@@ -14,17 +14,17 @@ const Stack = (() => {
   let _currentTilt = 0;
   let _navId = 0;
 
-  // Responsive peek: on mobile, cards peek less so labels stay on-screen
+  // Responsive: on mobile, only 1 card peeks each side but peeks MORE
   function getIsMobile() { return window.innerWidth < 768; }
-  let PEEK_WIDTH = getIsMobile() ? 24 : 48;
-  let PEEK_GAP = getIsMobile() ? 2 : 4;
-  let MAX_PEEK = getIsMobile() ? 2 : 5;
+  let PEEK_WIDTH = getIsMobile() ? 40 : 48;
+  let PEEK_GAP = getIsMobile() ? 4 : 4;
+  let MAX_PEEK = getIsMobile() ? 1 : 5;
 
   window.addEventListener('resize', () => {
     const m = getIsMobile();
-    PEEK_WIDTH = m ? 24 : 48;
-    PEEK_GAP = m ? 2 : 4;
-    MAX_PEEK = m ? 2 : 5;
+    PEEK_WIDTH = m ? 40 : 48;
+    PEEK_GAP = m ? 4 : 4;
+    MAX_PEEK = m ? 1 : 5;
   });
   const WHEEL_IMPULSE = 0.008;    // wheel delta → accumulator (lower = slower)
   const EDGE_ACCEL = 0.003;       // edge hover accumulation rate per frame
