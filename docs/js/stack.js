@@ -26,10 +26,12 @@ const Stack = (() => {
     PEEK_GAP = m ? 4 : 4;
     MAX_PEEK = m ? 1 : 5;
   });
-  const WHEEL_IMPULSE = 0.008;    // wheel delta → accumulator (lower = slower)
+  const WHEEL_IMPULSE = 0.006;    // wheel delta → accumulator (lower = slower)
   const EDGE_ACCEL = 0.003;       // edge hover accumulation rate per frame
-  const FRICTION = 0.88;
-  const SNAP_THRESHOLD = 0.35;    // accumulator > this → navigate
+  const FRICTION = 0.85;
+  const SNAP_THRESHOLD = 0.5;     // accumulator > this → navigate
+  let _lastSnapTime = 0;
+  const SNAP_COOLDOWN = 200;      // ms between snaps to prevent rapid-fire
   const MAX_TILT = 3;
   const TILT_SMOOTHING = 0.1;
 
@@ -219,9 +221,11 @@ const Stack = (() => {
 
       const direction = dx < 0 ? 1 : -1;
 
-      // For multi-card jumps: jump directly to target, let CSS transition handle smoothness
-      const target = _currentIndex + direction * totalJump;
-      goTo(target);
+      // Clamp jump to available cards
+      const maxForward = _cards.length - 1 - _currentIndex;
+      const maxBack = _currentIndex;
+      const clampedJump = direction > 0 ? Math.min(totalJump, maxForward) : Math.min(totalJump, maxBack);
+      if (clampedJump > 0) goTo(_currentIndex + direction * clampedJump);
     }, { passive: true });
   }
 
@@ -235,11 +239,16 @@ const Stack = (() => {
         _velocity = _edgeDir * EDGE_ACCEL;
       }
 
-      // Check if accumulated enough to navigate
-      if (_accumulator >= SNAP_THRESHOLD) {
-        goTo(_currentIndex + 1);
-      } else if (_accumulator <= -SNAP_THRESHOLD) {
-        goTo(_currentIndex - 1);
+      // Check if accumulated enough to navigate (with cooldown to prevent rapid-fire)
+      const now = performance.now();
+      if (now - _lastSnapTime > SNAP_COOLDOWN) {
+        if (_accumulator >= SNAP_THRESHOLD) {
+          goTo(_currentIndex + 1);
+          _lastSnapTime = now;
+        } else if (_accumulator <= -SNAP_THRESHOLD) {
+          goTo(_currentIndex - 1);
+          _lastSnapTime = now;
+        }
       }
 
       // Friction on accumulator (decays back toward 0 if no input)
