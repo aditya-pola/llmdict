@@ -2,7 +2,7 @@
   "id": "tag-ft",
   "name": "-ft / -full-ft / -fft / -lora / -qlora / -adapter",
   "expansion": "Fine-tuning method tags",
-  "category": "adapter-tags",
+  "category": "model-naming",
   "oneliner": "-ft: generic fine-tuned. -full-ft/-fft: all params updated. -lora/-qlora: adapter type. -adapter: generic (usually bottleneck). Check model card for details.",
   "explanation": "Fine-tuning suffixes indicate how a model was adapted. -ft is generic and could mean any method. -lora means Low-Rank Adaptation was applied, with adapter files typically 10-100 MB. -full-ft means every parameter was updated, producing a full model copy. -qlora means quantized LoRA training was used. Check for adapter_config.json to confirm a LoRA-based fine-tune versus full-weight files.",
   "seen_in": [

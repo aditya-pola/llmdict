@@ -2,7 +2,7 @@
   "id": "tag-mrl",
   "name": "-MRL",
   "expansion": "Matryoshka Representation Learning",
-  "category": "capability-tags",
+  "category": "model-naming",
   "oneliner": "Embedding model supporting variable-dimensionality outputs — truncate to smaller sizes with minimal quality loss. Named after Russian nesting dolls.",
   "explanation": "MRL stands for Matryoshka Representation Learning, a training technique that makes an embedding model useful at multiple output dimensions. You can truncate its full-dimension output to a smaller size and still get competitive retrieval quality. This lets you trade storage and computation cost against accuracy at inference time without retraining. When you see MRL in a model name or card, it means you can freely choose your embedding dimension.",
   "seen_in": [

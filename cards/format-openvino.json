@@ -2,7 +2,7 @@
   "id": "format-openvino",
   "name": "OpenVINO",
   "expansion": "Intel's inference optimization toolkit",
-  "category": "export-formats",
+  "category": "formats",
   "oneliner": "Converts to OpenVINO IR format, applies INT8/INT4 quant via NNCF, hardware-specific kernels. Significantly faster than generic ONNX on Intel CPUs (AMX).",
   "seen_in": [
     "filename"

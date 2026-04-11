@@ -2,7 +2,7 @@
   "id": "tag-moe-suffix",
   "name": "-MOE / -MoE",
   "expansion": "Mixture-of-Experts architecture",
-  "category": "family-tags",
+  "category": "model-naming",
   "oneliner": "Explicit MoE tag. Qwen2.5-MoE-A14B, DBRX (MoE). Mixtral uses 8x7B notation instead.",
   "explanation": "Some model families explicitly tag themselves with -MoE in the name (Qwen2.5-MoE-A2.7B), while others encode the mixture structure in the expert notation instead (Mixtral-8x7B). If neither appears in the name, check config.json for num_local_experts: a value greater than one confirms a MoE architecture. This matters because MoE models require more total memory than their active parameter count suggests.",
   "seen_in": [

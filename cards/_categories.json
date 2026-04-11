@@ -3,92 +3,60 @@
     "label": "Precision Formats",
     "order": 0
   },
-  "core-concepts": {
-    "label": "Core Concepts",
+  "quantization-basics": {
+    "label": "Quantization Basics",
     "order": 1
   },
   "quantization-methods": {
     "label": "Quantization Methods",
     "order": 2
   },
-  "file-formats": {
-    "label": "File Formats",
+  "formats": {
+    "label": "Formats",
     "order": 3
-  },
-  "gguf-quantization": {
-    "label": "GGUF Quantization",
-    "order": 4
   },
   "attention-variants": {
     "label": "Attention & Memory",
-    "order": 5
+    "order": 4
   },
   "position-encodings": {
     "label": "Position Encodings",
-    "order": 6
+    "order": 5
   },
   "layer-types": {
     "label": "Layer Types",
-    "order": 7
-  },
-  "normalization": {
-    "label": "Normalization",
-    "order": 8
+    "order": 6
   },
   "scaling-patterns": {
     "label": "Scaling & Serving",
-    "order": 9
+    "order": 7
   },
   "training-pipeline": {
     "label": "Training Pipeline",
-    "order": 10
+    "order": 8
   },
   "fine-tuning-methods": {
     "label": "Fine-Tuning Methods",
-    "order": 11
+    "order": 9
   },
-  "size-conventions": {
-    "label": "Size Conventions",
-    "order": 12
-  },
-  "training-tags": {
-    "label": "Training Tags",
-    "order": 13
-  },
-  "capability-tags": {
-    "label": "Capability Tags",
-    "order": 14
-  },
-  "scale-tags": {
-    "label": "Scale Variants",
-    "order": 15
-  },
-  "family-tags": {
-    "label": "Family-Specific Tags",
-    "order": 16
-  },
-  "adapter-tags": {
-    "label": "Adapter Tags",
-    "order": 17
+  "model-naming": {
+    "label": "Model Naming",
+    "order": 10
   },
   "hf-organizations": {
     "label": "HF Organizations",
-    "order": 19
+    "order": 11
   },
   "serving-tools": {
     "label": "Serving Tools",
-    "order": 20
-  },
-  "export-formats": {
-    "label": "Export Formats",
-    "order": 21
+    "order": 12
   },
   "tokenizers": {
     "label": "Tokenizers",
-    "order": 22
+    "order": 13
   },
   "datasets-recipes": {
     "label": "Datasets & Recipes",
-    "order": 23
+    "order": 14
   }
 }

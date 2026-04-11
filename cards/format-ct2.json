@@ -2,7 +2,7 @@
   "id": "format-ct2",
   "name": "CTranslate2 (ct2)",
   "expansion": "Efficient inference engine/format by OpenNMT",
-  "category": "export-formats",
+  "category": "formats",
   "oneliner": "Fast CPU inference, INT8/INT16/FP16. Originally built for translation (encoder-decoder). Less common for large decoder-only LLMs. Reduced activity since late 2024.",
   "seen_in": [
     "filename"

@@ -2,7 +2,7 @@
   "id": "tag-base",
   "name": "-base / -raw / -pretrain / -pt",
   "expansion": "Base pretrained model",
-  "category": "training-tags",
+  "category": "model-naming",
   "oneliner": "No instruction tuning. Next-token prediction only. The starting point for fine-tuning. Google uses -pt, others use -base or no suffix.",
   "explanation": "A base model (also labeled -raw, -pretrain, or -pt) is the pretrained checkpoint before any instruction tuning or alignment. It predicts the next token given a prompt but has no built-in chat behavior, so it will continue your text rather than answer questions. Meta's Llama 3.1 uses no suffix for the base variant and adds -Instruct for the tuned one, while Google Gemma marks the base with -pt. If you are fine-tuning, start from the base.",
   "seen_in": [

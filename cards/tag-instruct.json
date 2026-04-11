@@ -2,7 +2,7 @@
   "id": "tag-instruct",
   "name": "-it / -instruct / -chat",
   "expansion": "Instruction-tuned / chat-tuned",
-  "category": "training-tags",
+  "category": "model-naming",
   "oneliner": "-it (Google Gemma), -Instruct (Meta Llama, Mistral), -Chat (Qwen 1/2). Same concept, different branding. Designed for instruction-following.",
   "explanation": "The -Instruct suffix (and its synonyms -Chat, -it) means the model has been fine-tuned with supervised instruction-following data and typically aligned with RLHF or DPO. Qwen shifted branding from -Chat to -Instruct starting with Qwen2.5, but the underlying training recipe is similar. There is no meaningful technical difference between -instruct and -chat across families; it is purely a naming preference.",
   "seen_in": [

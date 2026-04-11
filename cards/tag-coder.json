@@ -2,7 +2,7 @@
   "id": "tag-coder",
   "name": "-Coder / -Code",
   "expansion": "Code-optimized model",
-  "category": "capability-tags",
+  "category": "model-naming",
   "oneliner": "CPT or fine-tuned on code corpora. Distinct models, not just prompting. Qwen2.5-Coder, DeepSeek-Coder, CodeLlama.",
   "explanation": "A -Coder or Code- tag means the model was specialized for programming tasks, usually through continued pre-training on hundreds of billions of code tokens plus code-specific instruction tuning. CodeLlama prefixes it (CodeLlama-7b), while Qwen suffixes it (Qwen2.5-Coder-7B). These models score much higher on HumanEval and MBPP benchmarks than their general-purpose siblings, but may underperform on pure-prose tasks.",
   "seen_in": [

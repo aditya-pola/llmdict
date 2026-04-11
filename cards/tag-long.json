@@ -2,7 +2,7 @@
   "id": "tag-long",
   "name": "-Long",
   "expansion": "Extended context window variant",
-  "category": "family-tags",
+  "category": "model-naming",
   "oneliner": "Trained or fine-tuned for longer sequences. Some use -Long suffix, others embed context length in name (128K, 1M).",
   "explanation": "A -Long or context-length tag means the model's context window has been extended beyond its base training length, typically using RoPE scaling techniques like YaRN, NTK-aware interpolation, or Adjusted Base Frequency. These models are usually continued-trained on long documents after the base RoPE modification. Performance may degrade at the extreme ends of the claimed range, so check the model card for validated effective lengths.",
   "seen_in": [

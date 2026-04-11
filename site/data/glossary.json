@@ -16,8 +16,8 @@
       ]
     },
     {
-      "id": "core-concepts",
-      "label": "Core Concepts",
+      "id": "quantization-basics",
+      "label": "Quantization Basics",
       "order": 1,
       "entries": [
         "calibration-data",
@@ -53,29 +53,26 @@
       ]
     },
     {
-      "id": "file-formats",
-      "label": "File Formats",
+      "id": "formats",
+      "label": "Formats",
       "order": 3,
       "entries": [
+        "format-coreml",
+        "format-ct2",
+        "format-onnx",
+        "format-openvino",
         "ggml",
         "gguf",
-        "safetensors"
-      ]
-    },
-    {
-      "id": "gguf-quantization",
-      "label": "GGUF Quantization",
-      "order": 4,
-      "entries": [
         "iq-quants",
         "k-quants",
-        "mxfp4-moe"
+        "mxfp4-moe",
+        "safetensors"
       ]
     },
     {
       "id": "attention-variants",
       "label": "Attention & Memory",
-      "order": 5,
+      "order": 4,
       "entries": [
         "attention-mask",
         "flash-attention",
@@ -93,7 +90,7 @@
     {
       "id": "position-encodings",
       "label": "Position Encodings",
-      "order": 6,
+      "order": 5,
       "entries": [
         "abf",
         "alibi",
@@ -108,32 +105,25 @@
     {
       "id": "layer-types",
       "label": "Layer Types",
-      "order": 7,
+      "order": 6,
       "entries": [
         "backbone",
         "ffn",
         "geglu",
+        "layernorm",
         "model-head",
         "ple",
+        "pre-norm",
         "residual-connection",
+        "rmsnorm",
         "seq2seq",
         "swiglu"
       ]
     },
     {
-      "id": "normalization",
-      "label": "Normalization",
-      "order": 8,
-      "entries": [
-        "layernorm",
-        "pre-norm",
-        "rmsnorm"
-      ]
-    },
-    {
       "id": "scaling-patterns",
       "label": "Scaling & Serving",
-      "order": 9,
+      "order": 7,
       "entries": [
         "continuous-batching",
         "dense-models",
@@ -151,7 +141,7 @@
     {
       "id": "training-pipeline",
       "label": "Training Pipeline",
-      "order": 10,
+      "order": 8,
       "entries": [
         "causal-lm",
         "cpt",
@@ -168,7 +158,7 @@
     {
       "id": "fine-tuning-methods",
       "label": "Fine-Tuning Methods",
-      "order": 11,
+      "order": 9,
       "entries": [
         "adapters",
         "dora",
@@ -180,74 +170,39 @@
       ]
     },
     {
-      "id": "size-conventions",
-      "label": "Size Conventions",
-      "order": 12,
+      "id": "model-naming",
+      "label": "Model Naming",
+      "order": 10,
       "entries": [
         "size-A",
         "size-B",
         "size-E",
         "size-T",
         "size-context",
-        "size-x"
-      ]
-    },
-    {
-      "id": "training-tags",
-      "label": "Training Tags",
-      "order": 13,
-      "entries": [
+        "size-x",
         "tag-alignment",
         "tag-base",
-        "tag-hf",
-        "tag-instruct"
-      ]
-    },
-    {
-      "id": "capability-tags",
-      "label": "Capability Tags",
-      "order": 14,
-      "entries": [
         "tag-coder",
         "tag-embed",
+        "tag-ft",
         "tag-guard",
+        "tag-hf",
+        "tag-instruct",
+        "tag-long",
         "tag-math",
+        "tag-merged",
+        "tag-moe-suffix",
         "tag-mrl",
         "tag-reward",
+        "tag-scale",
+        "tag-scout-maverick",
         "tag-vision"
-      ]
-    },
-    {
-      "id": "scale-tags",
-      "label": "Scale Variants",
-      "order": 15,
-      "entries": [
-        "tag-scale"
-      ]
-    },
-    {
-      "id": "family-tags",
-      "label": "Family-Specific Tags",
-      "order": 16,
-      "entries": [
-        "tag-long",
-        "tag-moe-suffix",
-        "tag-scout-maverick"
-      ]
-    },
-    {
-      "id": "adapter-tags",
-      "label": "Adapter Tags",
-      "order": 17,
-      "entries": [
-        "tag-ft",
-        "tag-merged"
       ]
     },
     {
       "id": "hf-organizations",
       "label": "HF Organizations",
-      "order": 19,
+      "order": 11,
       "entries": [
         "org-bartowski",
         "org-deepseek",
@@ -266,7 +221,7 @@
     {
       "id": "serving-tools",
       "label": "Serving Tools",
-      "order": 20,
+      "order": 12,
       "entries": [
         "tool-exllamav2",
         "tool-llamacpp",
@@ -279,20 +234,9 @@
       ]
     },
     {
-      "id": "export-formats",
-      "label": "Export Formats",
-      "order": 21,
-      "entries": [
-        "format-coreml",
-        "format-ct2",
-        "format-onnx",
-        "format-openvino"
-      ]
-    },
-    {
       "id": "tokenizers",
       "label": "Tokenizers",
-      "order": 22,
+      "order": 13,
       "entries": [
         "tokenizer-bpe",
         "tokenizer-spm",
@@ -303,7 +247,7 @@
     {
       "id": "datasets-recipes",
       "label": "Datasets & Recipes",
-      "order": 23,
+      "order": 14,
       "entries": [
         "dataset-dolphin",
         "dataset-evolinstruct",
@@ -627,7 +571,7 @@
       "id": "calibration-data",
       "name": "Calibration Data",
       "expansion": "Quantization Calibration Dataset",
-      "category": "core-concepts",
+      "category": "quantization-basics",
       "oneliner": "A small dataset (~128 samples) run through the model to collect activation statistics needed by quantization methods to set scale factors.",
       "explanation": "Calibration data is a small representative dataset used to measure how activations behave inside a model, so quantization methods can set accurate scaling parameters. The standard benchmark established by the GPTQ paper is 128 samples of 2048 tokens from the C4 or WikiText-2 datasets. Methods like GPTQ, AWQ, and SmoothQuant require calibration because they need to observe real activation ranges, while simpler approaches like round-to-nearest and dynamic quantization do not. Using domain-matched calibration data yields slightly better results.",
       "fundamentals": "For layer Y=XW+b: calibration records per-layer activation stats. Approaches: min/max (simple but outlier-sensitive), percentile (clips outliers), MSE-optimal (minimizes reconstruction error), entropy/KL-based (TensorRT). For GPTQ: calibration computes Hessian H = 2XX^T, used to solve layer-wise optimization min_Q $\\|\\|WX - QX\\|\\|^2$.",
@@ -942,7 +886,7 @@
       "id": "dequantization",
       "name": "Dequantization",
       "expansion": "Inverse Quantization",
-      "category": "core-concepts",
+      "category": "quantization-basics",
       "oneliner": "Reverse mapping from low-precision quantized values back to approximate floats — happens on-the-fly during inference.",
       "explanation": "Dequantization is the process of converting quantized weights back to a higher-precision format during inference so they can participate in standard matrix multiplication. In a 4-bit weight scheme, integer weights are read from memory at 4 bits, multiplied by their group scale factor, and fed directly into 16-bit matrix math. This is fused with the computation so the full-precision weight matrix is never materialized in memory, meaning only 4 bits per weight travel across the memory bus. The dequantization cost is negligible compared to the matrix multiply itself.",
       "fundamentals": "Integer: W_approx = scale $\\times$ (W_q - zero_point). Error: |W_original - W_approx| ≤ scale/2. nf4: W_approx = nf4_codebook[index] $\\times$ absmax. W8A8 output: Y_fp16 = Y_int32 $\\times$ (s_x $\\times$ s_w).",
@@ -1236,7 +1180,7 @@
       "id": "format-coreml",
       "name": "CoreML",
       "expansion": "Apple's ML format for on-device inference",
-      "category": "export-formats",
+      "category": "formats",
       "oneliner": ".mlmodel/.mlpackage files. Runs on Apple Neural Engine, GPU, CPU transparently. For iOS/macOS apps. Converter: coremltools.",
       "seen_in": [
         "filename"
@@ -1262,7 +1206,7 @@
       "id": "format-ct2",
       "name": "CTranslate2 (ct2)",
       "expansion": "Efficient inference engine/format by OpenNMT",
-      "category": "export-formats",
+      "category": "formats",
       "oneliner": "Fast CPU inference, INT8/INT16/FP16. Originally built for translation (encoder-decoder). Less common for large decoder-only LLMs. Reduced activity since late 2024.",
       "seen_in": [
         "filename"
@@ -1282,7 +1226,7 @@
       "id": "format-onnx",
       "name": "ONNX",
       "expansion": "Open Neural Network Exchange",
-      "category": "export-formats",
+      "category": "formats",
       "oneliner": "Open format for ML computation graphs. Train in PyTorch, export to ONNX, run anywhere via ONNX Runtime (CPU, CUDA, DirectML, TensorRT). Key for edge/Windows.",
       "seen_in": [
         "filename",
@@ -1307,7 +1251,7 @@
       "id": "format-openvino",
       "name": "OpenVINO",
       "expansion": "Intel's inference optimization toolkit",
-      "category": "export-formats",
+      "category": "formats",
       "oneliner": "Converts to OpenVINO IR format, applies INT8/INT4 quant via NNCF, hardware-specific kernels. Significantly faster than generic ONNX on Intel CPUs (AMX).",
       "seen_in": [
         "filename"
@@ -1496,7 +1440,7 @@
       "id": "ggml",
       "name": "GGML",
       "expansion": "Georgi Gerganov Machine Learning (library and legacy format)",
-      "category": "file-formats",
+      "category": "formats",
       "oneliner": "Legacy format — predecessor to GGUF. No longer used for new models but you may encounter old repos with .ggml files.",
       "explanation": "GGML was the original format used by llama.cpp before GGUF. It lacked proper metadata support (no tokenizer info, architecture details, or versioning), making it fragile and hard to extend. GGUF replaced it in August 2023, adding self-describing metadata. The GGML C library itself is still actively used (it's the tensor math backend for llama.cpp), but the file format is obsolete.",
       "fundamentals": "Simple binary layout: tensor data with minimal headers. No standardized metadata — required external configuration files. No versioning — breaking changes required new tooling. GGUF solved all of these by adding a proper header with KV metadata.",
@@ -1518,7 +1462,7 @@
       "id": "gguf",
       "name": "GGUF",
       "expansion": "GGML Universal File",
-      "category": "file-formats",
+      "category": "formats",
       "oneliner": "The standard single-file format for llama.cpp/Ollama/LM Studio — contains model weights, metadata, tokenizer, and quantization info in one file.",
       "explanation": "Replaced GGML format in August 2023. Self-contained: everything needed to load and run a model is in one file. Supports any quantization type (Q2_K through Q8_0, IQ variants, UD variants, BF16). Metadata is key-value pairs (architecture, context length, vocab size, etc.) stored in the header. Designed for CPU + GPU split inference — can mmap weights and offload specific layers to GPU. Each GGUF repo on HuggingFace typically contains multiple files at different quant levels.",
       "fundamentals": "File structure: 1) Magic number ('GGUF'). 2) Version. 3) Tensor count. 4) Metadata KV pairs (architecture, tokenizer, quant type, etc.). 5) Tensor descriptors (name, shape, type, offset). 6) Tensor data (aligned, mmap-friendly). Quantization type is per-tensor — different tensors can use different types. Supports memory mapping for efficient loading.",
@@ -1868,7 +1812,7 @@
       "id": "iq-quants",
       "name": "IQ-Quants (IQ1 through IQ4)",
       "expansion": "Importance-weighted Quantization (codebook-based)",
-      "category": "gguf-quantization",
+      "category": "formats",
       "oneliner": "llama.cpp's codebook/lookup-table quantization — uses importance matrices to make smarter rounding decisions. Better than K-quants at same bitwidth.",
       "explanation": "IQ-quants use vector quantization with codebooks instead of simple scalar rounding. An importance matrix (imatrix) weights which values matter most. The encoder maps groups of weights to the nearest codebook entry, weighted by importance. Higher quality than K-quants at the same bitwidth but slower to generate (needs imatrix computation). Particularly valuable at low bitwidths (IQ2, IQ3) where the quality gap vs K-quants is largest.",
       "fundamentals": "Codebook approach: a fixed set of representative vectors (codebook entries). Each group of weights is mapped to the nearest codebook entry. With importance weighting: minimize $\\Sigma$ importance[i] $\\times$ (w[i] - codebook[nearest][i])^2 instead of unweighted MSE. IQ4_XS at ~4.25 bpw outperforms Q4_K_S at ~4.5 bpw.",
@@ -1902,7 +1846,7 @@
       "id": "k-quants",
       "name": "K-Quants (Q2_K through Q8_K)",
       "expansion": "K-quant block quantization system",
-      "category": "gguf-quantization",
+      "category": "formats",
       "oneliner": "llama.cpp's standard quantization types — hierarchical super-blocks of 256 elements with mixed-precision sub-block scales.",
       "explanation": "Designed by Iwan Kawrakow (PR #1684). The 'K' does NOT stand for K-means — it's a custom method. Structure: super-blocks of 256 elements, divided into sub-blocks. Each sub-block has its own quantized scale/min. The S/M/L suffixes (e.g., Q4_K_S, Q4_K_M, Q4_K_L) control how many bits are spent on scales vs data. Q4_K_M is the most popular default: good balance of quality and size. Range: Q2_K (~2.6 bpw) through Q8_K (~8.5 bpw).",
       "fundamentals": "Q4_K_M example: super-block of 256 values, split into 8 sub-blocks of 32. Each sub-block: 32 $\\times$ 4-bit values + 6-bit scale + 6-bit min. Super-block has fp16 master scale and fp16 master min. Effective bpw: 4 + (6+6)/32 + (16+16)/256 $\\approx$ 4.5 bpw. S tier: fewer scale bits, smaller. M tier: balanced. L tier: more scale bits, larger/better.",
@@ -2033,7 +1977,7 @@
       "id": "layernorm",
       "name": "LayerNorm",
       "expansion": "Layer Normalization",
-      "category": "normalization",
+      "category": "layer-types",
       "oneliner": "Standardizes activations across the hidden dimension per token — zero mean, unit variance, then learnable scale and shift. The original transformer normalization.",
       "explanation": "Layer normalization stabilizes training by normalizing activations across the hidden dimension of each token independently, making it insensitive to batch size. It computes the mean and variance over all hidden dimensions, normalizes to zero mean and unit variance, then applies a learnable scale and shift. LayerNorm was the default in the original Transformer, GPT-2, GPT-3, BERT, and T5. Post-2022 decoder LLMs have largely replaced it with RMSNorm, which drops the mean subtraction for better speed with equivalent quality.",
       "fundamentals": "$\\text{LayerNorm}(x) = \\gamma \\cdot \\frac{x - \\mu}{\\sqrt{\\sigma^2 + \\varepsilon}} + \\beta$. Where $\\mu = \\frac{1}{d}\\sum_i x_i$ and $\\sigma^2 = \\frac{1}{d}\\sum_i (x_i - \\mu)^2$. $\\gamma, \\beta \\in \\mathbb{R}^d$ are learnable (init: $\\gamma=1, \\beta=0$). Params: $2 \\times d_{\\text{model}}$. Requires 2 reductions (mean, variance) vs RMSNorm's 1 (sum of squares). Batch-independent (unlike BatchNorm), no running stats at inference.",
@@ -2315,7 +2259,7 @@
       "id": "model-size-memory",
       "name": "Model Size ↔ Memory",
       "expansion": "Memory Footprint Calculation for Quantized LLMs",
-      "category": "core-concepts",
+      "category": "quantization-basics",
       "oneliner": "Memory (bytes) = params $\\times$ bits_per_param / 8, plus overhead for scales, KV-cache, and non-quantized components.",
       "explanation": "To estimate a model's memory footprint, multiply the parameter count by the bytes per parameter for your chosen format. A 70-billion parameter model in 16-bit precision needs about 140 GB, while the same model in 4-bit quantization needs roughly 35 GB. Real usage is higher because embedding and normalization layers are typically kept in 16-bit, scale factors add overhead, and the KV cache grows with sequence length and batch size. For a 70B model, the KV cache alone can reach 2.5 GB per sequence at 4096 tokens.",
       "fundamentals": "Weight memory = P $\\times$ b / 8. Scale overhead = P $\\times$ (s_bits / g) / 8. KV-cache = 2 $\\times$ layers $\\times$ kv_heads $\\times$ head_dim $\\times$ seq_len $\\times$ batch $\\times$ kv_bytes. Practical: RTX 4090 (24 GB) fits 7B at fp16, 13B at int8, ~33B at int4. A100-80GB fits 70B at int8. H100 at 3.35 TB/s: 70B int4 $\\approx$ 55 tok/s, 70B fp16 $\\approx$ 14 tok/s.",
@@ -2424,7 +2368,7 @@
       "id": "mxfp4-moe",
       "name": "MXFP4_MOE",
       "expansion": "Microscaling FP4 optimized for Mixture-of-Experts layers",
-      "category": "gguf-quantization",
+      "category": "formats",
       "oneliner": "E2M1 micro-float with block scaling, specifically targeting MoE expert weights. Only appears in 26B-A4B GGUF repos.",
       "explanation": "Applies the OCP Microscaling FP4 format (E2M1 elements with shared E8M0 block scales) specifically to the expert weight matrices in Mixture-of-Experts models. MoE expert weights are a good target because they are numerous (128 experts) but individually small, and the block-scaling approach handles their weight distributions well. Relatively new format in llama.cpp.",
       "fundamentals": "Same as E2M1/MXFP4: 32 elements share one 8-bit scale. Per-element: 1 sign, 2 exp, 1 mantissa = 15 distinct values. Effective 4.25 bpw. The _MOE suffix is an architecture annotation, not a different quantization algorithm.",
@@ -2900,7 +2844,7 @@
       "id": "per-group-quantization",
       "name": "Per-Group Quantization",
       "expansion": "Group-wise Quantization Granularity",
-      "category": "core-concepts",
+      "category": "quantization-basics",
       "oneliner": "Divides weights into small groups (32-128 values) with separate scale factors per group — essential for making int4 viable.",
       "explanation": "Granularity spectrum: per-tensor (1 scale for whole matrix, coarse) → per-channel (1 per output row) → per-group (1 per g values, fine). Per-group is essential for int4 where 16 levels need to fit local distributions. For a [4096, 4096] weight matrix with g=128: 131K scale factors, 256 KB overhead, +0.125 effective bpw. Tradeoff: finer groups = better accuracy but more overhead. Int8: per-channel usually sufficient. Int4: g=128 minimum, g=32 noticeably better.",
       "fundamentals": "Error depends on range: scale = range/(2^b - 1), max error = scale/2. Smaller groups have smaller local ranges → smaller scales → smaller errors. Overhead for g=128 with fp16 scales: 16/128 = 0.125 bits/weight. For g=32: 16/32 = 0.5 bits/weight.",
@@ -2992,7 +2936,7 @@
       "id": "pre-norm",
       "name": "Pre-Norm vs Post-Norm",
       "expansion": "Pre-Layer Normalization vs Post-Layer Normalization",
-      "category": "normalization",
+      "category": "layer-types",
       "oneliner": "Where normalization sits: before the sub-layer (Pre-Norm, modern standard — stable training) or after the residual add (Post-Norm, original Transformer — fragile at depth).",
       "explanation": "Original Transformer (2017): Post-Norm — LayerNorm(x + Sublayer(x)). GPT-2 (2019): Pre-Norm — x + Sublayer(Norm(x)). This seemingly minor change was transformative for training stability. Post-Norm forces gradients through normalization (magnitude depends on output scale, varies by layer). Pre-Norm keeps residual path 'clean' — un-normalized x passes directly through skip connection, gradients have unimpeded path regardless of depth. All modern LLMs use Pre-Norm + RMSNorm. Tradeoff: Pre-Norm may converge to slightly worse final loss than well-tuned Post-Norm, addressed by final RMSNorm before output head.",
       "fundamentals": "Post-Norm: output = Norm(x + Sublayer(x)). Gradient path goes through Norm Jacobian at every layer. Pre-Norm: output = x + Sublayer(Norm(x)). Gradient: ∂L/∂xₗ = ∂L/∂x_L·(I + $\\Sigma$∂F_k/∂x). The I (identity) ensures gradient magnitude ≥ |∂L/∂x_L| — prevents vanishing regardless of depth. Timeline: Post-Norm (2017 Transformer, BERT) → Pre-Norm+LayerNorm (GPT-2/3, 2019-20) → Pre-Norm+RMSNorm (LLaMA+, 2023+).",
@@ -3074,7 +3018,7 @@
       "id": "ptq",
       "name": "PTQ",
       "expansion": "Post-Training Quantization",
-      "category": "core-concepts",
+      "category": "quantization-basics",
       "oneliner": "Quantize an already-trained model without further training — fast (minutes to hours), practical, dominates LLM quantization.",
       "explanation": "Takes a fully trained model and converts to lower precision in one pass. No training infrastructure needed. Methods: GPTQ, AWQ, RTN, EXL2. Fast even for 70B models. Downside: model never adapted to quantization noise, so quality degrades more than QAT, especially below 4-bit. At int8: essentially lossless. At int4: measurable but acceptable. At int2: usually unacceptable without QAT.",
       "fundamentals": "Workflow: 1) Load fp16/bf16 model. 2) Optional calibration pass. 3) Compute scale/zero-point per layer/channel/group. 4) Quantize: W_q = round(W/scale) + zp. 5) Save. At inference: dequantize and compute.",
@@ -3104,7 +3048,7 @@
       "id": "qat",
       "name": "QAT",
       "expansion": "Quantization-Aware Training",
-      "category": "core-concepts",
+      "category": "quantization-basics",
       "oneliner": "Simulate quantization during training so the model learns to be robust to quantization noise — better quality than PTQ but requires full training infrastructure.",
       "explanation": "Forward pass uses 'fake quantization' (quantize then immediately dequantize, introducing realistic noise). Gradients flow through rounding via Straight-Through Estimator (STE). Over many steps, weights adapt to quantize well. Quality gap vs PTQ widens at lower bits: at int8 no benefit, at int4 meaningful, at int2 essential. Cost: requires training/fine-tuning infrastructure (hundreds of GPUs for 70B). Meta and Google have published LLM QAT results. Google's Gemma uses QAT for official quantized variants.",
       "fundamentals": "Forward: W_fake_q = dequantize(quantize(W)), Y = X @ W_fake_q. Backward: STE approximates d(round(x))/dx $\\approx$ 1 — gradients pass through as if rounding wasn't there. Optimizer updates full-precision master weights. The model learns weights that happen to quantize well.",
@@ -3174,7 +3118,7 @@
       "id": "quantization",
       "name": "Quantization",
       "expansion": "Model Quantization / Neural Network Quantization",
-      "category": "core-concepts",
+      "category": "quantization-basics",
       "oneliner": "Converting a model's high-precision floats to lower-precision representations — the single most impactful optimization for LLM serving.",
       "explanation": "Quantization maps model weights from their original 16-bit or 32-bit format to smaller representations like 8-bit, 4-bit, or even lower. This matters because LLM inference is memory-bandwidth-bound: generating each token requires reading every weight from memory, so shrinking the weights directly speeds up generation. A 70-billion parameter model in 16-bit takes about 140 GB; in 4-bit it fits in roughly 35 GB. Quality impact varies by precision: 8-bit is essentially lossless, 4-bit adds small but measurable degradation, and below 4-bit requires specialized techniques.",
       "fundamentals": "Uniform affine quantization: $x_q = \\text{clamp}(\\text{round}(x/s + z),\\, q_{\\min},\\, q_{\\max})$. Dequantize: $\\hat{x} = s \\cdot (x_q - z)$. Scale $s = (x_{\\max} - x_{\\min})/(q_{\\max} - q_{\\min})$. Symmetric: $z=0$, $s = \\max(|x|)/q_{\\max}$. Error per value bounded by $s/2$. Not all weights contribute equally — attention layers and first/last layers are typically more sensitive.",
@@ -3355,7 +3299,7 @@
       "id": "rmsnorm",
       "name": "RMSNorm",
       "expansion": "Root Mean Square Layer Normalization",
-      "category": "normalization",
+      "category": "layer-types",
       "oneliner": "Simplified LayerNorm — normalizes by root mean square only, dropping mean subtraction. Same quality, fewer ops. Standard in all modern LLMs.",
       "explanation": "RMS Normalization is a simplified version of Layer Normalization that drops the mean-centering step, normalizing activations by their root mean square alone. This saves a full reduction operation over the hidden dimension, making it 7 to 64 percent faster than LayerNorm depending on implementation, while producing equivalent training quality. RMSNorm has only a learnable scale parameter with no bias. It has been adopted by virtually every major open-weight LLM since 2023, including Llama, Mistral, Qwen, Gemma, and DeepSeek.",
       "fundamentals": "$\\text{RMSNorm}(x) = \\gamma \\cdot \\frac{x}{\\text{RMS}(x)}$ where $\\text{RMS}(x) = \\sqrt{\\frac{1}{d}\\sum_i x_i^2 + \\varepsilon}$. vs LayerNorm: no $\\mu$ computation, no $(x-\\mu)$ subtraction, no $\\beta$ bias. Params: $d_{\\text{model}}$ (vs $2 \\times d_{\\text{model}}$ for LayerNorm). For LLaMA 7B: 65 RMSNorm instances $\\times$ 4096 = 266K params (<0.004% of model). Computational savings: 1 reduction op vs 2, ~2x fewer reductions (the GPU synchronization bottleneck).",
@@ -3419,7 +3363,7 @@
       "id": "safetensors",
       "name": "safetensors",
       "expansion": "Safe Tensors serialization format",
-      "category": "file-formats",
+      "category": "formats",
       "oneliner": "HuggingFace's secure, fast tensor serialization — replaces pickle-based .bin files. Immune to arbitrary code execution.",
       "explanation": "Created because PyTorch's default serialization uses Python pickle, which can execute arbitrary code when loading. A malicious .bin file could run any code on your machine. safetensors stores tensors as raw bytes with a JSON header — no code execution possible. Also faster: supports memory mapping and lazy loading (load only the tensors you need). Now the default format on HuggingFace Hub. Used by GPTQ, AWQ, EXL2, and full-precision model uploads.",
       "fundamentals": "File structure: 8-byte header length, JSON header (tensor names, shapes, dtypes, offsets), raw tensor data. No nested structures, no code, no pickle. Can be memory-mapped for zero-copy loading. Validation: can verify file integrity without loading all data.",
@@ -3650,7 +3594,7 @@
       "id": "size-A",
       "name": "A (Active params)",
       "expansion": "Active parameters per token in MoE",
-      "category": "size-conventions",
+      "category": "model-naming",
       "oneliner": "Active parameters per forward pass in MoE. Qwen2.5-A14B = 57B total, 14B active. Gemma 26B-A4B = 25.2B total, 3.8B active.",
       "explanation": "A marks the active parameter count in a Mixture-of-Experts model, which is the number of parameters that actually compute for each token. For example, Qwen2.5-MoE-A2.7B-Instruct has 14.3B total parameters but only 2.7 billion fire per token because the router selects a small subset of experts. This distinction is critical for estimating inference speed and GPU cost: all parameters must fit in memory, but latency and FLOPs scale with the active count.",
       "seen_in": [
@@ -3674,7 +3618,7 @@
       "id": "size-B",
       "name": "B (Billion)",
       "expansion": "Billion parameters",
-      "category": "size-conventions",
+      "category": "model-naming",
       "oneliner": "The universal size marker. 7B = 7 billion parameters. Refers to total params unless combined with A (active).",
       "explanation": "When you see a number followed by B in a model name, it means billion parameters. Llama-3.1-8B has eight billion, Qwen2.5-72B has seventy-two billion. The convention is nearly universal, though some older repos use lowercase (7b instead of 7B). If the name shows a single number with no active/total distinction, assume the model is dense and every parameter fires on every token.",
       "seen_in": [
@@ -3698,7 +3642,7 @@
       "id": "size-E",
       "name": "E (Effective params)",
       "expansion": "Effective parameters (Gemma-specific)",
-      "category": "size-conventions",
+      "category": "model-naming",
       "oneliner": "Google Gemma notation: effective capacity accounting for architectural efficiency (PLE, parameter sharing). E4B $\\approx$ performs like 4B dense.",
       "explanation": "E stands for effective parameters, a convention specific to Google's Gemma 3n and Gemma 4 series. The Gemma-3n-E4B model has roughly eight billion raw parameters, but because it uses Per-Layer Embedding sharing, many of those weights are reused, giving it the compute profile of about 4.5 billion parameters. Google introduced the E tag so users can compare real-world performance expectations without being misled by the inflated raw count.",
       "seen_in": [
@@ -3722,7 +3666,7 @@
       "id": "size-T",
       "name": "T (Trillion)",
       "expansion": "Trillion parameters or tokens",
-      "category": "size-conventions",
+      "category": "model-naming",
       "oneliner": "Trillions. Rare for params (Switch Transformer 1.6T). More common for training data ('trained on 15T tokens'). Context matters.",
       "explanation": "T means trillion parameters when it appears as a size marker, but context matters because the same letter shows up in training-data descriptions where 1T means one trillion tokens of training text, not model size. Very few public-weight models exceed one trillion parameters. If you see 1T in a HuggingFace repo title, double-check whether it refers to the model or the pre-training corpus volume.",
       "seen_in": [
@@ -3745,7 +3689,7 @@
       "id": "size-context",
       "name": "K / M (Context length)",
       "expansion": "Thousands / Millions of tokens context",
-      "category": "size-conventions",
+      "category": "model-naming",
       "oneliner": "128K = 128,000 token context. 1M = 1 million. Distinguishes long-context variants from defaults.",
       "explanation": "A number like 1M, 128K, or 4K in the model name indicates the maximum context window in tokens. Qwen2.5-7B-Instruct-1M supports up to one million tokens, while Llama-3.1 variants advertise 128K in their model cards even though it rarely appears in the repo name. Not every model puts this in the title, so you may need to check config.json for max_position_embeddings.",
       "seen_in": [
@@ -3770,7 +3714,7 @@
       "id": "size-x",
       "name": "x (MoE expert notation)",
       "expansion": "Experts × expert size (e.g., 8x7B)",
-      "category": "size-conventions",
+      "category": "model-naming",
       "oneliner": "Mixtral-style: 8x7B = 8 experts of ~7B each. Total ≠ 8$\\times$7B due to shared attention layers. Active = top-k experts worth.",
       "explanation": "The NxSB pattern popularized by Mixtral describes Mixture-of-Experts model sizes, where N is the number of experts and S is the size of each expert. For example, 8x7B means 8 experts of roughly 7 billion parameters each, but the total parameter count is about 46.7 billion rather than 56 billion because the attention layers are shared across all experts. The active parameter count per token is much smaller, around 12.9 billion for Mixtral since only the top 2 experts are selected for each token.",
       "seen_in": [
@@ -3933,7 +3877,7 @@
       "id": "tag-alignment",
       "name": "-sft / -dpo / -rlhf / -orpo / -kto",
       "expansion": "Specific alignment method used",
-      "category": "training-tags",
+      "category": "model-naming",
       "oneliner": "Signals which training stage/method produced the model. -sft = supervised only. -dpo = DPO-aligned. Often released in pairs for comparison.",
       "explanation": "Alignment-method suffixes like -sft, -dpo, -rlhf, -kto, or -orpo tell you exactly which post-training recipe was applied. Researchers publish these to enable direct comparisons: for instance, zephyr-7b-sft-full used only supervised fine-tuning while zephyr-7b-beta added a round of DPO on top. If you are benchmarking alignment approaches, these tags let you isolate the effect of each training phase.",
       "seen_in": [
@@ -3960,7 +3904,7 @@
       "id": "tag-base",
       "name": "-base / -raw / -pretrain / -pt",
       "expansion": "Base pretrained model",
-      "category": "training-tags",
+      "category": "model-naming",
       "oneliner": "No instruction tuning. Next-token prediction only. The starting point for fine-tuning. Google uses -pt, others use -base or no suffix.",
       "explanation": "A base model (also labeled -raw, -pretrain, or -pt) is the pretrained checkpoint before any instruction tuning or alignment. It predicts the next token given a prompt but has no built-in chat behavior, so it will continue your text rather than answer questions. Meta's Llama 3.1 uses no suffix for the base variant and adds -Instruct for the tuned one, while Google Gemma marks the base with -pt. If you are fine-tuning, start from the base.",
       "seen_in": [
@@ -3983,7 +3927,7 @@
       "id": "tag-coder",
       "name": "-Coder / -Code",
       "expansion": "Code-optimized model",
-      "category": "capability-tags",
+      "category": "model-naming",
       "oneliner": "CPT or fine-tuned on code corpora. Distinct models, not just prompting. Qwen2.5-Coder, DeepSeek-Coder, CodeLlama.",
       "explanation": "A -Coder or Code- tag means the model was specialized for programming tasks, usually through continued pre-training on hundreds of billions of code tokens plus code-specific instruction tuning. CodeLlama prefixes it (CodeLlama-7b), while Qwen suffixes it (Qwen2.5-Coder-7B). These models score much higher on HumanEval and MBPP benchmarks than their general-purpose siblings, but may underperform on pure-prose tasks.",
       "seen_in": [
@@ -4005,7 +3949,7 @@
       "id": "tag-embed",
       "name": "-Embed / -Embedding",
       "expansion": "Embedding model",
-      "category": "capability-tags",
+      "category": "model-naming",
       "oneliner": "Produces fixed-size vectors for retrieval/similarity, not generative text. Often encoder-only or uses mean pooling over decoder.",
       "explanation": "An embedding model outputs a single fixed-length vector for each input rather than generating text. These vectors are used for retrieval-augmented generation, semantic search, clustering, and similarity scoring. Unlike generative models, embedding models are loaded differently and called without a generate loop. Check the model card for the recommended prompt prefix and output dimension, as these vary across families.",
       "seen_in": [
@@ -4027,7 +3971,7 @@
       "id": "tag-ft",
       "name": "-ft / -full-ft / -fft / -lora / -qlora / -adapter",
       "expansion": "Fine-tuning method tags",
-      "category": "adapter-tags",
+      "category": "model-naming",
       "oneliner": "-ft: generic fine-tuned. -full-ft/-fft: all params updated. -lora/-qlora: adapter type. -adapter: generic (usually bottleneck). Check model card for details.",
       "explanation": "Fine-tuning suffixes indicate how a model was adapted. -ft is generic and could mean any method. -lora means Low-Rank Adaptation was applied, with adapter files typically 10-100 MB. -full-ft means every parameter was updated, producing a full model copy. -qlora means quantized LoRA training was used. Check for adapter_config.json to confirm a LoRA-based fine-tune versus full-weight files.",
       "seen_in": [
@@ -4053,7 +3997,7 @@
       "id": "tag-guard",
       "name": "-Guard / -Shield",
       "expansion": "Safety classifier model",
-      "category": "capability-tags",
+      "category": "model-naming",
       "oneliner": "Detects harmful content, prompt injections, policy violations. Outputs safe/unsafe classification, not generative text. Llama-Guard-3.",
       "explanation": "Guard models like Llama-Guard-3-8B are classifiers trained to flag unsafe content in prompts or model responses. They run as a filter alongside your main generative model, receiving a prompt-response pair and returning a safety label. Deploy one before or after generation to enforce content policies without modifying the main model. Guard models are small enough to run alongside the generator with minimal latency overhead.",
       "seen_in": [
@@ -4075,7 +4019,7 @@
       "id": "tag-hf",
       "name": "-hf",
       "expansion": "HuggingFace-compatible format",
-      "category": "training-tags",
+      "category": "model-naming",
       "oneliner": "Weights converted to HuggingFace transformers format (safetensors + config.json). Does NOT mean 'hosted on HF'. Without -hf may need custom loading.",
       "explanation": "The -hf suffix means the checkpoint has been converted to HuggingFace Transformers format with standard PyTorch weight files and a config.json. Early Llama 2 releases shipped in Meta's internal format, so the community created -hf conversions. Starting with Llama 3 and most 2024-era releases, models ship HF-native, so the suffix is disappearing. If you see a repo without -hf, check whether it contains a config.json.",
       "seen_in": [
@@ -4097,7 +4041,7 @@
       "id": "tag-instruct",
       "name": "-it / -instruct / -chat",
       "expansion": "Instruction-tuned / chat-tuned",
-      "category": "training-tags",
+      "category": "model-naming",
       "oneliner": "-it (Google Gemma), -Instruct (Meta Llama, Mistral), -Chat (Qwen 1/2). Same concept, different branding. Designed for instruction-following.",
       "explanation": "The -Instruct suffix (and its synonyms -Chat, -it) means the model has been fine-tuned with supervised instruction-following data and typically aligned with RLHF or DPO. Qwen shifted branding from -Chat to -Instruct starting with Qwen2.5, but the underlying training recipe is similar. There is no meaningful technical difference between -instruct and -chat across families; it is purely a naming preference.",
       "seen_in": [
@@ -4121,7 +4065,7 @@
       "id": "tag-long",
       "name": "-Long",
       "expansion": "Extended context window variant",
-      "category": "family-tags",
+      "category": "model-naming",
       "oneliner": "Trained or fine-tuned for longer sequences. Some use -Long suffix, others embed context length in name (128K, 1M).",
       "explanation": "A -Long or context-length tag means the model's context window has been extended beyond its base training length, typically using RoPE scaling techniques like YaRN, NTK-aware interpolation, or Adjusted Base Frequency. These models are usually continued-trained on long documents after the base RoPE modification. Performance may degrade at the extreme ends of the claimed range, so check the model card for validated effective lengths.",
       "seen_in": [
@@ -4145,7 +4089,7 @@
       "id": "tag-math",
       "name": "-Math",
       "expansion": "Math-optimized model",
-      "category": "capability-tags",
+      "category": "model-naming",
       "oneliner": "Specialized for mathematical reasoning via training data and reward signals. Qwen2.5-Math, DeepSeek-Math.",
       "explanation": "The -Math suffix signals a model fine-tuned specifically for mathematical reasoning. Qwen2.5-Math-7B and DeepSeek-Math-7B are evaluated on GSM8K, MATH, and competition-level benchmarks. Some math models employ tool-augmented reasoning, invoking a code interpreter to handle arithmetic rather than relying on the LLM's native calculation ability. If your use case is general chat, a math-tagged model may be less helpful.",
       "seen_in": [
@@ -4168,7 +4112,7 @@
       "id": "tag-merged",
       "name": "-merged / -unmerged",
       "expansion": "Adapter merge state",
-      "category": "adapter-tags",
+      "category": "model-naming",
       "oneliner": "-merged: LoRA folded into base weights (standalone, no overhead, irreversible). -unmerged: adapter separate (can hot-swap, needs PEFT loading).",
       "explanation": "A merged adapter model has the LoRA weight deltas baked into the base model weights, producing full-size checkpoint files that load like any standard model. An unmerged model ships the adapter files separately alongside a pointer to the base model, which saves storage but requires PEFT-aware loading code. If you see -merged in the name, expect larger files but simpler deployment.",
       "seen_in": [
@@ -4193,7 +4137,7 @@
       "id": "tag-moe-suffix",
       "name": "-MOE / -MoE",
       "expansion": "Mixture-of-Experts architecture",
-      "category": "family-tags",
+      "category": "model-naming",
       "oneliner": "Explicit MoE tag. Qwen2.5-MoE-A14B, DBRX (MoE). Mixtral uses 8x7B notation instead.",
       "explanation": "Some model families explicitly tag themselves with -MoE in the name (Qwen2.5-MoE-A2.7B), while others encode the mixture structure in the expert notation instead (Mixtral-8x7B). If neither appears in the name, check config.json for num_local_experts: a value greater than one confirms a MoE architecture. This matters because MoE models require more total memory than their active parameter count suggests.",
       "seen_in": [
@@ -4216,7 +4160,7 @@
       "id": "tag-mrl",
       "name": "-MRL",
       "expansion": "Matryoshka Representation Learning",
-      "category": "capability-tags",
+      "category": "model-naming",
       "oneliner": "Embedding model supporting variable-dimensionality outputs — truncate to smaller sizes with minimal quality loss. Named after Russian nesting dolls.",
       "explanation": "MRL stands for Matryoshka Representation Learning, a training technique that makes an embedding model useful at multiple output dimensions. You can truncate its full-dimension output to a smaller size and still get competitive retrieval quality. This lets you trade storage and computation cost against accuracy at inference time without retraining. When you see MRL in a model name or card, it means you can freely choose your embedding dimension.",
       "seen_in": [
@@ -4240,7 +4184,7 @@
       "id": "tag-reward",
       "name": "-Reward / -RM",
       "expansion": "Reward model",
-      "category": "capability-tags",
+      "category": "model-naming",
       "oneliner": "Outputs scalar preference scores for (prompt, response) pairs. Used in RLHF pipelines or best-of-N reranking. Not generative.",
       "explanation": "A reward model takes a prompt-response pair and outputs a scalar score indicating quality. Starling-RM-34B and tulu-v3.1-8b-rl-rm are examples. Reward models are a critical component of the RLHF pipeline and are also used standalone for best-of-N reranking at inference time. These are classifier-like models, not generators, so you call them differently from chat models.",
       "seen_in": [
@@ -4262,7 +4206,7 @@
       "id": "tag-scale",
       "name": "-Nano/-Micro/-Mini/-Small/-Tiny/-Lite/-Pro/-Turbo/-Large/-Max/-Ultra",
       "expansion": "Relative scale/quality tiers within a model family",
-      "category": "scale-tags",
+      "category": "model-naming",
       "oneliner": "NOT standardized across families. Mistral 'Small' = 24B. Phi 'Mini' = 3.8B. Always check actual param count. -Turbo = speed-optimized (OpenAI convention).",
       "explanation": "Scale-tier tags like -Lite, -Mini, -Small, -Pro, -Max, and -Ultra indicate relative positioning within a model family rather than absolute parameter counts. Mistral Small is 24B parameters. Phi-3 uses Mini for its 3.8B model. -Turbo typically signals speed optimization. -Pro, -Max, and -Ultra are more common in API product naming than in open-weight HuggingFace repos. Always check the actual parameter count.",
       "seen_in": [
@@ -4284,7 +4228,7 @@
       "id": "tag-scout-maverick",
       "name": "Scout / Maverick (Llama 4)",
       "expansion": "Llama 4 MoE scale variants",
-      "category": "family-tags",
+      "category": "model-naming",
       "oneliner": "Scout: 17B active, 16 experts (109B total), 10M context. Maverick: 17B active, 128 experts (400B+ total), higher quality.",
       "explanation": "Scout and Maverick are the two variants of Meta's Llama 4 MoE family, released April 2025. Both use the same active parameter count but differ in total experts: Scout has 16 experts while Maverick has 128. The 16E/128E notation in the name tells you the expert count directly. More experts with the same active count means a larger total model requiring more memory but enabling more specialized routing per token.",
       "seen_in": [
@@ -4307,7 +4251,7 @@
       "id": "tag-vision",
       "name": "-V / -VL / -Vision",
       "expansion": "Vision-language multimodal",
-      "category": "capability-tags",
+      "category": "model-naming",
       "oneliner": "Accepts image (and sometimes video) inputs. -VL (Qwen), -Vision (Llama). Has an added vision encoder (often ViT) + projection layers.",
       "explanation": "A -Vision or -VL tag indicates a multimodal model that accepts both text and image inputs. Qwen2.5-VL-7B, Llama-3.2-11B-Vision, and InternVL are examples. These are architecturally distinct from text-only variants because they include a vision encoder (often a ViT) plus a projection layer that maps image patches into the token embedding space. Parameter counts usually include the vision encoder.",
       "seen_in": [
@@ -4329,7 +4273,7 @@
       "id": "token",
       "name": "Token",
       "expansion": "Token (subword unit)",
-      "category": "core-concepts",
+      "category": "quantization-basics",
       "oneliner": "The smallest text unit an LLM reads and generates — typically a subword piece, not a full word.",
       "explanation": "A token is the atomic unit of text that a language model processes. Before any text reaches a model, a tokenizer splits it into tokens — subword pieces drawn from a fixed vocabulary. The word 'unbelievable' might become ['un', 'believ', 'able']. Vocabulary size is a key design choice: GPT-2 uses 50,257 tokens, LLaMA 2 uses 32,000, and GPT-4 uses roughly 100,000. Larger vocabularies encode text more efficiently but increase embedding table size and softmax cost. Most modern tokenizers use Byte-Pair Encoding.",
       "fundamentals": "Byte-Pair Encoding starts with a character-level vocabulary and iteratively merges the most frequent adjacent pair into a new token. After $k$ merges the vocabulary has $|V_0| + k$ entries. The compression ratio — characters per token — typically lands between 3 and 5 for English. The final softmax over the vocabulary has cost $O(|V| \\cdot d_{\\text{model}})$, so doubling $|V|$ roughly doubles that layer's compute.",
@@ -4758,7 +4702,7 @@
       "id": "w4a16",
       "name": "W4A16",
       "expansion": "4-bit Weights, 16-bit Activations",
-      "category": "core-concepts",
+      "category": "quantization-basics",
       "oneliner": "Weight-only quantization: weights stored in 4-bit, dequantized to fp16 on-the-fly for computation. Saves memory, compute stays fp16.",
       "explanation": "The standard for memory-constrained inference (consumer GPUs, llama.cpp). Weights read from memory in 4-bit (small, fast), dequantized in registers to fp16, then standard fp16 GEMM. Saves memory bandwidth but compute is still fp16 — no compute speedup for large batches. Contrast with W8A8 where both operands are quantized and integer math provides both memory and compute savings.",
       "fundamentals": "Inference per layer: 1) Read int4 weights from memory. 2) Dequantize: W_fp16 = scale $\\times$ (W_int4 - zero_point). 3) GEMM: Y = X_fp16 @ W_fp16. Memory bandwidth savings: 4$\\times$ vs fp16. Compute savings: none (still fp16 GEMM). For batch=1 (memory-bound): ~4$\\times$ throughput. For large batches (compute-bound): no speedup.",
@@ -4789,7 +4733,7 @@
       "id": "w8a8",
       "name": "W8A8",
       "expansion": "8-bit Weights, 8-bit Activations",
-      "category": "core-concepts",
+      "category": "quantization-basics",
       "oneliner": "Both weights and activations quantized to 8-bit — saves memory AND compute via integer arithmetic. Standard for data-center serving.",
       "explanation": "W8A8 quantization stores both weights and activations in 8-bit integer format, enabling integer matrix multiplication on tensor cores. Unlike weight-only quantization which only saves memory bandwidth, W8A8 provides both memory savings and a compute speedup because both operands of the matrix multiply are quantized. The challenge is that activations must be quantized at runtime, which is harder due to input-dependent distributions and outlier values. SmoothQuant makes this practical by redistributing quantization difficulty from activations to weights.",
       "fundamentals": "Inference: 1) Quantize activation: X_int8 = round(X_fp16/s_x). 2) Read int8 weights. 3) INT8 GEMM: Y_int32 = X_int8 @ W_int8. 4) Dequantize: Y_fp16 = Y_int32 $\\times$ s_x $\\times$ s_w. Key difference from W4A16: saves both bandwidth AND compute. For large batch sizes (compute-bound workloads), W8A8 provides real speedup while W4A16 does not.",

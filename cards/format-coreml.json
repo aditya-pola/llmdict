@@ -2,7 +2,7 @@
   "id": "format-coreml",
   "name": "CoreML",
   "expansion": "Apple's ML format for on-device inference",
-  "category": "export-formats",
+  "category": "formats",
   "oneliner": ".mlmodel/.mlpackage files. Runs on Apple Neural Engine, GPU, CPU transparently. For iOS/macOS apps. Converter: coremltools.",
   "seen_in": [
     "filename"

@@ -2,7 +2,7 @@
   "id": "size-context",
   "name": "K / M (Context length)",
   "expansion": "Thousands / Millions of tokens context",
-  "category": "size-conventions",
+  "category": "model-naming",
   "oneliner": "128K = 128,000 token context. 1M = 1 million. Distinguishes long-context variants from defaults.",
   "explanation": "A number like 1M, 128K, or 4K in the model name indicates the maximum context window in tokens. Qwen2.5-7B-Instruct-1M supports up to one million tokens, while Llama-3.1 variants advertise 128K in their model cards even though it rarely appears in the repo name. Not every model puts this in the title, so you may need to check config.json for max_position_embeddings.",
   "seen_in": [

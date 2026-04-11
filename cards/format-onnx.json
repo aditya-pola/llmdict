@@ -2,7 +2,7 @@
   "id": "format-onnx",
   "name": "ONNX",
   "expansion": "Open Neural Network Exchange",
-  "category": "export-formats",
+  "category": "formats",
   "oneliner": "Open format for ML computation graphs. Train in PyTorch, export to ONNX, run anywhere via ONNX Runtime (CPU, CUDA, DirectML, TensorRT). Key for edge/Windows.",
   "seen_in": [
     "filename",

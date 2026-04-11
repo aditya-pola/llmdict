@@ -2,7 +2,7 @@
   "id": "tag-guard",
   "name": "-Guard / -Shield",
   "expansion": "Safety classifier model",
-  "category": "capability-tags",
+  "category": "model-naming",
   "oneliner": "Detects harmful content, prompt injections, policy violations. Outputs safe/unsafe classification, not generative text. Llama-Guard-3.",
   "explanation": "Guard models like Llama-Guard-3-8B are classifiers trained to flag unsafe content in prompts or model responses. They run as a filter alongside your main generative model, receiving a prompt-response pair and returning a safety label. Deploy one before or after generation to enforce content policies without modifying the main model. Guard models are small enough to run alongside the generator with minimal latency overhead.",
   "seen_in": [

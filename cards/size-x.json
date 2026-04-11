@@ -2,7 +2,7 @@
   "id": "size-x",
   "name": "x (MoE expert notation)",
   "expansion": "Experts × expert size (e.g., 8x7B)",
-  "category": "size-conventions",
+  "category": "model-naming",
   "oneliner": "Mixtral-style: 8x7B = 8 experts of ~7B each. Total ≠ 8$\\times$7B due to shared attention layers. Active = top-k experts worth.",
   "explanation": "The NxSB pattern popularized by Mixtral describes Mixture-of-Experts model sizes, where N is the number of experts and S is the size of each expert. For example, 8x7B means 8 experts of roughly 7 billion parameters each, but the total parameter count is about 46.7 billion rather than 56 billion because the attention layers are shared across all experts. The active parameter count per token is much smaller, around 12.9 billion for Mixtral since only the top 2 experts are selected for each token.",
   "seen_in": [

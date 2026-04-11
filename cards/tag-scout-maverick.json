@@ -2,7 +2,7 @@
   "id": "tag-scout-maverick",
   "name": "Scout / Maverick (Llama 4)",
   "expansion": "Llama 4 MoE scale variants",
-  "category": "family-tags",
+  "category": "model-naming",
   "oneliner": "Scout: 17B active, 16 experts (109B total), 10M context. Maverick: 17B active, 128 experts (400B+ total), higher quality.",
   "explanation": "Scout and Maverick are the two variants of Meta's Llama 4 MoE family, released April 2025. Both use the same active parameter count but differ in total experts: Scout has 16 experts while Maverick has 128. The 16E/128E notation in the name tells you the expert count directly. More experts with the same active count means a larger total model requiring more memory but enabling more specialized routing per token.",
   "seen_in": [

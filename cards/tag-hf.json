@@ -2,7 +2,7 @@
   "id": "tag-hf",
   "name": "-hf",
   "expansion": "HuggingFace-compatible format",
-  "category": "training-tags",
+  "category": "model-naming",
   "oneliner": "Weights converted to HuggingFace transformers format (safetensors + config.json). Does NOT mean 'hosted on HF'. Without -hf may need custom loading.",
   "explanation": "The -hf suffix means the checkpoint has been converted to HuggingFace Transformers format with standard PyTorch weight files and a config.json. Early Llama 2 releases shipped in Meta's internal format, so the community created -hf conversions. Starting with Llama 3 and most 2024-era releases, models ship HF-native, so the suffix is disappearing. If you see a repo without -hf, check whether it contains a config.json.",
   "seen_in": [

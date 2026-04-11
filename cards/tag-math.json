@@ -2,7 +2,7 @@
   "id": "tag-math",
   "name": "-Math",
   "expansion": "Math-optimized model",
-  "category": "capability-tags",
+  "category": "model-naming",
   "oneliner": "Specialized for mathematical reasoning via training data and reward signals. Qwen2.5-Math, DeepSeek-Math.",
   "explanation": "The -Math suffix signals a model fine-tuned specifically for mathematical reasoning. Qwen2.5-Math-7B and DeepSeek-Math-7B are evaluated on GSM8K, MATH, and competition-level benchmarks. Some math models employ tool-augmented reasoning, invoking a code interpreter to handle arithmetic rather than relying on the LLM's native calculation ability. If your use case is general chat, a math-tagged model may be less helpful.",
   "seen_in": [

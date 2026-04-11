@@ -2,7 +2,7 @@
   "id": "tag-alignment",
   "name": "-sft / -dpo / -rlhf / -orpo / -kto",
   "expansion": "Specific alignment method used",
-  "category": "training-tags",
+  "category": "model-naming",
   "oneliner": "Signals which training stage/method produced the model. -sft = supervised only. -dpo = DPO-aligned. Often released in pairs for comparison.",
   "explanation": "Alignment-method suffixes like -sft, -dpo, -rlhf, -kto, or -orpo tell you exactly which post-training recipe was applied. Researchers publish these to enable direct comparisons: for instance, zephyr-7b-sft-full used only supervised fine-tuning while zephyr-7b-beta added a round of DPO on top. If you are benchmarking alignment approaches, these tags let you isolate the effect of each training phase.",
   "seen_in": [
