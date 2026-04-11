@@ -591,8 +591,7 @@
       "explanation": "API providers host language models and offer them as a service via HTTP endpoints, so you can use powerful models without managing GPU infrastructure. OpenAI (GPT-4, o1), Anthropic (Claude), and Google (Gemini) offer proprietary models. Together AI, Fireworks, and Groq offer open-weight models (Llama, Mistral, Qwen) at competitive prices with high throughput. Groq is notable for custom LPU hardware delivering extremely low latency.",
       "related": [
         "inference",
-        "inference-engine",
-        "model-serving"
+        "inference-engine"
       ],
       "seen_in": [
         "documentation"
@@ -8607,7 +8606,7 @@
       "name": "YaRN",
       "expansion": "Yet another RoPE extensioN",
       "category": "position-encodings",
-      "oneliner": "Improved RoPE extension: divides frequency bands into three zones (untouched / ramped / fully interpolated) plus attention temperature scaling. Achieves 64-128$\\times$ extension with ~400 fine-tuning steps.",
+      "oneliner": "Improved RoPE context extension that treats different frequency bands separately — untouched, interpolated, or ramped — achieving large context extensions with minimal fine-tuning.",
       "explanation": "YaRN is a method for extending a RoPE-based model's context window well beyond its training length. It improves on simpler scaling approaches by treating different frequency bands separately: high-frequency components encoding local positions are left unchanged, low-frequency components for global positions are interpolated, and a smooth ramp connects the two zones. With only about 400 fine-tuning steps, YaRN achieved 32x context extension on Llama 2.",
       "fundamentals": "Define $r_i$ = $\\lambda_i$/L (wavelength/context ratio). Thresholds $\\alpha$=1, $\\beta$=32. If $r_i$<$\\alpha$: no scaling. If $r_i$>$\\beta$: full interpolation (÷s). Between: ramp $\\gamma_i$ = ($r_i$-$\\alpha$)/($\\beta$-$\\alpha$), scale = 1/(1+$\\gamma_i$·(s-1)). Temperature: attention *= $\\sqrt{1/t}$ where t $\\approx$ 0.1·ln(s)+1. Three-part approach preserves local precision while extending global range — key improvement over uniform NTK. Extension: LLaMA 2 7B/13B to 64K-128K, passkey retrieval passing at 128K.",
       "seen_in": [
