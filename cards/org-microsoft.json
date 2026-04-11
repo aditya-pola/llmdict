@@ -17,5 +17,6 @@
     }
   ],
   "confidence": "high",
-  "verified_date": "2026-04-10"
+  "verified_date": "2026-04-10",
+  "explanation": "Microsoft Research produces the Phi series of small language models which demonstrate that carefully curated, textbook-quality training data can make compact models perform far above their size class. Phi-3 Mini at 3.8B parameters rivals models several times larger on many benchmarks. The models are MIT-licensed, making them attractive for on-device and embedded deployments where size and licensing flexibility both matter."
 }

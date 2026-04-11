@@ -19,5 +19,6 @@
     }
   ],
   "confidence": "high",
-  "verified_date": "2026-04-10"
+  "verified_date": "2026-04-10",
+  "explanation": "SGLang is both a serving backend and a frontend programming language for LLM applications. Its key innovation, RadixAttention, reuses KV cache across requests that share common prefixes, which speeds up workloads like multi-turn chat and branching prompts. The frontend DSL lets developers express complex generation patterns in clean Python. It consistently ranks among the fastest open-source serving engines in benchmarks."
 }

@@ -17,5 +17,6 @@
       "label": "TheBloke HuggingFace profile",
       "url": "https://huggingface.co/TheBloke"
     }
-  ]
+  ],
+  "explanation": "TheBloke was the most prolific quantizer on HuggingFace during 2023, converting hundreds of models into GPTQ and GGUF formats so the community could run them on consumer hardware. At a time when most model releases were full-precision only, TheBloke's repos were often the first place users went to grab a runnable version. The account is now largely inactive, with the quantization mantle passed to bartowski and others."
 }

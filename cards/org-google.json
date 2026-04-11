@@ -19,5 +19,6 @@
       "label": "Gemma Technical Report",
       "url": "https://arxiv.org/abs/2403.08295"
     }
-  ]
+  ],
+  "explanation": "Google has released several open-weight model families derived from its Gemini research, including the Gemma series, T5, FLAN-T5, and the multimodal PaLiGemma. Gemma models are known for strong performance relative to their size and come with permissive licenses suitable for commercial use. Google also contributes foundational research like the Transformer architecture itself and training techniques widely adopted across the field."
 }

@@ -21,5 +21,6 @@
       "label": "coremltools",
       "url": "https://github.com/apple/coremltools"
     }
-  ]
+  ],
+  "explanation": "Core ML is Apple's on-device machine learning framework, using .mlmodel and .mlpackage file formats. It automatically dispatches inference across the Apple Neural Engine, GPU, and CPU for optimal performance on iPhones, iPads, and Macs. Developers integrate models directly into iOS and macOS apps with a few lines of Swift, and Apple's tools handle hardware-specific optimization transparently."
 }

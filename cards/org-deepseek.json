@@ -19,5 +19,6 @@
     }
   ],
   "confidence": "high",
-  "verified_date": "2026-04-10"
+  "verified_date": "2026-04-10",
+  "explanation": "DeepSeek is a Chinese AI lab that has pushed open-weight model architecture forward with innovations like Multi-head Latent Attention, which compresses KV caches to reduce memory use, and DeepSeekMoE, an efficient mixture-of-experts design. Their DeepSeek-R1 model brought open chain-of-thought reasoning to the community, showing step-by-step problem solving previously seen only in closed models like OpenAI's o1."
 }

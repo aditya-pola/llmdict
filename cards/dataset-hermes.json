@@ -18,5 +18,6 @@
       "label": "OpenHermes-2.5 dataset",
       "url": "https://huggingface.co/datasets/teknium/OpenHermes-2.5"
     }
-  ]
+  ],
+  "explanation": "OpenHermes is a large-scale instruction-tuning dataset containing roughly one million diverse examples formatted in ChatML. Created by Teknium and NousResearch, it covers general knowledge, coding, roleplay, and function calling. Models fine-tuned on Hermes consistently rank well on community benchmarks, making it one of the most widely used open instruction datasets for training capable chat models."
 }

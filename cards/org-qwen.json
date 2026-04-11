@@ -19,5 +19,6 @@
       "label": "Qwen2 Technical Report",
       "url": "https://arxiv.org/abs/2407.10671"
     }
-  ]
+  ],
+  "explanation": "Qwen is Alibaba Cloud's open-weight model family, spanning the Qwen 1.5, 2, and 2.5 series plus the QwQ reasoning model. The models are released under Apache 2.0 and offer strong multilingual performance, especially in Chinese and English. Qwen 2.5 is competitive with leading models at every parameter count from 0.5B to 72B. The family also includes vision, code, and math specialist variants."
 }

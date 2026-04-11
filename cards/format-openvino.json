@@ -17,5 +17,6 @@
       "label": "OpenVINO GitHub",
       "url": "https://github.com/openvinotoolkit/openvino"
     }
-  ]
+  ],
+  "explanation": "OpenVINO is Intel's toolkit for optimizing and deploying inference workloads on Intel hardware. It converts models from PyTorch or ONNX into its own Intermediate Representation format, then applies INT8 and INT4 quantization along with graph-level optimizations. The result is significantly faster inference on Intel CPUs and integrated GPUs, making it the go-to choice for deploying AI on Intel-based servers and edge devices."
 }

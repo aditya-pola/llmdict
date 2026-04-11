@@ -17,5 +17,6 @@
     }
   ],
   "confidence": "high",
-  "verified_date": "2026-04-10"
+  "verified_date": "2026-04-10",
+  "explanation": "Open-Platypus is a carefully curated collection of roughly 25,000 STEM reasoning questions drawn from sources like ScienceQA and MATH benchmarks. Despite its small size, Platypus2-70B briefly topped the Hugging Face Open LLM Leaderboard in August 2023, demonstrating that high-quality data curation can outperform brute-force scale. It focuses on logical and scientific reasoning rather than broad instruction-following."
 }

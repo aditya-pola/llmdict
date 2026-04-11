@@ -17,5 +17,6 @@
       "label": "NousResearch HuggingFace profile",
       "url": "https://huggingface.co/NousResearch"
     }
-  ]
+  ],
+  "explanation": "Nous Research is a community-driven lab known for the Hermes fine-tune series, which adds strong instruction-following and function-calling capabilities to popular base models like Llama and Mistral. Hermes models use the ChatML prompt format and are widely adopted for agent and tool-use applications. Nous also runs research into synthetic data generation and model merging techniques that benefit the broader open-weight community."
 }

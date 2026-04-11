@@ -19,5 +19,6 @@
       "label": "llama.cpp GitHub",
       "url": "https://github.com/ggerganov/llama.cpp"
     }
-  ]
+  ],
+  "explanation": "llama.cpp is a C/C++ inference engine created by Georgi Gerganov that makes it possible to run large language models on consumer hardware, including CPUs. It defined the GGUF file format, which has become the standard for quantized model distribution. Users can offload selected layers to a GPU for extra speed while keeping the rest in system RAM. Its efficiency and portability spawned an entire ecosystem of local-inference tools built on top of it."
 }

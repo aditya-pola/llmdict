@@ -22,5 +22,6 @@
       "label": "Ollama website",
       "url": "https://ollama.com"
     }
-  ]
+  ],
+  "explanation": "Ollama is a command-line tool and background service that wraps llama.cpp into a seamless local experience. A single command like 'ollama run llama3' downloads the model weights and starts an interactive chat. It exposes a local REST API compatible with the OpenAI format, so apps can swap between local and cloud models easily. Modelfiles let users customize system prompts, parameters, and adapters in a Dockerfile-like syntax."
 }

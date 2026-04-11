@@ -18,5 +18,6 @@
       "label": "Mradermacher HuggingFace profile",
       "url": "https://huggingface.co/mradermacher"
     }
-  ]
+  ],
+  "explanation": "mradermacher is a HuggingFace account that runs high-volume automated quantization pipelines, producing GGUF versions of a vast number of models including obscure fine-tunes and niche variants that other quantizers skip. While bartowski focuses on prominent releases with careful calibration, mradermacher prioritizes breadth and coverage. This makes the account a valuable last-resort source when searching for quantized versions of lesser-known models."
 }

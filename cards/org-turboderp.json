@@ -17,5 +17,6 @@
       "label": "ExLlamaV2 GitHub",
       "url": "https://github.com/turboderp/exllamav2"
     }
-  ]
+  ],
+  "explanation": "turboderp is the solo developer behind the ExLlamaV2 inference engine and the EXL2 quantization format. They maintain the engine, publish EXL2-format quantizations of popular models, and actively benchmark performance on consumer NVIDIA GPUs. Their work is particularly valued by users running 70B-class models on single GPUs like the RTX 4090, where the variable-bitwidth EXL2 format maximizes quality within tight VRAM budgets."
 }

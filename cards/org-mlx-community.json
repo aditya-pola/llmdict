@@ -19,5 +19,6 @@
       "label": "Apple MLX GitHub",
       "url": "https://github.com/ml-explore/mlx"
     }
-  ]
+  ],
+  "explanation": "The MLX Community is a collaborative HuggingFace organization that publishes models converted to Apple's MLX format, optimized for Apple Silicon chips like M1 through M4. MLX leverages the unified memory architecture of these chips, allowing models to use both CPU and GPU memory seamlessly. The community ensures that popular new models are quickly available in MLX format, making it the main hub for Mac-native local inference."
 }

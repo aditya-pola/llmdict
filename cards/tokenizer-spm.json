@@ -20,5 +20,6 @@
     }
   ],
   "confidence": "high",
-  "verified_date": "2026-04-10"
+  "verified_date": "2026-04-10",
+  "explanation": "SentencePiece is a language-independent tokenizer that operates directly on raw Unicode text without requiring pre-tokenization or whitespace splitting. It supports two subword algorithms: Byte-Pair Encoding and Unigram Language Model. Llama 1 and Llama 2 use its BPE mode, while T5 uses Unigram. Because it treats input as a raw byte stream, it handles any language or script without special preprocessing rules."
 }

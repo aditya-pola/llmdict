@@ -17,5 +17,6 @@
     }
   ],
   "confidence": "high",
-  "verified_date": "2026-04-10"
+  "verified_date": "2026-04-10",
+  "explanation": "Meta AI is the research division behind the Llama family of open-weight language models, spanning Llama 1 through Llama 4. By releasing powerful models with permissive licenses, Meta catalyzed the entire open-weight ecosystem — most fine-tunes, quantizations, and serving tools were first built around Llama. The Llama 3 series matched or exceeded many closed models at equivalent sizes, making it the most widely fine-tuned base model family."
 }

@@ -17,5 +17,6 @@
       "label": "TGI GitHub",
       "url": "https://github.com/huggingface/text-generation-inference"
     }
-  ]
+  ],
+  "explanation": "Text Generation Inference (TGI) is HuggingFace's production-grade serving solution for large language models. It pairs a high-performance Rust-based HTTP router with Python model backends, handling continuous batching, token streaming, and quantization out of the box. TGI integrates tightly with the HuggingFace Hub, making it straightforward to deploy any compatible model. It powers the Inference API behind many HuggingFace-hosted endpoints."
 }

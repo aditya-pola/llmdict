@@ -23,5 +23,6 @@
       "label": "UltraFeedback dataset",
       "url": "https://huggingface.co/datasets/openbmb/UltraFeedback"
     }
-  ]
+  ],
+  "explanation": "UltraChat is a synthetic dataset of approximately 1.5 million multi-turn conversations designed for supervised fine-tuning of chat models. Its companion, UltraFeedback, contains around 64,000 instructions each paired with four model responses scored by GPT-4 for helpfulness and quality, making it ideal for Direct Preference Optimization. Together they power models like Zephyr-7B-beta."
 }

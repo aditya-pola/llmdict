@@ -19,5 +19,6 @@
     }
   ],
   "confidence": "high",
-  "verified_date": "2026-04-10"
+  "verified_date": "2026-04-10",
+  "explanation": "WordPiece is a subword tokenization algorithm that selects merges by maximizing the likelihood of the training corpus rather than simply picking the most frequent pair, as BPE does. Continuation tokens are marked with a ## prefix, so 'playing' might become 'play' and '##ing'. It is the tokenizer behind BERT, DistilBERT, and most models in the original Transformer encoder family from Google."
 }

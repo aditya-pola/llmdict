@@ -18,5 +18,6 @@
     }
   ],
   "confidence": "high",
-  "verified_date": "2026-04-10"
+  "verified_date": "2026-04-10",
+  "explanation": "Evol-Instruct is a data synthesis method from Microsoft Research that uses an LLM to iteratively rewrite simple instructions into progressively more complex versions. Each evolution step adds constraints, deepens reasoning, or broadens scope. This technique generates the training data behind WizardLM and WizardCoder, producing models that handle nuanced, multi-step prompts far better than models trained on basic instruction pairs."
 }

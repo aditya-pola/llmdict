@@ -15,5 +15,6 @@
       "label": "Eric Hartford's 'Uncensored Models' blog post",
       "url": "https://erichartford.com/uncensored-models"
     }
-  ]
+  ],
+  "explanation": "Dolphin is an instruction-tuning dataset derived from high-quality sources like FLANv2 and OpenOrca, with alignment refusals and safety filters systematically stripped out. Created by Eric Hartford, its philosophy is that censorship decisions belong to the end user, not the training data. Dolphin-tuned models follow instructions without built-in refusals, which makes them popular for unrestricted research and customization."
 }

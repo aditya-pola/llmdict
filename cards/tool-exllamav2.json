@@ -18,5 +18,6 @@
       "label": "ExLlamaV2 GitHub",
       "url": "https://github.com/turboderp/exllamav2"
     }
-  ]
+  ],
+  "explanation": "ExLlamaV2 is a CUDA-optimized inference engine built by turboderp, focused on maximum speed on NVIDIA consumer GPUs like the RTX 3090 and 4090. It introduced the EXL2 quantization format, which assigns different bit widths to different layers based on their sensitivity, squeezing more quality out of a given memory budget. Benchmarks often show it delivering the fastest single-GPU token generation for models that fit in VRAM."
 }

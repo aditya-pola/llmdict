@@ -17,5 +17,6 @@
       "label": "LM Studio website",
       "url": "https://lmstudio.ai"
     }
-  ]
+  ],
+  "explanation": "LM Studio is a desktop GUI application that lets users browse, download, and run open-weight language models locally without touching a terminal. Under the hood it uses llama.cpp on Windows and Linux, and Apple MLX on Mac, choosing the fastest backend automatically. It provides a chat interface, a local OpenAI-compatible API server, and model search across HuggingFace. It has become one of the most popular ways non-developers interact with local LLMs."
 }

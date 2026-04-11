@@ -18,5 +18,6 @@
       "label": "tiktoken GitHub",
       "url": "https://github.com/openai/tiktoken"
     }
-  ]
+  ],
+  "explanation": "Tiktoken is OpenAI's open-source tokenizer library, written in Rust with Python bindings, making it significantly faster than alternatives like HuggingFace tokenizers. It uses pre-compiled BPE merge tables rather than learning them at runtime. Tiktoken powers the tokenization for GPT-3.5, GPT-4, and the Qwen model family. Its speed advantage matters most in applications that need to count or split tokens at high throughput."
 }

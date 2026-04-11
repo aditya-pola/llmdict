@@ -19,5 +19,6 @@
     }
   ],
   "confidence": "high",
-  "verified_date": "2026-04-10"
+  "verified_date": "2026-04-10",
+  "explanation": "The Orca dataset captures detailed step-by-step reasoning traces from GPT-4, not just final answers. Smaller models trained on these traces learn the thinking process itself, a technique Microsoft Research calls explanation tuning. Orca-series models showed that a 13-billion-parameter model could match GPT-3.5 on many benchmarks by imitating how a stronger model reasons through problems rather than memorizing outputs."
 }

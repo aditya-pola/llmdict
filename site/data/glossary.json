@@ -673,7 +673,8 @@
           "label": "Eric Hartford's 'Uncensored Models' blog post",
           "url": "https://erichartford.com/uncensored-models"
         }
-      ]
+      ],
+      "explanation": "Dolphin is an instruction-tuning dataset derived from high-quality sources like FLANv2 and OpenOrca, with alignment refusals and safety filters systematically stripped out. Created by Eric Hartford, its philosophy is that censorship decisions belong to the end user, not the training data. Dolphin-tuned models follow instructions without built-in refusals, which makes them popular for unrestricted research and customization."
     },
     "dataset-evolinstruct": {
       "id": "dataset-evolinstruct",
@@ -695,7 +696,8 @@
         }
       ],
       "confidence": "high",
-      "verified_date": "2026-04-10"
+      "verified_date": "2026-04-10",
+      "explanation": "Evol-Instruct is a data synthesis method from Microsoft Research that uses an LLM to iteratively rewrite simple instructions into progressively more complex versions. Each evolution step adds constraints, deepens reasoning, or broadens scope. This technique generates the training data behind WizardLM and WizardCoder, producing models that handle nuanced, multi-step prompts far better than models trained on basic instruction pairs."
     },
     "dataset-hermes": {
       "id": "dataset-hermes",
@@ -717,7 +719,8 @@
           "label": "OpenHermes-2.5 dataset",
           "url": "https://huggingface.co/datasets/teknium/OpenHermes-2.5"
         }
-      ]
+      ],
+      "explanation": "OpenHermes is a large-scale instruction-tuning dataset containing roughly one million diverse examples formatted in ChatML. Created by Teknium and NousResearch, it covers general knowledge, coding, roleplay, and function calling. Models fine-tuned on Hermes consistently rank well on community benchmarks, making it one of the most widely used open instruction datasets for training capable chat models."
     },
     "dataset-orca": {
       "id": "dataset-orca",
@@ -740,7 +743,8 @@
         }
       ],
       "confidence": "high",
-      "verified_date": "2026-04-10"
+      "verified_date": "2026-04-10",
+      "explanation": "The Orca dataset captures detailed step-by-step reasoning traces from GPT-4, not just final answers. Smaller models trained on these traces learn the thinking process itself, a technique Microsoft Research calls explanation tuning. Orca-series models showed that a 13-billion-parameter model could match GPT-3.5 on many benchmarks by imitating how a stronger model reasons through problems rather than memorizing outputs."
     },
     "dataset-platypus": {
       "id": "dataset-platypus",
@@ -761,7 +765,8 @@
         }
       ],
       "confidence": "high",
-      "verified_date": "2026-04-10"
+      "verified_date": "2026-04-10",
+      "explanation": "Open-Platypus is a carefully curated collection of roughly 25,000 STEM reasoning questions drawn from sources like ScienceQA and MATH benchmarks. Despite its small size, Platypus2-70B briefly topped the Hugging Face Open LLM Leaderboard in August 2023, demonstrating that high-quality data curation can outperform brute-force scale. It focuses on logical and scientific reasoning rather than broad instruction-following."
     },
     "dataset-ultrachat": {
       "id": "dataset-ultrachat",
@@ -788,7 +793,8 @@
           "label": "UltraFeedback dataset",
           "url": "https://huggingface.co/datasets/openbmb/UltraFeedback"
         }
-      ]
+      ],
+      "explanation": "UltraChat is a synthetic dataset of approximately 1.5 million multi-turn conversations designed for supervised fine-tuning of chat models. Its companion, UltraFeedback, contains around 64,000 instructions each paired with four model responses scored by GPT-4 for helpfulness and quality, making it ideal for Direct Preference Optimization. Together they power models like Zephyr-7B-beta."
     },
     "dense-models": {
       "id": "dense-models",
@@ -1140,7 +1146,8 @@
           "label": "coremltools",
           "url": "https://github.com/apple/coremltools"
         }
-      ]
+      ],
+      "explanation": "Core ML is Apple's on-device machine learning framework, using .mlmodel and .mlpackage file formats. It automatically dispatches inference across the Apple Neural Engine, GPU, and CPU for optimal performance on iPhones, iPads, and Macs. Developers integrate models directly into iOS and macOS apps with a few lines of Swift, and Apple's tools handle hardware-specific optimization transparently."
     },
     "format-ct2": {
       "id": "format-ct2",
@@ -1159,7 +1166,8 @@
           "label": "CTranslate2 GitHub",
           "url": "https://github.com/OpenNMT/CTranslate2"
         }
-      ]
+      ],
+      "explanation": "CTranslate2 is a lightweight inference engine optimized for fast CPU execution with INT8, INT16, and FP16 quantization. Originally developed by OpenNMT for translation models like MarianMT and NLLB, it also supports encoder-decoder architectures such as Whisper. However, it has seen reduced development activity since late 2024 and is less commonly used for large decoder-only LLMs compared to llama.cpp or vLLM."
     },
     "format-onnx": {
       "id": "format-onnx",
@@ -1183,7 +1191,8 @@
           "label": "ONNX Runtime",
           "url": "https://github.com/microsoft/onnxruntime"
         }
-      ]
+      ],
+      "explanation": "ONNX (Open Neural Network Exchange) is an open standard for representing machine learning computation graphs. You train a model in any framework like PyTorch or TensorFlow, export it to ONNX format, and run inference anywhere using ONNX Runtime. It supports operator-level optimizations and quantization, making it a practical choice for deploying models across CPUs, GPUs, and edge devices without framework lock-in."
     },
     "format-openvino": {
       "id": "format-openvino",
@@ -1204,7 +1213,8 @@
           "label": "OpenVINO GitHub",
           "url": "https://github.com/openvinotoolkit/openvino"
         }
-      ]
+      ],
+      "explanation": "OpenVINO is Intel's toolkit for optimizing and deploying inference workloads on Intel hardware. It converts models from PyTorch or ONNX into its own Intermediate Representation format, then applies INT8 and INT4 quantization along with graph-level optimizations. The result is significantly faster inference on Intel CPUs and integrated GPUs, making it the go-to choice for deploying AI on Intel-based servers and edge devices."
     },
     "fp16": {
       "id": "fp16",
@@ -2356,7 +2366,8 @@
           "label": "bartowski HuggingFace profile",
           "url": "https://huggingface.co/bartowski"
         }
-      ]
+      ],
+      "explanation": "bartowski is a HuggingFace contributor who produces GGUF quantizations of new models typically within hours of their release. Each repo includes a comprehensive range of quant levels from Q2 to Q8, with consistent naming conventions and imatrix-calibrated variants for better quality at low bit widths. This speed and consistency have made bartowski the go-to source for GGUF files in the current open-weight ecosystem."
     },
     "org-deepseek": {
       "id": "org-deepseek",
@@ -2379,7 +2390,8 @@
         }
       ],
       "confidence": "high",
-      "verified_date": "2026-04-10"
+      "verified_date": "2026-04-10",
+      "explanation": "DeepSeek is a Chinese AI lab that has pushed open-weight model architecture forward with innovations like Multi-head Latent Attention, which compresses KV caches to reduce memory use, and DeepSeekMoE, an efficient mixture-of-experts design. Their DeepSeek-R1 model brought open chain-of-thought reasoning to the community, showing step-by-step problem solving previously seen only in closed models like OpenAI's o1."
     },
     "org-google": {
       "id": "org-google",
@@ -2402,7 +2414,8 @@
           "label": "Gemma Technical Report",
           "url": "https://arxiv.org/abs/2403.08295"
         }
-      ]
+      ],
+      "explanation": "Google has released several open-weight model families derived from its Gemini research, including the Gemma series, T5, FLAN-T5, and the multimodal PaLiGemma. Gemma models are known for strong performance relative to their size and come with permissive licenses suitable for commercial use. Google also contributes foundational research like the Transformer architecture itself and training techniques widely adopted across the field."
     },
     "org-meta": {
       "id": "org-meta",
@@ -2423,7 +2436,8 @@
         }
       ],
       "confidence": "high",
-      "verified_date": "2026-04-10"
+      "verified_date": "2026-04-10",
+      "explanation": "Meta AI is the research division behind the Llama family of open-weight language models, spanning Llama 1 through Llama 4. By releasing powerful models with permissive licenses, Meta catalyzed the entire open-weight ecosystem — most fine-tunes, quantizations, and serving tools were first built around Llama. The Llama 3 series matched or exceeded many closed models at equivalent sizes, making it the most widely fine-tuned base model family."
     },
     "org-microsoft": {
       "id": "org-microsoft",
@@ -2444,7 +2458,8 @@
         }
       ],
       "confidence": "high",
-      "verified_date": "2026-04-10"
+      "verified_date": "2026-04-10",
+      "explanation": "Microsoft Research produces the Phi series of small language models which demonstrate that carefully curated, textbook-quality training data can make compact models perform far above their size class. Phi-3 Mini at 3.8B parameters rivals models several times larger on many benchmarks. The models are MIT-licensed, making them attractive for on-device and embedded deployments where size and licensing flexibility both matter."
     },
     "org-mistral": {
       "id": "org-mistral",
@@ -2465,7 +2480,8 @@
         }
       ],
       "confidence": "high",
-      "verified_date": "2026-04-10"
+      "verified_date": "2026-04-10",
+      "explanation": "Mistral AI is a Paris-based startup that released Mistral 7B, which outperformed Llama 2 13B despite being half the size, putting the company on the map overnight. They pioneered sliding window attention for efficient long contexts and released Mixtral 8x7B and 8x22B, bringing sparse mixture-of-experts architectures to the open-weight world. They also produce Codestral for code generation and offer commercial API endpoints alongside open releases."
     },
     "org-mlx-community": {
       "id": "org-mlx-community",
@@ -2488,7 +2504,8 @@
           "label": "Apple MLX GitHub",
           "url": "https://github.com/ml-explore/mlx"
         }
-      ]
+      ],
+      "explanation": "The MLX Community is a collaborative HuggingFace organization that publishes models converted to Apple's MLX format, optimized for Apple Silicon chips like M1 through M4. MLX leverages the unified memory architecture of these chips, allowing models to use both CPU and GPU memory seamlessly. The community ensures that popular new models are quickly available in MLX format, making it the main hub for Mac-native local inference."
     },
     "org-mradermacher": {
       "id": "org-mradermacher",
@@ -2510,7 +2527,8 @@
           "label": "Mradermacher HuggingFace profile",
           "url": "https://huggingface.co/mradermacher"
         }
-      ]
+      ],
+      "explanation": "mradermacher is a HuggingFace account that runs high-volume automated quantization pipelines, producing GGUF versions of a vast number of models including obscure fine-tunes and niche variants that other quantizers skip. While bartowski focuses on prominent releases with careful calibration, mradermacher prioritizes breadth and coverage. This makes the account a valuable last-resort source when searching for quantized versions of lesser-known models."
     },
     "org-nousresearch": {
       "id": "org-nousresearch",
@@ -2531,7 +2549,8 @@
           "label": "NousResearch HuggingFace profile",
           "url": "https://huggingface.co/NousResearch"
         }
-      ]
+      ],
+      "explanation": "Nous Research is a community-driven lab known for the Hermes fine-tune series, which adds strong instruction-following and function-calling capabilities to popular base models like Llama and Mistral. Hermes models use the ChatML prompt format and are widely adopted for agent and tool-use applications. Nous also runs research into synthetic data generation and model merging techniques that benefit the broader open-weight community."
     },
     "org-qwen": {
       "id": "org-qwen",
@@ -2554,7 +2573,8 @@
           "label": "Qwen2 Technical Report",
           "url": "https://arxiv.org/abs/2407.10671"
         }
-      ]
+      ],
+      "explanation": "Qwen is Alibaba Cloud's open-weight model family, spanning the Qwen 1.5, 2, and 2.5 series plus the QwQ reasoning model. The models are released under Apache 2.0 and offer strong multilingual performance, especially in Chinese and English. Qwen 2.5 is competitive with leading models at every parameter count from 0.5B to 72B. The family also includes vision, code, and math specialist variants."
     },
     "org-thebloke": {
       "id": "org-thebloke",
@@ -2575,7 +2595,8 @@
           "label": "TheBloke HuggingFace profile",
           "url": "https://huggingface.co/TheBloke"
         }
-      ]
+      ],
+      "explanation": "TheBloke was the most prolific quantizer on HuggingFace during 2023, converting hundreds of models into GPTQ and GGUF formats so the community could run them on consumer hardware. At a time when most model releases were full-precision only, TheBloke's repos were often the first place users went to grab a runnable version. The account is now largely inactive, with the quantization mantle passed to bartowski and others."
     },
     "org-turboderp": {
       "id": "org-turboderp",
@@ -2596,7 +2617,8 @@
           "label": "ExLlamaV2 GitHub",
           "url": "https://github.com/turboderp/exllamav2"
         }
-      ]
+      ],
+      "explanation": "turboderp is the solo developer behind the ExLlamaV2 inference engine and the EXL2 quantization format. They maintain the engine, publish EXL2-format quantizations of popular models, and actively benchmark performance on consumer NVIDIA GPUs. Their work is particularly valued by users running 70B-class models on single GPUs like the RTX 4090, where the variable-bitwidth EXL2 format maximizes quality within tight VRAM budgets."
     },
     "orpo": {
       "id": "orpo",
@@ -4114,7 +4136,8 @@
         }
       ],
       "confidence": "high",
-      "verified_date": "2026-04-10"
+      "verified_date": "2026-04-10",
+      "explanation": "SentencePiece is a language-independent tokenizer that operates directly on raw Unicode text without requiring pre-tokenization or whitespace splitting. It supports two subword algorithms: Byte-Pair Encoding and Unigram Language Model. Llama 1 and Llama 2 use its BPE mode, while T5 uses Unigram. Because it treats input as a raw byte stream, it handles any language or script without special preprocessing rules."
     },
     "tokenizer-tiktoken": {
       "id": "tokenizer-tiktoken",
@@ -4136,7 +4159,8 @@
           "label": "tiktoken GitHub",
           "url": "https://github.com/openai/tiktoken"
         }
-      ]
+      ],
+      "explanation": "Tiktoken is OpenAI's open-source tokenizer library, written in Rust with Python bindings, making it significantly faster than alternatives like HuggingFace tokenizers. It uses pre-compiled BPE merge tables rather than learning them at runtime. Tiktoken powers the tokenization for GPT-3.5, GPT-4, and the Qwen model family. Its speed advantage matters most in applications that need to count or split tokens at high throughput."
     },
     "tokenizer-wordpiece": {
       "id": "tokenizer-wordpiece",
@@ -4159,7 +4183,8 @@
         }
       ],
       "confidence": "high",
-      "verified_date": "2026-04-10"
+      "verified_date": "2026-04-10",
+      "explanation": "WordPiece is a subword tokenization algorithm that selects merges by maximizing the likelihood of the training corpus rather than simply picking the most frequent pair, as BPE does. Continuation tokens are marked with a ## prefix, so 'playing' might become 'play' and '##ing'. It is the tokenizer behind BERT, DistilBERT, and most models in the original Transformer encoder family from Google."
     },
     "tool-exllamav2": {
       "id": "tool-exllamav2",
@@ -4181,7 +4206,8 @@
           "label": "ExLlamaV2 GitHub",
           "url": "https://github.com/turboderp/exllamav2"
         }
-      ]
+      ],
+      "explanation": "ExLlamaV2 is a CUDA-optimized inference engine built by turboderp, focused on maximum speed on NVIDIA consumer GPUs like the RTX 3090 and 4090. It introduced the EXL2 quantization format, which assigns different bit widths to different layers based on their sensitivity, squeezing more quality out of a given memory budget. Benchmarks often show it delivering the fastest single-GPU token generation for models that fit in VRAM."
     },
     "tool-llamacpp": {
       "id": "tool-llamacpp",
@@ -4204,7 +4230,8 @@
           "label": "llama.cpp GitHub",
           "url": "https://github.com/ggerganov/llama.cpp"
         }
-      ]
+      ],
+      "explanation": "llama.cpp is a C/C++ inference engine created by Georgi Gerganov that makes it possible to run large language models on consumer hardware, including CPUs. It defined the GGUF file format, which has become the standard for quantized model distribution. Users can offload selected layers to a GPU for extra speed while keeping the rest in system RAM. Its efficiency and portability spawned an entire ecosystem of local-inference tools built on top of it."
     },
     "tool-lmstudio": {
       "id": "tool-lmstudio",
@@ -4225,7 +4252,8 @@
           "label": "LM Studio website",
           "url": "https://lmstudio.ai"
         }
-      ]
+      ],
+      "explanation": "LM Studio is a desktop GUI application that lets users browse, download, and run open-weight language models locally without touching a terminal. Under the hood it uses llama.cpp on Windows and Linux, and Apple MLX on Mac, choosing the fastest backend automatically. It provides a chat interface, a local OpenAI-compatible API server, and model search across HuggingFace. It has become one of the most popular ways non-developers interact with local LLMs."
     },
     "tool-ollama": {
       "id": "tool-ollama",
@@ -4251,7 +4279,8 @@
           "label": "Ollama website",
           "url": "https://ollama.com"
         }
-      ]
+      ],
+      "explanation": "Ollama is a command-line tool and background service that wraps llama.cpp into a seamless local experience. A single command like 'ollama run llama3' downloads the model weights and starts an interactive chat. It exposes a local REST API compatible with the OpenAI format, so apps can swap between local and cloud models easily. Modelfiles let users customize system prompts, parameters, and adapters in a Dockerfile-like syntax."
     },
     "tool-sglang": {
       "id": "tool-sglang",
@@ -4274,7 +4303,8 @@
         }
       ],
       "confidence": "high",
-      "verified_date": "2026-04-10"
+      "verified_date": "2026-04-10",
+      "explanation": "SGLang is both a serving backend and a frontend programming language for LLM applications. Its key innovation, RadixAttention, reuses KV cache across requests that share common prefixes, which speeds up workloads like multi-turn chat and branching prompts. The frontend DSL lets developers express complex generation patterns in clean Python. It consistently ranks among the fastest open-source serving engines in benchmarks."
     },
     "tool-tensorrt-llm": {
       "id": "tool-tensorrt-llm",
@@ -4296,7 +4326,8 @@
           "label": "TensorRT-LLM GitHub",
           "url": "https://github.com/NVIDIA/TensorRT-LLM"
         }
-      ]
+      ],
+      "explanation": "TensorRT-LLM is NVIDIA's official library for optimizing and serving large language models on NVIDIA GPUs. It compiles models into highly optimized TensorRT engines using techniques like FP8 and INT4 quantization, paged KV caches, and in-flight batching. It supports multi-GPU and multi-node setups via tensor and pipeline parallelism. Deploying requires an ahead-of-time compilation step, but the resulting throughput on NVIDIA hardware is typically best-in-class."
     },
     "tool-tgi": {
       "id": "tool-tgi",
@@ -4317,7 +4348,8 @@
           "label": "TGI GitHub",
           "url": "https://github.com/huggingface/text-generation-inference"
         }
-      ]
+      ],
+      "explanation": "Text Generation Inference (TGI) is HuggingFace's production-grade serving solution for large language models. It pairs a high-performance Rust-based HTTP router with Python model backends, handling continuous batching, token streaming, and quantization out of the box. TGI integrates tightly with the HuggingFace Hub, making it straightforward to deploy any compatible model. It powers the Inference API behind many HuggingFace-hosted endpoints."
     },
     "tool-vllm": {
       "id": "tool-vllm",
@@ -4342,7 +4374,8 @@
         }
       ],
       "confidence": "high",
-      "verified_date": "2026-04-10"
+      "verified_date": "2026-04-10",
+      "explanation": "vLLM is an open-source inference engine for serving large language models in production. It introduced PagedAttention, which manages GPU memory for key-value caches the way an operating system pages virtual memory, dramatically reducing waste. Combined with continuous batching, it achieves throughput several times higher than naive HuggingFace generation. vLLM has become the default serving backend for most open-weight deployments and supports tensor parallelism across multiple GPUs."
     },
     "tp-pp": {
       "id": "tp-pp",

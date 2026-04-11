@@ -17,5 +17,6 @@
     }
   ],
   "confidence": "high",
-  "verified_date": "2026-04-10"
+  "verified_date": "2026-04-10",
+  "explanation": "Mistral AI is a Paris-based startup that released Mistral 7B, which outperformed Llama 2 13B despite being half the size, putting the company on the map overnight. They pioneered sliding window attention for efficient long contexts and released Mixtral 8x7B and 8x22B, bringing sparse mixture-of-experts architectures to the open-weight world. They also produce Codestral for code generation and offer commercial API endpoints alongside open releases."
 }

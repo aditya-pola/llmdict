@@ -18,5 +18,6 @@
       "label": "bartowski HuggingFace profile",
       "url": "https://huggingface.co/bartowski"
     }
-  ]
+  ],
+  "explanation": "bartowski is a HuggingFace contributor who produces GGUF quantizations of new models typically within hours of their release. Each repo includes a comprehensive range of quant levels from Q2 to Q8, with consistent naming conventions and imatrix-calibrated variants for better quality at low bit widths. This speed and consistency have made bartowski the go-to source for GGUF files in the current open-weight ecosystem."
 }

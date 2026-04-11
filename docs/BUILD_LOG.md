@@ -329,7 +329,52 @@ site/
 - Consistent floating search bar, category legend with click-to-pan
 - Zoom toward cursor position
 
+### UI polish (continued)
+- Graph/glossary toggle: circle buttons beside header bar on both pages
+- Both pages show "LLM Glossary" as header title
+- Full LaTeX sweep: 0 remaining bare Unicode math outside $...$ blocks
+- Fixed linkifyText breaking LaTeX (protect $...$ blocks with placeholders before linkification)
+- KaTeX sized up: 1.15em on cards, 1.2em in overlays, color #ccc
+
+---
+
+## 2026-04-11 — Content Quality Plan + Data Architecture Migration
+
+### Quality audit
+- 33/142 entries had empty explanation fields (entire categories: orgs, tools, datasets, formats, tokenizers)
+- Tone inconsistency: some entries are compressed notes, some dump LaTeX on card face, some are well-written prose
+- Compared against HuggingFace glossary: identified 10 terms to add
+
+### Quality rubric established (docs/ui/... in plan)
+- oneliner: 80-160 chars, plain English, no LaTeX
+- explanation: 200-500 chars, prose, no formulas, self-contained walk-away text
+- fundamentals: where math lives (LaTeX welcome)
+- Every entry must have at least 1 external resource link
+
+### Data architecture: one file per card
+```
+cards/
+├── _categories.json          # defines valid categories (label + order)
+├── fp32.json                 # one card per file
+├── gptq.json
+├── ...142 files
+build.py                      # merges cards/ → site/data/glossary.json
+.github/workflows/build-glossary.yml  # auto-runs on push to main
+```
+
+**Contributor workflow**: add/edit one JSON file in cards/, submit PR. GitHub Action auto-rebuilds glossary.json on merge. If new category needed, also edit _categories.json.
+
+Build script validates: all cards must have `id` and a category that exists in _categories.json. Unknown categories are rejected with an error.
+
+### Phase A: Fill 33 empty explanations — DONE
+All 33 previously-empty cards now have 200-500 char prose explanations:
+- Serving Tools (8): vLLM, TGI, llama.cpp, Ollama, LM Studio, ExLlamaV2, TensorRT-LLM, SGLang
+- HF Organizations (12): Meta, Mistral, Qwen, Google, DeepSeek, Microsoft, NousResearch, TheBloke, bartowski, turboderp, mlx-community, mradermacher
+- Datasets & Recipes (6): Hermes, Dolphin, Platypus, EvolInstruct, Orca, UltraChat
+- Export Formats (4): ONNX, CoreML, OpenVINO, CTranslate2
+- Tokenizers (3): SentencePiece, tiktoken, WordPiece
+
 ### Current status
-- UI is functionally complete (stacked cards + graph view)
-- 142 entries, LaTeX rendering, search, history, overlays all working
-- **Content quality needs review** — data presentation, writing style, depth coverage to be revisited
+- 142 entries, 0 empty explanations
+- One-file-per-card architecture in place
+- **Remaining content phases**: B (move math from card face), C (rewrite compressed notes), D (enrich thin tags), E (add 10 new HF entries), F (consistency pass)

@@ -20,5 +20,6 @@
       "label": "ONNX Runtime",
       "url": "https://github.com/microsoft/onnxruntime"
     }
-  ]
+  ],
+  "explanation": "ONNX (Open Neural Network Exchange) is an open standard for representing machine learning computation graphs. You train a model in any framework like PyTorch or TensorFlow, export it to ONNX format, and run inference anywhere using ONNX Runtime. It supports operator-level optimizations and quantization, making it a practical choice for deploying models across CPUs, GPUs, and edge devices without framework lock-in."
 }

@@ -18,5 +18,6 @@
       "label": "TensorRT-LLM GitHub",
       "url": "https://github.com/NVIDIA/TensorRT-LLM"
     }
-  ]
+  ],
+  "explanation": "TensorRT-LLM is NVIDIA's official library for optimizing and serving large language models on NVIDIA GPUs. It compiles models into highly optimized TensorRT engines using techniques like FP8 and INT4 quantization, paged KV caches, and in-flight batching. It supports multi-GPU and multi-node setups via tensor and pipeline parallelism. Deploying requires an ahead-of-time compilation step, but the resulting throughput on NVIDIA hardware is typically best-in-class."
 }
