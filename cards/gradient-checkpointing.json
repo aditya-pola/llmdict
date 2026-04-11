@@ -1,0 +1,35 @@
+{
+  "id": "gradient-checkpointing",
+  "name": "Gradient Checkpointing",
+  "expansion": "Gradient Checkpointing (Activation Recomputation)",
+  "category": "training-pipeline",
+  "oneliner": "A memory optimization that trades compute for memory by recomputing activations during the backward pass instead of storing them all.",
+  "explanation": "Gradient checkpointing saves GPU memory during training by discarding intermediate activations in the forward pass and recomputing them during the backward pass. Without it, a transformer stores activations from every layer, consuming tens of gigabytes. Checkpointing roughly halves activation memory at the cost of about 33 percent extra compute. It is essential for training large models on limited hardware and is enabled by a single flag in most frameworks.",
+  "fundamentals": "Standard: store all $L$ layers' activations, memory $O(L \\cdot B \\cdot S \\cdot D)$ where $B$ = batch, $S$ = seq_len, $D$ = hidden_dim. With checkpointing every $\\sqrt{L}$ layers: memory $O(\\sqrt{L} \\cdot BSD)$, compute increases by ~33% (one extra forward pass). Selective checkpointing: only checkpoint attention layers (expensive to store) while keeping cheap layers (norms, residuals). Flash Attention's recomputation of attention in the backward pass is a form of selective checkpointing.",
+  "related": [
+    "flash-attention",
+    "full-ft",
+    "zero",
+    "mixed-precision-training"
+  ],
+  "seen_in": [
+    "training-config",
+    "code"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Training Deep Nets with Sublinear Memory Cost",
+      "authors": "Chen et al.",
+      "venue": "2016",
+      "arxiv": "1604.06174"
+    }
+  ],
+  "resources": [
+    {
+      "label": "Lilian Weng — How to Train Really Large Models",
+      "url": "https://lilianweng.github.io/posts/2021-09-25-train-large/"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "perplexity",
+  "name": "Perplexity",
+  "expansion": "Perplexity (Language Model Evaluation Metric)",
+  "category": "scaling-patterns",
+  "oneliner": "The standard metric for language model quality — the exponential of average cross-entropy loss. Lower is better.",
+  "explanation": "Perplexity measures how well a language model predicts held-out text. It represents how many tokens the model is effectively choosing between at each step — a perplexity of 10 means the model is as uncertain as picking uniformly from 10 options. Lower is better. It appears on virtually every model card and quantization benchmark, where a 0.1-point increase indicates minimal quality loss and a 1.0-point increase indicates noticeable degradation.",
+  "fundamentals": "$\\text{PPL} = \\exp\\left(-\\frac{1}{T}\\sum_{t=1}^{T} \\log p(x_t | x_{<t})\\right)$. For a perfect model predicting every token with probability 1: PPL = 1. Random prediction over vocabulary $V$: PPL = $|V|$. Typical LLM perplexity on WikiText-2: fp16 baseline ~5.5, Q4_K_M ~5.6 (+0.1), Q2_K ~6.5 (+1.0). Bits-per-character (BPC) is the log2 of perplexity divided by characters per token.",
+  "related": [
+    "pre-training",
+    "quantization",
+    "mmlu"
+  ],
+  "seen_in": [
+    "model-cards",
+    "documentation"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "HuggingFace — Perplexity of fixed-length models",
+      "url": "https://huggingface.co/docs/transformers/perplexity"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

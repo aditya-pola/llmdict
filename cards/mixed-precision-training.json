@@ -1,0 +1,37 @@
+{
+  "id": "mixed-precision-training",
+  "name": "Mixed-Precision Training",
+  "expansion": "Mixed-Precision Training (FP16/BF16 compute + FP32 master weights)",
+  "category": "training-pipeline",
+  "oneliner": "Training with 16-bit compute for speed while keeping 32-bit master weights for numerical stability — the standard for all modern LLM training.",
+  "explanation": "Mixed-precision training runs the forward and backward passes in 16-bit for speed and memory savings, while maintaining a copy of the weights in 32-bit for accurate gradient accumulation. With bf16 on modern hardware it works out of the box; with fp16, loss scaling prevents gradient underflow. This gives nearly 2x speedup and halves activation memory. Every major LLM is trained this way, and it is the default in DeepSpeed, FSDP, and Accelerate.",
+  "fundamentals": "Forward: compute in fp16/bf16. Backward: gradients in fp16/bf16. Optimizer step: accumulate gradients into fp32 master weights using Adam (momentum and variance stored in fp32). Memory per param: 2 bytes (fp16 weights) + 2 bytes (fp16 grads) + 4 bytes (fp32 master) + 8 bytes (Adam m + v in fp32) = 16 bytes total. Loss scaling (fp16 only): multiply loss by scale $S$ before backward, divide gradients by $S$ before optimizer step.",
+  "related": [
+    "bf16",
+    "fp16",
+    "fp32",
+    "zero",
+    "full-ft",
+    "tool-accelerate"
+  ],
+  "seen_in": [
+    "training-config",
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Mixed Precision Training",
+      "authors": "Micikevicius et al.",
+      "venue": "ICLR 2018",
+      "arxiv": "1710.03740"
+    }
+  ],
+  "resources": [
+    {
+      "label": "Lilian Weng — How to Train Really Large Models",
+      "url": "https://lilianweng.github.io/posts/2021-09-25-train-large/"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

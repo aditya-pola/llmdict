@@ -1,0 +1,31 @@
+{
+  "id": "context-window",
+  "name": "Context Window",
+  "expansion": "Context Window (Maximum Sequence Length)",
+  "category": "quantization-basics",
+  "oneliner": "The maximum number of tokens a model can process in a single forward pass — typically 4K to 1M tokens depending on the model.",
+  "explanation": "The context window is the maximum number of tokens a model can process in one session. Everything — system prompt, conversation history, documents, and response — must fit within it. Early models had 2K-4K contexts; modern models reach 128K (Llama 3.1) or 1M tokens (Qwen 2.5). Extending context requires RoPE scaling, efficient attention, and careful KV cache management. Context length is one of the most important constraints when deploying LLMs.",
+  "fundamentals": "Attention cost scales as $O(n^2 d)$ where $n$ = context length, making long contexts expensive. KV cache memory scales as $O(n \\cdot L \\cdot d_{kv})$ per sequence. For Llama 3 70B at 128K context: KV cache alone is ~40 GB in fp16. Practical context is often shorter than the advertised maximum due to quality degradation at the extremes — check model cards for validated effective lengths.",
+  "related": [
+    "kv-cache",
+    "rope",
+    "yarn",
+    "abf",
+    "swa",
+    "flash-attention",
+    "size-context"
+  ],
+  "seen_in": [
+    "model-config",
+    "model-cards"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "HuggingFace — Long context models",
+      "url": "https://huggingface.co/docs/transformers/llm_optims"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

@@ -1,0 +1,34 @@
+{
+  "id": "pruning",
+  "name": "Pruning",
+  "expansion": "Model Pruning (Weight / Neuron Removal)",
+  "category": "scaling-patterns",
+  "oneliner": "Removing unnecessary weights, neurons, or entire layers from a trained model to make it smaller and faster without retraining from scratch.",
+  "explanation": "Pruning reduces a model's size by removing parameters that contribute least to its output. Unstructured pruning zeros out individual weights, creating sparse matrices. Structured pruning removes entire neurons, heads, or layers, producing a smaller dense model that runs faster on standard hardware. LLaMA 3.2 1B and 3B were created by structured pruning of the 8B model followed by distillation. Pruning is complementary to quantization.",
+  "fundamentals": "Magnitude pruning: remove weights with smallest absolute value. Movement pruning: remove weights that move toward zero during fine-tuning. Structured pruning: remove entire rows/columns from weight matrices based on importance scores. Width pruning (neurons/heads) vs depth pruning (layers). Wanda (Weights AND Activations): considers both weight magnitude and activation magnitude for better pruning decisions without retraining.",
+  "related": [
+    "knowledge-distillation",
+    "quantization",
+    "model-size-memory"
+  ],
+  "seen_in": [
+    "documentation",
+    "model-cards"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Wanda: A Simple and Effective Pruning Approach for Large Language Models",
+      "authors": "Sun et al.",
+      "venue": "2024",
+      "arxiv": "2306.11695"
+    }
+  ],
+  "resources": [
+    {
+      "label": "Lilian Weng — LLM Inference Optimization",
+      "url": "https://lilianweng.github.io/posts/2023-01-10-inference-optimization/"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

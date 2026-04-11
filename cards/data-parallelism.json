@@ -1,0 +1,31 @@
+{
+  "id": "data-parallelism",
+  "name": "Data Parallelism",
+  "expansion": "Data Parallelism (DDP / Distributed Data Parallel)",
+  "category": "scaling-patterns",
+  "oneliner": "Replicating the full model on every GPU and splitting the training data across them — the simplest multi-GPU training strategy.",
+  "explanation": "Data parallelism is the simplest multi-GPU training strategy. Each GPU holds a complete copy of the model and processes a different slice of the training batch. After each step, gradients are averaged across all GPUs using an AllReduce operation so every copy stays synchronized. The main limitation is memory: every GPU must fit the entire model plus optimizer states. ZeRO was invented to fix this by sharding the redundant copies across GPUs.",
+  "fundamentals": "Standard DDP: each of $N$ GPUs stores full model ($P$ params), full gradients, full optimizer states. Per-GPU memory: $16P$ bytes (mixed precision Adam). Gradient sync: AllReduce of $2P$ bytes per step. Throughput scales nearly linearly with $N$ (minus communication overhead). FSDP (Fully Sharded Data Parallelism) and ZeRO eliminate the redundancy by sharding across GPUs.",
+  "related": [
+    "tp-pp",
+    "zero",
+    "full-ft"
+  ],
+  "seen_in": [
+    "training-config",
+    "documentation"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "Lilian Weng — How to Train Really Large Models",
+      "url": "https://lilianweng.github.io/posts/2021-09-25-train-large/"
+    },
+    {
+      "label": "PyTorch DDP docs",
+      "url": "https://pytorch.org/docs/stable/notes/ddp.html"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

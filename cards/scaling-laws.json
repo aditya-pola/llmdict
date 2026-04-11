@@ -1,0 +1,39 @@
+{
+  "id": "scaling-laws",
+  "name": "Scaling Laws",
+  "expansion": "Neural Scaling Laws (Kaplan / Chinchilla)",
+  "category": "training-pipeline",
+  "oneliner": "Empirical relationships governing how model performance improves with more parameters, data, and compute — the foundation of LLM training budgets.",
+  "explanation": "Scaling laws are empirical formulas predicting how model loss decreases as you increase parameter count, training data, or compute. The Chinchilla study (2022) found that for a given compute budget, you should train on roughly 20 tokens per parameter — meaning many models were too large and undertrained. This shifted the field toward smaller models trained on more data, exemplified by Llama training 7B on over one trillion tokens rather than using those FLOPs on a larger model.",
+  "fundamentals": "Kaplan scaling: $L(N) \\propto N^{-0.076}$ where $N$ = parameters, $L$ = loss. Chinchilla optimal: for compute budget $C \\approx 6ND$ FLOPs, the optimal allocation is $N \\propto C^{0.5}$ and $D \\propto C^{0.5}$, meaning params and tokens should scale equally. Practical rule: train on ~20 tokens per parameter. Over-training (more tokens than optimal) is common because inference cost scales with $N$ but not $D$.",
+  "related": [
+    "pre-training",
+    "dense-models"
+  ],
+  "seen_in": [
+    "documentation",
+    "model-cards"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Scaling Laws for Neural Language Models",
+      "authors": "Kaplan et al.",
+      "venue": "2020",
+      "arxiv": "2001.08361"
+    },
+    {
+      "title": "Training Compute-Optimal Large Language Models (Chinchilla)",
+      "authors": "Hoffmann et al.",
+      "venue": "NeurIPS 2022",
+      "arxiv": "2203.15556"
+    }
+  ],
+  "resources": [
+    {
+      "label": "Sebastian Raschka — State of LLMs 2025",
+      "url": "https://magazine.sebastianraschka.com/p/state-of-llms-2025"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

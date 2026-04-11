@@ -21,6 +21,7 @@
       "order": 1,
       "entries": [
         "calibration-data",
+        "context-window",
         "dequantization",
         "model-size-memory",
         "per-group-quantization",
@@ -49,6 +50,7 @@
         "marlin",
         "quanto",
         "quip-sharp",
+        "smoothquant",
         "spinquant",
         "unsloth-dynamic"
       ]
@@ -119,7 +121,8 @@
         "residual-connection",
         "rmsnorm",
         "seq2seq",
-        "swiglu"
+        "swiglu",
+        "weight-tying"
       ]
     },
     {
@@ -130,6 +133,7 @@
         "chain-of-thought",
         "chunked-prefill",
         "continuous-batching",
+        "data-parallelism",
         "dense-models",
         "expert-parallelism",
         "expert-routing",
@@ -141,7 +145,9 @@
         "mmlu",
         "model-merging",
         "moe",
+        "perplexity",
         "prefix-caching",
+        "pruning",
         "rag",
         "reasoning-models",
         "speculative-decoding",
@@ -159,12 +165,15 @@
         "causal-lm",
         "cpt",
         "dpo",
+        "gradient-checkpointing",
         "grpo",
         "kto",
+        "mixed-precision-training",
         "orpo",
         "pre-training",
         "rlhf",
         "rlvr",
+        "scaling-laws",
         "sft",
         "simpo",
         "transfer-learning"
@@ -239,10 +248,14 @@
       "order": 12,
       "entries": [
         "tool-accelerate",
+        "tool-crewai",
         "tool-dask",
         "tool-exllamav2",
+        "tool-langchain",
         "tool-llamacpp",
+        "tool-llamaindex",
         "tool-lmstudio",
+        "tool-n8n",
         "tool-ollama",
         "tool-ray",
         "tool-sglang",
@@ -274,6 +287,16 @@
         "dataset-orca",
         "dataset-platypus",
         "dataset-ultrachat"
+      ]
+    },
+    {
+      "id": "agents-and-tools",
+      "label": "Agents & Tool Use",
+      "order": 15,
+      "entries": [
+        "agentic-ai",
+        "function-calling",
+        "mcp"
       ]
     }
   ],
@@ -358,6 +381,51 @@
       ],
       "confidence": "high",
       "verified_date": "2026-04-10"
+    },
+    "agentic-ai": {
+      "id": "agentic-ai",
+      "name": "Agentic AI",
+      "expansion": "Agentic Artificial Intelligence",
+      "category": "agents-and-tools",
+      "oneliner": "AI systems that plan, use tools, retain memory, and execute multi-step tasks autonomously. The paradigm shift from prompt-response to goal-driven agents.",
+      "explanation": "Agentic AI is the paradigm in which a language model serves as a reasoning engine inside an orchestration loop that can plan actions, invoke external tools, observe results, and iterate until a goal is met. Unlike a vanilla chatbot that produces a single reply, an agentic system breaks a request into sub-tasks, calls APIs or databases, writes and runs code, and self-corrects based on feedback. The key components are a planner, a tool registry, working memory, and a control loop that decides when to stop.",
+      "fundamentals": "Core loop: Observe -> Think -> Act -> Observe. The LLM receives the goal plus accumulated context (scratchpad), reasons about the next step, emits a structured tool call, the harness executes it, appends the result, and re-prompts. ReAct (Reason + Act) is the foundational pattern. Key design axes: single-agent vs. multi-agent, sequential vs. parallel tool calls, human-in-the-loop checkpoints, and memory persistence (short-term scratchpad vs. long-term vector store). Reliability depends on the model's instruction-following and the harness's error recovery.",
+      "related": [
+        "function-calling",
+        "mcp",
+        "rag",
+        "inference-engine"
+      ],
+      "seen_in": [
+        "documentation",
+        "serving-config"
+      ],
+      "foundational_papers": [
+        {
+          "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+          "authors": "Yao et al.",
+          "venue": "ICLR 2023",
+          "arxiv": "2210.03629"
+        },
+        {
+          "title": "Toolformer: Language Models Can Teach Themselves to Use Tools",
+          "authors": "Schick et al.",
+          "venue": "NeurIPS 2023",
+          "arxiv": "2302.04761"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Agentic AI explained (MIT Sloan)",
+          "url": "https://mitsloan.mit.edu/ideas-made-to-matter/agentic-ai-explained"
+        },
+        {
+          "label": "What is Agentic AI (IBM)",
+          "url": "https://www.ibm.com/think/topics/agentic-ai"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     },
     "alibi": {
       "id": "alibi",
@@ -779,6 +847,37 @@
       "confidence": "high",
       "verified_date": "2026-04-11"
     },
+    "context-window": {
+      "id": "context-window",
+      "name": "Context Window",
+      "expansion": "Context Window (Maximum Sequence Length)",
+      "category": "quantization-basics",
+      "oneliner": "The maximum number of tokens a model can process in a single forward pass — typically 4K to 1M tokens depending on the model.",
+      "explanation": "The context window is the maximum number of tokens a model can process in one session. Everything — system prompt, conversation history, documents, and response — must fit within it. Early models had 2K-4K contexts; modern models reach 128K (Llama 3.1) or 1M tokens (Qwen 2.5). Extending context requires RoPE scaling, efficient attention, and careful KV cache management. Context length is one of the most important constraints when deploying LLMs.",
+      "fundamentals": "Attention cost scales as $O(n^2 d)$ where $n$ = context length, making long contexts expensive. KV cache memory scales as $O(n \\cdot L \\cdot d_{kv})$ per sequence. For Llama 3 70B at 128K context: KV cache alone is ~40 GB in fp16. Practical context is often shorter than the advertised maximum due to quality degradation at the extremes — check model cards for validated effective lengths.",
+      "related": [
+        "kv-cache",
+        "rope",
+        "yarn",
+        "abf",
+        "swa",
+        "flash-attention",
+        "size-context"
+      ],
+      "seen_in": [
+        "model-config",
+        "model-cards"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "HuggingFace — Long context models",
+          "url": "https://huggingface.co/docs/transformers/llm_optims"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "continuous-batching": {
       "id": "continuous-batching",
       "name": "Continuous Batching",
@@ -861,6 +960,37 @@
       ],
       "confidence": "high",
       "verified_date": "2026-04-10"
+    },
+    "data-parallelism": {
+      "id": "data-parallelism",
+      "name": "Data Parallelism",
+      "expansion": "Data Parallelism (DDP / Distributed Data Parallel)",
+      "category": "scaling-patterns",
+      "oneliner": "Replicating the full model on every GPU and splitting the training data across them — the simplest multi-GPU training strategy.",
+      "explanation": "Data parallelism is the simplest multi-GPU training strategy. Each GPU holds a complete copy of the model and processes a different slice of the training batch. After each step, gradients are averaged across all GPUs using an AllReduce operation so every copy stays synchronized. The main limitation is memory: every GPU must fit the entire model plus optimizer states. ZeRO was invented to fix this by sharding the redundant copies across GPUs.",
+      "fundamentals": "Standard DDP: each of $N$ GPUs stores full model ($P$ params), full gradients, full optimizer states. Per-GPU memory: $16P$ bytes (mixed precision Adam). Gradient sync: AllReduce of $2P$ bytes per step. Throughput scales nearly linearly with $N$ (minus communication overhead). FSDP (Fully Sharded Data Parallelism) and ZeRO eliminate the redundancy by sharding across GPUs.",
+      "related": [
+        "tp-pp",
+        "zero",
+        "full-ft"
+      ],
+      "seen_in": [
+        "training-config",
+        "documentation"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "Lilian Weng — How to Train Really Large Models",
+          "url": "https://lilianweng.github.io/posts/2021-09-25-train-large/"
+        },
+        {
+          "label": "PyTorch DDP docs",
+          "url": "https://pytorch.org/docs/stable/notes/ddp.html"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     },
     "dataset-dolphin": {
       "id": "dataset-dolphin",
@@ -1640,6 +1770,50 @@
       "confidence": "high",
       "verified_date": "2026-04-10"
     },
+    "function-calling": {
+      "id": "function-calling",
+      "name": "Function Calling",
+      "expansion": "LLM Function Calling / Tool Use",
+      "category": "agents-and-tools",
+      "oneliner": "The mechanism by which an LLM emits structured JSON to invoke external tools instead of generating free-text. Foundation of all agentic behaviour.",
+      "explanation": "Function calling is the capability that lets a language model request execution of external functions by outputting structured arguments rather than plain text. The developer registers a set of tool schemas (name, description, parameter JSON Schema) in the prompt or API call. When the model decides a tool is needed, it emits a tool-call object with the function name and arguments. The harness executes the function, returns the result, and the model continues reasoning. OpenAI, Anthropic, and Google each implement this slightly differently but the pattern is universal.",
+      "fundamentals": "Flow: user prompt + tool schemas -> model reasons -> model emits tool_call(name, args) -> harness validates and executes -> result appended as tool_result -> model generates final answer or chains another call. Parallel tool calling lets the model emit multiple calls in one turn. Forced tool use constrains the model to always call a specific function. Structured output mode (JSON Schema) is closely related but produces data rather than invoking actions. Fine-tuning on function-calling datasets improves reliability; constrained decoding guarantees valid JSON.",
+      "related": [
+        "agentic-ai",
+        "mcp",
+        "inference-engine"
+      ],
+      "seen_in": [
+        "documentation",
+        "code"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Toolformer: Language Models Can Teach Themselves to Use Tools",
+          "authors": "Schick et al.",
+          "venue": "NeurIPS 2023",
+          "arxiv": "2302.04761"
+        },
+        {
+          "title": "Gorilla: Large Language Model Connected with Massive APIs",
+          "authors": "Patil et al.",
+          "venue": "arXiv 2023",
+          "arxiv": "2305.15334"
+        }
+      ],
+      "resources": [
+        {
+          "label": "OpenAI function calling guide",
+          "url": "https://platform.openai.com/docs/guides/function-calling"
+        },
+        {
+          "label": "Anthropic tool use docs",
+          "url": "https://docs.anthropic.com/en/docs/build-with-claude/tool-use"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "geglu": {
       "id": "geglu",
       "name": "GeGLU",
@@ -1808,6 +1982,41 @@
           "url": "https://lilianweng.github.io/posts/2023-01-27-the-transformer-family-v2/"
         }
       ]
+    },
+    "gradient-checkpointing": {
+      "id": "gradient-checkpointing",
+      "name": "Gradient Checkpointing",
+      "expansion": "Gradient Checkpointing (Activation Recomputation)",
+      "category": "training-pipeline",
+      "oneliner": "A memory optimization that trades compute for memory by recomputing activations during the backward pass instead of storing them all.",
+      "explanation": "Gradient checkpointing saves GPU memory during training by discarding intermediate activations in the forward pass and recomputing them during the backward pass. Without it, a transformer stores activations from every layer, consuming tens of gigabytes. Checkpointing roughly halves activation memory at the cost of about 33 percent extra compute. It is essential for training large models on limited hardware and is enabled by a single flag in most frameworks.",
+      "fundamentals": "Standard: store all $L$ layers' activations, memory $O(L \\cdot B \\cdot S \\cdot D)$ where $B$ = batch, $S$ = seq_len, $D$ = hidden_dim. With checkpointing every $\\sqrt{L}$ layers: memory $O(\\sqrt{L} \\cdot BSD)$, compute increases by ~33% (one extra forward pass). Selective checkpointing: only checkpoint attention layers (expensive to store) while keeping cheap layers (norms, residuals). Flash Attention's recomputation of attention in the backward pass is a form of selective checkpointing.",
+      "related": [
+        "flash-attention",
+        "full-ft",
+        "zero",
+        "mixed-precision-training"
+      ],
+      "seen_in": [
+        "training-config",
+        "code"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Training Deep Nets with Sublinear Memory Cost",
+          "authors": "Chen et al.",
+          "venue": "2016",
+          "arxiv": "1604.06174"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Lilian Weng — How to Train Really Large Models",
+          "url": "https://lilianweng.github.io/posts/2021-09-25-train-large/"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     },
     "grpo": {
       "id": "grpo",
@@ -2642,6 +2851,40 @@
         }
       ]
     },
+    "mcp": {
+      "id": "mcp",
+      "name": "MCP",
+      "expansion": "Model Context Protocol",
+      "category": "agents-and-tools",
+      "oneliner": "Anthropic's open protocol for connecting LLMs to external tools and data sources. A universal plug-and-play standard for agent integrations.",
+      "explanation": "MCP is an open protocol introduced by Anthropic in November 2024 that standardises how LLM applications discover and invoke external tools, access data sources, and manage context. It defines a client-server architecture where an MCP server exposes tools (callable functions), resources (readable data), and prompts (reusable templates), while an MCP client inside the LLM application connects to one or more servers. The protocol uses JSON-RPC over stdio or HTTP with SSE, supports OAuth 2.0 authentication, and has been adopted by OpenAI, Google, and the broader ecosystem.",
+      "fundamentals": "Architecture: Host (IDE, chat app) embeds an MCP Client that connects to MCP Servers. Each server declares capabilities via initialize handshake. Tools are described with JSON Schema inputs and can return text or structured JSON. Resources provide read-only data (files, DB rows). Prompts are server-defined templates. Transport: stdio for local servers, HTTP+SSE or streamable HTTP for remote. Security: servers are OAuth 2.0 Resource Servers; tokens are scoped per server. The 2025-06-18 spec added structured output, elicitation (server asks user for input mid-session), and task tracking for long-running operations.",
+      "related": [
+        "agentic-ai",
+        "function-calling"
+      ],
+      "seen_in": [
+        "documentation",
+        "code"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "MCP specification",
+          "url": "https://modelcontextprotocol.io/specification/2025-11-25"
+        },
+        {
+          "label": "Anthropic MCP announcement",
+          "url": "https://www.anthropic.com/news/model-context-protocol"
+        },
+        {
+          "label": "MCP GitHub repo",
+          "url": "https://github.com/modelcontextprotocol/modelcontextprotocol"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "mha": {
       "id": "mha",
       "name": "MHA",
@@ -2690,6 +2933,43 @@
           "url": "https://sebastianraschka.com/llm-architecture-gallery/"
         }
       ]
+    },
+    "mixed-precision-training": {
+      "id": "mixed-precision-training",
+      "name": "Mixed-Precision Training",
+      "expansion": "Mixed-Precision Training (FP16/BF16 compute + FP32 master weights)",
+      "category": "training-pipeline",
+      "oneliner": "Training with 16-bit compute for speed while keeping 32-bit master weights for numerical stability — the standard for all modern LLM training.",
+      "explanation": "Mixed-precision training runs the forward and backward passes in 16-bit for speed and memory savings, while maintaining a copy of the weights in 32-bit for accurate gradient accumulation. With bf16 on modern hardware it works out of the box; with fp16, loss scaling prevents gradient underflow. This gives nearly 2x speedup and halves activation memory. Every major LLM is trained this way, and it is the default in DeepSpeed, FSDP, and Accelerate.",
+      "fundamentals": "Forward: compute in fp16/bf16. Backward: gradients in fp16/bf16. Optimizer step: accumulate gradients into fp32 master weights using Adam (momentum and variance stored in fp32). Memory per param: 2 bytes (fp16 weights) + 2 bytes (fp16 grads) + 4 bytes (fp32 master) + 8 bytes (Adam m + v in fp32) = 16 bytes total. Loss scaling (fp16 only): multiply loss by scale $S$ before backward, divide gradients by $S$ before optimizer step.",
+      "related": [
+        "bf16",
+        "fp16",
+        "fp32",
+        "zero",
+        "full-ft",
+        "tool-accelerate"
+      ],
+      "seen_in": [
+        "training-config",
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Mixed Precision Training",
+          "authors": "Micikevicius et al.",
+          "venue": "ICLR 2018",
+          "arxiv": "1710.03740"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Lilian Weng — How to Train Really Large Models",
+          "url": "https://lilianweng.github.io/posts/2021-09-25-train-large/"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     },
     "mla": {
       "id": "mla",
@@ -3498,6 +3778,33 @@
         }
       ]
     },
+    "perplexity": {
+      "id": "perplexity",
+      "name": "Perplexity",
+      "expansion": "Perplexity (Language Model Evaluation Metric)",
+      "category": "scaling-patterns",
+      "oneliner": "The standard metric for language model quality — the exponential of average cross-entropy loss. Lower is better.",
+      "explanation": "Perplexity measures how well a language model predicts held-out text. It represents how many tokens the model is effectively choosing between at each step — a perplexity of 10 means the model is as uncertain as picking uniformly from 10 options. Lower is better. It appears on virtually every model card and quantization benchmark, where a 0.1-point increase indicates minimal quality loss and a 1.0-point increase indicates noticeable degradation.",
+      "fundamentals": "$\\text{PPL} = \\exp\\left(-\\frac{1}{T}\\sum_{t=1}^{T} \\log p(x_t | x_{<t})\\right)$. For a perfect model predicting every token with probability 1: PPL = 1. Random prediction over vocabulary $V$: PPL = $|V|$. Typical LLM perplexity on WikiText-2: fp16 baseline ~5.5, Q4_K_M ~5.6 (+0.1), Q2_K ~6.5 (+1.0). Bits-per-character (BPC) is the log2 of perplexity divided by characters per token.",
+      "related": [
+        "pre-training",
+        "quantization",
+        "mmlu"
+      ],
+      "seen_in": [
+        "model-cards",
+        "documentation"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "HuggingFace — Perplexity of fixed-length models",
+          "url": "https://huggingface.co/docs/transformers/perplexity"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "ple": {
       "id": "ple",
       "name": "PLE",
@@ -3686,6 +3993,40 @@
         {
           "label": "vLLM APC docs",
           "url": "https://docs.vllm.ai/en/stable/design/prefix_caching/"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
+    "pruning": {
+      "id": "pruning",
+      "name": "Pruning",
+      "expansion": "Model Pruning (Weight / Neuron Removal)",
+      "category": "scaling-patterns",
+      "oneliner": "Removing unnecessary weights, neurons, or entire layers from a trained model to make it smaller and faster without retraining from scratch.",
+      "explanation": "Pruning reduces a model's size by removing parameters that contribute least to its output. Unstructured pruning zeros out individual weights, creating sparse matrices. Structured pruning removes entire neurons, heads, or layers, producing a smaller dense model that runs faster on standard hardware. LLaMA 3.2 1B and 3B were created by structured pruning of the 8B model followed by distillation. Pruning is complementary to quantization.",
+      "fundamentals": "Magnitude pruning: remove weights with smallest absolute value. Movement pruning: remove weights that move toward zero during fine-tuning. Structured pruning: remove entire rows/columns from weight matrices based on importance scores. Width pruning (neurons/heads) vs depth pruning (layers). Wanda (Weights AND Activations): considers both weight magnitude and activation magnitude for better pruning decisions without retraining.",
+      "related": [
+        "knowledge-distillation",
+        "quantization",
+        "model-size-memory"
+      ],
+      "seen_in": [
+        "documentation",
+        "model-cards"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Wanda: A Simple and Effective Pruning Approach for Large Language Models",
+          "authors": "Sun et al.",
+          "venue": "2024",
+          "arxiv": "2306.11695"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Lilian Weng — LLM Inference Optimization",
+          "url": "https://lilianweng.github.io/posts/2023-01-10-inference-optimization/"
         }
       ],
       "confidence": "high",
@@ -4239,6 +4580,45 @@
       "confidence": "high",
       "verified_date": "2026-04-10"
     },
+    "scaling-laws": {
+      "id": "scaling-laws",
+      "name": "Scaling Laws",
+      "expansion": "Neural Scaling Laws (Kaplan / Chinchilla)",
+      "category": "training-pipeline",
+      "oneliner": "Empirical relationships governing how model performance improves with more parameters, data, and compute — the foundation of LLM training budgets.",
+      "explanation": "Scaling laws are empirical formulas predicting how model loss decreases as you increase parameter count, training data, or compute. The Chinchilla study (2022) found that for a given compute budget, you should train on roughly 20 tokens per parameter — meaning many models were too large and undertrained. This shifted the field toward smaller models trained on more data, exemplified by Llama training 7B on over one trillion tokens rather than using those FLOPs on a larger model.",
+      "fundamentals": "Kaplan scaling: $L(N) \\propto N^{-0.076}$ where $N$ = parameters, $L$ = loss. Chinchilla optimal: for compute budget $C \\approx 6ND$ FLOPs, the optimal allocation is $N \\propto C^{0.5}$ and $D \\propto C^{0.5}$, meaning params and tokens should scale equally. Practical rule: train on ~20 tokens per parameter. Over-training (more tokens than optimal) is common because inference cost scales with $N$ but not $D$.",
+      "related": [
+        "pre-training",
+        "dense-models"
+      ],
+      "seen_in": [
+        "documentation",
+        "model-cards"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Scaling Laws for Neural Language Models",
+          "authors": "Kaplan et al.",
+          "venue": "2020",
+          "arxiv": "2001.08361"
+        },
+        {
+          "title": "Training Compute-Optimal Large Language Models (Chinchilla)",
+          "authors": "Hoffmann et al.",
+          "venue": "NeurIPS 2022",
+          "arxiv": "2203.15556"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Sebastian Raschka — State of LLMs 2025",
+          "url": "https://magazine.sebastianraschka.com/p/state-of-llms-2025"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "sdpa": {
       "id": "sdpa",
       "name": "SDPA",
@@ -4615,6 +4995,42 @@
           "url": "https://arxiv.org/abs/2401.04088"
         }
       ]
+    },
+    "smoothquant": {
+      "id": "smoothquant",
+      "name": "SmoothQuant",
+      "expansion": "SmoothQuant — Activation-Aware Weight Smoothing for W8A8",
+      "category": "quantization-methods",
+      "oneliner": "A technique that migrates the quantization difficulty from hard-to-quantize activations to easy-to-quantize weights, enabling practical W8A8 inference.",
+      "explanation": "SmoothQuant makes W8A8 quantization practical by mathematically smoothing activation outliers before quantization. LLM activations have extreme values in certain channels that make direct INT8 quantization fail. SmoothQuant applies per-channel scaling that divides activations by a smoothing factor and multiplies corresponding weights by the same factor. This is mathematically equivalent but redistributes the difficulty from activations to weights, enabling both to be quantized to INT8.",
+      "fundamentals": "For each channel $j$: smooth factor $s_j = \\max(|X_j|)^\\alpha / \\max(|W_j|)^{(1-\\alpha)}$ where $\\alpha \\in [0,1]$ controls the migration strength (typically 0.5). Smoothed: $\\hat{X}_j = X_j / s_j$, $\\hat{W}_j = W_j \\cdot s_j$. Output unchanged: $Y = XW = (X/s)(sW) = \\hat{X}\\hat{W}$. The smoothing factors are computed once from calibration data and folded into preceding LayerNorm parameters.",
+      "related": [
+        "w8a8",
+        "int8",
+        "quantization",
+        "calibration-data",
+        "awq"
+      ],
+      "seen_in": [
+        "documentation",
+        "serving-config"
+      ],
+      "foundational_papers": [
+        {
+          "title": "SmoothQuant: Accurate and Efficient Post-Training Quantization for Large Language Models",
+          "authors": "Xiao et al.",
+          "venue": "ICML 2023",
+          "arxiv": "2211.10438"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Lilian Weng — LLM Inference Optimization",
+          "url": "https://lilianweng.github.io/posts/2023-01-10-inference-optimization/"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     },
     "speculative-decoding": {
       "id": "speculative-decoding",
@@ -5430,6 +5846,41 @@
       "confidence": "high",
       "verified_date": "2026-04-11"
     },
+    "tool-crewai": {
+      "id": "tool-crewai",
+      "name": "CrewAI",
+      "expansion": "CrewAI — multi-agent orchestration framework",
+      "category": "serving-tools",
+      "oneliner": "Python framework for orchestrating teams of role-playing AI agents. Each agent has a role, goal, and tools; tasks flow through a structured crew pipeline.",
+      "explanation": "CrewAI is an open-source Python framework for building multi-agent systems where each agent is assigned a specific role, goal, and backstory. Agents collaborate by passing task outputs along a defined workflow, with support for sequential, parallel, and hierarchical execution. Unlike LangChain which is a general-purpose LLM framework, CrewAI is purpose-built for the multi-agent pattern: define agents, assign tasks with dependencies, and let the crew execute end-to-end. It is framework-independent, built from scratch without relying on LangChain internals.",
+      "fundamentals": "Core concepts: Agent (role + goal + backstory + tools), Task (description + expected output + assigned agent), Crew (collection of agents + tasks + process type). Process types: sequential (tasks run in order), hierarchical (a manager agent delegates to workers and aggregates results). Agents can use any tool that follows the BaseTool interface. Memory: short-term (within a crew run), long-term (across runs via embeddings), and entity memory. CrewAI Flows add event-driven orchestration on top of crews for complex multi-crew pipelines. Enterprise edition adds observability, deployment, and access control.",
+      "related": [
+        "agentic-ai",
+        "function-calling",
+        "tool-langchain"
+      ],
+      "seen_in": [
+        "documentation",
+        "code"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "CrewAI website",
+          "url": "https://crewai.com/"
+        },
+        {
+          "label": "CrewAI docs",
+          "url": "https://docs.crewai.com/"
+        },
+        {
+          "label": "CrewAI GitHub",
+          "url": "https://github.com/crewAIInc/crewAI"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "tool-dask": {
       "id": "tool-dask",
       "name": "Dask",
@@ -5487,6 +5938,42 @@
       ],
       "explanation": "ExLlamaV2 is a CUDA-optimized inference engine built by turboderp, focused on maximum speed on NVIDIA consumer GPUs like the RTX 3090 and 4090. It introduced the EXL2 quantization format, which assigns different bit widths to different layers based on their sensitivity, squeezing more quality out of a given memory budget. Benchmarks often show it delivering the fastest single-GPU token generation for models that fit in VRAM."
     },
+    "tool-langchain": {
+      "id": "tool-langchain",
+      "name": "LangChain",
+      "expansion": "LangChain — LLM application framework",
+      "category": "serving-tools",
+      "oneliner": "The most widely adopted Python/JS framework for building LLM-powered applications. Chains, agents, RAG pipelines, and LangGraph for stateful agent orchestration.",
+      "explanation": "LangChain is an open-source framework for building applications powered by language models. It provides composable abstractions for prompts, models, output parsers, retrievers, and tool calling, letting developers wire together chains (sequential LLM calls) and agents (LLM-driven tool-use loops). LangGraph, its companion library, models agent workflows as state machines (graphs) with durable state, human-in-the-loop checkpoints, and long-running execution. LangChain 1.0 and LangGraph 1.0 reached general availability in late 2025.",
+      "fundamentals": "Core abstractions: ChatModel (provider-agnostic LLM interface), PromptTemplate, OutputParser, Retriever, Tool. A Chain is a fixed sequence of steps; an Agent uses the LLM to decide which tools to call dynamically. LangGraph extends this with nodes (functions), edges (control flow), and state objects that persist across steps. LangSmith provides observability (tracing, evaluation). The ecosystem includes 700+ integrations via langchain-community. Criticism: early versions were over-abstracted; v0.3+ and LangGraph addressed this by favouring explicit graphs over magic chains.",
+      "related": [
+        "agentic-ai",
+        "function-calling",
+        "rag",
+        "tool-llamaindex"
+      ],
+      "seen_in": [
+        "documentation",
+        "code"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "LangChain docs",
+          "url": "https://python.langchain.com/docs/"
+        },
+        {
+          "label": "LangGraph docs",
+          "url": "https://langchain-ai.github.io/langgraph/"
+        },
+        {
+          "label": "LangChain GitHub",
+          "url": "https://github.com/langchain-ai/langchain"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "tool-llamacpp": {
       "id": "tool-llamacpp",
       "name": "llama.cpp",
@@ -5513,6 +6000,42 @@
       ],
       "explanation": "llama.cpp is a C/C++ inference engine created by Georgi Gerganov that makes it possible to run large language models on consumer hardware, including CPUs. It defined the GGUF file format, which has become the standard for quantized model distribution. Users can offload selected layers to a GPU for extra speed while keeping the rest in system RAM. Its efficiency and portability spawned an entire ecosystem of local-inference tools built on top of it."
     },
+    "tool-llamaindex": {
+      "id": "tool-llamaindex",
+      "name": "LlamaIndex",
+      "expansion": "LlamaIndex — data framework for LLM applications",
+      "category": "serving-tools",
+      "oneliner": "Python framework optimised for connecting LLMs to your data. Best-in-class RAG pipelines, document agents, and structured data querying out of the box.",
+      "explanation": "LlamaIndex is an open-source data framework that simplifies building retrieval-augmented generation and agentic applications over private data. It provides connectors for 160+ data sources, handles chunking, indexing, and embedding, and orchestrates retrieval and synthesis at query time. Its Workflows API lets developers build multi-step agentic pipelines with branching, loops, and parallel execution. LlamaIndex differentiates from LangChain by focusing on data ingestion and retrieval quality rather than general-purpose chain composition.",
+      "fundamentals": "Pipeline: DataConnector (loads docs) -> NodeParser (chunks) -> Embedding model -> VectorStoreIndex (stores embeddings) -> Retriever (fetches top-k) -> ResponseSynthesizer (LLM generates answer). Advanced features: agentic RAG (per-document agents with a top-level router), sub-question decomposition, knowledge graph indices, and structured output extraction. Workflows API replaces the older query-engine pattern with explicit step functions, state passing, and event-driven control flow. LlamaParse handles complex PDF/table extraction. LlamaCloud offers managed indexing and retrieval.",
+      "related": [
+        "agentic-ai",
+        "rag",
+        "tool-langchain",
+        "function-calling"
+      ],
+      "seen_in": [
+        "documentation",
+        "code"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "LlamaIndex docs",
+          "url": "https://docs.llamaindex.ai/"
+        },
+        {
+          "label": "LlamaIndex GitHub",
+          "url": "https://github.com/run-llama/llama_index"
+        },
+        {
+          "label": "LlamaIndex website",
+          "url": "https://www.llamaindex.ai/"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "tool-lmstudio": {
       "id": "tool-lmstudio",
       "name": "LM Studio",
@@ -5534,6 +6057,39 @@
         }
       ],
       "explanation": "LM Studio is a desktop GUI application that lets users browse, download, and run open-weight language models locally without touching a terminal. Under the hood it uses llama.cpp on Windows and Linux, and Apple MLX on Mac, choosing the fastest backend automatically. It provides a chat interface, a local OpenAI-compatible API server, and model search across HuggingFace. It has become one of the most popular ways non-developers interact with local LLMs."
+    },
+    "tool-n8n": {
+      "id": "tool-n8n",
+      "name": "n8n",
+      "expansion": "n8n — workflow automation platform",
+      "category": "serving-tools",
+      "oneliner": "Open-source, self-hostable workflow automation platform with a visual builder. Connects 400+ apps and now supports AI agent nodes with LLM tool calling.",
+      "explanation": "n8n is an open-source workflow automation platform that lets users visually connect triggers, logic, and integrations across hundreds of services. Since 2024 it has added first-class AI agent nodes that embed LLM reasoning directly into workflows: an agent node can call tools (other n8n nodes), maintain conversational memory, and make multi-step decisions. This bridges the gap between no-code automation (like Zapier) and developer-centric agent frameworks (like LangChain), letting teams build production AI workflows with human-in-the-loop approval gates and full execution tracing.",
+      "fundamentals": "Architecture: event-driven DAG of nodes. Each node is a trigger, action, or logic gate. AI Agent node wraps an LLM (OpenAI, Anthropic, Gemini, Ollama) with a system prompt and a set of tool-nodes it can invoke. Execution is visual and inspectable: every prompt, model response, and tool result is logged per run. Supports self-hosting (Docker, Kubernetes) or n8n Cloud. Workflows can be versioned, shared, and triggered via webhooks, cron, or app events. Community library has 1000+ workflow templates including RAG pipelines, email classifiers, and multi-agent patterns.",
+      "related": [
+        "agentic-ai",
+        "function-calling"
+      ],
+      "seen_in": [
+        "documentation"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "n8n website",
+          "url": "https://n8n.io/"
+        },
+        {
+          "label": "n8n AI features",
+          "url": "https://n8n.io/ai/"
+        },
+        {
+          "label": "n8n GitHub",
+          "url": "https://github.com/n8n-io/n8n"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     },
     "tool-ollama": {
       "id": "tool-ollama",
@@ -5914,6 +6470,40 @@
           "url": "https://arxiv.org/abs/2211.10438"
         }
       ]
+    },
+    "weight-tying": {
+      "id": "weight-tying",
+      "name": "Weight Tying",
+      "expansion": "Weight Tying (Shared Input/Output Embeddings)",
+      "category": "layer-types",
+      "oneliner": "Sharing the same weight matrix between the input token embedding and the output prediction layer, saving parameters and improving quality.",
+      "explanation": "Weight tying reuses the token embedding matrix as the output projection that converts hidden states back to vocabulary logits. Since both layers map between the vocabulary and hidden dimensions, sharing them saves significant parameters and forces a consistent token representation. For a vocabulary of 128K and hidden dimension of 4096, this saves over 500 million parameters. Most modern LLMs use weight tying — check the config for tie_word_embeddings.",
+      "fundamentals": "Without tying: input embedding $W_E \\in \\mathbb{R}^{|V| \\times d}$, output projection $W_O \\in \\mathbb{R}^{d \\times |V|}$. With tying: $W_O = W_E^\\top$, so logits $= h \\cdot W_E^\\top$. Saves $|V| \\times d$ parameters. For Llama-3 8B ($|V|$=128K, $d$=4096): saves 524M params (~6% of model).",
+      "related": [
+        "model-head",
+        "backbone",
+        "token"
+      ],
+      "seen_in": [
+        "model-config",
+        "code"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Using the Output Embedding to Improve Language Models",
+          "authors": "Press & Wolf",
+          "venue": "EACL 2017",
+          "arxiv": "1608.05859"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Sebastian Raschka — LLM Architecture Gallery",
+          "url": "https://sebastianraschka.com/llm-architecture-gallery/"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     },
     "yarn": {
       "id": "yarn",

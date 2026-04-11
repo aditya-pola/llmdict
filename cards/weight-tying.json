@@ -1,0 +1,34 @@
+{
+  "id": "weight-tying",
+  "name": "Weight Tying",
+  "expansion": "Weight Tying (Shared Input/Output Embeddings)",
+  "category": "layer-types",
+  "oneliner": "Sharing the same weight matrix between the input token embedding and the output prediction layer, saving parameters and improving quality.",
+  "explanation": "Weight tying reuses the token embedding matrix as the output projection that converts hidden states back to vocabulary logits. Since both layers map between the vocabulary and hidden dimensions, sharing them saves significant parameters and forces a consistent token representation. For a vocabulary of 128K and hidden dimension of 4096, this saves over 500 million parameters. Most modern LLMs use weight tying — check the config for tie_word_embeddings.",
+  "fundamentals": "Without tying: input embedding $W_E \\in \\mathbb{R}^{|V| \\times d}$, output projection $W_O \\in \\mathbb{R}^{d \\times |V|}$. With tying: $W_O = W_E^\\top$, so logits $= h \\cdot W_E^\\top$. Saves $|V| \\times d$ parameters. For Llama-3 8B ($|V|$=128K, $d$=4096): saves 524M params (~6% of model).",
+  "related": [
+    "model-head",
+    "backbone",
+    "token"
+  ],
+  "seen_in": [
+    "model-config",
+    "code"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Using the Output Embedding to Improve Language Models",
+      "authors": "Press & Wolf",
+      "venue": "EACL 2017",
+      "arxiv": "1608.05859"
+    }
+  ],
+  "resources": [
+    {
+      "label": "Sebastian Raschka — LLM Architecture Gallery",
+      "url": "https://sebastianraschka.com/llm-architecture-gallery/"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

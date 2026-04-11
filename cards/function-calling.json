@@ -1,0 +1,31 @@
+{
+  "id": "function-calling",
+  "name": "Function Calling",
+  "expansion": "LLM Function Calling / Tool Use",
+  "category": "agents-and-tools",
+  "oneliner": "The mechanism by which an LLM emits structured JSON to invoke external tools instead of generating free-text. Foundation of all agentic behaviour.",
+  "explanation": "Function calling is the capability that lets a language model request execution of external functions by outputting structured arguments rather than plain text. The developer registers a set of tool schemas (name, description, parameter JSON Schema) in the prompt or API call. When the model decides a tool is needed, it emits a tool-call object with the function name and arguments. The harness executes the function, returns the result, and the model continues reasoning. OpenAI, Anthropic, and Google each implement this slightly differently but the pattern is universal.",
+  "fundamentals": "Flow: user prompt + tool schemas -> model reasons -> model emits tool_call(name, args) -> harness validates and executes -> result appended as tool_result -> model generates final answer or chains another call. Parallel tool calling lets the model emit multiple calls in one turn. Forced tool use constrains the model to always call a specific function. Structured output mode (JSON Schema) is closely related but produces data rather than invoking actions. Fine-tuning on function-calling datasets improves reliability; constrained decoding guarantees valid JSON.",
+  "related": ["agentic-ai", "mcp", "inference-engine"],
+  "seen_in": ["documentation", "code"],
+  "foundational_papers": [
+    {
+      "title": "Toolformer: Language Models Can Teach Themselves to Use Tools",
+      "authors": "Schick et al.",
+      "venue": "NeurIPS 2023",
+      "arxiv": "2302.04761"
+    },
+    {
+      "title": "Gorilla: Large Language Model Connected with Massive APIs",
+      "authors": "Patil et al.",
+      "venue": "arXiv 2023",
+      "arxiv": "2305.15334"
+    }
+  ],
+  "resources": [
+    {"label": "OpenAI function calling guide", "url": "https://platform.openai.com/docs/guides/function-calling"},
+    {"label": "Anthropic tool use docs", "url": "https://docs.anthropic.com/en/docs/build-with-claude/tool-use"}
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

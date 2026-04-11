@@ -1,0 +1,19 @@
+{
+  "id": "tool-n8n",
+  "name": "n8n",
+  "expansion": "n8n — workflow automation platform",
+  "category": "serving-tools",
+  "oneliner": "Open-source, self-hostable workflow automation platform with a visual builder. Connects 400+ apps and now supports AI agent nodes with LLM tool calling.",
+  "explanation": "n8n is an open-source workflow automation platform that lets users visually connect triggers, logic, and integrations across hundreds of services. Since 2024 it has added first-class AI agent nodes that embed LLM reasoning directly into workflows: an agent node can call tools (other n8n nodes), maintain conversational memory, and make multi-step decisions. This bridges the gap between no-code automation (like Zapier) and developer-centric agent frameworks (like LangChain), letting teams build production AI workflows with human-in-the-loop approval gates and full execution tracing.",
+  "fundamentals": "Architecture: event-driven DAG of nodes. Each node is a trigger, action, or logic gate. AI Agent node wraps an LLM (OpenAI, Anthropic, Gemini, Ollama) with a system prompt and a set of tool-nodes it can invoke. Execution is visual and inspectable: every prompt, model response, and tool result is logged per run. Supports self-hosting (Docker, Kubernetes) or n8n Cloud. Workflows can be versioned, shared, and triggered via webhooks, cron, or app events. Community library has 1000+ workflow templates including RAG pipelines, email classifiers, and multi-agent patterns.",
+  "related": ["agentic-ai", "function-calling"],
+  "seen_in": ["documentation"],
+  "foundational_papers": [],
+  "resources": [
+    {"label": "n8n website", "url": "https://n8n.io/"},
+    {"label": "n8n AI features", "url": "https://n8n.io/ai/"},
+    {"label": "n8n GitHub", "url": "https://github.com/n8n-io/n8n"}
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

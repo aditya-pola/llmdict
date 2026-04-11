@@ -1,0 +1,36 @@
+{
+  "id": "smoothquant",
+  "name": "SmoothQuant",
+  "expansion": "SmoothQuant — Activation-Aware Weight Smoothing for W8A8",
+  "category": "quantization-methods",
+  "oneliner": "A technique that migrates the quantization difficulty from hard-to-quantize activations to easy-to-quantize weights, enabling practical W8A8 inference.",
+  "explanation": "SmoothQuant makes W8A8 quantization practical by mathematically smoothing activation outliers before quantization. LLM activations have extreme values in certain channels that make direct INT8 quantization fail. SmoothQuant applies per-channel scaling that divides activations by a smoothing factor and multiplies corresponding weights by the same factor. This is mathematically equivalent but redistributes the difficulty from activations to weights, enabling both to be quantized to INT8.",
+  "fundamentals": "For each channel $j$: smooth factor $s_j = \\max(|X_j|)^\\alpha / \\max(|W_j|)^{(1-\\alpha)}$ where $\\alpha \\in [0,1]$ controls the migration strength (typically 0.5). Smoothed: $\\hat{X}_j = X_j / s_j$, $\\hat{W}_j = W_j \\cdot s_j$. Output unchanged: $Y = XW = (X/s)(sW) = \\hat{X}\\hat{W}$. The smoothing factors are computed once from calibration data and folded into preceding LayerNorm parameters.",
+  "related": [
+    "w8a8",
+    "int8",
+    "quantization",
+    "calibration-data",
+    "awq"
+  ],
+  "seen_in": [
+    "documentation",
+    "serving-config"
+  ],
+  "foundational_papers": [
+    {
+      "title": "SmoothQuant: Accurate and Efficient Post-Training Quantization for Large Language Models",
+      "authors": "Xiao et al.",
+      "venue": "ICML 2023",
+      "arxiv": "2211.10438"
+    }
+  ],
+  "resources": [
+    {
+      "label": "Lilian Weng — LLM Inference Optimization",
+      "url": "https://lilianweng.github.io/posts/2023-01-10-inference-optimization/"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}
