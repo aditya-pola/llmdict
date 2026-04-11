@@ -109,6 +109,39 @@ def validate():
         if vdate and not re.match(r'^\d{4}-\d{2}-\d{2}$', vdate):
             warnings.append(f'{fname}: verified_date should be YYYY-MM-DD format, got "{vdate}"')
 
+    # --- Connectivity check: do new/edited cards mention existing terms they should link to? ---
+    # Load all cards for cross-referencing
+    all_cards = {}
+    for fname in sorted(os.listdir(CARDS_DIR)):
+        if not fname.endswith('.json') or fname.startswith('_'): continue
+        with open(os.path.join(CARDS_DIR, fname)) as f:
+            try: all_cards[fname[:-5]] = json.load(f)
+            except: pass
+
+    # Build name→id lookup
+    name_to_id = {}
+    for cid, c in all_cards.items():
+        name_lower = c.get('name', '').lower()
+        if len(name_lower) >= 3:
+            name_to_id[name_lower] = cid
+
+    # For each card, check if explanation mentions other card names not in related
+    for cid, c in all_cards.items():
+        explanation = c.get('explanation', '')
+        current_related = set(c.get('related', []))
+        missing_links = []
+
+        for name, target_id in name_to_id.items():
+            if target_id == cid: continue
+            if target_id in current_related: continue
+            if len(name) < 4: continue  # skip very short names to avoid false positives
+            # Case-insensitive word boundary match
+            if re.search(r'\b' + re.escape(name) + r'\b', explanation, re.IGNORECASE):
+                missing_links.append(target_id)
+
+        if missing_links:
+            warnings.append(f'{cid}.json: explanation mentions [{", ".join(missing_links[:5])}] but they are not in "related" — consider adding them')
+
     # --- Report ---
     print(f'Validated {cards_checked} cards\n')
 
