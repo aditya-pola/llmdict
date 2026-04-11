@@ -288,4 +288,48 @@ site/
 ### Current status
 - Serving locally at http://localhost:8891
 - Edge hover scroll and mousewheel scroll fixed (scroll-snap removed)
-- Ready for GitHub Pages deployment after further iteration
+
+### UI iteration (2026-04-11)
+
+**Stacked card view** (replaced carousel):
+- One card visible at center, others peek from sides with vertical title labels
+- Mousewheel/edge hover/touch swipe to navigate (velocity-based accumulator)
+- Click peeking cards to jump, arrow keys supported
+- Card tilt on scroll (rotateY based on velocity, perspective 1200px)
+- Stacked cards branch created, iterated, merged to main
+
+**Floating header + home FAB:**
+- Dark pill header: fixed top-center, backdrop-blur, search expands on focus
+- Home FAB: black circle with house icon, fixed bottom-right, always visible
+- Home card renamed to "Home" with icon, inverted white scheme
+
+**Expandable home/category cards:**
+- Show 8-item preview with overflow hidden, "click to see all" hint
+- Click opens light overlay (white bg) with full scrollable list
+- Category/home overlays use inverted color scheme
+
+**LaTeX rendering fixed:**
+- Root cause: linkifyText was inserting <span> tags inside $...$ blocks, splitting delimiters across DOM nodes
+- Fix: protect math blocks with placeholders before linkification, restore after
+- Hand-wrote proper LaTeX for 11 math-heavy entries
+- Auto-converted 112 fields from Unicode to $...$ delimiters
+
+**History mode:**
+- Toggle button (floating pill, bottom-center) switches stack to visited-only cards
+- "Find in carousel" button on each card in history mode
+- Exits history mode on any link click or home button
+
+**Graph view rewrite:**
+- Light theme (#fafafa bg, 23 category colors)
+- Category hub nodes: donut-style, always-visible labels, cluster centers
+- Home node fixed at center, categories radiate outward
+- Three edge types: home→category, category→term, term↔term
+- Hover: same-category brightens, others dim, direct edges thicken
+- Click category node → overlay with term list
+- Consistent floating search bar, category legend with click-to-pan
+- Zoom toward cursor position
+
+### Current status
+- UI is functionally complete (stacked cards + graph view)
+- 142 entries, LaTeX rendering, search, history, overlays all working
+- **Content quality needs review** — data presentation, writing style, depth coverage to be revisited
