@@ -641,6 +641,28 @@ main {
   .related-tag:hover { color: #fff; border-color: rgba(255, 255, 255, 0.3); }
 }
 
+/* --- Graph button (circle, beside header bar) --- */
+.graph-pill {
+  position: fixed;
+  z-index: 101;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(16px);
+  color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+  transition: transform 0.15s ease, color 0.3s ease;
+}
+@media (hover: hover) {
+  .graph-pill:hover { color: #fff; transform: scale(1.08); }
+}
+.graph-pill:active { transform: scale(0.94); }
+
 /* --- Home FAB (floating action button) --- */
 .home-fab {
   position: fixed;

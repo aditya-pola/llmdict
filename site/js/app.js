@@ -181,6 +181,19 @@
   overlay.addEventListener('click', (e) => { if (e.target === overlay) closeOverlay(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeOverlay(); });
 
+  // --- Position graph button beside the header bar, vertically centered ---
+  function positionGraphPill() {
+    const header = document.querySelector('.site-header');
+    const pill = document.querySelector('.graph-pill');
+    if (!header || !pill) return;
+    const rect = header.getBoundingClientRect();
+    const pillH = pill.offsetHeight;
+    pill.style.left = (rect.right + 10) + 'px';
+    pill.style.top = (rect.top + (rect.height - pillH) / 2) + 'px';
+  }
+  positionGraphPill();
+  window.addEventListener('resize', positionGraphPill);
+
   // --- Home button ---
   const homeBtn = document.getElementById('home-btn');
   if (homeBtn) homeBtn.addEventListener('click', () => {
