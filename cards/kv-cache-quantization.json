@@ -4,10 +4,18 @@
   "expansion": "Key-Value Cache Quantization",
   "category": "quantization-methods",
   "oneliner": "Quantize the KV cache tensors themselves (not model weights) to FP8, INT4, or even 2-bit, slashing memory so more requests or longer contexts fit in GPU RAM.",
-  "explanation": "KV cache quantization reduces the precision of stored key and value vectors in the attention cache, independently of any weight quantization. Because the KV cache can exceed the size of the model weights at long contexts and large batches, compressing it to FP8 or INT4 directly increases the number of concurrent requests a server can handle. KIVI showed that keys benefit from per-channel quantization while values benefit from per-token quantization, achieving 2-bit precision with minimal quality loss. KVQuant pushed further toward 10-million-token contexts by combining quantization with sparse outlier handling.",
+  "explanation": "KV cache quantization reduces the precision of stored key and value vectors in the attention cache, independently of any weight quantization. Because the KV cache can exceed the size of the model weights at long contexts and large batches, compressing it to FP8 or INT4 directly increases the number of concurrent requests a server can handle.",
   "fundamentals": "KV cache memory: $2 \\times n_{\\text{layers}} \\times n_{\\text{kv\\_heads}} \\times d_{\\text{head}} \\times \\text{seq\\_len} \\times \\text{batch} \\times \\text{bytes}$. Quantising from FP16 (2 B) to FP8 (1 B) halves cache; to INT4 (0.5 B) quarters it. KIVI: keys quantised per-channel (outliers concentrate on specific channels), values per-token. 2-bit asymmetric quantisation retains >98% of FP16 quality on Llama-2-7B. Residual length: keep last $r$ tokens in full precision to preserve recent context fidelity. Compatible with PagedAttention: quantise when writing blocks, dequantise on read.",
-  "related": ["kv-cache", "fp8", "int4", "quantization"],
-  "seen_in": ["serving-config", "documentation"],
+  "related": [
+    "kv-cache",
+    "fp8",
+    "int4",
+    "quantization"
+  ],
+  "seen_in": [
+    "serving-config",
+    "documentation"
+  ],
   "foundational_papers": [
     {
       "title": "KIVI: A Tuning-Free Asymmetric 2bit Quantization for KV Cache",
@@ -23,8 +31,14 @@
     }
   ],
   "resources": [
-    {"label": "KIVI paper", "url": "https://arxiv.org/abs/2402.02750"},
-    {"label": "KVQuant paper", "url": "https://arxiv.org/abs/2401.18079"}
+    {
+      "label": "KIVI paper",
+      "url": "https://arxiv.org/abs/2402.02750"
+    },
+    {
+      "label": "KVQuant paper",
+      "url": "https://arxiv.org/abs/2401.18079"
+    }
   ],
   "confidence": "high",
   "verified_date": "2026-04-11"

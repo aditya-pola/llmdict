@@ -4,15 +4,32 @@
   "expansion": "LlamaIndex — data framework for LLM applications",
   "category": "serving-tools",
   "oneliner": "Python framework optimised for connecting LLMs to your data. Best-in-class RAG pipelines, document agents, and structured data querying out of the box.",
-  "explanation": "LlamaIndex is an open-source data framework that simplifies building retrieval-augmented generation and agentic applications over private data. It provides connectors for 160+ data sources, handles chunking, indexing, and embedding, and orchestrates retrieval and synthesis at query time. Its Workflows API lets developers build multi-step agentic pipelines with branching, loops, and parallel execution. LlamaIndex differentiates from LangChain by focusing on data ingestion and retrieval quality rather than general-purpose chain composition.",
+  "explanation": "LlamaIndex is an open-source data framework that simplifies building retrieval-augmented generation and agentic applications over private data. It provides connectors for 160+ data sources, handles chunking, indexing, and embedding, and orchestrates retrieval and synthesis at query time. Its Workflows API lets developers build multi-step agentic pipelines with branching, loops, and parallel execution.",
   "fundamentals": "Pipeline: DataConnector (loads docs) -> NodeParser (chunks) -> Embedding model -> VectorStoreIndex (stores embeddings) -> Retriever (fetches top-k) -> ResponseSynthesizer (LLM generates answer). Advanced features: agentic RAG (per-document agents with a top-level router), sub-question decomposition, knowledge graph indices, and structured output extraction. Workflows API replaces the older query-engine pattern with explicit step functions, state passing, and event-driven control flow. LlamaParse handles complex PDF/table extraction. LlamaCloud offers managed indexing and retrieval.",
-  "related": ["agentic-ai", "rag", "tool-langchain", "function-calling"],
-  "seen_in": ["documentation", "code"],
+  "related": [
+    "agentic-ai",
+    "rag",
+    "tool-langchain",
+    "function-calling"
+  ],
+  "seen_in": [
+    "documentation",
+    "code"
+  ],
   "foundational_papers": [],
   "resources": [
-    {"label": "LlamaIndex docs", "url": "https://docs.llamaindex.ai/"},
-    {"label": "LlamaIndex GitHub", "url": "https://github.com/run-llama/llama_index"},
-    {"label": "LlamaIndex website", "url": "https://www.llamaindex.ai/"}
+    {
+      "label": "LlamaIndex docs",
+      "url": "https://docs.llamaindex.ai/"
+    },
+    {
+      "label": "LlamaIndex GitHub",
+      "url": "https://github.com/run-llama/llama_index"
+    },
+    {
+      "label": "LlamaIndex website",
+      "url": "https://www.llamaindex.ai/"
+    }
   ],
   "confidence": "high",
   "verified_date": "2026-04-11"

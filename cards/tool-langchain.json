@@ -4,15 +4,32 @@
   "expansion": "LangChain — LLM application framework",
   "category": "serving-tools",
   "oneliner": "The most widely adopted Python/JS framework for building LLM-powered applications. Chains, agents, RAG pipelines, and LangGraph for stateful agent orchestration.",
-  "explanation": "LangChain is an open-source framework for building applications powered by language models. It provides composable abstractions for prompts, models, output parsers, retrievers, and tool calling, letting developers wire together chains (sequential LLM calls) and agents (LLM-driven tool-use loops). LangGraph, its companion library, models agent workflows as state machines (graphs) with durable state, human-in-the-loop checkpoints, and long-running execution. LangChain 1.0 and LangGraph 1.0 reached general availability in late 2025.",
+  "explanation": "LangChain is an open-source framework for building applications powered by language models. It provides composable abstractions for prompts, models, output parsers, retrievers, and tool calling, letting developers wire together chains (sequential LLM calls) and agents (LLM-driven tool-use loops). LangGraph, its companion library, models agent workflows as state machines (graphs) with durable state, human-in-the-loop checkpoints, and long-running execution. LangChain 1.",
   "fundamentals": "Core abstractions: ChatModel (provider-agnostic LLM interface), PromptTemplate, OutputParser, Retriever, Tool. A Chain is a fixed sequence of steps; an Agent uses the LLM to decide which tools to call dynamically. LangGraph extends this with nodes (functions), edges (control flow), and state objects that persist across steps. LangSmith provides observability (tracing, evaluation). The ecosystem includes 700+ integrations via langchain-community. Criticism: early versions were over-abstracted; v0.3+ and LangGraph addressed this by favouring explicit graphs over magic chains.",
-  "related": ["agentic-ai", "function-calling", "rag", "tool-llamaindex"],
-  "seen_in": ["documentation", "code"],
+  "related": [
+    "agentic-ai",
+    "function-calling",
+    "rag",
+    "tool-llamaindex"
+  ],
+  "seen_in": [
+    "documentation",
+    "code"
+  ],
   "foundational_papers": [],
   "resources": [
-    {"label": "LangChain docs", "url": "https://python.langchain.com/docs/"},
-    {"label": "LangGraph docs", "url": "https://langchain-ai.github.io/langgraph/"},
-    {"label": "LangChain GitHub", "url": "https://github.com/langchain-ai/langchain"}
+    {
+      "label": "LangChain docs",
+      "url": "https://python.langchain.com/docs/"
+    },
+    {
+      "label": "LangGraph docs",
+      "url": "https://langchain-ai.github.io/langgraph/"
+    },
+    {
+      "label": "LangChain GitHub",
+      "url": "https://github.com/langchain-ai/langchain"
+    }
   ],
   "confidence": "high",
   "verified_date": "2026-04-11"

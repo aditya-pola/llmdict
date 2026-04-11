@@ -4,10 +4,17 @@
   "expansion": "Automatic Prefix Caching (APC)",
   "category": "scaling-patterns",
   "oneliner": "Reuse precomputed KV cache blocks for shared prompt prefixes (system prompts, few-shot examples) across requests, avoiding redundant prefill computation.",
-  "explanation": "Prefix caching stores the KV cache blocks produced during prompt prefill and reuses them when a subsequent request shares the same token prefix. Because the KV computation for any token depends only on preceding tokens, identical prefixes yield identical cache entries. This is especially effective for system prompts, few-shot templates, and multi-turn conversations where a large shared context is prepended to each query. vLLM implements this via hash-based block lookup, while SGLang uses a radix tree (RadixAttention). The technique can cut time-to-first-token dramatically when hit rates are high.",
+  "explanation": "Prefix caching stores the KV cache blocks produced during prompt prefill and reuses them when a subsequent request shares the same token prefix. Because the KV computation for any token depends only on preceding tokens, identical prefixes yield identical cache entries. This is especially effective for system prompts, few-shot templates, and multi-turn conversations where a large shared context is prepended to each query.",
   "fundamentals": "Each KV block is identified by a hash of the tokens it covers plus all preceding tokens. A global hash table maps hashes to physical GPU memory blocks. On a new request the scheduler walks the token sequence block-by-block: cache hit $\\rightarrow$ skip prefill for that block; cache miss $\\rightarrow$ compute and store. Eviction follows LRU. Best practice: place static content (system prompt, instructions) at the beginning to maximise prefix overlap. SGLang RadixAttention uses a trie structure enabling shared caching for tree-shaped conversation histories.",
-  "related": ["kv-cache", "paged-attention", "continuous-batching"],
-  "seen_in": ["serving-config", "documentation"],
+  "related": [
+    "kv-cache",
+    "paged-attention",
+    "continuous-batching"
+  ],
+  "seen_in": [
+    "serving-config",
+    "documentation"
+  ],
   "foundational_papers": [
     {
       "title": "Efficient Memory Management for Large Language Model Serving with PagedAttention",
@@ -23,7 +30,10 @@
     }
   ],
   "resources": [
-    {"label": "vLLM APC docs", "url": "https://docs.vllm.ai/en/stable/design/prefix_caching/"}
+    {
+      "label": "vLLM APC docs",
+      "url": "https://docs.vllm.ai/en/stable/design/prefix_caching/"
+    }
   ],
   "confidence": "high",
   "verified_date": "2026-04-11"

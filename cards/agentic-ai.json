@@ -4,10 +4,18 @@
   "expansion": "Agentic Artificial Intelligence",
   "category": "agents-and-tools",
   "oneliner": "AI systems that plan, use tools, retain memory, and execute multi-step tasks autonomously. The paradigm shift from prompt-response to goal-driven agents.",
-  "explanation": "Agentic AI is the paradigm in which a language model serves as a reasoning engine inside an orchestration loop that can plan actions, invoke external tools, observe results, and iterate until a goal is met. Unlike a vanilla chatbot that produces a single reply, an agentic system breaks a request into sub-tasks, calls APIs or databases, writes and runs code, and self-corrects based on feedback. The key components are a planner, a tool registry, working memory, and a control loop that decides when to stop.",
+  "explanation": "Agentic AI is the paradigm in which a language model serves as a reasoning engine inside an orchestration loop that can plan actions, invoke external tools, observe results, and iterate until a goal is met. Unlike a vanilla chatbot that produces a single reply, an agentic system breaks a request into sub-tasks, calls APIs or databases, writes and runs code, and self-corrects based on feedback.",
   "fundamentals": "Core loop: Observe -> Think -> Act -> Observe. The LLM receives the goal plus accumulated context (scratchpad), reasons about the next step, emits a structured tool call, the harness executes it, appends the result, and re-prompts. ReAct (Reason + Act) is the foundational pattern. Key design axes: single-agent vs. multi-agent, sequential vs. parallel tool calls, human-in-the-loop checkpoints, and memory persistence (short-term scratchpad vs. long-term vector store). Reliability depends on the model's instruction-following and the harness's error recovery.",
-  "related": ["function-calling", "mcp", "rag", "inference-engine"],
-  "seen_in": ["documentation", "serving-config"],
+  "related": [
+    "function-calling",
+    "mcp",
+    "rag",
+    "inference-engine"
+  ],
+  "seen_in": [
+    "documentation",
+    "serving-config"
+  ],
   "foundational_papers": [
     {
       "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
@@ -23,8 +31,14 @@
     }
   ],
   "resources": [
-    {"label": "Agentic AI explained (MIT Sloan)", "url": "https://mitsloan.mit.edu/ideas-made-to-matter/agentic-ai-explained"},
-    {"label": "What is Agentic AI (IBM)", "url": "https://www.ibm.com/think/topics/agentic-ai"}
+    {
+      "label": "Agentic AI explained (MIT Sloan)",
+      "url": "https://mitsloan.mit.edu/ideas-made-to-matter/agentic-ai-explained"
+    },
+    {
+      "label": "What is Agentic AI (IBM)",
+      "url": "https://www.ibm.com/think/topics/agentic-ai"
+    }
   ],
   "confidence": "high",
   "verified_date": "2026-04-11"

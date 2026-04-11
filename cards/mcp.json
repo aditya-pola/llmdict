@@ -4,15 +4,30 @@
   "expansion": "Model Context Protocol",
   "category": "agents-and-tools",
   "oneliner": "Anthropic's open protocol for connecting LLMs to external tools and data sources. A universal plug-and-play standard for agent integrations.",
-  "explanation": "MCP is an open protocol introduced by Anthropic in November 2024 that standardises how LLM applications discover and invoke external tools, access data sources, and manage context. It defines a client-server architecture where an MCP server exposes tools (callable functions), resources (readable data), and prompts (reusable templates), while an MCP client inside the LLM application connects to one or more servers. The protocol uses JSON-RPC over stdio or HTTP with SSE, supports OAuth 2.0 authentication, and has been adopted by OpenAI, Google, and the broader ecosystem.",
+  "explanation": "MCP is an open protocol introduced by Anthropic in November 2024 that standardises how LLM applications discover and invoke external tools, access data sources, and manage context. It defines a client-server architecture where an MCP server exposes tools (callable functions), resources (readable data), and prompts (reusable templates), while an MCP client inside the LLM application connects to one or more servers.",
   "fundamentals": "Architecture: Host (IDE, chat app) embeds an MCP Client that connects to MCP Servers. Each server declares capabilities via initialize handshake. Tools are described with JSON Schema inputs and can return text or structured JSON. Resources provide read-only data (files, DB rows). Prompts are server-defined templates. Transport: stdio for local servers, HTTP+SSE or streamable HTTP for remote. Security: servers are OAuth 2.0 Resource Servers; tokens are scoped per server. The 2025-06-18 spec added structured output, elicitation (server asks user for input mid-session), and task tracking for long-running operations.",
-  "related": ["agentic-ai", "function-calling"],
-  "seen_in": ["documentation", "code"],
+  "related": [
+    "agentic-ai",
+    "function-calling"
+  ],
+  "seen_in": [
+    "documentation",
+    "code"
+  ],
   "foundational_papers": [],
   "resources": [
-    {"label": "MCP specification", "url": "https://modelcontextprotocol.io/specification/2025-11-25"},
-    {"label": "Anthropic MCP announcement", "url": "https://www.anthropic.com/news/model-context-protocol"},
-    {"label": "MCP GitHub repo", "url": "https://github.com/modelcontextprotocol/modelcontextprotocol"}
+    {
+      "label": "MCP specification",
+      "url": "https://modelcontextprotocol.io/specification/2025-11-25"
+    },
+    {
+      "label": "Anthropic MCP announcement",
+      "url": "https://www.anthropic.com/news/model-context-protocol"
+    },
+    {
+      "label": "MCP GitHub repo",
+      "url": "https://github.com/modelcontextprotocol/modelcontextprotocol"
+    }
   ],
   "confidence": "high",
   "verified_date": "2026-04-11"

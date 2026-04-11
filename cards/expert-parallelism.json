@@ -4,10 +4,17 @@
   "expansion": "Expert Parallelism (EP)",
   "category": "scaling-patterns",
   "oneliner": "Distribute MoE experts across GPUs so each device holds a subset of experts, enabling models with hundreds of experts to scale beyond single-node memory.",
-  "explanation": "Expert parallelism is a distribution strategy for Mixture-of-Experts models where different experts in each MoE layer are placed on different GPUs. When a token is routed to a particular expert, it is sent via all-to-all communication to the GPU hosting that expert, processed, and returned. This complements tensor parallelism and pipeline parallelism as a third axis of model distribution. DeepSeek-V3 relies heavily on expert parallelism to serve 256 routed experts. The main bottleneck is the all-to-all communication overhead, which MegaScale-MoE and disaggregated expert parallelism address.",
+  "explanation": "Expert parallelism is a distribution strategy for Mixture-of-Experts models where different experts in each MoE layer are placed on different GPUs. When a token is routed to a particular expert, it is sent via all-to-all communication to the GPU hosting that expert, processed, and returned. This complements tensor parallelism and pipeline parallelism as a third axis of model distribution. DeepSeek-V3 relies heavily on expert parallelism to serve 256 routed experts.",
   "fundamentals": "Given $E$ experts and $G$ GPUs, each GPU holds $E/G$ experts. Forward pass: 1) router selects top-$k$ experts per token; 2) all-to-all dispatch sends tokens to correct GPUs; 3) each GPU runs its local experts on received tokens; 4) all-to-all combine returns results. Communication volume: $O(B \\times k \\times d / G)$ per layer, where $B$ = tokens in batch, $d$ = hidden dim. Can combine with TP (split each expert) and PP (split layers). Load balancing is critical: skewed routing wastes GPU cycles on idle experts.",
-  "related": ["tp-pp", "moe", "expert-routing"],
-  "seen_in": ["code", "documentation"],
+  "related": [
+    "tp-pp",
+    "moe",
+    "expert-routing"
+  ],
+  "seen_in": [
+    "code",
+    "documentation"
+  ],
   "foundational_papers": [
     {
       "title": "GShard: Scaling Giant Models with Conditional Computation and Automatic Sharding",
@@ -23,7 +30,10 @@
     }
   ],
   "resources": [
-    {"label": "LMSYS: Large-scale EP for DeepSeek", "url": "https://www.lmsys.org/blog/2025-05-05-large-scale-ep/"}
+    {
+      "label": "LMSYS: Large-scale EP for DeepSeek",
+      "url": "https://www.lmsys.org/blog/2025-05-05-large-scale-ep/"
+    }
   ],
   "confidence": "high",
   "verified_date": "2026-04-11"

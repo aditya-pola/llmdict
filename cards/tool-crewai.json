@@ -4,15 +4,31 @@
   "expansion": "CrewAI — multi-agent orchestration framework",
   "category": "serving-tools",
   "oneliner": "Python framework for orchestrating teams of role-playing AI agents. Each agent has a role, goal, and tools; tasks flow through a structured crew pipeline.",
-  "explanation": "CrewAI is an open-source Python framework for building multi-agent systems where each agent is assigned a specific role, goal, and backstory. Agents collaborate by passing task outputs along a defined workflow, with support for sequential, parallel, and hierarchical execution. Unlike LangChain which is a general-purpose LLM framework, CrewAI is purpose-built for the multi-agent pattern: define agents, assign tasks with dependencies, and let the crew execute end-to-end. It is framework-independent, built from scratch without relying on LangChain internals.",
+  "explanation": "CrewAI is an open-source Python framework for building multi-agent systems where each agent is assigned a specific role, goal, and backstory. Agents collaborate by passing task outputs along a defined workflow, with support for sequential, parallel, and hierarchical execution. Unlike LangChain which is a general-purpose LLM framework, CrewAI is purpose-built for the multi-agent pattern: define agents, assign tasks with dependencies, and let the crew execute end-to-end.",
   "fundamentals": "Core concepts: Agent (role + goal + backstory + tools), Task (description + expected output + assigned agent), Crew (collection of agents + tasks + process type). Process types: sequential (tasks run in order), hierarchical (a manager agent delegates to workers and aggregates results). Agents can use any tool that follows the BaseTool interface. Memory: short-term (within a crew run), long-term (across runs via embeddings), and entity memory. CrewAI Flows add event-driven orchestration on top of crews for complex multi-crew pipelines. Enterprise edition adds observability, deployment, and access control.",
-  "related": ["agentic-ai", "function-calling", "tool-langchain"],
-  "seen_in": ["documentation", "code"],
+  "related": [
+    "agentic-ai",
+    "function-calling",
+    "tool-langchain"
+  ],
+  "seen_in": [
+    "documentation",
+    "code"
+  ],
   "foundational_papers": [],
   "resources": [
-    {"label": "CrewAI website", "url": "https://crewai.com/"},
-    {"label": "CrewAI docs", "url": "https://docs.crewai.com/"},
-    {"label": "CrewAI GitHub", "url": "https://github.com/crewAIInc/crewAI"}
+    {
+      "label": "CrewAI website",
+      "url": "https://crewai.com/"
+    },
+    {
+      "label": "CrewAI docs",
+      "url": "https://docs.crewai.com/"
+    },
+    {
+      "label": "CrewAI GitHub",
+      "url": "https://github.com/crewAIInc/crewAI"
+    }
   ],
   "confidence": "high",
   "verified_date": "2026-04-11"

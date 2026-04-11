@@ -4,10 +4,18 @@
   "expansion": "Retrieval-Augmented Generation",
   "category": "scaling-patterns",
   "oneliner": "Augment an LLM with retrieved documents at inference time so it can answer questions grounded in external knowledge without retraining.",
-  "explanation": "Retrieval-Augmented Generation is an inference pattern that pairs a language model with an external retrieval system. When a query arrives, a retriever (typically a dense embedding model) fetches relevant documents from a knowledge base, and those documents are concatenated into the prompt before generation. This grounds the model's output in up-to-date, verifiable facts, reducing hallucination and eliminating the need to bake all knowledge into model weights. RAG is the dominant production pattern for knowledge-intensive LLM applications.",
+  "explanation": "Retrieval-Augmented Generation is an inference pattern that pairs a language model with an external retrieval system. When a query arrives, a retriever (typically a dense embedding model) fetches relevant documents from a knowledge base, and those documents are concatenated into the prompt before generation. This grounds the model's output in up-to-date, verifiable facts, reducing hallucination and eliminating the need to bake all knowledge into model weights.",
   "fundamentals": "Pipeline: query $\\rightarrow$ embed(query) $\\rightarrow$ vector search top-$k$ $\\rightarrow$ concat(docs, query) $\\rightarrow$ LLM generate. Retriever: bi-encoder (e.g. DPR) maps query and documents to shared embedding space; cosine similarity selects top-$k$. Generator: any causal LM conditioned on retrieved context. Original RAG formulation: $p(y|x) = \\sum_{z \\in \\text{top-}k} p(z|x)\\,p(y|x,z)$, marginalising over retrieved documents $z$. Chunking strategy, chunk size, overlap, and reranking significantly affect quality.",
-  "related": ["token", "inference", "tag-embed"],
-  "seen_in": ["code", "serving-config", "documentation"],
+  "related": [
+    "token",
+    "inference",
+    "tag-embed"
+  ],
+  "seen_in": [
+    "code",
+    "serving-config",
+    "documentation"
+  ],
   "foundational_papers": [
     {
       "title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
@@ -17,7 +25,10 @@
     }
   ],
   "resources": [
-    {"label": "Original paper", "url": "https://arxiv.org/abs/2005.11401"}
+    {
+      "label": "Original paper",
+      "url": "https://arxiv.org/abs/2005.11401"
+    }
   ],
   "confidence": "high",
   "verified_date": "2026-04-11"
