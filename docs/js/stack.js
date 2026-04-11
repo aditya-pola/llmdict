@@ -14,11 +14,18 @@ const Stack = (() => {
   let _currentTilt = 0;
   let _navId = 0;
 
-  // Responsive peek width: narrower on small screens
-  const isMobile = window.innerWidth < 768;
-  const PEEK_WIDTH = isMobile ? 28 : 48;
-  const PEEK_GAP = isMobile ? 2 : 4;
-  const MAX_PEEK = isMobile ? 3 : 5;
+  // Responsive peek: on mobile, cards peek less so labels stay on-screen
+  function getIsMobile() { return window.innerWidth < 768; }
+  let PEEK_WIDTH = getIsMobile() ? 24 : 48;
+  let PEEK_GAP = getIsMobile() ? 2 : 4;
+  let MAX_PEEK = getIsMobile() ? 2 : 5;
+
+  window.addEventListener('resize', () => {
+    const m = getIsMobile();
+    PEEK_WIDTH = m ? 24 : 48;
+    PEEK_GAP = m ? 2 : 4;
+    MAX_PEEK = m ? 2 : 5;
+  });
   const WHEEL_IMPULSE = 0.008;    // wheel delta → accumulator (lower = slower)
   const EDGE_ACCEL = 0.003;       // edge hover accumulation rate per frame
   const FRICTION = 0.88;
@@ -187,21 +194,9 @@ const Stack = (() => {
 
       const direction = dx < 0 ? 1 : -1;
 
-      if (totalJump === 1) {
-        goTo(_currentIndex + direction);
-      } else {
-        // Animated multi-step: step through cards with decelerating timing
-        let stepped = 0;
-        function stepNext() {
-          if (stepped >= totalJump) return;
-          stepped++;
-          goTo(_currentIndex + direction);
-          // Decelerate: each step takes longer
-          const delay = 60 + stepped * 40;
-          if (stepped < totalJump) setTimeout(stepNext, delay);
-        }
-        stepNext();
-      }
+      // For multi-card jumps: jump directly to target, let CSS transition handle smoothness
+      const target = _currentIndex + direction * totalJump;
+      goTo(target);
     }, { passive: true });
   }
 
@@ -232,12 +227,18 @@ const Stack = (() => {
       _velocity *= FRICTION;
       if (Math.abs(_velocity) < 0.001) _velocity = 0;
 
-      // Tilt based on velocity
+      // Tilt: only update the active card's rotateY (don't re-layout everything)
       const targetTilt = Math.max(-MAX_TILT, Math.min(MAX_TILT, _velocity * 300));
       _currentTilt += (targetTilt - _currentTilt) * TILT_SMOOTHING;
       if (Math.abs(_currentTilt) < 0.05) _currentTilt = 0;
 
-      _layout(_currentTilt);
+      const activeCard = _cards[_currentIndex];
+      if (activeCard && Math.abs(_currentTilt) > 0.05) {
+        activeCard.style.transform = `translateX(0) scale(1) rotateY(${_currentTilt}deg)`;
+      } else if (activeCard) {
+        activeCard.style.transform = 'translateX(0) scale(1) rotateY(0deg)';
+      }
+
       requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);

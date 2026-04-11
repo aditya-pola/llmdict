@@ -1039,21 +1039,29 @@ main {
 
 /* --- Responsive --- */
 @media (max-width: 768px) {
-  :root { --card-width: 260px; --cp: 18px; --peek-width: 28px; }
+  :root { --card-width: calc(100vw - 120px); --cp: 20px; --peek-width: 28px; }
   .site-header { padding: 10px 16px; gap: 8px; }
   .site-title { font-size: 13px; }
-  #search-input { width: 140px; font-size: 12px; padding: 6px 12px; }
-  #search-input:focus { width: 180px; }
+  #search-input { width: 120px; font-size: 12px; padding: 6px 12px; }
+  #search-input:focus { width: 160px; }
   .history-bar { padding: 8px 16px; }
-  .term-name { font-size: 22px; letter-spacing: -1px; }
-  .card--term .term-expansion { font-size: 11px; margin-bottom: 10px; }
-  .card--term .term-explanation { font-size: 13px; }
-  .card .peek-label { width: 24px; font-size: 12px; }
-  .home-title { font-size: 28px; }
-  .cat-title { font-size: 20px; }
-  .card-hint { font-size: 9px; }
+  .term-name { font-size: 24px; letter-spacing: -1px; }
+  .card .peek-label { width: 22px; font-size: 11px; letter-spacing: -0.3px; }
   .home-fab { width: 40px; height: 40px; bottom: 16px; right: 16px; }
   .history-toggle { font-size: 10px; padding: 6px 14px; }
   .shortcut-hint { display: none; }
-  .overlay-card { padding: 22px; max-width: 90vw; }
+  .overlay-card { padding: 22px; max-width: 92vw; }
+
+  /* Move action buttons below the header bar on mobile */
+  .graph-pill, .globe-toggle, .contribute-btn {
+    position: fixed !important;
+    top: auto !important;
+    left: auto !important;
+    bottom: 16px !important;
+    width: 36px;
+    height: 36px;
+  }
+  .graph-pill { left: 16px !important; }
+  .globe-toggle { left: 60px !important; }
+  .contribute-btn { left: 104px !important; }
 }
