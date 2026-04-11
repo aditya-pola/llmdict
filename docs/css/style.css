@@ -1037,6 +1037,9 @@ main {
 .overlay-card .katex { color: #ccc; font-size: 1.2em; }
 .katex .katex-mathml { display: none; }
 
+/* Mobile peek labels — hidden on desktop */
+.mobile-peek-label { display: none; }
+
 /* --- Responsive --- */
 @media (max-width: 768px) {
   :root { --card-width: calc(100vw - 140px); --cp: 18px; --peek-width: 40px; }
@@ -1046,10 +1049,32 @@ main {
   #search-input:focus { width: 160px; }
   .history-bar { padding: 8px 16px; }
   .term-name { font-size: 24px; letter-spacing: -1px; }
-  /* Mobile: put peek labels on the INNER edge (facing the active card) so they're always visible */
-  .card .peek-label { width: 34px; font-size: 13px; font-weight: 500; letter-spacing: -0.3px; color: rgba(255,255,255,0.9); }
-  .card.card--left .peek-label { left: auto; right: 8px; }
-  .card.card--right .peek-label { right: auto; left: 8px; }
+  /* Mobile: hide card-attached peek labels, use fixed edge labels instead */
+  .card .peek-label { display: none !important; }
+
+  .mobile-peek-label {
+    display: block;
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 60;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: -0.2px;
+    color: rgba(0, 0, 0, 0.35);
+    pointer-events: none;
+    max-height: 60vh;
+    overflow: hidden;
+  }
+  .mobile-peek-label--left {
+    left: 6px;
+    writing-mode: vertical-lr;
+    transform: translateY(-50%) rotate(180deg);
+  }
+  .mobile-peek-label--right {
+    right: 6px;
+    writing-mode: vertical-rl;
+  }
   .home-fab { width: 40px; height: 40px; bottom: 16px; right: 16px; }
   .history-toggle { font-size: 10px; padding: 6px 14px; }
   .shortcut-hint { display: none; }

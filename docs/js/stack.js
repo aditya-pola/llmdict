@@ -112,6 +112,31 @@ const Stack = (() => {
     _currentIndex = index;
     _accumulator = 0;
     _layout(_currentTilt);
+    _updateMobilePeekLabels();
+  }
+
+  function _updateMobilePeekLabels() {
+    const leftLabel = document.getElementById('mobile-peek-left');
+    const rightLabel = document.getElementById('mobile-peek-right');
+    if (!leftLabel || !rightLabel) return;
+
+    // Previous card label
+    if (_currentIndex > 0) {
+      const prevCard = _cards[_currentIndex - 1];
+      const prevLabel = prevCard.querySelector('.peek-label span');
+      leftLabel.textContent = prevLabel ? prevLabel.textContent : '';
+    } else {
+      leftLabel.textContent = '';
+    }
+
+    // Next card label
+    if (_currentIndex < _cards.length - 1) {
+      const nextCard = _cards[_currentIndex + 1];
+      const nextLabel = nextCard.querySelector('.peek-label span');
+      rightLabel.textContent = nextLabel ? nextLabel.textContent : '';
+    } else {
+      rightLabel.textContent = '';
+    }
   }
 
   /**
