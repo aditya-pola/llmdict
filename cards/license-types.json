@@ -1,0 +1,26 @@
+{
+  "id": "license-types",
+  "name": "License Types",
+  "expansion": "Common LLM Licenses",
+  "category": "model-naming",
+  "oneliner": "The legal terms governing how you can use a model — Apache 2.0 (fully permissive), MIT, Llama Community License (restrictions), and CC-BY-NC (non-commercial only).",
+  "explanation": "LLM licenses determine what you can legally do with model weights. Apache 2.0 and MIT are fully permissive — use for anything including commercial products. The Llama Community License allows commercial use but adds restrictions on large-scale deployment and requires attribution. CC-BY-NC prohibits commercial use entirely. Some models use custom licenses with specific restrictions on use cases or output. Always check the license before deploying a model commercially.",
+  "related": [
+    "open-weights",
+    "model-card",
+    "huggingface-hub"
+  ],
+  "seen_in": [
+    "model-cards",
+    "documentation"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "HuggingFace — Model licenses",
+      "url": "https://huggingface.co/docs/hub/repositories-licenses"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

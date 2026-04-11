@@ -1,0 +1,27 @@
+{
+  "id": "data-mixing",
+  "name": "Data Mixing",
+  "expansion": "Pre-Training Data Mix (Data Recipe)",
+  "category": "datasets-recipes",
+  "oneliner": "The proportions of different data sources — web text, code, books, academic papers, domain text — used in a pre-training corpus. A key decision that shapes model capabilities.",
+  "explanation": "Data mixing is the practice of balancing different data sources in a pre-training corpus to shape the model's capabilities. A typical mix includes web crawl data (60-80 percent), code (5-15 percent), books and academic papers (5-10 percent), and curated domain data. The mix ratios directly affect what the model is good at — more code data produces better coding ability, more math data improves reasoning. Llama 3 trained on 15 trillion tokens with carefully tuned proportions.",
+  "related": [
+    "pre-training",
+    "training-recipe",
+    "scaling-laws",
+    "data-deduplication"
+  ],
+  "seen_in": [
+    "documentation",
+    "model-cards"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "Llama 3 training details",
+      "url": "https://arxiv.org/abs/2407.21783"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

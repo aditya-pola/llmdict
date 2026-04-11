@@ -1,0 +1,33 @@
+{
+  "id": "gpqa",
+  "name": "GPQA",
+  "expansion": "GPQA — Graduate-Level Google-Proof Q&A",
+  "category": "scaling-patterns",
+  "oneliner": "A 448-question science reasoning benchmark where non-expert humans score only 34% — designed to measure frontier model capabilities that MMLU can no longer distinguish.",
+  "explanation": "GPQA is a benchmark of 448 extremely difficult science questions in biology, physics, and chemistry, written by domain experts and verified to be unsearchable. Non-expert humans with internet access score only 34 percent, while expert humans score around 65 percent. GPQA has replaced MMLU as the discriminating benchmark for frontier models because MMLU is now saturated above 88 percent. Models are evaluated on the GPQA-Diamond subset of 198 hardest questions.",
+  "related": [
+    "mmlu",
+    "evals",
+    "reasoning-models"
+  ],
+  "seen_in": [
+    "model-cards",
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "GPQA: A Graduate-Level Google-Proof Q&A Benchmark",
+      "authors": "Rein et al.",
+      "venue": "2023",
+      "arxiv": "2311.12022"
+    }
+  ],
+  "resources": [
+    {
+      "label": "GPQA paper",
+      "url": "https://arxiv.org/abs/2311.12022"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

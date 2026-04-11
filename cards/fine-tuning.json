@@ -1,0 +1,30 @@
+{
+  "id": "fine-tuning",
+  "name": "Fine-Tuning",
+  "expansion": "Fine-Tuning (Model Adaptation)",
+  "category": "fine-tuning-methods",
+  "oneliner": "The general practice of further training a pre-trained model on task-specific data — encompasses full fine-tuning, LoRA, QLoRA, and all other adaptation methods.",
+  "explanation": "Fine-tuning is the umbrella term for adapting a pre-trained language model to a specific task or domain by continuing training on specialized data. It ranges from full fine-tuning (updating every parameter) to parameter-efficient methods like LoRA (updating less than 1 percent of weights). Fine-tuning is what transforms a generic base model into a code assistant, medical advisor, or customer service bot.",
+  "related": [
+    "lora",
+    "qlora",
+    "full-ft",
+    "sft",
+    "adapters",
+    "peft",
+    "transfer-learning"
+  ],
+  "seen_in": [
+    "documentation",
+    "model-cards"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "HuggingFace — Fine-tune a pretrained model",
+      "url": "https://huggingface.co/docs/transformers/training"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

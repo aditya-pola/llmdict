@@ -1,0 +1,22 @@
+{
+  "id": "gpu-memory",
+  "name": "GPU Memory",
+  "expansion": "GPU Memory (VRAM) for LLMs",
+  "category": "scaling-patterns",
+  "oneliner": "The GPU video memory (VRAM) available for loading model weights, KV cache, and activations — the primary hardware constraint for LLM deployment.",
+  "explanation": "GPU memory (VRAM) is the single most important hardware constraint for running LLMs. Model weights, the KV cache, and activations must all fit in VRAM. Consumer GPUs like the RTX 4090 have 24 GB, datacenter GPUs like A100 have 40-80 GB, and H100s have 80 GB of fast HBM3 memory. A 70B model in fp16 needs 140 GB — more than any single GPU — requiring either quantization (4-bit reduces it to 35 GB) or multi-GPU distribution.",
+  "related": [
+    "model-size-memory",
+    "quantization",
+    "int4",
+    "tp-pp",
+    "inference"
+  ],
+  "seen_in": [
+    "documentation"
+  ],
+  "foundational_papers": [],
+  "resources": [],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

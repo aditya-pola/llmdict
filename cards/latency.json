@@ -1,0 +1,22 @@
+{
+  "id": "latency",
+  "name": "Latency",
+  "expansion": "LLM Inference Latency",
+  "category": "scaling-patterns",
+  "oneliner": "The time from sending a request to receiving the complete response — the user-facing performance metric that determines whether an LLM application feels responsive.",
+  "explanation": "Latency in LLM serving is the total time a user waits for a response. It breaks down into time-to-first-token (how long before streaming starts), inter-token latency (the gap between streamed tokens), and total generation time. Latency is affected by model size, quantization level, batch size, prompt length, and hardware. For interactive applications, TTFT under 500ms and ITL under 50ms are typical targets.",
+  "related": [
+    "inference-metrics",
+    "inference",
+    "speculative-decoding",
+    "prefix-caching"
+  ],
+  "seen_in": [
+    "documentation",
+    "serving-config"
+  ],
+  "foundational_papers": [],
+  "resources": [],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

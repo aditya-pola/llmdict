@@ -1,0 +1,22 @@
+{
+  "id": "open-weights",
+  "name": "Open Weights",
+  "expansion": "Open Weights vs Fully Open Models",
+  "category": "model-naming",
+  "oneliner": "Models where the trained weights are publicly downloadable — distinct from fully open models that also release training data, code, and intermediate checkpoints.",
+  "explanation": "Open weights means the model's trained parameters are publicly downloadable and usable, but the training data, code, and process may remain proprietary. Llama, Mistral, and Qwen are open-weight models. Fully open models like OLMo additionally release the complete training data, training code, intermediate checkpoints, and evaluation suite.",
+  "related": [
+    "olmo",
+    "org-meta",
+    "org-mistral",
+    "license-types"
+  ],
+  "seen_in": [
+    "model-cards",
+    "documentation"
+  ],
+  "foundational_papers": [],
+  "resources": [],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

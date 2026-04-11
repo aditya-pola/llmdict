@@ -1,0 +1,34 @@
+{
+  "id": "gsm8k",
+  "name": "GSM8K",
+  "expansion": "GSM8K — Grade School Math 8K",
+  "category": "scaling-patterns",
+  "oneliner": "A benchmark of 8,500 grade-school math word problems requiring multi-step arithmetic reasoning — the standard test for basic mathematical ability in LLMs.",
+  "explanation": "GSM8K is a benchmark of roughly 8,500 math word problems at a grade school level, each requiring 2-8 steps of basic arithmetic reasoning. It tests whether a model can break down a problem into steps and compute the answer correctly. GSM8K has been the standard math reasoning benchmark since its release, appearing on virtually every model card. Frontier models now score above 95 percent, so harder benchmarks like MATH and AIME are used for differentiation.",
+  "related": [
+    "mmlu",
+    "evals",
+    "chain-of-thought",
+    "tag-math"
+  ],
+  "seen_in": [
+    "model-cards",
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Training Verifiers to Solve Math Word Problems",
+      "authors": "Cobbe et al.",
+      "venue": "2021",
+      "arxiv": "2110.14168"
+    }
+  ],
+  "resources": [
+    {
+      "label": "GSM8K dataset",
+      "url": "https://huggingface.co/datasets/openai/gsm8k"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "chat-template",
+  "name": "Chat Template",
+  "expansion": "Chat Template (Prompt Format)",
+  "category": "model-naming",
+  "oneliner": "The specific token format a chat model expects — ChatML, Llama format, Alpaca format — getting this wrong produces garbage output from an otherwise good model.",
+  "explanation": "A chat template defines how system messages, user turns, and assistant turns are formatted with special tokens before being fed to the model. Each model family uses a different format: Llama uses special header tokens, ChatML uses role tags, and Alpaca uses instruction/response markers. Using the wrong template is one of the most common deployment mistakes — the model sees unexpected tokens and produces incoherent output. HuggingFace stores the template in tokenizer_config.",
+  "related": [
+    "tag-instruct",
+    "sft",
+    "system-prompt",
+    "token"
+  ],
+  "seen_in": [
+    "model-config",
+    "code"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "HuggingFace — Chat templates",
+      "url": "https://huggingface.co/docs/transformers/chat_templating"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

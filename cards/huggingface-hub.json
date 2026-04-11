@@ -1,0 +1,31 @@
+{
+  "id": "huggingface-hub",
+  "name": "HuggingFace Hub",
+  "expansion": "HuggingFace Hub",
+  "category": "hf-organizations",
+  "oneliner": "The central platform for sharing and discovering ML models, datasets, and applications — hosting over 1 million models with Git-based versioning.",
+  "explanation": "HuggingFace Hub is the platform where the open-source ML community shares models, datasets, and demo applications. It hosts over one million model repositories with Git-based versioning, automatic model cards, and integration with the Transformers library for one-line loading. The Hub provides Inference API for testing models without downloading them, Spaces for hosting interactive demos, and Organizations for team collaboration.",
+  "related": [
+    "safetensors",
+    "model-card",
+    "org-meta",
+    "org-mistral",
+    "org-qwen"
+  ],
+  "seen_in": [
+    "documentation"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "HuggingFace Hub",
+      "url": "https://huggingface.co"
+    },
+    {
+      "label": "Hub documentation",
+      "url": "https://huggingface.co/docs/hub"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

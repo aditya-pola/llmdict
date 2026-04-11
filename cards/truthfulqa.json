@@ -1,0 +1,33 @@
+{
+  "id": "truthfulqa",
+  "name": "TruthfulQA",
+  "expansion": "TruthfulQA",
+  "category": "scaling-patterns",
+  "oneliner": "A benchmark testing whether LLMs generate truthful answers rather than repeating popular misconceptions — specifically targeting common human false beliefs.",
+  "explanation": "TruthfulQA is a benchmark of 817 questions designed to test whether language models reproduce common misconceptions or generate truthful answers. Questions span health, law, finance, and politics where humans commonly hold false beliefs. Larger models paradoxically scored worse on early versions because they better learned the popular-but-wrong answers from training data. TruthfulQA is a standard safety evaluation measuring a model's tendency toward hallucination and misinformation.",
+  "related": [
+    "evals",
+    "hallucination",
+    "red-teaming"
+  ],
+  "seen_in": [
+    "model-cards",
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "TruthfulQA: Measuring How Models Mimic Human Falsehoods",
+      "authors": "Lin et al.",
+      "venue": "ACL 2022",
+      "arxiv": "2109.07958"
+    }
+  ],
+  "resources": [
+    {
+      "label": "TruthfulQA GitHub",
+      "url": "https://github.com/sylinrl/TruthfulQA"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

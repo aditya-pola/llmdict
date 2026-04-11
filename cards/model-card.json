@@ -1,0 +1,32 @@
+{
+  "id": "model-card",
+  "name": "Model Card",
+  "expansion": "Model Card (Model Documentation)",
+  "category": "model-naming",
+  "oneliner": "A standardized documentation page accompanying every model release — covering architecture, training data, benchmarks, intended use, limitations, and license.",
+  "explanation": "A model card is the README and metadata page that accompanies a model release on HuggingFace or other platforms. It documents what the model is, how it was trained, what data was used, benchmark scores, known limitations, intended use cases, and license terms. Google introduced model cards as a concept in 2019 to promote transparency and responsible AI. On HuggingFace, model cards are Markdown files rendered on the model page, often including YAML frontmatter with structured metadata.",
+  "related": [
+    "huggingface-hub",
+    "tag-instruct",
+    "evals"
+  ],
+  "seen_in": [
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Model Cards for Model Reporting",
+      "authors": "Mitchell et al.",
+      "venue": "FAT* 2019",
+      "arxiv": "1810.03993"
+    }
+  ],
+  "resources": [
+    {
+      "label": "HuggingFace — Model cards guide",
+      "url": "https://huggingface.co/docs/hub/model-cards"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

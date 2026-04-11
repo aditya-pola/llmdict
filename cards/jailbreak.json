@@ -1,0 +1,26 @@
+{
+  "id": "jailbreak",
+  "name": "Jailbreak",
+  "expansion": "Jailbreak (LLM Safety Bypass)",
+  "category": "safety-alignment",
+  "oneliner": "A prompt attack that tricks a safety-trained model into producing content it was aligned to refuse — through roleplay, encoding tricks, or multi-step manipulation.",
+  "explanation": "A jailbreak is a specific form of prompt injection that circumvents a model's safety training to produce harmful, unethical, or restricted content. Common techniques include: roleplay scenarios that put the model in a character who ignores rules, encoding harmful requests in base64 or other formats the model can decode, multi-turn escalation that gradually shifts the conversation boundary, and adversarial suffixes found by gradient-based search.",
+  "related": [
+    "prompt-injection",
+    "red-teaming",
+    "guardrails",
+    "constitutional-ai"
+  ],
+  "seen_in": [
+    "documentation"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "OWASP LLM Top 10",
+      "url": "https://genai.owasp.org/llmrisk/"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

@@ -1,0 +1,19 @@
+{
+  "id": "rouge",
+  "name": "ROUGE",
+  "expansion": "ROUGE — Recall-Oriented Understudy for Gisting Evaluation",
+  "category": "scaling-patterns",
+  "oneliner": "A family of metrics measuring word-level overlap between generated text and reference text — the standard evaluation for summarization tasks.",
+  "explanation": "ROUGE is a set of metrics that compare a generated summary to one or more reference summaries by measuring n-gram overlap. ROUGE-1 counts matching individual words, ROUGE-2 counts matching two-word phrases, and ROUGE-L measures the longest common subsequence. Scores range from 0 to 1, with higher indicating more overlap with the reference. ROUGE is the standard metric for summarization evaluation and appears in benchmarks and research papers.",
+  "related": [
+    "evals",
+    "perplexity"
+  ],
+  "seen_in": [
+    "documentation"
+  ],
+  "foundational_papers": [],
+  "resources": [],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "min-p",
+  "name": "Min-p Sampling",
+  "expansion": "Min-p (Minimum Probability) Sampling",
+  "category": "sampling-decoding",
+  "oneliner": "A dynamic sampling threshold that keeps tokens with probability above a fraction of the top token's probability — an adaptive alternative to fixed top-k or top-p.",
+  "explanation": "Min-p sampling retains all tokens whose probability exceeds a fraction of the highest-probability token. If the top token has probability 0.9, min-p of 0.1 keeps only tokens above 0.09. If the top token has probability 0.3, it keeps tokens above 0.03 — naturally widening the candidate pool when the model is uncertain. This adapts more gracefully than top-k (fixed count) or top-p (fixed cumulative mass). Min-p has gained popularity in the llama.",
+  "related": [
+    "top-p",
+    "top-k",
+    "temperature"
+  ],
+  "seen_in": [
+    "model-config",
+    "code"
+  ],
+  "foundational_papers": [],
+  "resources": [],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

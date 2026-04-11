@@ -1,0 +1,30 @@
+{
+  "id": "cross-attention",
+  "name": "Cross-Attention",
+  "expansion": "Cross-Attention (Encoder-Decoder Attention)",
+  "category": "attention-variants",
+  "oneliner": "Attention between two different sequences — the decoder attending to the encoder's output in seq2seq models, or text attending to image features in VLMs.",
+  "explanation": "Cross-attention is the mechanism where queries come from one sequence and keys/values come from a different sequence. In encoder-decoder models like T5, the decoder uses cross-attention to look at the encoder's output while generating each token. In vision-language models, text tokens use cross-attention over image patch embeddings to ground language in visual content.",
+  "related": [
+    "self-attention",
+    "mha",
+    "seq2seq",
+    "vlm",
+    "diffusion-models"
+  ],
+  "seen_in": [
+    "code",
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Attention Is All You Need",
+      "authors": "Vaswani et al.",
+      "venue": "NeurIPS 2017",
+      "arxiv": "1706.03762"
+    }
+  ],
+  "resources": [],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

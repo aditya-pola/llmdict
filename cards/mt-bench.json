@@ -1,0 +1,33 @@
+{
+  "id": "mt-bench",
+  "name": "MT-Bench",
+  "expansion": "MT-Bench — Multi-Turn Benchmark",
+  "category": "scaling-patterns",
+  "oneliner": "An 80-question multi-turn conversation benchmark scored by GPT-4 across 8 categories — one of the first LLM-as-judge evaluations.",
+  "explanation": "MT-Bench evaluates chat model quality through 80 multi-turn questions spanning writing, roleplay, reasoning, math, coding, extraction, STEM, and humanities. A strong judge model (GPT-4) scores each response on a 1-10 scale. The multi-turn format tests whether models can maintain coherence and follow up on previous context. MT-Bench was introduced alongside Chatbot Arena as a complementary automated evaluation and is widely used for quick model comparisons during development.",
+  "related": [
+    "evals",
+    "llm-as-judge",
+    "chatbot-arena"
+  ],
+  "seen_in": [
+    "model-cards",
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena",
+      "authors": "Zheng et al.",
+      "venue": "NeurIPS 2023",
+      "arxiv": "2306.05685"
+    }
+  ],
+  "resources": [
+    {
+      "label": "MT-Bench paper",
+      "url": "https://arxiv.org/abs/2306.05685"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}
