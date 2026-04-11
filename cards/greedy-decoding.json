@@ -1,0 +1,21 @@
+{
+  "id": "greedy-decoding",
+  "name": "Greedy Decoding",
+  "expansion": "Greedy Decoding (Argmax Sampling)",
+  "category": "sampling-decoding",
+  "oneliner": "The simplest decoding strategy — always pick the single highest-probability token at each step. Fast and deterministic but can produce repetitive or suboptimal text.",
+  "explanation": "Greedy decoding selects the token with the highest probability at each generation step, equivalent to setting temperature to 0. It produces deterministic output — the same input always gives the same output. While fast and predictable, greedy decoding often misses better sequences that would have been found by exploring lower-probability tokens early on. It tends to produce repetitive text and can get stuck in loops.",
+  "related": [
+    "temperature",
+    "top-p",
+    "top-k"
+  ],
+  "seen_in": [
+    "code",
+    "documentation"
+  ],
+  "foundational_papers": [],
+  "resources": [],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

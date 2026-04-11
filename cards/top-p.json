@@ -1,0 +1,33 @@
+{
+  "id": "top-p",
+  "name": "Top-p / Nucleus Sampling",
+  "expansion": "Top-p (Nucleus) Sampling",
+  "category": "sampling-decoding",
+  "oneliner": "A decoding strategy that samples from the smallest set of tokens whose cumulative probability exceeds a threshold p, adapting vocabulary size dynamically.",
+  "explanation": "Top-p sampling, also called nucleus sampling, selects the smallest set of tokens whose cumulative probability mass exceeds a threshold p (typically 0.9-0.95). Unlike top-k which always considers a fixed number of tokens regardless of confidence, top-p adapts: when the model is confident, it considers few tokens; when uncertain, it considers many. This produces more natural and diverse text than top-k alone. Most LLM APIs use top-p as the default sampling strategy alongside temperature.",
+  "related": [
+    "temperature",
+    "top-k",
+    "greedy-decoding"
+  ],
+  "seen_in": [
+    "model-config",
+    "code"
+  ],
+  "foundational_papers": [
+    {
+      "title": "The Curious Case of Neural Text Degeneration",
+      "authors": "Holtzman et al.",
+      "venue": "ICLR 2020",
+      "arxiv": "1904.09751"
+    }
+  ],
+  "resources": [
+    {
+      "label": "HuggingFace — Decoding strategies",
+      "url": "https://huggingface.co/blog/mlabonne/decoding-strategies"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

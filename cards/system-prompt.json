@@ -1,0 +1,27 @@
+{
+  "id": "system-prompt",
+  "name": "System Prompt",
+  "expansion": "System Prompt (System Message)",
+  "category": "prompting",
+  "oneliner": "A hidden instruction layer that defines the LLM's persona, behavior rules, and constraints before the user's message is processed.",
+  "explanation": "The system prompt is a special message at the beginning of a conversation that sets the model's behavior, persona, and constraints. It is typically hidden from the user but visible to the model. System prompts define tone, output format, safety rules, and domain expertise. They are the primary customization mechanism for LLM applications — the same base model can behave as a coding assistant, medical advisor, or creative writer depending on its system prompt.",
+  "related": [
+    "prompt-engineering",
+    "context-engineering",
+    "prompt-injection",
+    "prefix-caching"
+  ],
+  "seen_in": [
+    "code",
+    "documentation"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "OpenAI system message guide",
+      "url": "https://platform.openai.com/docs/guides/text?api-mode=chat"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

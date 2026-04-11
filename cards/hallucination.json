@@ -1,0 +1,26 @@
+{
+  "id": "hallucination",
+  "name": "Hallucination",
+  "expansion": "LLM Hallucination (Confabulation)",
+  "category": "safety-alignment",
+  "oneliner": "When a model generates plausible-sounding but factually incorrect or fabricated information not grounded in its training data or provided context.",
+  "explanation": "Hallucination is the tendency of language models to generate confident, fluent text that is factually wrong or entirely fabricated. The model may cite nonexistent papers, invent statistics, or describe events that never happened. Hallucinations occur because LLMs are trained to produce probable text, not truthful text — they have no internal fact-checking mechanism.",
+  "related": [
+    "rag",
+    "evals",
+    "red-teaming",
+    "guardrails"
+  ],
+  "seen_in": [
+    "documentation"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "TruthfulQA benchmark",
+      "url": "https://github.com/sylinrl/TruthfulQA"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

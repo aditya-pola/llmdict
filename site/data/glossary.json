@@ -111,6 +111,7 @@
       "order": 6,
       "entries": [
         "backbone",
+        "clip",
         "diffusion-models",
         "ffn",
         "geglu",
@@ -123,6 +124,7 @@
         "rmsnorm",
         "seq2seq",
         "swiglu",
+        "vlm",
         "weight-tying"
       ]
     },
@@ -145,6 +147,7 @@
         "inference-metrics",
         "inference",
         "knowledge-distillation",
+        "llm-as-judge",
         "metr",
         "mmlu",
         "model-merging",
@@ -185,6 +188,18 @@
         "simpo",
         "training-recipe",
         "transfer-learning"
+      ]
+    },
+    {
+      "id": "sampling-decoding",
+      "label": "Sampling & Decoding",
+      "order": 8,
+      "entries": [
+        "greedy-decoding",
+        "structured-output",
+        "temperature",
+        "top-k",
+        "top-p"
       ]
     },
     {
@@ -296,7 +311,8 @@
         "dataset-hermes",
         "dataset-orca",
         "dataset-platypus",
-        "dataset-ultrachat"
+        "dataset-ultrachat",
+        "synthetic-data"
       ]
     },
     {
@@ -311,6 +327,38 @@
         "guardrails",
         "mcp",
         "pydantic-ai"
+      ]
+    },
+    {
+      "id": "safety-alignment",
+      "label": "Safety & Alignment",
+      "order": 16,
+      "entries": [
+        "constitutional-ai",
+        "hallucination",
+        "prompt-injection",
+        "reward-model",
+        "rlaif"
+      ]
+    },
+    {
+      "id": "prompting",
+      "label": "Prompting",
+      "order": 17,
+      "entries": [
+        "few-shot",
+        "prompt-engineering",
+        "system-prompt",
+        "zero-shot"
+      ]
+    },
+    {
+      "id": "embeddings-retrieval",
+      "label": "Embeddings & Retrieval",
+      "order": 18,
+      "entries": [
+        "embeddings",
+        "vector-database"
       ]
     }
   ],
@@ -886,6 +934,73 @@
         {
           "label": "vLLM chunked prefill docs",
           "url": "https://docs.vllm.ai/en/latest/features/chunked_prefill.html"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
+    "clip": {
+      "id": "clip",
+      "name": "CLIP",
+      "expansion": "CLIP — Contrastive Language-Image Pre-training",
+      "category": "layer-types",
+      "oneliner": "OpenAI's model that jointly trains image and text encoders to map both modalities into a shared embedding space using contrastive learning.",
+      "explanation": "CLIP is a model from OpenAI that learns to associate images with text by training on 400 million image-caption pairs. An image encoder and text encoder are trained so matching pairs produce similar embeddings while mismatched pairs produce different ones. This shared embedding space enables zero-shot image classification and image search by text. CLIP serves as the vision backbone in many multimodal models and diffusion systems like Stable Diffusion.",
+      "related": [
+        "vlm",
+        "embeddings",
+        "diffusion-models",
+        "tag-embed"
+      ],
+      "seen_in": [
+        "model-config",
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Learning Transferable Visual Models From Natural Language Supervision",
+          "authors": "Radford et al.",
+          "venue": "ICML 2021",
+          "arxiv": "2103.00020"
+        }
+      ],
+      "resources": [
+        {
+          "label": "OpenAI CLIP paper",
+          "url": "https://arxiv.org/abs/2103.00020"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
+    "constitutional-ai": {
+      "id": "constitutional-ai",
+      "name": "Constitutional AI",
+      "expansion": "Constitutional AI (CAI)",
+      "category": "safety-alignment",
+      "oneliner": "Anthropic's alignment approach where the model critiques and revises its own outputs against a set of written principles, reducing reliance on human preference labels.",
+      "explanation": "Constitutional AI is an alignment framework from Anthropic where a model self-improves by critiquing its own responses against a written constitution of principles. Instead of collecting thousands of human preference labels, the model generates a response, then generates a critique of that response based on principles like helpfulness and harmlessness, then revises its answer. This self-critique data is used for RLHF training, replacing human annotators with AI feedback (RLAIF).",
+      "related": [
+        "rlhf",
+        "dpo",
+        "red-teaming",
+        "rlaif"
+      ],
+      "seen_in": [
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Constitutional AI: Harmlessness from AI Feedback",
+          "authors": "Bai et al.",
+          "venue": "2022",
+          "arxiv": "2212.08073"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Anthropic CAI paper",
+          "url": "https://arxiv.org/abs/2212.08073"
         }
       ],
       "confidence": "high",
@@ -1509,6 +1624,33 @@
       "confidence": "high",
       "verified_date": "2026-04-10"
     },
+    "embeddings": {
+      "id": "embeddings",
+      "name": "Embeddings",
+      "expansion": "Text Embeddings (Dense Vector Representations)",
+      "category": "embeddings-retrieval",
+      "oneliner": "Dense vector representations of text that capture semantic meaning, enabling similarity search, clustering, and retrieval-augmented generation.",
+      "explanation": "Embeddings are fixed-length vectors that encode the semantic meaning of text in a high-dimensional space. Similar texts produce similar vectors, enabling semantic search — finding relevant documents by meaning rather than keyword overlap. Embedding models (like BGE, GTE, Nomic Embed) are distinct from generative models: they output a single vector per input rather than generating text.",
+      "related": [
+        "rag",
+        "tag-embed",
+        "tag-mrl",
+        "token"
+      ],
+      "seen_in": [
+        "code",
+        "documentation"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "MTEB Leaderboard",
+          "url": "https://huggingface.co/spaces/mteb/leaderboard"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "evals": {
       "id": "evals",
       "name": "Evals",
@@ -1643,6 +1785,40 @@
           "url": "https://cameronrwolfe.substack.com/p/moe-llms"
         }
       ]
+    },
+    "few-shot": {
+      "id": "few-shot",
+      "name": "Few-Shot Prompting",
+      "expansion": "Few-Shot Prompting (In-Context Learning)",
+      "category": "prompting",
+      "oneliner": "Providing a handful of input-output examples in the prompt so the model learns the desired task format and behavior without any weight updates.",
+      "explanation": "Few-shot prompting provides 2-10 labeled examples in the prompt to demonstrate the desired task before asking the model to perform it on a new input. The model adapts to the task purely from the examples in its context window, without any training or weight changes. This in-context learning ability emerged with scale — it works reliably in models above a few billion parameters. The quality and diversity of examples matters significantly.",
+      "related": [
+        "prompt-engineering",
+        "zero-shot",
+        "chain-of-thought",
+        "transfer-learning"
+      ],
+      "seen_in": [
+        "documentation",
+        "code"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Language Models are Few-Shot Learners",
+          "authors": "Brown et al.",
+          "venue": "NeurIPS 2020",
+          "arxiv": "2005.14165"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Lilian Weng — Prompt Engineering",
+          "url": "https://lilianweng.github.io/posts/2023-03-15-prompt-engineering/"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     },
     "ffn": {
       "id": "ffn",
@@ -2211,6 +2387,27 @@
       "confidence": "high",
       "verified_date": "2026-04-11"
     },
+    "greedy-decoding": {
+      "id": "greedy-decoding",
+      "name": "Greedy Decoding",
+      "expansion": "Greedy Decoding (Argmax Sampling)",
+      "category": "sampling-decoding",
+      "oneliner": "The simplest decoding strategy — always pick the single highest-probability token at each step. Fast and deterministic but can produce repetitive or suboptimal text.",
+      "explanation": "Greedy decoding selects the token with the highest probability at each generation step, equivalent to setting temperature to 0. It produces deterministic output — the same input always gives the same output. While fast and predictable, greedy decoding often misses better sequences that would have been found by exploring lower-probability tokens early on. It tends to produce repetitive text and can get stuck in loops.",
+      "related": [
+        "temperature",
+        "top-p",
+        "top-k"
+      ],
+      "seen_in": [
+        "code",
+        "documentation"
+      ],
+      "foundational_papers": [],
+      "resources": [],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "grpo": {
       "id": "grpo",
       "name": "GRPO",
@@ -2289,6 +2486,32 @@
         {
           "label": "Guardrails AI",
           "url": "https://github.com/guardrails-ai/guardrails"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
+    "hallucination": {
+      "id": "hallucination",
+      "name": "Hallucination",
+      "expansion": "LLM Hallucination (Confabulation)",
+      "category": "safety-alignment",
+      "oneliner": "When a model generates plausible-sounding but factually incorrect or fabricated information not grounded in its training data or provided context.",
+      "explanation": "Hallucination is the tendency of language models to generate confident, fluent text that is factually wrong or entirely fabricated. The model may cite nonexistent papers, invent statistics, or describe events that never happened. Hallucinations occur because LLMs are trained to produce probable text, not truthful text — they have no internal fact-checking mechanism.",
+      "related": [
+        "rag",
+        "evals",
+        "red-teaming",
+        "guardrails"
+      ],
+      "seen_in": [
+        "documentation"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "TruthfulQA benchmark",
+          "url": "https://github.com/sylinrl/TruthfulQA"
         }
       ],
       "confidence": "high",
@@ -2971,6 +3194,40 @@
           "url": "https://arxiv.org/abs/1810.04805"
         }
       ]
+    },
+    "llm-as-judge": {
+      "id": "llm-as-judge",
+      "name": "LLM-as-a-Judge",
+      "expansion": "LLM-as-a-Judge (Model-Graded Evaluation)",
+      "category": "scaling-patterns",
+      "oneliner": "Using a language model to score or rank outputs from another model, replacing or supplementing human evaluation for scalability.",
+      "explanation": "LLM-as-a-Judge is an evaluation paradigm where a strong language model (typically GPT-4 or Claude) scores the quality of outputs from another model. The judge receives a prompt, a candidate response, and evaluation criteria, then assigns a score or ranking. This approach scales evaluation to thousands of examples at low cost. It powers benchmarks like AlpacaEval and MT-Bench and is widely used in production for monitoring output quality.",
+      "related": [
+        "evals",
+        "mmlu",
+        "humaneval",
+        "rlaif"
+      ],
+      "seen_in": [
+        "documentation",
+        "code"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena",
+          "authors": "Zheng et al.",
+          "venue": "NeurIPS 2023",
+          "arxiv": "2306.05685"
+        }
+      ],
+      "resources": [
+        {
+          "label": "MT-Bench paper",
+          "url": "https://arxiv.org/abs/2306.05685"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     },
     "lora": {
       "id": "lora",
@@ -4363,6 +4620,63 @@
       "confidence": "high",
       "verified_date": "2026-04-11"
     },
+    "prompt-engineering": {
+      "id": "prompt-engineering",
+      "name": "Prompt Engineering",
+      "expansion": "Prompt Engineering",
+      "category": "prompting",
+      "oneliner": "The practice of designing input prompts to elicit desired behavior from LLMs — selecting wording, structure, examples, and constraints without changing model weights.",
+      "explanation": "Prompt engineering is the practice of crafting inputs that guide a language model toward desired outputs without modifying its weights. It encompasses choosing the right phrasing, structuring instructions clearly, providing examples, and setting constraints. Techniques range from simple rewording to sophisticated strategies like chain-of-thought prompting, few-shot examples, and role-playing personas.",
+      "related": [
+        "few-shot",
+        "zero-shot",
+        "chain-of-thought",
+        "system-prompt",
+        "context-engineering"
+      ],
+      "seen_in": [
+        "documentation"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "Lilian Weng — Prompt Engineering",
+          "url": "https://lilianweng.github.io/posts/2023-03-15-prompt-engineering/"
+        },
+        {
+          "label": "Anthropic prompt engineering guide",
+          "url": "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
+    "prompt-injection": {
+      "id": "prompt-injection",
+      "name": "Prompt Injection",
+      "expansion": "Prompt Injection Attack",
+      "category": "safety-alignment",
+      "oneliner": "An attack where crafted input manipulates an LLM into ignoring its system instructions or executing unintended actions — the top LLM security vulnerability.",
+      "explanation": "Prompt injection is an attack technique where adversarial text in the user input causes the model to override its system prompt instructions. Direct injection explicitly tells the model to ignore previous instructions. Indirect injection hides malicious instructions in retrieved documents or tool outputs that the model processes. It is ranked as the number one vulnerability in the OWASP Top 10 for LLM Applications.",
+      "related": [
+        "red-teaming",
+        "guardrails",
+        "tag-guard",
+        "agentic-ai"
+      ],
+      "seen_in": [
+        "documentation"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "OWASP LLM Top 10 — Prompt Injection",
+          "url": "https://genai.owasp.org/llmrisk/llm01-prompt-injection/"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "pruning": {
       "id": "pruning",
       "name": "Pruning",
@@ -4799,6 +5113,73 @@
           "url": "https://jalammar.github.io/illustrated-transformer/"
         }
       ]
+    },
+    "reward-model": {
+      "id": "reward-model",
+      "name": "Reward Model",
+      "expansion": "Reward Model (RM)",
+      "category": "safety-alignment",
+      "oneliner": "A model trained on human preference data to score the quality of LLM responses, providing the optimization signal for RLHF alignment training.",
+      "explanation": "A reward model is a neural network trained to predict which of two responses a human would prefer, given a prompt. It takes a prompt-response pair and outputs a scalar score indicating quality. The reward model is the bridge between human preferences and the mathematical optimization in RLHF — it translates subjective judgments into a differentiable training signal. It is typically initialized from the SFT model with the language modeling head replaced by a scalar output.",
+      "related": [
+        "rlhf",
+        "dpo",
+        "tag-reward",
+        "rlaif"
+      ],
+      "seen_in": [
+        "documentation",
+        "code"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Training language models to follow instructions with human feedback",
+          "authors": "Ouyang et al.",
+          "venue": "NeurIPS 2022",
+          "arxiv": "2203.02155"
+        }
+      ],
+      "resources": [
+        {
+          "label": "HuggingFace TRL — Reward modeling",
+          "url": "https://huggingface.co/docs/trl/en/reward_trainer"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
+    "rlaif": {
+      "id": "rlaif",
+      "name": "RLAIF",
+      "expansion": "Reinforcement Learning from AI Feedback",
+      "category": "safety-alignment",
+      "oneliner": "Using an LLM to generate preference labels instead of human annotators, making RLHF-style alignment scalable without expensive human data collection.",
+      "explanation": "RLAIF replaces human annotators in the RLHF pipeline with an AI model that generates preference judgments. A strong model like GPT-4 or Claude compares two candidate responses and decides which is better, producing the same kind of preference pairs that humans would generate. This dramatically reduces the cost and speed of collecting alignment data. Constitutional AI from Anthropic is a specific form of RLAIF where the judge model uses explicit written principles.",
+      "related": [
+        "rlhf",
+        "dpo",
+        "constitutional-ai",
+        "evals"
+      ],
+      "seen_in": [
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "RLAIF: Scaling Reinforcement Learning from Human Feedback with AI Feedback",
+          "authors": "Lee et al.",
+          "venue": "2023",
+          "arxiv": "2309.00267"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Cameron Wolfe — RLAIF overview",
+          "url": "https://cameronrwolfe.substack.com/p/rlaif-reinforcement-learning-from"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     },
     "rlhf": {
       "id": "rlhf",
@@ -5573,6 +5954,37 @@
         }
       ]
     },
+    "structured-output": {
+      "id": "structured-output",
+      "name": "Structured Output",
+      "expansion": "Structured Output / Constrained Decoding",
+      "category": "sampling-decoding",
+      "oneliner": "Forcing an LLM to generate output that conforms to a specific format like JSON, XML, or a grammar by masking invalid tokens during generation.",
+      "explanation": "Structured output techniques force a language model to produce responses that conform to a defined schema or grammar. The most common approach, constrained decoding, works by masking out tokens at each generation step that would violate the target format. For JSON output, only tokens that continue a valid JSON structure are allowed. OpenAI, Anthropic, and open-source tools like Outlines and SGLang support this natively.",
+      "related": [
+        "function-calling",
+        "pydantic-ai",
+        "guardrails"
+      ],
+      "seen_in": [
+        "code",
+        "documentation",
+        "serving-config"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "Outlines library",
+          "url": "https://github.com/dottxt-ai/outlines"
+        },
+        {
+          "label": "OpenAI structured outputs",
+          "url": "https://platform.openai.com/docs/guides/structured-outputs"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "swa": {
       "id": "swa",
       "name": "SWA",
@@ -5648,6 +6060,62 @@
           "url": "https://sebastianraschka.com/llm-architecture-gallery/"
         }
       ]
+    },
+    "synthetic-data": {
+      "id": "synthetic-data",
+      "name": "Synthetic Data",
+      "expansion": "Synthetic Training Data",
+      "category": "datasets-recipes",
+      "oneliner": "Training data generated by AI models rather than collected from humans — used to scale instruction datasets, simulate scenarios, and augment scarce domain data.",
+      "explanation": "Synthetic data is training data produced by language models rather than curated from human sources. An LLM generates instruction-response pairs, reasoning traces, or domain-specific examples that are then used to train or fine-tune other models. The Phi series demonstrated that models trained primarily on synthetic textbook-quality data can punch far above their size.",
+      "related": [
+        "dataset-evolinstruct",
+        "dataset-orca",
+        "knowledge-distillation",
+        "sft"
+      ],
+      "seen_in": [
+        "documentation",
+        "model-cards"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Self-Instruct: Aligning Language Models with Self-Generated Instructions",
+          "authors": "Wang et al.",
+          "venue": "ACL 2023",
+          "arxiv": "2212.10560"
+        }
+      ],
+      "resources": [],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
+    "system-prompt": {
+      "id": "system-prompt",
+      "name": "System Prompt",
+      "expansion": "System Prompt (System Message)",
+      "category": "prompting",
+      "oneliner": "A hidden instruction layer that defines the LLM's persona, behavior rules, and constraints before the user's message is processed.",
+      "explanation": "The system prompt is a special message at the beginning of a conversation that sets the model's behavior, persona, and constraints. It is typically hidden from the user but visible to the model. System prompts define tone, output format, safety rules, and domain expertise. They are the primary customization mechanism for LLM applications — the same base model can behave as a coding assistant, medical advisor, or creative writer depending on its system prompt.",
+      "related": [
+        "prompt-engineering",
+        "context-engineering",
+        "prompt-injection",
+        "prefix-caching"
+      ],
+      "seen_in": [
+        "code",
+        "documentation"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "OpenAI system message guide",
+          "url": "https://platform.openai.com/docs/guides/text?api-mode=chat"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     },
     "tag-alignment": {
       "id": "tag-alignment",
@@ -6050,6 +6518,34 @@
           "url": "https://huggingface.co/meta-llama/Llama-3.2-11B-Vision-Instruct"
         }
       ]
+    },
+    "temperature": {
+      "id": "temperature",
+      "name": "Temperature",
+      "expansion": "Temperature (Sampling Temperature)",
+      "category": "sampling-decoding",
+      "oneliner": "A parameter that controls randomness in token selection — low temperature makes output deterministic, high temperature makes it creative and diverse.",
+      "explanation": "Temperature is a scaling factor applied to the model's output logits before the softmax that converts them into probabilities. At temperature 1.0, the original probability distribution is used. Lower values (0.1-0.5) sharpen the distribution, making the model more likely to pick the highest-probability token. Higher values (1.0-2.0) flatten it, giving lower-probability tokens a better chance. Temperature 0 is equivalent to greedy decoding — always picking the top token.",
+      "related": [
+        "top-p",
+        "top-k",
+        "greedy-decoding",
+        "inference"
+      ],
+      "seen_in": [
+        "model-config",
+        "code",
+        "documentation"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "HuggingFace — Decoding strategies",
+          "url": "https://huggingface.co/blog/mlabonne/decoding-strategies"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     },
     "test-time-compute": {
       "id": "test-time-compute",
@@ -6766,6 +7262,65 @@
       "verified_date": "2026-04-10",
       "explanation": "vLLM is an open-source inference engine for serving large language models in production. It introduced PagedAttention, which manages GPU memory for key-value caches the way an operating system pages virtual memory, dramatically reducing waste. Combined with continuous batching, it achieves throughput several times higher than naive HuggingFace generation. vLLM has become the default serving backend for most open-weight deployments and supports tensor parallelism across multiple GPUs."
     },
+    "top-k": {
+      "id": "top-k",
+      "name": "Top-k Sampling",
+      "expansion": "Top-k Sampling",
+      "category": "sampling-decoding",
+      "oneliner": "A decoding strategy that restricts token selection to the k highest-probability tokens at each step, preventing low-probability nonsense tokens from being chosen.",
+      "explanation": "Top-k sampling limits the candidate pool at each generation step to the k tokens with the highest probabilities, then samples from that reduced set. This prevents the model from occasionally picking extremely unlikely tokens that produce incoherent text. Common values are k=40 to k=100. The limitation is that k is fixed regardless of context — a confident prediction and an uncertain one both consider the same number of candidates.",
+      "related": [
+        "temperature",
+        "top-p",
+        "greedy-decoding"
+      ],
+      "seen_in": [
+        "model-config",
+        "code"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "HuggingFace — Decoding strategies",
+          "url": "https://huggingface.co/blog/mlabonne/decoding-strategies"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
+    "top-p": {
+      "id": "top-p",
+      "name": "Top-p / Nucleus Sampling",
+      "expansion": "Top-p (Nucleus) Sampling",
+      "category": "sampling-decoding",
+      "oneliner": "A decoding strategy that samples from the smallest set of tokens whose cumulative probability exceeds a threshold p, adapting vocabulary size dynamically.",
+      "explanation": "Top-p sampling, also called nucleus sampling, selects the smallest set of tokens whose cumulative probability mass exceeds a threshold p (typically 0.9-0.95). Unlike top-k which always considers a fixed number of tokens regardless of confidence, top-p adapts: when the model is confident, it considers few tokens; when uncertain, it considers many. This produces more natural and diverse text than top-k alone. Most LLM APIs use top-p as the default sampling strategy alongside temperature.",
+      "related": [
+        "temperature",
+        "top-k",
+        "greedy-decoding"
+      ],
+      "seen_in": [
+        "model-config",
+        "code"
+      ],
+      "foundational_papers": [
+        {
+          "title": "The Curious Case of Neural Text Degeneration",
+          "authors": "Holtzman et al.",
+          "venue": "ICLR 2020",
+          "arxiv": "1904.09751"
+        }
+      ],
+      "resources": [
+        {
+          "label": "HuggingFace — Decoding strategies",
+          "url": "https://huggingface.co/blog/mlabonne/decoding-strategies"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "tp-pp": {
       "id": "tp-pp",
       "name": "Tensor Parallelism (TP) vs Pipeline Parallelism (PP)",
@@ -6910,6 +7465,66 @@
         }
       ]
     },
+    "vector-database": {
+      "id": "vector-database",
+      "name": "Vector Database",
+      "expansion": "Vector Database (Vector Store)",
+      "category": "embeddings-retrieval",
+      "oneliner": "A specialized database optimized for storing and querying high-dimensional embedding vectors using approximate nearest neighbor search.",
+      "explanation": "A vector database stores embedding vectors and supports fast similarity search over millions or billions of entries using approximate nearest neighbor algorithms. When a user asks a question in a RAG system, the query is embedded into a vector, and the database returns the most semantically similar document chunks. Popular options include Pinecone (managed), Weaviate, Qdrant, Milvus (open-source), and pgvector (PostgreSQL extension).",
+      "related": [
+        "embeddings",
+        "rag",
+        "tag-embed"
+      ],
+      "seen_in": [
+        "code",
+        "documentation"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "Pinecone — What is a Vector Database?",
+          "url": "https://www.pinecone.io/learn/vector-database/"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
+    "vlm": {
+      "id": "vlm",
+      "name": "VLM",
+      "expansion": "Vision-Language Model",
+      "category": "layer-types",
+      "oneliner": "A model combining a vision encoder with an LLM backbone to understand and reason about images alongside text — LLaVA, Qwen-VL, Llama Vision.",
+      "explanation": "A vision-language model pairs an image encoder (typically a Vision Transformer like SigLIP or CLIP) with a language model backbone via a projection layer that maps visual features into the LLM's token embedding space. This lets the model understand images as naturally as text — describing scenes, answering questions about visual content, and reasoning over diagrams. Popular VLMs include LLaVA, Qwen2-VL, Llama 3.2 Vision, and InternVL.",
+      "related": [
+        "tag-vision",
+        "backbone",
+        "model-head",
+        "self-attention"
+      ],
+      "seen_in": [
+        "model-config",
+        "model-cards"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Visual Instruction Tuning (LLaVA)",
+          "authors": "Liu et al.",
+          "venue": "NeurIPS 2023",
+          "arxiv": "2304.08485"
+        }
+      ],
+      "resources": [
+        {
+          "label": "ByteByteGo — Multimodal LLMs",
+          "url": "https://blog.bytebytego.com/p/multimodal-llms-basics-how-llms-process"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "w4a16": {
       "id": "w4a16",
       "name": "W4A16",
@@ -7039,6 +7654,31 @@
           "arxiv": "2309.00071"
         }
       ]
+    },
+    "zero-shot": {
+      "id": "zero-shot",
+      "name": "Zero-Shot Prompting",
+      "expansion": "Zero-Shot Prompting",
+      "category": "prompting",
+      "oneliner": "Querying a model with only task instructions and no examples, relying entirely on the model's pre-trained knowledge to understand what is being asked.",
+      "explanation": "Zero-shot prompting asks a model to perform a task using only a natural language instruction with no examples. The model must understand the task from the description alone, drawing on patterns learned during pre-training and instruction tuning. For instance, asking 'Translate the following sentence to French' without showing any translation examples. Zero-shot performance improves dramatically with model scale and instruction tuning quality.",
+      "related": [
+        "few-shot",
+        "prompt-engineering",
+        "sft"
+      ],
+      "seen_in": [
+        "documentation"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "Lilian Weng — Prompt Engineering",
+          "url": "https://lilianweng.github.io/posts/2023-03-15-prompt-engineering/"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     },
     "zero": {
       "id": "zero",

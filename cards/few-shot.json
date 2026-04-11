@@ -1,0 +1,34 @@
+{
+  "id": "few-shot",
+  "name": "Few-Shot Prompting",
+  "expansion": "Few-Shot Prompting (In-Context Learning)",
+  "category": "prompting",
+  "oneliner": "Providing a handful of input-output examples in the prompt so the model learns the desired task format and behavior without any weight updates.",
+  "explanation": "Few-shot prompting provides 2-10 labeled examples in the prompt to demonstrate the desired task before asking the model to perform it on a new input. The model adapts to the task purely from the examples in its context window, without any training or weight changes. This in-context learning ability emerged with scale — it works reliably in models above a few billion parameters. The quality and diversity of examples matters significantly.",
+  "related": [
+    "prompt-engineering",
+    "zero-shot",
+    "chain-of-thought",
+    "transfer-learning"
+  ],
+  "seen_in": [
+    "documentation",
+    "code"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Language Models are Few-Shot Learners",
+      "authors": "Brown et al.",
+      "venue": "NeurIPS 2020",
+      "arxiv": "2005.14165"
+    }
+  ],
+  "resources": [
+    {
+      "label": "Lilian Weng — Prompt Engineering",
+      "url": "https://lilianweng.github.io/posts/2023-03-15-prompt-engineering/"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

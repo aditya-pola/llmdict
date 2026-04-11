@@ -1,0 +1,33 @@
+{
+  "id": "rlaif",
+  "name": "RLAIF",
+  "expansion": "Reinforcement Learning from AI Feedback",
+  "category": "safety-alignment",
+  "oneliner": "Using an LLM to generate preference labels instead of human annotators, making RLHF-style alignment scalable without expensive human data collection.",
+  "explanation": "RLAIF replaces human annotators in the RLHF pipeline with an AI model that generates preference judgments. A strong model like GPT-4 or Claude compares two candidate responses and decides which is better, producing the same kind of preference pairs that humans would generate. This dramatically reduces the cost and speed of collecting alignment data. Constitutional AI from Anthropic is a specific form of RLAIF where the judge model uses explicit written principles.",
+  "related": [
+    "rlhf",
+    "dpo",
+    "constitutional-ai",
+    "evals"
+  ],
+  "seen_in": [
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "RLAIF: Scaling Reinforcement Learning from Human Feedback with AI Feedback",
+      "authors": "Lee et al.",
+      "venue": "2023",
+      "arxiv": "2309.00267"
+    }
+  ],
+  "resources": [
+    {
+      "label": "Cameron Wolfe — RLAIF overview",
+      "url": "https://cameronrwolfe.substack.com/p/rlaif-reinforcement-learning-from"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

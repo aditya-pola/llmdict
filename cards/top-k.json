@@ -1,0 +1,26 @@
+{
+  "id": "top-k",
+  "name": "Top-k Sampling",
+  "expansion": "Top-k Sampling",
+  "category": "sampling-decoding",
+  "oneliner": "A decoding strategy that restricts token selection to the k highest-probability tokens at each step, preventing low-probability nonsense tokens from being chosen.",
+  "explanation": "Top-k sampling limits the candidate pool at each generation step to the k tokens with the highest probabilities, then samples from that reduced set. This prevents the model from occasionally picking extremely unlikely tokens that produce incoherent text. Common values are k=40 to k=100. The limitation is that k is fixed regardless of context — a confident prediction and an uncertain one both consider the same number of candidates.",
+  "related": [
+    "temperature",
+    "top-p",
+    "greedy-decoding"
+  ],
+  "seen_in": [
+    "model-config",
+    "code"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "HuggingFace — Decoding strategies",
+      "url": "https://huggingface.co/blog/mlabonne/decoding-strategies"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

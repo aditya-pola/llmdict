@@ -1,0 +1,31 @@
+{
+  "id": "structured-output",
+  "name": "Structured Output",
+  "expansion": "Structured Output / Constrained Decoding",
+  "category": "sampling-decoding",
+  "oneliner": "Forcing an LLM to generate output that conforms to a specific format like JSON, XML, or a grammar by masking invalid tokens during generation.",
+  "explanation": "Structured output techniques force a language model to produce responses that conform to a defined schema or grammar. The most common approach, constrained decoding, works by masking out tokens at each generation step that would violate the target format. For JSON output, only tokens that continue a valid JSON structure are allowed. OpenAI, Anthropic, and open-source tools like Outlines and SGLang support this natively.",
+  "related": [
+    "function-calling",
+    "pydantic-ai",
+    "guardrails"
+  ],
+  "seen_in": [
+    "code",
+    "documentation",
+    "serving-config"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "Outlines library",
+      "url": "https://github.com/dottxt-ai/outlines"
+    },
+    {
+      "label": "OpenAI structured outputs",
+      "url": "https://platform.openai.com/docs/guides/structured-outputs"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

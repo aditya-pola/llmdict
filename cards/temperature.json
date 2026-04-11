@@ -1,0 +1,28 @@
+{
+  "id": "temperature",
+  "name": "Temperature",
+  "expansion": "Temperature (Sampling Temperature)",
+  "category": "sampling-decoding",
+  "oneliner": "A parameter that controls randomness in token selection — low temperature makes output deterministic, high temperature makes it creative and diverse.",
+  "explanation": "Temperature is a scaling factor applied to the model's output logits before the softmax that converts them into probabilities. At temperature 1.0, the original probability distribution is used. Lower values (0.1-0.5) sharpen the distribution, making the model more likely to pick the highest-probability token. Higher values (1.0-2.0) flatten it, giving lower-probability tokens a better chance. Temperature 0 is equivalent to greedy decoding — always picking the top token.",
+  "related": [
+    "top-p",
+    "top-k",
+    "greedy-decoding",
+    "inference"
+  ],
+  "seen_in": [
+    "model-config",
+    "code",
+    "documentation"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "HuggingFace — Decoding strategies",
+      "url": "https://huggingface.co/blog/mlabonne/decoding-strategies"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

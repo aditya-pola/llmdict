@@ -1,0 +1,27 @@
+{
+  "id": "embeddings",
+  "name": "Embeddings",
+  "expansion": "Text Embeddings (Dense Vector Representations)",
+  "category": "embeddings-retrieval",
+  "oneliner": "Dense vector representations of text that capture semantic meaning, enabling similarity search, clustering, and retrieval-augmented generation.",
+  "explanation": "Embeddings are fixed-length vectors that encode the semantic meaning of text in a high-dimensional space. Similar texts produce similar vectors, enabling semantic search — finding relevant documents by meaning rather than keyword overlap. Embedding models (like BGE, GTE, Nomic Embed) are distinct from generative models: they output a single vector per input rather than generating text.",
+  "related": [
+    "rag",
+    "tag-embed",
+    "tag-mrl",
+    "token"
+  ],
+  "seen_in": [
+    "code",
+    "documentation"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "MTEB Leaderboard",
+      "url": "https://huggingface.co/spaces/mteb/leaderboard"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

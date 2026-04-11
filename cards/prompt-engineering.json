@@ -1,0 +1,31 @@
+{
+  "id": "prompt-engineering",
+  "name": "Prompt Engineering",
+  "expansion": "Prompt Engineering",
+  "category": "prompting",
+  "oneliner": "The practice of designing input prompts to elicit desired behavior from LLMs — selecting wording, structure, examples, and constraints without changing model weights.",
+  "explanation": "Prompt engineering is the practice of crafting inputs that guide a language model toward desired outputs without modifying its weights. It encompasses choosing the right phrasing, structuring instructions clearly, providing examples, and setting constraints. Techniques range from simple rewording to sophisticated strategies like chain-of-thought prompting, few-shot examples, and role-playing personas.",
+  "related": [
+    "few-shot",
+    "zero-shot",
+    "chain-of-thought",
+    "system-prompt",
+    "context-engineering"
+  ],
+  "seen_in": [
+    "documentation"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "Lilian Weng — Prompt Engineering",
+      "url": "https://lilianweng.github.io/posts/2023-03-15-prompt-engineering/"
+    },
+    {
+      "label": "Anthropic prompt engineering guide",
+      "url": "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

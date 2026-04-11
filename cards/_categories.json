@@ -62,5 +62,21 @@
   "agents-and-tools": {
     "label": "Agents & Tool Use",
     "order": 15
+  },
+  "sampling-decoding": {
+    "label": "Sampling & Decoding",
+    "order": 8
+  },
+  "safety-alignment": {
+    "label": "Safety & Alignment",
+    "order": 16
+  },
+  "prompting": {
+    "label": "Prompting",
+    "order": 17
+  },
+  "embeddings-retrieval": {
+    "label": "Embeddings & Retrieval",
+    "order": 18
   }
 }

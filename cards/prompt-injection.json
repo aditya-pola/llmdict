@@ -1,0 +1,26 @@
+{
+  "id": "prompt-injection",
+  "name": "Prompt Injection",
+  "expansion": "Prompt Injection Attack",
+  "category": "safety-alignment",
+  "oneliner": "An attack where crafted input manipulates an LLM into ignoring its system instructions or executing unintended actions — the top LLM security vulnerability.",
+  "explanation": "Prompt injection is an attack technique where adversarial text in the user input causes the model to override its system prompt instructions. Direct injection explicitly tells the model to ignore previous instructions. Indirect injection hides malicious instructions in retrieved documents or tool outputs that the model processes. It is ranked as the number one vulnerability in the OWASP Top 10 for LLM Applications.",
+  "related": [
+    "red-teaming",
+    "guardrails",
+    "tag-guard",
+    "agentic-ai"
+  ],
+  "seen_in": [
+    "documentation"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "OWASP LLM Top 10 — Prompt Injection",
+      "url": "https://genai.owasp.org/llmrisk/llm01-prompt-injection/"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

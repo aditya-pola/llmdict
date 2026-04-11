@@ -1,0 +1,34 @@
+{
+  "id": "reward-model",
+  "name": "Reward Model",
+  "expansion": "Reward Model (RM)",
+  "category": "safety-alignment",
+  "oneliner": "A model trained on human preference data to score the quality of LLM responses, providing the optimization signal for RLHF alignment training.",
+  "explanation": "A reward model is a neural network trained to predict which of two responses a human would prefer, given a prompt. It takes a prompt-response pair and outputs a scalar score indicating quality. The reward model is the bridge between human preferences and the mathematical optimization in RLHF — it translates subjective judgments into a differentiable training signal. It is typically initialized from the SFT model with the language modeling head replaced by a scalar output.",
+  "related": [
+    "rlhf",
+    "dpo",
+    "tag-reward",
+    "rlaif"
+  ],
+  "seen_in": [
+    "documentation",
+    "code"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Training language models to follow instructions with human feedback",
+      "authors": "Ouyang et al.",
+      "venue": "NeurIPS 2022",
+      "arxiv": "2203.02155"
+    }
+  ],
+  "resources": [
+    {
+      "label": "HuggingFace TRL — Reward modeling",
+      "url": "https://huggingface.co/docs/trl/en/reward_trainer"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

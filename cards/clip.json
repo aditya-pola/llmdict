@@ -1,0 +1,34 @@
+{
+  "id": "clip",
+  "name": "CLIP",
+  "expansion": "CLIP — Contrastive Language-Image Pre-training",
+  "category": "layer-types",
+  "oneliner": "OpenAI's model that jointly trains image and text encoders to map both modalities into a shared embedding space using contrastive learning.",
+  "explanation": "CLIP is a model from OpenAI that learns to associate images with text by training on 400 million image-caption pairs. An image encoder and text encoder are trained so matching pairs produce similar embeddings while mismatched pairs produce different ones. This shared embedding space enables zero-shot image classification and image search by text. CLIP serves as the vision backbone in many multimodal models and diffusion systems like Stable Diffusion.",
+  "related": [
+    "vlm",
+    "embeddings",
+    "diffusion-models",
+    "tag-embed"
+  ],
+  "seen_in": [
+    "model-config",
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Learning Transferable Visual Models From Natural Language Supervision",
+      "authors": "Radford et al.",
+      "venue": "ICML 2021",
+      "arxiv": "2103.00020"
+    }
+  ],
+  "resources": [
+    {
+      "label": "OpenAI CLIP paper",
+      "url": "https://arxiv.org/abs/2103.00020"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

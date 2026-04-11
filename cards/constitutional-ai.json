@@ -1,0 +1,33 @@
+{
+  "id": "constitutional-ai",
+  "name": "Constitutional AI",
+  "expansion": "Constitutional AI (CAI)",
+  "category": "safety-alignment",
+  "oneliner": "Anthropic's alignment approach where the model critiques and revises its own outputs against a set of written principles, reducing reliance on human preference labels.",
+  "explanation": "Constitutional AI is an alignment framework from Anthropic where a model self-improves by critiquing its own responses against a written constitution of principles. Instead of collecting thousands of human preference labels, the model generates a response, then generates a critique of that response based on principles like helpfulness and harmlessness, then revises its answer. This self-critique data is used for RLHF training, replacing human annotators with AI feedback (RLAIF).",
+  "related": [
+    "rlhf",
+    "dpo",
+    "red-teaming",
+    "rlaif"
+  ],
+  "seen_in": [
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Constitutional AI: Harmlessness from AI Feedback",
+      "authors": "Bai et al.",
+      "venue": "2022",
+      "arxiv": "2212.08073"
+    }
+  ],
+  "resources": [
+    {
+      "label": "Anthropic CAI paper",
+      "url": "https://arxiv.org/abs/2212.08073"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

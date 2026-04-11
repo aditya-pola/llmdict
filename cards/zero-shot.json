@@ -1,0 +1,25 @@
+{
+  "id": "zero-shot",
+  "name": "Zero-Shot Prompting",
+  "expansion": "Zero-Shot Prompting",
+  "category": "prompting",
+  "oneliner": "Querying a model with only task instructions and no examples, relying entirely on the model's pre-trained knowledge to understand what is being asked.",
+  "explanation": "Zero-shot prompting asks a model to perform a task using only a natural language instruction with no examples. The model must understand the task from the description alone, drawing on patterns learned during pre-training and instruction tuning. For instance, asking 'Translate the following sentence to French' without showing any translation examples. Zero-shot performance improves dramatically with model scale and instruction tuning quality.",
+  "related": [
+    "few-shot",
+    "prompt-engineering",
+    "sft"
+  ],
+  "seen_in": [
+    "documentation"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "Lilian Weng — Prompt Engineering",
+      "url": "https://lilianweng.github.io/posts/2023-03-15-prompt-engineering/"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

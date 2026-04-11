@@ -1,0 +1,26 @@
+{
+  "id": "vector-database",
+  "name": "Vector Database",
+  "expansion": "Vector Database (Vector Store)",
+  "category": "embeddings-retrieval",
+  "oneliner": "A specialized database optimized for storing and querying high-dimensional embedding vectors using approximate nearest neighbor search.",
+  "explanation": "A vector database stores embedding vectors and supports fast similarity search over millions or billions of entries using approximate nearest neighbor algorithms. When a user asks a question in a RAG system, the query is embedded into a vector, and the database returns the most semantically similar document chunks. Popular options include Pinecone (managed), Weaviate, Qdrant, Milvus (open-source), and pgvector (PostgreSQL extension).",
+  "related": [
+    "embeddings",
+    "rag",
+    "tag-embed"
+  ],
+  "seen_in": [
+    "code",
+    "documentation"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "Pinecone — What is a Vector Database?",
+      "url": "https://www.pinecone.io/learn/vector-database/"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

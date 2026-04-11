@@ -1,0 +1,34 @@
+{
+  "id": "llm-as-judge",
+  "name": "LLM-as-a-Judge",
+  "expansion": "LLM-as-a-Judge (Model-Graded Evaluation)",
+  "category": "scaling-patterns",
+  "oneliner": "Using a language model to score or rank outputs from another model, replacing or supplementing human evaluation for scalability.",
+  "explanation": "LLM-as-a-Judge is an evaluation paradigm where a strong language model (typically GPT-4 or Claude) scores the quality of outputs from another model. The judge receives a prompt, a candidate response, and evaluation criteria, then assigns a score or ranking. This approach scales evaluation to thousands of examples at low cost. It powers benchmarks like AlpacaEval and MT-Bench and is widely used in production for monitoring output quality.",
+  "related": [
+    "evals",
+    "mmlu",
+    "humaneval",
+    "rlaif"
+  ],
+  "seen_in": [
+    "documentation",
+    "code"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena",
+      "authors": "Zheng et al.",
+      "venue": "NeurIPS 2023",
+      "arxiv": "2306.05685"
+    }
+  ],
+  "resources": [
+    {
+      "label": "MT-Bench paper",
+      "url": "https://arxiv.org/abs/2306.05685"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}
