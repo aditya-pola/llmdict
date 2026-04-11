@@ -1058,11 +1058,13 @@ main {
     top: 50%;
     transform: translateY(-50%);
     z-index: 60;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 500;
-    letter-spacing: -0.2px;
-    color: rgba(0, 0, 0, 0.6);
-    text-shadow: 0 0 8px rgba(255, 255, 255, 0.9), 0 0 3px rgba(255, 255, 255, 1);
+    letter-spacing: -0.3px;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 8px 4px;
+    border-radius: 6px;
     pointer-events: none;
     max-height: 60vh;
     overflow: hidden;
