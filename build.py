@@ -66,5 +66,18 @@ def build():
 
     print(f'Built {OUTPUT}: {len(entries)} cards, {len(sorted_cats)} categories')
 
+    # Update README badge counts
+    readme_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'README.md')
+    if os.path.exists(readme_path):
+        import re
+        with open(readme_path) as f:
+            readme = f.read()
+        # Replace "N terms" and "N cards" patterns
+        readme = re.sub(r'\b\d+ terms\b', f'{len(entries)} terms', readme, count=1)
+        readme = re.sub(r'\b\d+ cards across\b', f'{len(entries)} cards across', readme, count=1)
+        with open(readme_path, 'w') as f:
+            f.write(readme)
+        print(f'Updated README.md counts to {len(entries)}')
+
 if __name__ == '__main__':
     build()
