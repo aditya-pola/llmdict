@@ -42,12 +42,14 @@ html {
   -webkit-font-smoothing: antialiased;
 }
 
+::selection { background: rgba(0, 0, 0, 0.12); color: inherit; }
+.card ::selection, .overlay-card ::selection { background: rgba(255, 255, 255, 0.2); color: inherit; }
+
 body {
   height: 100vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  user-select: none;
   padding-top: 0;
 }
 

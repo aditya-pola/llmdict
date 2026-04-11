@@ -23,12 +23,17 @@ const Cards = (() => {
       .sort((a, b) => b.name.length - a.name.length); // longest first
 
     const used = new Set();
+    const linkBlocks = [];
+
     for (const t of terms) {
       for (const pattern of t.patterns) {
         const regex = new RegExp(`\\b(${escapeRegex(pattern)})\\b`, 'gi');
         if (regex.test(protected) && !used.has(t.id)) {
+          // Replace match with placeholder to prevent nested matching
           protected = protected.replace(regex, (match) => {
-            return `<span class="inline-link" data-target="${t.id}">${match}</span>`;
+            const placeholder = `%%LINK${linkBlocks.length}%%`;
+            linkBlocks.push(`<span class="inline-link" data-target="${t.id}">${match}</span>`);
+            return placeholder;
           });
           used.add(t.id);
           break;
@@ -36,6 +41,8 @@ const Cards = (() => {
       }
     }
 
+    // Restore link placeholders
+    protected = protected.replace(/%%LINK(\d+)%%/g, (_, i) => linkBlocks[parseInt(i)]);
     // Restore math blocks
     protected = protected.replace(/%%MATH(\d+)%%/g, (_, i) => mathBlocks[parseInt(i)]);
     return protected;
