@@ -4,7 +4,7 @@
   "expansion": "Effective parameters (Gemma-specific)",
   "category": "size-conventions",
   "oneliner": "Google Gemma notation: effective capacity accounting for architectural efficiency (PLE, parameter sharing). E4B $\\approx$ performs like 4B dense.",
-  "explanation": "Specific to Gemma 3n/4 series. E4B has 8B total params but 4.5B 'effective' due to Per-Layer Embeddings inflating count. Distinguishes from raw param count.",
+  "explanation": "E stands for effective parameters, a convention specific to Google's Gemma 3n and Gemma 4 series. The Gemma-3n-E4B model has roughly eight billion raw parameters, but because it uses Per-Layer Embedding sharing, many of those weights are reused, giving it the compute profile of about 4.5 billion parameters. Google introduced the E tag so users can compare real-world performance expectations without being misled by the inflated raw count.",
   "seen_in": [
     "model-name"
   ],

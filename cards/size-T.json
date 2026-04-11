@@ -4,7 +4,7 @@
   "expansion": "Trillion parameters or tokens",
   "category": "size-conventions",
   "oneliner": "Trillions. Rare for params (Switch Transformer 1.6T). More common for training data ('trained on 15T tokens'). Context matters.",
-  "explanation": "Ambiguous: '1T' in model size = trillion params. '1T tokens' = training data volume. Few public models exceed 1T params. Switch Transformer (1.6T) is the canonical example.",
+  "explanation": "T means trillion parameters when it appears as a size marker, but context matters because the same letter shows up in training-data descriptions where 1T means one trillion tokens of training text, not model size. Very few public-weight models exceed one trillion parameters. If you see 1T in a HuggingFace repo title, double-check whether it refers to the model or the pre-training corpus volume.",
   "seen_in": [
     "model-cards",
     "documentation"

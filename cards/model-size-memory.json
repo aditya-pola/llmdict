@@ -4,7 +4,7 @@
   "expansion": "Memory Footprint Calculation for Quantized LLMs",
   "category": "core-concepts",
   "oneliner": "Memory (bytes) = params $\\times$ bits_per_param / 8, plus overhead for scales, KV-cache, and non-quantized components.",
-  "explanation": "70B at fp16 = 140 GB. At int4 = ~35 GB. Complications: embeddings + layer norms usually kept at fp16 (~0.5-1 GB). Scale factors add ~0.125 bpw overhead at g=128. KV-cache grows with sequence length and can exceed model size (70B Llama-2 at 4096 tokens = ~2.5 GB per sequence; at batch 32 = 80 GB). Token generation throughput $\\approx$ memory_bandwidth / model_weight_bytes.",
+  "explanation": "To estimate a model's memory footprint, multiply the parameter count by the bytes per parameter for your chosen format. A 70-billion parameter model in 16-bit precision needs about 140 GB, while the same model in 4-bit quantization needs roughly 35 GB. Real usage is higher because embedding and normalization layers are typically kept in 16-bit, scale factors add overhead, and the KV cache grows with sequence length and batch size. For a 70B model, the KV cache alone can reach 2.5 GB per sequence at 4096 tokens.",
   "fundamentals": "Weight memory = P $\\times$ b / 8. Scale overhead = P $\\times$ (s_bits / g) / 8. KV-cache = 2 $\\times$ layers $\\times$ kv_heads $\\times$ head_dim $\\times$ seq_len $\\times$ batch $\\times$ kv_bytes. Practical: RTX 4090 (24 GB) fits 7B at fp16, 13B at int8, ~33B at int4. A100-80GB fits 70B at int8. H100 at 3.35 TB/s: 70B int4 $\\approx$ 55 tok/s, 70B fp16 $\\approx$ 14 tok/s.",
   "seen_in": [
     "documentation",

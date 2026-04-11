@@ -1,0 +1,34 @@
+{
+  "id": "inference",
+  "name": "Inference",
+  "expansion": "Model Inference (forward pass for prediction)",
+  "category": "scaling-patterns",
+  "oneliner": "Running a trained model to produce outputs — the phase where latency, throughput, and memory bandwidth become the dominant constraints.",
+  "explanation": "Inference is the process of feeding input into a trained model and reading its output. For autoregressive LLMs, inference has two distinct phases. Prefill processes the entire input prompt in parallel, building the KV cache — this phase is compute-bound. Decode then generates tokens one at a time, each step reading the full KV cache but computing only one new token — this phase is memory-bandwidth-bound because most time is spent loading weights from GPU memory rather than doing arithmetic. This is why KV-cache quantization, speculative decoding, and batching are critical for efficient serving.",
+  "fundamentals": "During prefill, cost $\\approx 2nP$ FLOPs where $n$ = input tokens, $P$ = parameters. During decode, each step costs $\\approx 2P$ FLOPs but must load all $P$ parameters from HBM. Arithmetic intensity during decode is $\\approx 1/\\text{bytes\\_per\\_param}$, well below GPU compute-to-bandwidth ratio, making decode firmly memory-bandwidth-bound. Batching $B$ requests raises intensity to $B/\\text{bytes\\_per\\_param}$.",
+  "related": [
+    "inference-engine",
+    "kv-cache",
+    "speculative-decoding"
+  ],
+  "seen_in": [
+    "documentation",
+    "model-config"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Efficient Memory Management for Large Language Model Serving with PagedAttention",
+      "authors": "Kwon et al.",
+      "venue": "SOSP 2023",
+      "arxiv": "2309.06180"
+    }
+  ],
+  "resources": [
+    {
+      "label": "Kipply — Transformer Inference Arithmetic",
+      "url": "https://kipp.ly/transformer-inference-arithmetic/"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

@@ -27,6 +27,7 @@
         "ptq",
         "qat",
         "quantization",
+        "token",
         "w4a16",
         "w8a8"
       ]
@@ -76,6 +77,7 @@
       "label": "Attention & Memory",
       "order": 5,
       "entries": [
+        "attention-mask",
         "flash-attention",
         "gqa",
         "kv-cache",
@@ -84,6 +86,7 @@
         "mqa",
         "paged-attention",
         "sdpa",
+        "self-attention",
         "swa"
       ]
     },
@@ -107,10 +110,13 @@
       "label": "Layer Types",
       "order": 7,
       "entries": [
+        "backbone",
         "ffn",
         "geglu",
+        "model-head",
         "ple",
         "residual-connection",
+        "seq2seq",
         "swiglu"
       ]
     },
@@ -133,11 +139,13 @@
         "dense-models",
         "expert-routing",
         "inference-engine",
+        "inference",
         "knowledge-distillation",
         "model-merging",
         "moe",
         "speculative-decoding",
-        "tp-pp"
+        "tp-pp",
+        "zero"
       ]
     },
     {
@@ -145,6 +153,7 @@
       "label": "Training Pipeline",
       "order": 10,
       "entries": [
+        "causal-lm",
         "cpt",
         "dpo",
         "kto",
@@ -152,7 +161,8 @@
         "pre-training",
         "rlhf",
         "sft",
-        "simpo"
+        "simpo",
+        "transfer-learning"
       ]
     },
     {
@@ -311,7 +321,7 @@
       "expansion": "Adjusted Base Frequency",
       "category": "position-encodings",
       "oneliner": "Simplest long-context approach: increase RoPE base from 10,000 to 500K-1M during training. No post-hoc scaling needed.",
-      "explanation": "Just change the base constant in $\\theta_i = \\text{base}^{-2i/d}$ to a much larger value and train with it. Larger base = longer wavelengths = model can represent longer-range positions. High-freq band (i=0) always has $\\theta_0$=1 regardless of base, so local discrimination is preserved. Requires training/continued pre-training (can't just change at inference). Used by: LLaMA 3 (base=500K, 8K context), LLaMA 3.1 (500K, 128K), Code Llama (1M, 16K→100K+), Qwen2/2.5 (1M, 32K-128K). Preferred by orgs training from scratch due to simplicity.",
+      "explanation": "Adjusted Base Frequency is the simplest way to extend a model's context window when using RoPE position encoding. Instead of the default base of 10,000, the base is increased to 500,000 or even 1,000,000, which stretches the position wavelengths so the model can represent longer sequences without confusion. Local token-to-token discrimination is preserved because the highest-frequency band is unaffected by the base change. This technique requires continued pre-training. Llama 3 uses a base of 500K, and Qwen 2 uses 1M.",
       "fundamentals": "$\\theta_i$ = B^(-2i/d). Max wavelength = 2$\\pi$·B. base=10K → ~63K positions; base=500K → ~3.1M positions; base=1M → ~6.3M positions. High-freq (i=0): $\\theta_0$=1 always (base^0=1) — local info preserved for any base. Mathematically equivalent to NTK-aware with specific $\\alpha$, but applied during training not post-hoc. The model learns to use the extended position range natively — no distributional mismatch.",
       "seen_in": [
         "model-config"
@@ -444,6 +454,39 @@
         }
       ]
     },
+    "attention-mask": {
+      "id": "attention-mask",
+      "name": "Attention Mask",
+      "expansion": "Attention Mask",
+      "category": "attention-variants",
+      "oneliner": "A binary mask that controls which token pairs can attend to each other, handling padding, causality, and custom patterns.",
+      "explanation": "An attention mask tells the attention mechanism which positions a given token is allowed to look at. Padding masks prevent tokens from attending to padding positions when sequences of different lengths are batched together. Causal masks enforce the left-to-right constraint in autoregressive generation by blocking attention to future positions. In HuggingFace Transformers, the attention_mask tensor is typically 1 for real tokens and 0 for padding. Internally this is converted to large negative values added to attention logits before softmax, so masked positions get near-zero weight.",
+      "fundamentals": "Applied as: $\\text{Attention}(Q,K,V) = \\text{softmax}\\left(\\frac{QK^\\top}{\\sqrt{d_k}} + M_{\\text{add}}\\right)V$, where $M_{\\text{add}}$ contains $0$ for allowed positions and $-\\infty$ for blocked positions. For padded batches, the padding mask has shape $1 \\times L$ and is broadcast to $L \\times L$, combined with the causal mask via element-wise minimum.",
+      "related": [
+        "mha",
+        "token"
+      ],
+      "seen_in": [
+        "code",
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Attention Is All You Need",
+          "authors": "Vaswani et al.",
+          "venue": "NeurIPS 2017",
+          "arxiv": "1706.03762"
+        }
+      ],
+      "resources": [
+        {
+          "label": "HuggingFace Glossary: Attention mask",
+          "url": "https://huggingface.co/docs/transformers/glossary#attention-mask"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "awq": {
       "id": "awq",
       "name": "AWQ",
@@ -476,13 +519,46 @@
         }
       ]
     },
+    "backbone": {
+      "id": "backbone",
+      "name": "Backbone",
+      "expansion": "Model Backbone (trunk)",
+      "category": "layer-types",
+      "oneliner": "The main body of a model — embedding layer plus transformer blocks — that produces contextual representations before any task-specific head.",
+      "explanation": "The backbone is everything in a transformer between the raw token IDs and the task-specific output head. It includes the token embedding table, positional encoding, and the stack of transformer layers with self-attention, feed-forward blocks, normalization, and residual connections. The backbone's job is to convert a sequence of token IDs into rich contextual hidden states. When people say LLaMA-3 70B, they mostly mean the backbone — the 80 transformer layers and 8192-dimensional hidden states. The backbone is what gets pretrained once and reused across many downstream tasks via different heads or fine-tuning.",
+      "fundamentals": "A decoder-only backbone maps tokens $x_1, \\ldots, x_n$ to hidden states through $L$ layers. Each layer: $h' = h + \\text{Attention}(\\text{Norm}(h))$, then $h'' = h' + \\text{FFN}(\\text{Norm}(h'))$. Total params $\\approx L \\cdot 12d^2$ for standard MHA with $4d$ FFN, plus embedding $|V| \\cdot d$.",
+      "related": [
+        "model-head",
+        "residual-connection"
+      ],
+      "seen_in": [
+        "model-config",
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Attention Is All You Need",
+          "authors": "Vaswani et al.",
+          "venue": "NeurIPS 2017",
+          "arxiv": "1706.03762"
+        }
+      ],
+      "resources": [
+        {
+          "label": "HuggingFace Model summary",
+          "url": "https://huggingface.co/docs/transformers/model_summary"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "bf16": {
       "id": "bf16",
       "name": "bf16 / bfloat16",
       "expansion": "Brain Floating Point 16-bit (Google Brain Float 16)",
       "category": "precision-formats",
       "oneliner": "A 16-bit float with fp32's exponent range but reduced mantissa — designed for deep learning training without loss scaling.",
-      "explanation": "Developed by Google Brain for TPUs (2018). Keeps fp32's 8-bit exponent so it has the same range ($\\pm$3.4$\\times 10^{38}$) — gradients almost never overflow, no loss scaling needed. Tradeoff: only 7-bit mantissa (vs fp16's 10), so less precise than fp16. In practice, the reduced precision doesn't matter for neural nets. Default training format for LLMs at Google, Meta, and most labs. Supported on TPUs, NVIDIA Ampere+, AMD MI200+.",
+      "explanation": "BFloat16 is a 16-bit floating-point format developed by Google Brain for TPUs. It keeps the same 8-bit exponent as standard 32-bit float, giving it the same enormous numerical range, so training gradients almost never overflow and loss scaling is unnecessary. The tradeoff is a shorter 7-bit mantissa, meaning less precision than fp16, but neural networks are tolerant of this. BFloat16 is the default training format at Google, Meta, and most major labs, supported on TPUs, NVIDIA Ampere and newer, and AMD MI200 and newer GPUs.",
       "fundamentals": "Bit layout: 1 sign | 8 exponent (bias 127) | 7 mantissa. Same exponent as fp32 — conversion is just truncating the lower 16 bits. Precision: ~2.4 decimal digits (vs fp16's ~3.3). Two values differing by less than 1 part in 128 map to the same bf16.",
       "seen_in": [
         "model-name",
@@ -514,7 +590,7 @@
       "expansion": "bitsandbytes — Tim Dettmers' quantization library",
       "category": "quantization-methods",
       "oneliner": "The library behind LLM.int8() and QLoRA. Offers 8-bit (absmax) and 4-bit (nf4/fp4) quantization with deep HuggingFace integration.",
-      "explanation": "Two main modes. 8-bit (LLM.int8()): vector-wise absmax quantization with mixed-precision decomposition — outlier features (>~6$\\sigma$) kept in fp16, rest in int8. Solved the activation outlier problem. 4-bit (QLoRA): loads base model in nf4/fp4, trains LoRA adapters in fp16. Double quantization compresses scale factors. Tightly integrated with HuggingFace Transformers (load_in_8bit/load_in_4bit). Primary use: memory-efficient fine-tuning, not production serving.",
+      "explanation": "Bitsandbytes is a CUDA library that enables 8-bit and 4-bit quantization for large language models. Its 8-bit mode uses vector-wise quantization with mixed-precision decomposition, keeping statistical outlier features in 16-bit while compressing the rest to 8-bit. Its 4-bit mode powers QLoRA, loading base model weights in NF4 format while training LoRA adapters in 16-bit. It integrates directly with HuggingFace Transformers via load_in_8bit and load_in_4bit flags, making it the go-to tool for memory-efficient fine-tuning.",
       "fundamentals": "8-bit: per-vector absmax scaling. Outlier decomposition: X = X_normal + X_outlier, compute separately in int8 and fp16, sum results. 4-bit: per-group (g=64 default) with nf4 or fp4 dtype. Double quant: group the fp32 absmax values into blocks of 256, quantize to fp8 with their own absmax.",
       "seen_in": [
         "model-name",
@@ -553,7 +629,7 @@
       "expansion": "Quantization Calibration Dataset",
       "category": "core-concepts",
       "oneliner": "A small dataset (~128 samples) run through the model to collect activation statistics needed by quantization methods to set scale factors.",
-      "explanation": "Some methods need to observe actual activation ranges (which depend on input data) to set quantization parameters. Standard: 128 samples $\\times$ 2048 tokens from C4 or WikiText-2 (established by GPTQ paper). Required by: GPTQ (Hessian computation), AWQ (activation importance), SmoothQuant (smoothing factors), static quantization. NOT required by: simple RTN, dynamic quantization, HQQ. Domain-matched calibration (e.g., code for code models) yields slightly better results.",
+      "explanation": "Calibration data is a small representative dataset used to measure how activations behave inside a model, so quantization methods can set accurate scaling parameters. The standard benchmark established by the GPTQ paper is 128 samples of 2048 tokens from the C4 or WikiText-2 datasets. Methods like GPTQ, AWQ, and SmoothQuant require calibration because they need to observe real activation ranges, while simpler approaches like round-to-nearest and dynamic quantization do not. Using domain-matched calibration data yields slightly better results.",
       "fundamentals": "For layer Y=XW+b: calibration records per-layer activation stats. Approaches: min/max (simple but outlier-sensitive), percentile (clips outliers), MSE-optimal (minimizes reconstruction error), entropy/KL-based (TensorRT). For GPTQ: calibration computes Hessian H = 2XX^T, used to solve layer-wise optimization min_Q $\\|\\|WX - QX\\|\\|^2$.",
       "seen_in": [
         "documentation",
@@ -582,13 +658,46 @@
         }
       ]
     },
+    "causal-lm": {
+      "id": "causal-lm",
+      "name": "Causal Language Modeling",
+      "expansion": "Causal (Autoregressive) Language Modeling",
+      "category": "training-pipeline",
+      "oneliner": "The training objective where a model predicts the next token using only the tokens to its left — the foundation of GPT-style generation.",
+      "explanation": "Causal language modeling trains a model to predict each token given all preceding tokens, never peeking at future positions. A causal attention mask ensures position i can only attend to positions 0 through i. This is the pre-training objective behind GPT-2, GPT-3, GPT-4, LLaMA, and Mistral. At inference time the same left-to-right constraint enables autoregressive generation: sample one token, append it, repeat. Because every position provides a training signal, causal LM is highly data-efficient compared to masked LM approaches.",
+      "fundamentals": "The causal LM objective maximises $\\mathcal{L} = \\sum_{t=1}^{T} \\log P(x_t \\mid x_{<t}; \\theta)$. The causal mask is a lower-triangular binary matrix $M$ where $M_{ij} = 1$ iff $j \\leq i$. Perplexity $= \\exp(-\\mathcal{L}/T)$ is the standard evaluation metric.",
+      "related": [
+        "pre-training",
+        "sft"
+      ],
+      "seen_in": [
+        "model-config",
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Language Models are Few-Shot Learners",
+          "authors": "Brown et al.",
+          "venue": "NeurIPS 2020",
+          "arxiv": "2005.14165"
+        }
+      ],
+      "resources": [
+        {
+          "label": "HuggingFace CLM training guide",
+          "url": "https://huggingface.co/docs/transformers/tasks/language_modeling"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "continuous-batching": {
       "id": "continuous-batching",
       "name": "Continuous Batching",
       "expansion": "Continuous Batching / Iteration-Level Batching",
       "category": "scaling-patterns",
       "oneliner": "Dynamically insert/remove requests from a running batch at each generation step — eliminates wasted slots from variable-length outputs. 2-4$\\times$ throughput gain.",
-      "explanation": "Static batching: collect N requests, process until ALL finish, then accept new batch. Short requests waste their slots while waiting for long ones. Continuous batching (Orca, Yu et al. 2022): after each token step, remove finished requests and fill slots with waiting ones. Synergistic with PagedAttention: dynamic KV cache allocation/freeing enables efficient slot reuse. Together: 2-4$\\times$ throughput vs static batching, up to 23$\\times$ under high load (vLLM paper). Default in vLLM, TGI, TensorRT-LLM.",
+      "explanation": "Continuous batching replaces the traditional static batching approach where the server waits for every request in a batch to finish before accepting new ones. Instead, after each token generation step, finished requests are removed and waiting requests immediately fill the open slots. This eliminates the wasted compute from short requests sitting idle while long ones complete. Combined with PagedAttention for dynamic memory management, continuous batching delivers two to four times the throughput of static batching. It is the default in vLLM, TGI, and TensorRT-LLM.",
       "fundamentals": "Per-iteration scheduler: 1) Generate one token for all active requests. 2) Remove finished (EOS/max_len), free KV cache. 3) Fill freed slots with new requests (run prefill). 4) Repeat. Prefill vs decode asymmetry: prefill is compute-bound (many tokens), decode is memory-bound (one token). Advanced: chunked prefill interleaves prefill chunks with decode steps. Concrete: static batching wastes 60-80% KV memory on fragmentation; PagedAttention reduces to <4%.",
       "seen_in": [
         "serving-config",
@@ -620,7 +729,7 @@
       "expansion": "Continued Pre-Training (Domain-Adaptive Pre-Training)",
       "category": "training-pipeline",
       "oneliner": "Additional pre-training on domain-specific data (code, medical, legal) to inject specialized knowledge — same loss as pre-training, 2-10% of the cost.",
-      "explanation": "Takes a general base model and runs more pre-training on domain corpus. Same next-token prediction objective but shifted data distribution. Key challenge: catastrophic forgetting — mitigated by mixing 10-30% general data, lower lr (2-10$\\times$ lower). Examples: Code Llama (500B code tokens), Meditron (medical), SaulLM (legal), Minerva (math/science). Cost: 2-10% of original pre-training.",
+      "explanation": "Continued pre-training takes an existing general-purpose base model and runs additional pre-training on a domain-specific corpus using the same next-token prediction objective. The key challenge is catastrophic forgetting, which is mitigated by mixing in 10 to 30 percent general data and using a lower learning rate. Notable examples include Code Llama trained on 500 billion code tokens, Meditron for medical text, SaulLM for legal documents, and Minerva for math and science. CPT typically costs 2 to 10 percent of the original pre-training budget.",
       "fundamentals": "Loss: identical to pre-training (autoregressive CE). Only data distribution changes. Hyperparams: lr 1e-5 to 5e-5, cosine or constant schedule. Data mixing: ~70-90% domain + 10-30% general replay.",
       "seen_in": [
         "model-name",
@@ -802,7 +911,7 @@
       "expansion": "Dense Model (all parameters active per token)",
       "category": "scaling-patterns",
       "oneliner": "100% of parameters active for every token — the standard transformer design. Simpler than MoE but compute scales linearly with param count.",
-      "explanation": "The default transformer architecture: every attention head and FFN layer processes every token. Term became necessary to distinguish from MoE/sparse. Advantages: simplicity (no routing instabilities, no load balancing, simpler serving), sample efficiency (every param sees every token). Disadvantage: compute = $O(params)$. Preferred when: memory is the bottleneck and you want max quality per byte, simpler infrastructure needed, fine-tuning, or single-GPU deployment. Chinchilla scaling: N params should train on ~20N tokens.",
+      "explanation": "Dense models are the standard transformer architecture where every parameter is active for every token, meaning all attention heads and feed-forward layers participate in each computation. The term became necessary to distinguish from Mixture-of-Experts and other sparse architectures. Dense models are simpler to train, serve, and fine-tune, with no routing instabilities or load-balancing concerns. They are preferred when memory rather than compute is the bottleneck, when infrastructure simplicity matters, or when deploying on a single GPU.",
       "fundamentals": "Per-token FLOPS $\\approx$ 2 $\\times$ total_params (rough approximation). 70B dense model: ~140 TFLOPS/token. Same capacity as MoE ~280B total/70B active — same compute, 4$\\times$ less memory. When model card lists single param count without total/active distinction → dense. Examples: LLaMA 3 8B/70B/405B, Mistral 7B, Qwen 2.5 72B, Gemma 31B.",
       "seen_in": [
         "model-cards",
@@ -835,7 +944,7 @@
       "expansion": "Inverse Quantization",
       "category": "core-concepts",
       "oneliner": "Reverse mapping from low-precision quantized values back to approximate floats — happens on-the-fly during inference.",
-      "explanation": "In W4A16: int4 weights read from memory, multiplied by group scale in registers/shared memory, fed directly into fp16 GEMM. Fused with computation to avoid materializing full fp16 weight matrix — only 4 bits traverse the memory bus. In W8A8: dequantization happens AFTER the integer GEMM (output $\\times$ scale product), which is cheaper since it operates on the smaller output tensor. Dequantization is cheap: $O(KN)$ vs $O(MKN)$ for the GEMM itself.",
+      "explanation": "Dequantization is the process of converting quantized weights back to a higher-precision format during inference so they can participate in standard matrix multiplication. In a 4-bit weight scheme, integer weights are read from memory at 4 bits, multiplied by their group scale factor, and fed directly into 16-bit matrix math. This is fused with the computation so the full-precision weight matrix is never materialized in memory, meaning only 4 bits per weight travel across the memory bus. The dequantization cost is negligible compared to the matrix multiply itself.",
       "fundamentals": "Integer: W_approx = scale $\\times$ (W_q - zero_point). Error: |W_original - W_approx| ≤ scale/2. nf4: W_approx = nf4_codebook[index] $\\times$ absmax. W8A8 output: Y_fp16 = Y_int32 $\\times$ (s_x $\\times$ s_w).",
       "seen_in": [
         "documentation"
@@ -863,7 +972,7 @@
       "expansion": "Weight-Decomposed Low-Rank Adaptation",
       "category": "fine-tuning-methods",
       "oneliner": "Decompose weights into magnitude + direction, apply LoRA to direction only. More like full FT behavior, negligible extra params.",
-      "explanation": "LoRA couples magnitude and direction changes; full FT changes direction more. DoRA: $W_0$ = m·(V/$\\|\\|V\\|\\|$), freeze V, add LoRA to V, train m separately. Forward: W' = m·(V+($\\alpha$/r)·BA)/$\\|\\|V+($\\alpha$/r)·BA\\|\\|$. Extra: just m $\\in\\mathbb{R}$^(d_out) per layer. Consistently outperforms LoRA. PEFT: use_dora=True.",
+      "explanation": "Weight-Decomposed Low-Rank Adaptation splits each pre-trained weight matrix into a magnitude component and a direction component, then applies LoRA only to the direction while training the magnitude scalar separately. This decomposition is motivated by the observation that full fine-tuning primarily changes weight direction, while standard LoRA couples magnitude and direction changes in a suboptimal way. DoRA consistently outperforms LoRA across tasks with minimal additional parameters, just one scalar per output dimension per layer. It is available in PEFT with a simple use_dora flag.",
       "fundamentals": "W' = m·(V+($\\alpha$/r)·BA)/$\\|\\|V+($\\alpha$/r)·BA\\|\\|$_c. Extra params: d_out per layer. LLaMA 7B: 0.004% overhead. Based on weight normalization.",
       "seen_in": [
         "model-config"
@@ -898,7 +1007,7 @@
       "expansion": "Direct Preference Optimization",
       "category": "training-pipeline",
       "oneliner": "Reparameterizes RLHF into a classification loss on preference pairs — no reward model, no PPO, 2 models in memory. The default open-source alignment method.",
-      "explanation": "Optimal RLHF policy satisfies r(x,y) = $\\beta$·log[$\\pi_\\theta$/$\\pi_{\\text{ref}}$] + Z(x). Substituting into Bradley-Terry cancels reward model — reduces to supervised loss. 2-5$\\times$ cheaper than RLHF. Failure modes: distribution shift, overfitting to chosen, reference sensitivity. Default for open-source: Zephyr, Tulu 2, Llama 3.1, many community models.",
+      "explanation": "Direct Preference Optimization simplifies reinforcement learning from human feedback into a single supervised loss function that directly optimizes the language model using preference pairs, eliminating the need to train and maintain a separate reward model. This makes alignment two to five times cheaper than traditional RLHF while producing comparable results. DPO has become the default alignment method for open-source models including Zephyr, Tulu 2, and Llama 3.1. Known failure modes include distribution shift and overfitting to the chosen responses.",
       "fundamentals": "Loss: $\\mathcal{L} = -\\mathbb{E}\\left[\\log \\sigma\\left(\\beta \\log \\frac{\\pi_\\theta(y_w|x)}{\\pi_{\\text{ref}}(y_w|x)} - \\beta \\log \\frac{\\pi_\\theta(y_l|x)}{\\pi_{\\text{ref}}(y_l|x)}\\right)\\right]$. $\\beta$ typically 0.1-0.5. lr 1e-6 to 5e-7. Same preference data as RLHF RM.",
       "seen_in": [
         "model-name",
@@ -943,7 +1052,7 @@
       "expansion": "2-bit Exponent, 1-bit Mantissa — Microscaling FP4",
       "category": "precision-formats",
       "oneliner": "4-bit micro-float: only 15 distinct values, made viable by sharing an 8-bit block scale across 32 elements. Next-gen format for Blackwell GPUs.",
-      "explanation": "Part of the OCP Microscaling (MX) spec (AMD, ARM, Intel, Meta, Microsoft, NVIDIA, Qualcomm, 2023). Standalone E2M1 is nearly useless — 15 values. The MX trick: 32 E2M1 elements share one E8M0 scale (8-bit exponent, no mantissa). Scale handles magnitude, E2M1 handles relative differences within the block. 2$\\times$ compute density vs fp8. NVIDIA Blackwell has native MXFP4 Tensor Cores. Also defines MXFP6 (E3M2/E2M3) and MXFP8.",
+      "explanation": "E2M1 is a tiny 4-bit floating-point format with 2 exponent bits and 1 mantissa bit, capable of representing only 15 distinct values. On its own it would be nearly useless, but the OCP Microscaling specification groups 32 E2M1 elements under a single shared 8-bit scale factor. The scale handles overall magnitude while E2M1 captures relative differences within each block. This delivers double the compute density compared to 8-bit formats. NVIDIA Blackwell GPUs have native MXFP4 tensor core support for this format.",
       "fundamentals": "E2M1: 1 sign | 2 exp (bias 1) | 1 mantissa. No inf/NaN. Positive values: 0, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0. With sign: 15 distinct values. E8M0 block scale: pure power of 2 (2^(exp-127)), range 2^-127 to $2^{127}$. Effective value = E2M1_value $\\times$ 2^(shared_exp - 127). Effective bpw: 4 + 8/32 = 4.25 bits.",
       "seen_in": [
         "gguf-filename",
@@ -1059,7 +1168,7 @@
       "expansion": "Feed-Forward Network / Multi-Layer Perceptron",
       "category": "layer-types",
       "oneliner": "The position-wise fully connected sub-block in each transformer layer — up-project, activate, down-project. Stores ~67% of each layer's parameters.",
-      "explanation": "Operates independently per token (no cross-token interaction). Serves as the 'memory/knowledge storage' component — factual knowledge and patterns predominantly stored in FFN weights. Standard design: project up to larger intermediate dim, apply activation, project back down. In original Transformer, d_ff = 4 $\\times$ d_model with ReLU. Modern models use SwiGLU with 3 matrices and d_ff $\\approx$ 2.67 $\\times$ d_model to keep total params constant. FFN is the dominant parameter consumer: ~67% of layer params in gated variants.",
+      "explanation": "The feed-forward network is the component of each transformer layer that processes tokens independently, with no cross-token interaction. It serves as the primary knowledge and pattern storage, holding roughly two-thirds of the total model parameters. The standard design projects each token to a larger intermediate dimension, applies an activation function, and projects back down. Modern LLMs have replaced the original ReLU activation with SwiGLU, which uses three projection matrices instead of two but reduces the intermediate dimension to compensate.",
       "fundamentals": "Standard: FFN(x) = $W_2$·activation($W_1$·x). Gated (SwiGLU): FFN(x) = (Swish(xW_gate) ⊙ xW_up)W_down. LLaMA 7B: d_model=4096, d_ff=11008. FFN params: 3$\\times$4096$\\times$11008 = 135M vs Attention: 4$\\times$409$6^2$ = 67M. The '2/3 of 4x' rule: d_ff $\\approx$ (8/3)$\\times$d_model, rounded to multiple of 256 for hardware efficiency.",
       "seen_in": [
         "model-config",
@@ -1089,7 +1198,7 @@
       "expansion": "Flash Attention — IO-aware tiling algorithm for exact attention",
       "category": "attention-variants",
       "oneliner": "Computes exact attention without materializing the N$\\times$N matrix in GPU HBM — uses tiling and online softmax to reduce memory from $O($N^2$)$ to $O(N)$, achieving 2-4$\\times$ speedups.",
-      "explanation": "By Tri Dao et al. (2022). The insight: standard attention is bottlenecked by memory bandwidth (reads/writes to HBM), not compute. The N$\\times$N attention matrix written to HBM is the culprit. Flash Attention tiles Q, K, V into blocks that fit in SRAM, iterates over K/V blocks per Q block, accumulates output using online softmax (streaming, numerically stable, no full-row knowledge needed). Result is mathematically exact — not approximate. FA1 (2022): tiling + IO analysis. FA2 (2023): 2$\\times$ faster via better parallelism (over seq_len), better occupancy, 50-73% peak FLOPs on A100. FA3 (2024): targets H100 Hopper, exploits async WGMMA, TMA, FP8 support, up to 740 TFLOPS.",
+      "explanation": "Flash Attention by Tri Dao (2022) is an IO-aware algorithm that computes exact attention without ever materializing the full attention matrix in GPU main memory. Standard attention writes a massive matrix to slow HBM memory, which is the true bottleneck. Flash Attention tiles the query, key, and value matrices into small blocks that fit in fast on-chip SRAM and accumulates results using an online softmax trick. The output is mathematically identical to standard attention. Version 1 introduced tiling, version 2 doubled speed, and version 3 targets H100 GPUs.",
       "fundamentals": "Standard IO: Θ(N·d + $N^2$) HBM accesses. Flash Attention IO: Θ($N^2$·$d^2$/M) where M=SRAM size. For typical M>>$d^2$, significant reduction. Tiling: for each Q block, iterate K/V blocks. Maintain running max m and sum l for online softmax. Rescale output O as new blocks processed. Memory: $O(N)$ — only Q,K,V,O in HBM, no N$\\times$N matrix. Backward pass: recomputes attention from Q,K,V (gradient checkpointing). Versions: FA1 ~120 TFLOPS A100, FA2 ~230 TFLOPS A100, FA3 ~740 TFLOPS H100.",
       "seen_in": [
         "code",
@@ -1222,7 +1331,7 @@
       "expansion": "16-bit IEEE 754 Half-Precision Floating Point",
       "category": "precision-formats",
       "oneliner": "A 16-bit float that halves memory vs fp32 but has limited dynamic range — fast for inference, needs loss scaling for training.",
-      "explanation": "Cuts memory in half (7B model = 14 GB). Enables Tensor Cores on NVIDIA Volta+ GPUs for 2-8$\\times$ throughput. Critical limitation: max value is only 65,504 — gradients during training can overflow, requiring loss scaling. For inference, overflow is rarely an issue. Largely supplanted by bf16 for training where hardware supports it.",
+      "explanation": "FP16 is a 16-bit floating-point format that halves memory compared to 32-bit, so a 7-billion parameter model fits in about 14 GB. It enables tensor core acceleration on NVIDIA Volta and newer GPUs for significant throughput gains. The critical limitation is its small maximum representable value of 65,504, which means training gradients can overflow and require loss scaling to work around. For inference this is rarely an issue. FP16 has been largely supplanted by BFloat16 for training on hardware that supports it.",
       "fundamentals": "Bit layout: 1 sign | 5 exponent (bias 15) | 10 mantissa. Value = (-1)^sign $\\times$ 2^(exp-15) $\\times$ 1.mantissa. Range: $\\pm$65,504. Precision: ~3.3 decimal digits. Compared to fp32: range drops from ~$10^{38}$ to ~6.5$\\times 10^{4}$ (34 orders of magnitude less), precision from ~7.2 to ~3.3 digits.",
       "seen_in": [
         "model-name",
@@ -1254,7 +1363,7 @@
       "expansion": "32-bit IEEE 754 Single-Precision Floating Point",
       "category": "precision-formats",
       "oneliner": "The standard 32-bit floating-point format — baseline 'full precision' for neural networks.",
-      "explanation": "Each parameter stored as 4 bytes. A 7B model = 28 GB. Provides ~7.2 decimal digits of precision and range up to $\\pm$3.4$\\times 10^{38}$. Now considered overkill for inference; still used for optimizer states and master weight copies in mixed-precision training. When people say a model is 'quantized,' they mean converted from fp32/bf16 to something smaller.",
+      "explanation": "FP32 is the standard 32-bit floating-point format where each parameter occupies 4 bytes, so a 7-billion parameter model requires about 28 GB of memory. It provides roughly 7.2 decimal digits of precision and an enormous numerical range. FP32 is now considered overkill for inference and has been replaced by 16-bit or smaller formats for model weights. It is still used for optimizer states and master weight copies in mixed-precision training. When people say a model is quantized, they mean converted from FP32 or BFloat16 to a more compact representation.",
       "fundamentals": "Bit layout: 1 sign | 8 exponent (bias 127) | 23 mantissa. Value = (-1)^sign $\\times$ 2^(exp-127) $\\times$ 1.mantissa. The 23-bit mantissa + implicit leading 1 = 24 bits of significand $\\approx$ 7.2 decimal digits. Special values: $\\pm$inf (exp all 1s, mantissa 0), NaN (exp all 1s, mantissa ≠0), subnormals (exp all 0s).",
       "seen_in": [
         "model-weights",
@@ -1283,7 +1392,7 @@
       "expansion": "8-bit Floating Point — two variants for forward and backward passes",
       "category": "precision-formats",
       "oneliner": "Two 8-bit float formats: E4M3 for weights/activations (more precision) and E5M2 for gradients (more range). 2$\\times$ throughput vs fp16.",
-      "explanation": "Joint proposal by NVIDIA, ARM, Intel (2022). E4M3 (4 exp, 3 mantissa): max value 448, ~1.2 decimal digits — for forward pass. E5M2 (5 exp, 2 mantissa): max value 57,344, ~0.9 digits — for backward pass gradients. Native on H100/H200 Tensor Cores at 2$\\times$ fp16 throughput. NVIDIA Transformer Engine auto-manages per-tensor scaling. For inference, E4M3 only (no gradients). Typically <0.1% accuracy loss vs fp16.",
+      "explanation": "FP8 is an 8-bit floating-point format jointly proposed by NVIDIA, ARM, and Intel in 2022, available in two variants. E4M3 has more mantissa precision and is used for forward-pass weights and activations, while E5M2 has more dynamic range and is used for backward-pass gradients. FP8 runs natively on H100 and H200 tensor cores at double the throughput of FP16, with NVIDIA Transformer Engine automatically managing per-tensor scaling. For inference only E4M3 is needed, and accuracy loss is typically under 0.1 percent compared to FP16.",
       "fundamentals": "E4M3: 1 sign | 4 exp (bias 7) | 3 mantissa. No infinity — all exp=1111 patterns are finite (deliberate departure from IEEE 754). Only 16 values per sign per binade. E5M2: 1 sign | 5 exp (bias 15) | 2 mantissa. Follows IEEE 754 conventions (has inf/NaN). Per-tensor scaling factors are essential — without them, clipping destroys quality.",
       "seen_in": [
         "model-name",
@@ -1351,7 +1460,7 @@
       "expansion": "GELU-activated Gated Linear Unit",
       "category": "layer-types",
       "oneliner": "GLU variant using GELU activation instead of Swish — performs nearly identically to SwiGLU, used in T5 v1.1 and Flan-T5.",
-      "explanation": "From the same Shazeer (2020) paper. GELU(x) = x·$\\Phi$(x) where $\\Phi$ is Gaussian CDF. Practically indistinguishable from SwiGLU in quality (both ~21.3 perplexity vs ReLU's ~22.5 in Shazeer's T5 experiments). The ecosystem split: LLaMA-inspired models standardized on SwiGLU, T5/Flan-T5 family uses GeGLU. GELU was already standard in BERT/GPT-2, so GeGLU was a natural extension. Less common in decoder-only LLMs post-2023.",
+      "explanation": "GeGLU is a gated activation function that uses the GELU nonlinearity as its gating mechanism, introduced by Shazeer in 2020. In quality benchmarks it is practically indistinguishable from SwiGLU, both significantly outperforming ReLU. The T5 and Flan-T5 model families adopted GeGLU, while the Llama-inspired ecosystem standardized on SwiGLU instead. Since GELU was already the standard activation in BERT and GPT-2, GeGLU was a natural extension. It has become less common in decoder-only LLMs since 2023.",
       "fundamentals": "GeGLU(x) = (GELU(xW_gate) ⊙ xW_up)W_down. GELU(z) $\\approx$ z·0.5·(1 + tanh($\\sqrt{2/π}$·(z + 0.044715$z^3$))). Same parameter count as SwiGLU: 3 $\\times$ d_model $\\times$ d_ff. Swish vs GELU: $\\Phi$(x) has slightly steeper transition than $\\sigma$(x), negligible practical difference.",
       "seen_in": [
         "model-config",
@@ -1648,6 +1757,40 @@
       "confidence": "high",
       "verified_date": "2026-04-11"
     },
+    "inference": {
+      "id": "inference",
+      "name": "Inference",
+      "expansion": "Model Inference (forward pass for prediction)",
+      "category": "scaling-patterns",
+      "oneliner": "Running a trained model to produce outputs — the phase where latency, throughput, and memory bandwidth become the dominant constraints.",
+      "explanation": "Inference is the process of feeding input into a trained model and reading its output. For autoregressive LLMs, inference has two distinct phases. Prefill processes the entire input prompt in parallel, building the KV cache — this phase is compute-bound. Decode then generates tokens one at a time, each step reading the full KV cache but computing only one new token — this phase is memory-bandwidth-bound because most time is spent loading weights from GPU memory rather than doing arithmetic. This is why KV-cache quantization, speculative decoding, and batching are critical for efficient serving.",
+      "fundamentals": "During prefill, cost $\\approx 2nP$ FLOPs where $n$ = input tokens, $P$ = parameters. During decode, each step costs $\\approx 2P$ FLOPs but must load all $P$ parameters from HBM. Arithmetic intensity during decode is $\\approx 1/\\text{bytes\\_per\\_param}$, well below GPU compute-to-bandwidth ratio, making decode firmly memory-bandwidth-bound. Batching $B$ requests raises intensity to $B/\\text{bytes\\_per\\_param}$.",
+      "related": [
+        "inference-engine",
+        "kv-cache",
+        "speculative-decoding"
+      ],
+      "seen_in": [
+        "documentation",
+        "model-config"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Efficient Memory Management for Large Language Model Serving with PagedAttention",
+          "authors": "Kwon et al.",
+          "venue": "SOSP 2023",
+          "arxiv": "2309.06180"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Kipply — Transformer Inference Arithmetic",
+          "url": "https://kipp.ly/transformer-inference-arithmetic/"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "int4": {
       "id": "int4",
       "name": "int4 / i4",
@@ -1857,7 +2000,7 @@
       "expansion": "Key-Value Cache",
       "category": "attention-variants",
       "oneliner": "Stores computed K and V tensors from all previous tokens during autoregressive generation — avoids recomputation but is THE memory bottleneck for LLM serving.",
-      "explanation": "Without caching, generating token t recomputes K/V for all t-1 tokens — $O($n^2$)$ total compute. KV cache stores K/V from all previous steps; each new step only computes for the new token, appends to cache. Grows linearly with seq_len $\\times$ layers $\\times$ kv_heads. For large models at long contexts, KV cache dwarfs model weights. This is why MQA/GQA/MLA exist (shrink cache), why PagedAttention was invented (reduce waste), and why SWA bounds cache. KV cache quantization (to int8/int4) is increasingly common in production.",
+      "explanation": "The KV cache stores the key and value vectors from all previous tokens so they do not need to be recomputed at each generation step. Without it, generating each new token would require reprocessing the entire sequence from scratch, making generation extremely slow. The cache grows with sequence length, number of layers, and number of key-value heads, and for large models at long contexts it can exceed the size of the model weights themselves. This memory pressure is why techniques like GQA, MQA, MLA, PagedAttention, and sliding window attention were invented.",
       "fundamentals": "Formula: KV_cache_bytes = 2 $\\times$ n_layers $\\times$ n_kv_heads $\\times$ head_dim $\\times$ seq_len $\\times$ batch_size $\\times$ bytes_per_param. Examples (fp16): Llama 2 7B (32 layers, 32 KV heads): 16 KB/token/layer, 2 GB at 4K context. Llama 2 70B (80 layers, 8 KV heads): 4 KB/token/layer, 1.25 GB at 4K. At batch=32, seq=4096: Llama 70B = 40 GB cache (28% of weight memory). At batch=128, seq=8192: 320 GB — exceeds model weights. Each decode step reads entire cache from HBM — this bandwidth is the bottleneck.",
       "seen_in": [
         "code",
@@ -1892,7 +2035,7 @@
       "expansion": "Layer Normalization",
       "category": "normalization",
       "oneliner": "Standardizes activations across the hidden dimension per token — zero mean, unit variance, then learnable scale and shift. The original transformer normalization.",
-      "explanation": "Ba, Kiefer & Hinton (2016). Normalizes across feature/hidden dimension (not batch), making it batch-size-independent and suited for sequence models. Computes mean $\\mu$ and variance $\\sigma^2$ over d_model dimensions, normalizes to zero mean / unit variance, then applies learnable $\\gamma$ (scale) and $\\beta$ (shift). Default in original Transformer, GPT-2/3, BERT, T5, BART. Replaced by RMSNorm in post-2022 decoder LLMs (which drops mean subtraction and bias). Still used in encoder models, legacy architectures, some cross-attention/adapter layers.",
+      "explanation": "Layer normalization stabilizes training by normalizing activations across the hidden dimension of each token independently, making it insensitive to batch size. It computes the mean and variance over all hidden dimensions, normalizes to zero mean and unit variance, then applies a learnable scale and shift. LayerNorm was the default in the original Transformer, GPT-2, GPT-3, BERT, and T5. Post-2022 decoder LLMs have largely replaced it with RMSNorm, which drops the mean subtraction for better speed with equivalent quality.",
       "fundamentals": "$\\text{LayerNorm}(x) = \\gamma \\cdot \\frac{x - \\mu}{\\sqrt{\\sigma^2 + \\varepsilon}} + \\beta$. Where $\\mu = \\frac{1}{d}\\sum_i x_i$ and $\\sigma^2 = \\frac{1}{d}\\sum_i (x_i - \\mu)^2$. $\\gamma, \\beta \\in \\mathbb{R}^d$ are learnable (init: $\\gamma=1, \\beta=0$). Params: $2 \\times d_{\\text{model}}$. Requires 2 reductions (mean, variance) vs RMSNorm's 1 (sum of squares). Batch-independent (unlike BatchNorm), no running stats at inference.",
       "seen_in": [
         "model-config",
@@ -1924,7 +2067,7 @@
       "expansion": "Learned (Absolute) Position Embeddings",
       "category": "position-encodings",
       "oneliner": "A trainable lookup table of position vectors (like a vocabulary for positions) — simple but has a hard max length limit. Used by GPT-2, BERT, GPT-3.",
-      "explanation": "Maintain learnable matrix W_pos $\\in\\mathbb{R}$^(L_max $\\times$ d). Position m → lookup W_pos[m], add to token embedding. Model learns whatever representation is useful — often converges to sinusoidal-like patterns. Hard limitation: cannot process sequences > L_max (no embedding exists). Parameter cost: L_max $\\times$ d (128K $\\times$ 4096 = 537M params). No inherent relative position awareness. Replaced by RoPE in modern LLMs (2022-23 shift). Still used in: BERT variants, Vision Transformers (ViT), some encoder-only models.",
+      "explanation": "Learned positional embeddings use a trainable lookup table where each position index maps to a learned vector that gets added to the token embedding. The model learns whatever positional representation is useful during training, and the result often converges to patterns resembling sinusoidal encoding. The hard limitation is that the model cannot handle sequences longer than the maximum position trained, since no embedding exists beyond that point. This approach has been replaced by RoPE in modern LLMs but is still used in BERT variants and Vision Transformers.",
       "fundamentals": "x'_m = x_m + W_pos[m]. W_pos trained via backpropagation. GPT-2: L_max=1024, d=768 → 786K params. For 128K context: would be 537M params — impractical. Learned embeddings often show: low-freq sinusoidal patterns in principal components, nearby positions more similar, boundary effects at first/last positions. Cannot extrapolate — position L_max+1 has no representation.",
       "seen_in": [
         "model-config",
@@ -1958,7 +2101,7 @@
       "expansion": "Low-Rank Adaptation of Large Language Models",
       "category": "fine-tuning-methods",
       "oneliner": "Freeze base weights, add trainable low-rank bypass $W_0$ + ($\\alpha$/r)·B·A. Typically 0.1-0.6% of params. Zero inference overhead after merging.",
-      "explanation": "Fine-tuning updates have low intrinsic rank. Freeze $W_0$, add $\\Delta$W = BA where B$\\in\\mathbb{R}$^(d$\\times$r), A$\\in\\mathbb{R}$^(r$\\times$d), r<<d. B init to 0 (starts from pretrained). Scaling $\\alpha$/r. Apply to Q,K,V,O + FFN for best results. r typically 8-16. Merge: W = $W_0$ + ($\\alpha$/r)·BA. The default PEFT method.",
+      "explanation": "Low-Rank Adaptation freezes all original model weights and injects small trainable low-rank matrices alongside them, typically training only 0.1 to 0.6 percent of the total parameters. The key insight is that fine-tuning weight updates naturally have low intrinsic rank, so two small matrices can capture the needed changes. One matrix is initialized to zero so training starts from the exact pretrained behavior. After training, the adapter matrices can be merged back into the base weights for zero inference overhead. LoRA is the dominant parameter-efficient fine-tuning method.",
       "fundamentals": "Forward: $h = W_0 x + (\\alpha/r) \\cdot B \\cdot A \\cdot x$. LLaMA 7B $r$=16 all linear: ~40M params (0.6%). Memory: ~14.8GB (vs ~84GB full FT). Merge: one-time matrix add $W = W_0 + (\\alpha/r) \\cdot BA$. Files: adapter_model.safetensors (~80MB) + adapter_config.json.",
       "seen_in": [
         "model-name",
@@ -2097,6 +2240,32 @@
         }
       ]
     },
+    "model-head": {
+      "id": "model-head",
+      "name": "Model Head",
+      "expansion": "Task-Specific Model Head",
+      "category": "layer-types",
+      "oneliner": "The output layer(s) stacked on top of a pretrained backbone that adapt it to a specific task like classification or text generation.",
+      "explanation": "A model head is the task-specific projection layer that sits on top of a shared backbone. In a causal language model, the LM head is a linear layer that projects hidden states to vocabulary-sized logits for next-token prediction, often weight-tied with the input embedding table. For classification, a classification head pools the sequence representation and projects it to the number of classes. In HuggingFace, the distinction is explicit: GPT2Model is the backbone while GPT2LMHeadModel adds the language modeling head. Swapping heads lets you reuse the same backbone for different tasks.",
+      "fundamentals": "For an LM head with weight tying, logits are $z = h W_E^\\top$ where $h \\in \\mathbb{R}^{d}$ is the hidden state and $W_E \\in \\mathbb{R}^{|V| \\times d}$ is the shared embedding matrix. Weight tying reduces parameters by $|V| \\times d$. A classification head applies $\\text{softmax}(W_c h + b_c)$ where $W_c \\in \\mathbb{R}^{C \\times d}$.",
+      "related": [
+        "ffn",
+        "backbone"
+      ],
+      "seen_in": [
+        "code",
+        "model-config"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "HuggingFace Model summary",
+          "url": "https://huggingface.co/docs/transformers/model_summary"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "model-merging": {
       "id": "model-merging",
       "name": "Model Merging",
@@ -2148,7 +2317,7 @@
       "expansion": "Memory Footprint Calculation for Quantized LLMs",
       "category": "core-concepts",
       "oneliner": "Memory (bytes) = params $\\times$ bits_per_param / 8, plus overhead for scales, KV-cache, and non-quantized components.",
-      "explanation": "70B at fp16 = 140 GB. At int4 = ~35 GB. Complications: embeddings + layer norms usually kept at fp16 (~0.5-1 GB). Scale factors add ~0.125 bpw overhead at g=128. KV-cache grows with sequence length and can exceed model size (70B Llama-2 at 4096 tokens = ~2.5 GB per sequence; at batch 32 = 80 GB). Token generation throughput $\\approx$ memory_bandwidth / model_weight_bytes.",
+      "explanation": "To estimate a model's memory footprint, multiply the parameter count by the bytes per parameter for your chosen format. A 70-billion parameter model in 16-bit precision needs about 140 GB, while the same model in 4-bit quantization needs roughly 35 GB. Real usage is higher because embedding and normalization layers are typically kept in 16-bit, scale factors add overhead, and the KV cache grows with sequence length and batch size. For a 70B model, the KV cache alone can reach 2.5 GB per sequence at 4096 tokens.",
       "fundamentals": "Weight memory = P $\\times$ b / 8. Scale overhead = P $\\times$ (s_bits / g) / 8. KV-cache = 2 $\\times$ layers $\\times$ kv_heads $\\times$ head_dim $\\times$ seq_len $\\times$ batch $\\times$ kv_bytes. Practical: RTX 4090 (24 GB) fits 7B at fp16, 13B at int8, ~33B at int4. A100-80GB fits 70B at int8. H100 at 3.35 TB/s: 70B int4 $\\approx$ 55 tok/s, 70B fp16 $\\approx$ 14 tok/s.",
       "seen_in": [
         "documentation",
@@ -2227,7 +2396,7 @@
       "expansion": "Multi-Query Attention",
       "category": "attention-variants",
       "oneliner": "All query heads share a single K and V head — reduces KV cache by n_heads$\\times$ (e.g., 32$\\times$) with small quality tradeoff.",
-      "explanation": "Introduced by Shazeer (2019) to address the KV cache bottleneck in autoregressive decoding. Each decoding step must read all cached K/V from memory — this bandwidth is the bottleneck, not compute. MQA uses one K head and one V head shared across all query heads. KV cache shrinks by a factor of n_heads (e.g., 32$\\times$ for 32-head model). Quality degradation is small but measurable (0.1-0.5%). Used in PaLM, PaLM-2, Falcon-40B/180B, StarCoder. Led to GQA as a compromise.",
+      "explanation": "Multi-Query Attention shares a single key head and a single value head across all query heads, dramatically reducing the size of the KV cache. In standard multi-head attention, every head has its own key and value, but during autoregressive decoding the bottleneck is reading all cached keys and values from memory, not the computation itself. MQA shrinks this cache by a factor equal to the number of query heads. Quality loss is small but measurable. MQA is used in PaLM, Falcon, and StarCoder, and led to the GQA compromise.",
       "fundamentals": "For hidden_dim=4096, n_query_heads=32, n_kv_heads=1, head_dim=128: W_Q [4096, 4096], W_K [4096, 128] (32$\\times$ smaller), W_V [4096, 128] (32$\\times$ smaller), W_O [4096, 4096]. K and V broadcast to match query heads during attention. KV cache per token per layer: 2 $\\times$ 1 $\\times$ 128 $\\times$ 2 = 512 bytes (vs 16 KB in MHA). For 32 layers at 4096 tokens: ~64 MB (vs ~2 GB). Bandwidth per decode step at seq_len=2048: ~32 MB (vs ~1 GB in MHA).",
       "seen_in": [
         "model-config"
@@ -2286,7 +2455,7 @@
       "expansion": "4-bit NormalFloat — normal-distribution-optimal 4-bit data type",
       "category": "precision-formats",
       "oneliner": "Non-uniform 4-bit format with levels spaced at quantiles of a Gaussian — optimal for neural network weights, used by QLoRA/bitsandbytes.",
-      "explanation": "Introduced in the QLoRA paper (Dettmers 2023). Neural network weights $\\approx$ Gaussian when normalized. Uniform int4 wastes levels in sparse tails and under-resolves the dense center. nf4 places 16 levels at N(0,1) quantiles so each level covers equal probability mass (1/16). Reduces quantization error vs uniform int4 for the same 4-bit budget. With 'double quantization' (quantizing scale factors to fp8), effective ~4.127 bpw. Default in bitsandbytes load_in_4bit.",
+      "explanation": "NormalFloat4 is a non-uniform 4-bit data type designed specifically for neural network weights, introduced in the QLoRA paper. Neural network weights approximately follow a Gaussian distribution when normalized, so uniform 4-bit quantization wastes resolution in the sparse tails and under-resolves the dense center. NF4 places its 16 levels at the quantiles of a standard normal distribution so each level covers equal probability mass, minimizing quantization error. It is the default format in bitsandbytes load_in_4bit.",
       "fundamentals": "Lookup table: $\\{-1.0, -0.6962, -0.5251, -0.3949, -0.2844, -0.1848, -0.0911, 0.0, 0.0796, 0.1609, 0.2461, 0.3379, 0.4407, 0.5626, 0.7230, 1.0\\}$. Levels are denser near zero (spacing 0.08) and sparser in tails (spacing 0.28). Quantize: normalize per group $w_{\\text{norm}} = w/\\text{absmax}$, map to nearest level. Dequantize: $\\text{nf4\\_lookup}[\\text{index}] \\times \\text{absmax}$.",
       "seen_in": [
         "model-config",
@@ -2318,7 +2487,7 @@
       "expansion": "Neural Tangent Kernel-aware Rotary Position Embedding Scaling",
       "category": "position-encodings",
       "oneliner": "Extends RoPE context by increasing base frequency — preserves high-frequency local resolution while stretching low-frequency global capacity. Works zero-shot.",
-      "explanation": "Proposed by Reddit user /u/bloc97 (June 2023). Problem: extending context (e.g., 4K→16K) without fine-tuning. PI (Position Interpolation) compresses all frequencies equally, damaging local resolution. NTK insight: different frequency bands encode different scales. High-freq dimensions (local position) should stay untouched; low-freq dimensions (global) should stretch. Increasing base achieves this automatically because $\\theta_i = \\text{base}^{-2i/d}$ — larger base reduces all frequencies, but proportionally more for already-slow bands. Works surprisingly well zero-shot; better with light fine-tuning.",
+      "explanation": "NTK-aware RoPE scaling extends a model's context window without fine-tuning by increasing the RoPE base frequency in a way that treats different frequency bands differently. Unlike position interpolation which compresses all frequencies equally and damages local resolution, increasing the base naturally preserves high-frequency dimensions that encode local positions while stretching low-frequency dimensions that encode global positions. This was proposed by a community researcher in June 2023 and quickly became the basis for more advanced methods like YaRN.",
       "fundamentals": "New base: base' = base · $\\alpha$^(d/(d-2)) where $\\alpha$ = context extension factor. For $\\alpha$=4, d=128: base' $\\approx$ 40,440. Effect on wavelengths: highest-freq band (i=0) unchanged ($\\lambda_0$=2$\\pi$ always), lowest-freq band scales by ~$\\alpha$. Intermediate bands interpolate smoothly. Compare PI: all frequencies compressed uniformly by $\\alpha$ — damages high-freq resolution. NTK preserves local while extending global.",
       "seen_in": [
         "model-config"
@@ -2794,7 +2963,7 @@
       "expansion": "Position Interpolation",
       "category": "position-encodings",
       "oneliner": "Extends context by linearly downscaling position indices so longer sequences map into the original training range — simple but damages high-frequency resolution.",
-      "explanation": "Meta (Chen et al., June 2023). For context extension from L to L'=s·L: divide all position indices by s. Position L'-1 maps to ~L-1, staying within training range. Requires ~1000 fine-tuning steps (model adjusts to fractional position spacing 1/s instead of 1). Extended LLaMA 2K→32K (16$\\times$). Key finding: interpolation >> extrapolation (extrapolation explodes even for modest extensions). Superseded by NTK/YaRN because PI compresses ALL frequency bands equally — high-freq local resolution damaged by factor s.",
+      "explanation": "Position Interpolation extends a model's context window by dividing all position indices by a scaling factor so they fit within the original training range. For example, extending from 2K to 32K context means dividing positions by 16, which requires only about 1000 fine-tuning steps for the model to adjust. Meta demonstrated this with Llama, achieving 16x context extension. It was superseded by NTK-aware scaling and YaRN because it compresses all frequency bands equally, damaging local position resolution.",
       "fundamentals": "Modified angle: (m/s)·$\\theta_i$ instead of m·$\\theta_i$. Effective position m'=m/s. For L'=s·L: positions [0, L'-1] → effective [0, L-1/s] ⊂ [0, L). All within training range. Fine-tuning needed: adjacent tokens now separated by 1/s in position space (was 1). Comparison: PI uniformly compresses all frequencies by s. NTK preserves high-freq, stretches low-freq. YaRN: per-band treatment. In HuggingFace: called 'linear' scaling, not 'pi'.",
       "seen_in": [
         "model-config"
@@ -3007,7 +3176,7 @@
       "expansion": "Model Quantization / Neural Network Quantization",
       "category": "core-concepts",
       "oneliner": "Converting a model's high-precision floats to lower-precision representations — the single most impactful optimization for LLM serving.",
-      "explanation": "Maps weights (and optionally activations/KV-cache) from fp32/bf16/fp16 to int8/int4/fp8/etc. Core operation: find the nearest representable value in the target format. Why it matters: LLM inference is memory-bandwidth-bound. Generating one token reads ALL weights from memory. A 70B fp16 model (140 GB) on an H100 (3.35 TB/s) = ~42ms/token minimum. At int4 (35 GB) = ~10ms/token. Quality impact: fp8 $\\approx$ lossless; int8 $\\approx$ lossless; int4 = +0.1-1.0 perplexity; below 4-bit = requires specialized methods.",
+      "explanation": "Quantization maps model weights from their original 16-bit or 32-bit format to smaller representations like 8-bit, 4-bit, or even lower. This matters because LLM inference is memory-bandwidth-bound: generating each token requires reading every weight from memory, so shrinking the weights directly speeds up generation. A 70-billion parameter model in 16-bit takes about 140 GB; in 4-bit it fits in roughly 35 GB. Quality impact varies by precision: 8-bit is essentially lossless, 4-bit adds small but measurable degradation, and below 4-bit requires specialized techniques.",
       "fundamentals": "Uniform affine quantization: $x_q = \\text{clamp}(\\text{round}(x/s + z),\\, q_{\\min},\\, q_{\\max})$. Dequantize: $\\hat{x} = s \\cdot (x_q - z)$. Scale $s = (x_{\\max} - x_{\\min})/(q_{\\max} - q_{\\min})$. Symmetric: $z=0$, $s = \\max(|x|)/q_{\\max}$. Error per value bounded by $s/2$. Not all weights contribute equally — attention layers and first/last layers are typically more sensitive.",
       "seen_in": [
         "documentation",
@@ -3188,7 +3357,7 @@
       "expansion": "Root Mean Square Layer Normalization",
       "category": "normalization",
       "oneliner": "Simplified LayerNorm — normalizes by root mean square only, dropping mean subtraction. Same quality, fewer ops. Standard in all modern LLMs.",
-      "explanation": "Zhang & Sennrich (2019). Removes mean-centering from LayerNorm — the re-scaling by RMS alone is sufficient for stable training. Saves one full reduction operation over hidden_dim and the associated subtraction. 7-64% faster than LayerNorm depending on implementation. Only learnable scale $\\gamma$ (no bias $\\beta$): $d_{\\text{model}}$ params vs LayerNorm's $2 \\times d_{\\text{model}}$. Adopted by LLaMA 1/2/3, Mistral, Mixtral, Qwen, Gemma, Yi, DeepSeek, Command-R. Almost always paired with Pre-Norm placement.",
+      "explanation": "RMS Normalization is a simplified version of Layer Normalization that drops the mean-centering step, normalizing activations by their root mean square alone. This saves a full reduction operation over the hidden dimension, making it 7 to 64 percent faster than LayerNorm depending on implementation, while producing equivalent training quality. RMSNorm has only a learnable scale parameter with no bias. It has been adopted by virtually every major open-weight LLM since 2023, including Llama, Mistral, Qwen, Gemma, and DeepSeek.",
       "fundamentals": "$\\text{RMSNorm}(x) = \\gamma \\cdot \\frac{x}{\\text{RMS}(x)}$ where $\\text{RMS}(x) = \\sqrt{\\frac{1}{d}\\sum_i x_i^2 + \\varepsilon}$. vs LayerNorm: no $\\mu$ computation, no $(x-\\mu)$ subtraction, no $\\beta$ bias. Params: $d_{\\text{model}}$ (vs $2 \\times d_{\\text{model}}$ for LayerNorm). For LLaMA 7B: 65 RMSNorm instances $\\times$ 4096 = 266K params (<0.004% of model). Computational savings: 1 reduction op vs 2, ~2x fewer reductions (the GPU synchronization bottleneck).",
       "seen_in": [
         "model-config",
@@ -3219,7 +3388,7 @@
       "expansion": "Rotary Position Embedding",
       "category": "position-encodings",
       "oneliner": "Encodes position by rotating Q and K vectors in pairs of dimensions — the dot product naturally depends only on relative position (m-n), not absolute.",
-      "explanation": "The dominant position encoding in modern LLMs. Instead of adding a position signal to embeddings, RoPE rotates Q and K vectors before the dot product. Each dimension pair (2i, 2i+1) is rotated by angle m·$\\theta_i$ at position m, where $\\theta_i = \\text{base}^{-2i/d}$. The dot product of rotated Q at position m and K at position n depends only on (m-n). No learned parameters. Base=10,000 originally. Used by LLaMA 1/2/3, Mistral, Mixtral, Qwen, Gemma, Phi, DeepSeek, Yi, InternLM, Command-R. Vanilla RoPE struggles at lengths beyond training — addressed by NTK, YaRN, PI, ABF.",
+      "explanation": "Rotary Position Embedding encodes token positions by rotating query and key vectors in pairs of dimensions before the attention dot product, so the resulting attention score depends only on the relative distance between tokens rather than their absolute positions. Each dimension pair rotates at a different frequency, creating a multi-scale position signal with no learned parameters. RoPE has become the dominant position encoding method, used by Llama, Mistral, Qwen, Gemma, Phi, DeepSeek, and most other major open-weight LLMs.",
       "fundamentals": "Rotation per dimension pair: $[q'_{2i},\\, q'_{2i+1}] = R(m \\cdot \\theta_i) \\cdot [q_{2i},\\, q_{2i+1}]$ where $R$ is a $2 \\times 2$ rotation matrix. $\\theta_i = \\text{base}^{-2i/d}$. Complex form: $z'_i = z_i \\cdot e^{j \\cdot m \\cdot \\theta_i}$. Wavelengths: $2\\pi$ (i=0, high freq, local) to $2\\pi \\cdot \\text{base}$ (last pair, low freq, global). For base=10,000: max wavelength $\\approx$ 62,832 positions. Key property: $q^T(m) \\cdot k(n) = q^T(0) \\cdot R(n-m) \\cdot k(0)$ — depends only on relative offset. No learned params. Decaying inter-token signal acts as soft locality bias.",
       "seen_in": [
         "model-config"
@@ -3274,7 +3443,7 @@
       "expansion": "Scaled Dot-Product Attention (PyTorch API)",
       "category": "attention-variants",
       "oneliner": "PyTorch's fused attention primitive — auto-dispatches to Flash Attention, Memory-Efficient, or math fallback based on hardware and input constraints.",
-      "explanation": "torch.nn.functional.scaled_dot_product_attention (PyTorch 2.0+). Fuses Q·K^T scaling, masking, softmax, dropout, V multiplication into one kernel call. Before SDPA, users wrote attention manually or used xformers. Now the default in HuggingFace Transformers (v4.36+). Backend dispatch order: 1) Flash Attention (requires CUDA, fp16/bf16, head_dim≤256, no arbitrary mask). 2) Memory-Efficient (CUDA, arbitrary masks). 3) Math fallback (CPU or unsupported dtypes, materializes full N$\\times$N matrix).",
+      "explanation": "Scaled Dot-Product Attention in PyTorch 2.0 and later fuses the entire attention computation into a single optimized kernel call. Before this API, users had to implement attention manually or rely on external libraries. It automatically selects the best backend: Flash Attention when possible for maximum speed, memory-efficient attention for arbitrary masks, or a math fallback for CPU and unsupported data types. It is now the default attention implementation in HuggingFace Transformers.",
       "fundamentals": "API: F.scaled_dot_product_attention(query, key, value, attn_mask=None, is_causal=False, scale=None). Shapes: Q [batch, n_heads, seq_q, head_dim], K/V [batch, n_heads, seq_kv, head_dim]. Override backend: torch.backends.cuda.sdp_kernel(enable_flash=True, enable_mem_efficient=False, enable_math=False). Performance on A100 seq_len=2048: Math=baseline, Memory-Efficient=2-3$\\times$ faster, Flash=3-5$\\times$ faster.",
       "seen_in": [
         "code",
@@ -3297,6 +3466,74 @@
           "url": "https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html"
         }
       ]
+    },
+    "self-attention": {
+      "id": "self-attention",
+      "name": "Self-Attention",
+      "expansion": "Self-Attention (Scaled Dot-Product Attention)",
+      "category": "attention-variants",
+      "oneliner": "The mechanism where every position in a sequence computes a weighted sum over all other positions to capture contextual relationships.",
+      "explanation": "Self-attention lets each token in a sequence look at every other token to decide what context matters most. Each token is projected into a query, a key, and a value vector. The attention score between two positions is the dot product of the query of one and the key of the other, scaled and softmaxed into a weight. The output is the weighted sum of value vectors. This is the core building block inside Multi-Head Attention, Multi-Query Attention, and Grouped-Query Attention, giving transformers their ability to model long-range dependencies in a single layer.",
+      "fundamentals": "Given input $X \\in \\mathbb{R}^{n \\times d}$, self-attention computes $Q = XW^Q$, $K = XW^K$, $V = XW^V$ and returns $\\text{Attention}(Q,K,V) = \\text{softmax}\\left(\\frac{QK^\\top}{\\sqrt{d_k}}\\right)V$. Cost is $O(n^2 d)$ in time and $O(n^2)$ in memory.",
+      "related": [
+        "mha",
+        "mqa",
+        "gqa",
+        "sdpa"
+      ],
+      "seen_in": [
+        "code",
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Attention Is All You Need",
+          "authors": "Vaswani et al.",
+          "venue": "NeurIPS 2017",
+          "arxiv": "1706.03762"
+        }
+      ],
+      "resources": [
+        {
+          "label": "The Illustrated Transformer",
+          "url": "https://jalammar.github.io/illustrated-transformer/"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
+    "seq2seq": {
+      "id": "seq2seq",
+      "name": "Sequence-to-Sequence",
+      "expansion": "Sequence-to-Sequence (Encoder-Decoder)",
+      "category": "layer-types",
+      "oneliner": "An encoder-decoder architecture that reads an input sequence in full, then generates an output sequence token by token.",
+      "explanation": "Sequence-to-sequence models use an encoder to process the full input with bidirectional attention, producing context vectors, and a decoder to generate the output autoregressively using causal self-attention plus cross-attention over the encoder's output. This design is natural for tasks where input and output are different sequences: translation, summarization, and question answering. T5 and BART are the most prominent seq2seq transformers. While decoder-only models like GPT dominate chat applications, seq2seq models remain strong for structured generation tasks and are the architecture behind most neural machine translation systems.",
+      "fundamentals": "The encoder produces $H_{\\text{enc}} = \\text{Encoder}(x_1, \\ldots, x_n)$ using bidirectional attention. The decoder at step $t$ computes causal self-attention over $y_{<t}$, then cross-attention: $\\text{softmax}\\left(\\frac{Q_{\\text{dec}} K_{\\text{enc}}^\\top}{\\sqrt{d_k}}\\right) V_{\\text{enc}}$. Encoder KV cache computed once during prefill.",
+      "related": [
+        "mha",
+        "causal-lm"
+      ],
+      "seen_in": [
+        "model-config",
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer",
+          "authors": "Raffel et al.",
+          "venue": "JMLR 2020",
+          "arxiv": "1910.10683"
+        }
+      ],
+      "resources": [
+        {
+          "label": "HuggingFace T5 docs",
+          "url": "https://huggingface.co/docs/transformers/model_doc/t5"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     },
     "sft": {
       "id": "sft",
@@ -3354,7 +3591,7 @@
       "expansion": "Simple Preference Optimization",
       "category": "training-pipeline",
       "oneliner": "Reference-free DPO: length-normalized log-prob as implicit reward + target margin $\\gamma$. Halves memory vs DPO.",
-      "explanation": "Removes reference model entirely. Implicit reward = average log-prob per token (length-normalized). Adds margin $\\gamma$: chosen must exceed rejected by at least $\\gamma$. No reference = halves memory. $\\beta$ 2.0-2.5 (higher than DPO). Competitive or better than DPO on AlpacaEval 2 / MT-Bench.",
+      "explanation": "Simple Preference Optimization is a reference-free variant of DPO that eliminates the need to keep a frozen reference model in memory, halving the GPU memory requirement during alignment training. Instead of comparing against a reference policy, SimPO uses the average log-probability per token as an implicit reward, with a margin term requiring chosen responses to score above rejected ones by a minimum gap. SimPO is competitive with or better than DPO on standard benchmarks while being simpler and more memory-efficient.",
       "fundamentals": "L = -E[log $\\sigma$($\\beta$·avg_logp(y_w|x) - $\\beta$·avg_logp(y_l|x) - $\\gamma$)]. avg_logp = (1/|y|)$\\Sigma$ log $\\pi_\\theta(y_t|x,y_<t)$. No $\\pi_{\\text{ref}}$. $\\beta$ 2.0-2.5, $\\gamma$ 0.5-1.5.",
       "seen_in": [
         "model-name",
@@ -3384,7 +3621,7 @@
       "expansion": "Sinusoidal Position Encoding",
       "category": "position-encodings",
       "oneliner": "The original Transformer position encoding: sin/cos at geometrically spaced frequencies, added to token embeddings. Mostly replaced by RoPE.",
-      "explanation": "From 'Attention Is All You Need' (2017). Solves the fundamental problem: self-attention is permutation-invariant, so positions must be injected. Each position gets a vector of sin/cos values at different frequencies, added to token embeddings. Design goals: unique per position, bounded magnitude, potential relative position awareness (PE(pos+k) = linear transform of PE(pos)). Wavelengths: 2$\\pi$ to ~63K (geometric progression). Replaced because: (1) additive injection dilutes through layers, (2) model must learn to extract relative positions (RoPE guarantees it), (3) limited length generalization. Still used in diffusion model timestep embeddings.",
+      "explanation": "Sinusoidal positional encoding, introduced in the original Transformer paper, solves the fundamental problem that self-attention treats tokens as an unordered set. Each position is assigned a unique vector of sine and cosine values at geometrically spaced frequencies, which is added to the token embedding. This encoding is deterministic with no learned parameters and was designed so that relative positions could be represented as linear transformations. It has been replaced in modern LLMs by RoPE and other methods that better preserve positional information across layers.",
       "fundamentals": "PE(pos, 2i) = sin(pos/$10000^{2i/d}$). PE(pos, 2i+1) = cos(pos/$10000^{2i/d}$). Frequencies: $\\omega_k = 1/10000^{2k/d}$, geometric from 1 to 1/10000. Added to token embedding: $x'(pos) = x(pos) + PE(pos)$. Properties: $\\|PE(pos)\\|^2 = d/2$ (bounded, constant). $PE(pos+k) = M_k \\cdot PE(pos)$ where $M_k$ is a block-diagonal rotation matrix — relative position as linear transform. 0 learned params.",
       "seen_in": [
         "legacy-models",
@@ -3415,7 +3652,7 @@
       "expansion": "Active parameters per token in MoE",
       "category": "size-conventions",
       "oneliner": "Active parameters per forward pass in MoE. Qwen2.5-A14B = 57B total, 14B active. Gemma 26B-A4B = 25.2B total, 3.8B active.",
-      "explanation": "Crucial for understanding actual compute cost. All params must be in memory, but only A params compute per token. Introduced by Qwen MoE and Gemma teams.",
+      "explanation": "A marks the active parameter count in a Mixture-of-Experts model, which is the number of parameters that actually compute for each token. For example, Qwen2.5-MoE-A2.7B-Instruct has 14.3B total parameters but only 2.7 billion fire per token because the router selects a small subset of experts. This distinction is critical for estimating inference speed and GPU cost: all parameters must fit in memory, but latency and FLOPs scale with the active count.",
       "seen_in": [
         "model-name"
       ],
@@ -3439,7 +3676,7 @@
       "expansion": "Billion parameters",
       "category": "size-conventions",
       "oneliner": "The universal size marker. 7B = 7 billion parameters. Refers to total params unless combined with A (active).",
-      "explanation": "Nearly universal. Some older models use lowercase (7b). When a model card lists a single number without total/active distinction, it's the total (and the model is dense).",
+      "explanation": "When you see a number followed by B in a model name, it means billion parameters. Llama-3.1-8B has eight billion, Qwen2.5-72B has seventy-two billion. The convention is nearly universal, though some older repos use lowercase (7b instead of 7B). If the name shows a single number with no active/total distinction, assume the model is dense and every parameter fires on every token.",
       "seen_in": [
         "model-name"
       ],
@@ -3463,7 +3700,7 @@
       "expansion": "Effective parameters (Gemma-specific)",
       "category": "size-conventions",
       "oneliner": "Google Gemma notation: effective capacity accounting for architectural efficiency (PLE, parameter sharing). E4B $\\approx$ performs like 4B dense.",
-      "explanation": "Specific to Gemma 3n/4 series. E4B has 8B total params but 4.5B 'effective' due to Per-Layer Embeddings inflating count. Distinguishes from raw param count.",
+      "explanation": "E stands for effective parameters, a convention specific to Google's Gemma 3n and Gemma 4 series. The Gemma-3n-E4B model has roughly eight billion raw parameters, but because it uses Per-Layer Embedding sharing, many of those weights are reused, giving it the compute profile of about 4.5 billion parameters. Google introduced the E tag so users can compare real-world performance expectations without being misled by the inflated raw count.",
       "seen_in": [
         "model-name"
       ],
@@ -3487,7 +3724,7 @@
       "expansion": "Trillion parameters or tokens",
       "category": "size-conventions",
       "oneliner": "Trillions. Rare for params (Switch Transformer 1.6T). More common for training data ('trained on 15T tokens'). Context matters.",
-      "explanation": "Ambiguous: '1T' in model size = trillion params. '1T tokens' = training data volume. Few public models exceed 1T params. Switch Transformer (1.6T) is the canonical example.",
+      "explanation": "T means trillion parameters when it appears as a size marker, but context matters because the same letter shows up in training-data descriptions where 1T means one trillion tokens of training text, not model size. Very few public-weight models exceed one trillion parameters. If you see 1T in a HuggingFace repo title, double-check whether it refers to the model or the pre-training corpus volume.",
       "seen_in": [
         "model-cards",
         "documentation"
@@ -3510,7 +3747,7 @@
       "expansion": "Thousands / Millions of tokens context",
       "category": "size-conventions",
       "oneliner": "128K = 128,000 token context. 1M = 1 million. Distinguishes long-context variants from defaults.",
-      "explanation": "Not always in the name — sometimes only in the model card. When present, distinguishes extended-context variant. Qwen2.5-7B-Instruct-1M, Llama 3.1 (128K).",
+      "explanation": "A number like 1M, 128K, or 4K in the model name indicates the maximum context window in tokens. Qwen2.5-7B-Instruct-1M supports up to one million tokens, while Llama-3.1 variants advertise 128K in their model cards even though it rarely appears in the repo name. Not every model puts this in the title, so you may need to check config.json for max_position_embeddings.",
       "seen_in": [
         "model-name",
         "model-cards"
@@ -3535,7 +3772,7 @@
       "expansion": "Experts × expert size (e.g., 8x7B)",
       "category": "size-conventions",
       "oneliner": "Mixtral-style: 8x7B = 8 experts of ~7B each. Total ≠ 8$\\times$7B due to shared attention layers. Active = top-k experts worth.",
-      "explanation": "Popularized by Mixtral. 8x7B total $\\approx$ 46.7B (not 56B) because attention params are shared. Active per token $\\approx$ 12.9B (top-2 of 8).",
+      "explanation": "The NxSB pattern popularized by Mixtral describes Mixture-of-Experts model sizes, where N is the number of experts and S is the size of each expert. For example, 8x7B means 8 experts of roughly 7 billion parameters each, but the total parameter count is about 46.7 billion rather than 56 billion because the attention layers are shared across all experts. The active parameter count per token is much smaller, around 12.9 billion for Mixtral since only the top 2 experts are selected for each token.",
       "seen_in": [
         "model-name"
       ],
@@ -3558,7 +3795,7 @@
       "expansion": "Speculative Decoding / Speculative Sampling",
       "category": "scaling-patterns",
       "oneliner": "Small draft model proposes K candidate tokens, large model verifies all K in one forward pass. 2-3$\\times$ speedup with provably identical output distribution.",
-      "explanation": "Exploits the asymmetry: LLM inference is memory-bandwidth-bound, so processing 1 token or 5 tokens costs nearly the same. Draft model (10-50$\\times$ fewer params) generates K candidates autoregressively. Target model verifies all K in single forward pass via modified rejection sampling. If draft token matches target distribution: accept. If not: reject and sample correction from adjusted distribution. Output is mathematically identical to standard sampling — not approximate. Acceptance rates 70-85% → 2-3$\\times$ speedup. Supported by vLLM, TGI, llama.cpp, TensorRT-LLM.",
+      "explanation": "Speculative decoding exploits the fact that LLM inference is memory-bandwidth-bound, so processing one token or several tokens in parallel costs nearly the same. A small draft model rapidly generates several candidate tokens, then the large target model verifies all of them in a single forward pass using a modified rejection sampling scheme. Accepted tokens match the target model's distribution exactly, so the output is mathematically identical to standard generation. This typically achieves a two to three times speedup with acceptance rates of 70 to 90 percent.",
       "fundamentals": "Verification per position i: accept draft token x with prob min(1, p(x)/q(x)) where p=target, q=draft. If rejected: sample from p'(x) = max(0, p(x)-q(x)) / Z. Expected tokens per step: (1-$\\alpha$^(K+1))/(1-$\\alpha$) where $\\alpha$=acceptance rate. For K=5, $\\alpha$=0.8: ~3.36 tokens/step → ~2.7$\\times$ speedup. Draft model can be: smaller same-family model, separate small model, or even n-gram model. Self-speculative: use target model with early exit for drafting.",
       "seen_in": [
         "serving-config",
@@ -3628,7 +3865,7 @@
       "expansion": "Sliding Window Attention",
       "category": "attention-variants",
       "oneliner": "Each token attends only to a fixed-size local window of W preceding tokens — reduces quadratic cost to linear, with global reach through layer stacking.",
-      "explanation": "Each token attends to at most W preceding tokens instead of all. After L layers, effective receptive field = L $\\times$ W (information propagates through depth). Mistral 7B: W=4096, L=32 → 131K theoretical receptive field. Key benefit: KV cache is bounded at W tokens (rolling buffer) regardless of generated sequence length. Roots in Longformer (2020) and Sparse Transformers (2019). Modern architectures often use hybrids: Gemma 2 and later Mistral models alternate SWA layers with full-attention layers for direct long-range access plus cheap local patterns.",
+      "explanation": "Sliding Window Attention restricts each token to attending only to a fixed window of preceding tokens rather than the entire sequence. Although each layer sees only a local window, information propagates through depth, so after many layers the effective receptive field is much larger than the window itself. The key practical benefit is that the KV cache size is bounded by the window size regardless of how long the generated sequence becomes. Modern architectures like Gemma 2 alternate sliding window layers with full-attention layers for a hybrid approach.",
       "fundamentals": "Token at position i attends to [max(0, i-W+1), ..., i] instead of [0, ..., i]. Attention mask: band matrix, not lower-triangular. Memory for attention scores: $O(n$\\times$W)$ vs $O($n^2$)$. Rolling KV cache: fixed buffer of W entries, oldest overwritten. For Mistral 7B (8 KV heads, head_dim=128, W=4096): cache per layer = 2 $\\times$ 8 $\\times$ 128 $\\times$ 4096 $\\times$ 2 = 16 MB; 32 layers = 512 MB constant regardless of generation length. Hybrid approach: even layers = SWA (W=4096), odd layers = full attention.",
       "seen_in": [
         "model-config"
@@ -3666,7 +3903,7 @@
       "expansion": "Swish-activated Gated Linear Unit",
       "category": "layer-types",
       "oneliner": "Element-wise product of a Swish-activated gate projection and a value projection — the de facto standard FFN activation in modern LLMs.",
-      "explanation": "From Shazeer (2020). Replaces simple ReLU FFN with gated mechanism: one projection produces gates (via Swish), another produces values, element-wise multiply, then down-project. Swish(x) = x·$\\sigma$(x) is smooth, non-monotonic, allows small negatives through. ~0.02-0.05 lower perplexity than ReLU at same compute. Three matrices instead of two, but d_ff reduced to compensate. Used by LLaMA 1/2/3, Mistral, Mixtral, Qwen, Gemma, Yi, DeepSeek, Command-R — essentially every major open-weight model since 2023.",
+      "explanation": "SwiGLU is a gated activation function that replaced ReLU in the feed-forward blocks of modern transformers. It works by having one linear projection produce gate values through the Swish activation, while a second projection produces the values to be gated. The two are multiplied element-wise before a final down-projection. SwiGLU achieves measurably lower perplexity than ReLU at equivalent compute cost. It is used by virtually every major open-weight LLM including Llama, Mistral, Qwen, and DeepSeek.",
       "fundamentals": "SwiGLU(x) = (Swish(xW_gate) ⊙ xW_up)W_down. Swish(z) = z·$\\sigma$(z). For LLaMA 7B: W_gate [4096, 11008], W_up [4096, 11008], W_down [11008, 4096]. Params: 3$\\times$4096$\\times$11008 $\\approx$ 135M $\\approx$ 8$d^2$. In HuggingFace config: hidden_act='silu' (SiLU is the activation within the GLU structure). Code pattern: act_fn(gate_proj(x)) * up_proj(x) then down_proj(...).",
       "seen_in": [
         "model-config",
@@ -3698,7 +3935,7 @@
       "expansion": "Specific alignment method used",
       "category": "training-tags",
       "oneliner": "Signals which training stage/method produced the model. -sft = supervised only. -dpo = DPO-aligned. Often released in pairs for comparison.",
-      "explanation": "Useful for researchers comparing alignment methods. Example: zephyr-7b-sft-full (SFT only) vs zephyr-7b-beta (SFT+DPO).",
+      "explanation": "Alignment-method suffixes like -sft, -dpo, -rlhf, -kto, or -orpo tell you exactly which post-training recipe was applied. Researchers publish these to enable direct comparisons: for instance, zephyr-7b-sft-full used only supervised fine-tuning while zephyr-7b-beta added a round of DPO on top. If you are benchmarking alignment approaches, these tags let you isolate the effect of each training phase.",
       "seen_in": [
         "model-name",
         "model-cards"
@@ -3725,7 +3962,7 @@
       "expansion": "Base pretrained model",
       "category": "training-tags",
       "oneliner": "No instruction tuning. Next-token prediction only. The starting point for fine-tuning. Google uses -pt, others use -base or no suffix.",
-      "explanation": "Some repos omit suffix for base (Llama 3.1 has no suffix for base, adds -Instruct for tuned). Google Gemma uses -pt. Functionally: generates completions, not conversations.",
+      "explanation": "A base model (also labeled -raw, -pretrain, or -pt) is the pretrained checkpoint before any instruction tuning or alignment. It predicts the next token given a prompt but has no built-in chat behavior, so it will continue your text rather than answer questions. Meta's Llama 3.1 uses no suffix for the base variant and adds -Instruct for the tuned one, while Google Gemma marks the base with -pt. If you are fine-tuning, start from the base.",
       "seen_in": [
         "model-name"
       ],
@@ -3748,7 +3985,7 @@
       "expansion": "Code-optimized model",
       "category": "capability-tags",
       "oneliner": "CPT or fine-tuned on code corpora. Distinct models, not just prompting. Qwen2.5-Coder, DeepSeek-Coder, CodeLlama.",
-      "explanation": "Some prefix (CodeLlama), some suffix (Qwen2.5-Coder). Usually via continued pre-training on hundreds of billions of code tokens.",
+      "explanation": "A -Coder or Code- tag means the model was specialized for programming tasks, usually through continued pre-training on hundreds of billions of code tokens plus code-specific instruction tuning. CodeLlama prefixes it (CodeLlama-7b), while Qwen suffixes it (Qwen2.5-Coder-7B). These models score much higher on HumanEval and MBPP benchmarks than their general-purpose siblings, but may underperform on pure-prose tasks.",
       "seen_in": [
         "model-name"
       ],
@@ -3770,7 +4007,7 @@
       "expansion": "Embedding model",
       "category": "capability-tags",
       "oneliner": "Produces fixed-size vectors for retrieval/similarity, not generative text. Often encoder-only or uses mean pooling over decoder.",
-      "explanation": "bge-large, gte-Qwen2-7B, nomic-embed-text. Output: single vector per input. Used for RAG, search, similarity.",
+      "explanation": "An embedding model outputs a single fixed-length vector for each input rather than generating text. These vectors are used for retrieval-augmented generation, semantic search, clustering, and similarity scoring. Unlike generative models, embedding models are loaded differently and called without a generate loop. Check the model card for the recommended prompt prefix and output dimension, as these vary across families.",
       "seen_in": [
         "model-name"
       ],
@@ -3792,7 +4029,7 @@
       "expansion": "Fine-tuning method tags",
       "category": "adapter-tags",
       "oneliner": "-ft: generic fine-tuned. -full-ft/-fft: all params updated. -lora/-qlora: adapter type. -adapter: generic (usually bottleneck). Check model card for details.",
-      "explanation": "-ft is ambiguous (could be any method). -lora adapter files are typically 10-100MB. -full-ft produces full model copies.",
+      "explanation": "Fine-tuning suffixes indicate how a model was adapted. -ft is generic and could mean any method. -lora means Low-Rank Adaptation was applied, with adapter files typically 10-100 MB. -full-ft means every parameter was updated, producing a full model copy. -qlora means quantized LoRA training was used. Check for adapter_config.json to confirm a LoRA-based fine-tune versus full-weight files.",
       "seen_in": [
         "model-name",
         "filename"
@@ -3818,7 +4055,7 @@
       "expansion": "Safety classifier model",
       "category": "capability-tags",
       "oneliner": "Detects harmful content, prompt injections, policy violations. Outputs safe/unsafe classification, not generative text. Llama-Guard-3.",
-      "explanation": "Llama Guard (Inan et al., 2023) pioneered the pattern. Used as a filter alongside generative models.",
+      "explanation": "Guard models like Llama-Guard-3-8B are classifiers trained to flag unsafe content in prompts or model responses. They run as a filter alongside your main generative model, receiving a prompt-response pair and returning a safety label. Deploy one before or after generation to enforce content policies without modifying the main model. Guard models are small enough to run alongside the generator with minimal latency overhead.",
       "seen_in": [
         "model-name"
       ],
@@ -3840,7 +4077,7 @@
       "expansion": "HuggingFace-compatible format",
       "category": "training-tags",
       "oneliner": "Weights converted to HuggingFace transformers format (safetensors + config.json). Does NOT mean 'hosted on HF'. Without -hf may need custom loading.",
-      "explanation": "Critical for usability. Llama-2-7b-hf (converted) vs Llama-2-7b (original Megatron format). Modern releases (Llama 3+) are HF-native, making suffix less necessary.",
+      "explanation": "The -hf suffix means the checkpoint has been converted to HuggingFace Transformers format with standard PyTorch weight files and a config.json. Early Llama 2 releases shipped in Meta's internal format, so the community created -hf conversions. Starting with Llama 3 and most 2024-era releases, models ship HF-native, so the suffix is disappearing. If you see a repo without -hf, check whether it contains a config.json.",
       "seen_in": [
         "model-name"
       ],
@@ -3862,7 +4099,7 @@
       "expansion": "Instruction-tuned / chat-tuned",
       "category": "training-tags",
       "oneliner": "-it (Google Gemma), -Instruct (Meta Llama, Mistral), -Chat (Qwen 1/2). Same concept, different branding. Designed for instruction-following.",
-      "explanation": "All mean: SFT + alignment applied. Qwen shifted from -Chat to -Instruct in Qwen2.5. The distinction between -instruct and -chat is branding, not technical.",
+      "explanation": "The -Instruct suffix (and its synonyms -Chat, -it) means the model has been fine-tuned with supervised instruction-following data and typically aligned with RLHF or DPO. Qwen shifted branding from -Chat to -Instruct starting with Qwen2.5, but the underlying training recipe is similar. There is no meaningful technical difference between -instruct and -chat across families; it is purely a naming preference.",
       "seen_in": [
         "model-name"
       ],
@@ -3886,7 +4123,7 @@
       "expansion": "Extended context window variant",
       "category": "family-tags",
       "oneliner": "Trained or fine-tuned for longer sequences. Some use -Long suffix, others embed context length in name (128K, 1M).",
-      "explanation": "Methods: RoPE scaling (YaRN, NTK, ABF), continued training on long documents. gradientai/Llama-3-8B-Instruct-Gradient-1048k.",
+      "explanation": "A -Long or context-length tag means the model's context window has been extended beyond its base training length, typically using RoPE scaling techniques like YaRN, NTK-aware interpolation, or Adjusted Base Frequency. These models are usually continued-trained on long documents after the base RoPE modification. Performance may degrade at the extreme ends of the claimed range, so check the model card for validated effective lengths.",
       "seen_in": [
         "model-name"
       ],
@@ -3910,7 +4147,7 @@
       "expansion": "Math-optimized model",
       "category": "capability-tags",
       "oneliner": "Specialized for mathematical reasoning via training data and reward signals. Qwen2.5-Math, DeepSeek-Math.",
-      "explanation": "Evaluated on GSM8K, MATH, competition benchmarks. Some use tool-augmented reasoning (code interpreter for computation).",
+      "explanation": "The -Math suffix signals a model fine-tuned specifically for mathematical reasoning. Qwen2.5-Math-7B and DeepSeek-Math-7B are evaluated on GSM8K, MATH, and competition-level benchmarks. Some math models employ tool-augmented reasoning, invoking a code interpreter to handle arithmetic rather than relying on the LLM's native calculation ability. If your use case is general chat, a math-tagged model may be less helpful.",
       "seen_in": [
         "model-name"
       ],
@@ -3933,7 +4170,7 @@
       "expansion": "Adapter merge state",
       "category": "adapter-tags",
       "oneliner": "-merged: LoRA folded into base weights (standalone, no overhead, irreversible). -unmerged: adapter separate (can hot-swap, needs PEFT loading).",
-      "explanation": "Merged = larger files (full model) but simpler deployment. Unmerged = small adapter files + base model, flexible but needs PEFT-aware code.",
+      "explanation": "A merged adapter model has the LoRA weight deltas baked into the base model weights, producing full-size checkpoint files that load like any standard model. An unmerged model ships the adapter files separately alongside a pointer to the base model, which saves storage but requires PEFT-aware loading code. If you see -merged in the name, expect larger files but simpler deployment.",
       "seen_in": [
         "model-name",
         "filename"
@@ -3958,7 +4195,7 @@
       "expansion": "Mixture-of-Experts architecture",
       "category": "family-tags",
       "oneliner": "Explicit MoE tag. Qwen2.5-MoE-A14B, DBRX (MoE). Mixtral uses 8x7B notation instead.",
-      "explanation": "Some families use -MoE suffix, others encode it in the expert notation (8x7B). Check for num_local_experts in config.",
+      "explanation": "Some model families explicitly tag themselves with -MoE in the name (Qwen2.5-MoE-A2.7B), while others encode the mixture structure in the expert notation instead (Mixtral-8x7B). If neither appears in the name, check config.json for num_local_experts: a value greater than one confirms a MoE architecture. This matters because MoE models require more total memory than their active parameter count suggests.",
       "seen_in": [
         "model-name",
         "model-config"
@@ -3981,7 +4218,7 @@
       "expansion": "Matryoshka Representation Learning",
       "category": "capability-tags",
       "oneliner": "Embedding model supporting variable-dimensionality outputs — truncate to smaller sizes with minimal quality loss. Named after Russian nesting dolls.",
-      "explanation": "nomic-embed-text-v1.5 (MRL-capable). Allows storage/compute trade-offs at inference. Train once, serve at any dimension.",
+      "explanation": "MRL stands for Matryoshka Representation Learning, a training technique that makes an embedding model useful at multiple output dimensions. You can truncate its full-dimension output to a smaller size and still get competitive retrieval quality. This lets you trade storage and computation cost against accuracy at inference time without retraining. When you see MRL in a model name or card, it means you can freely choose your embedding dimension.",
       "seen_in": [
         "model-name"
       ],
@@ -4005,7 +4242,7 @@
       "expansion": "Reward model",
       "category": "capability-tags",
       "oneliner": "Outputs scalar preference scores for (prompt, response) pairs. Used in RLHF pipelines or best-of-N reranking. Not generative.",
-      "explanation": "Starling-RM-34B, tulu-v3.1-8b-rl-rm. Critical RLHF component. Takes (prompt, response) → scalar score.",
+      "explanation": "A reward model takes a prompt-response pair and outputs a scalar score indicating quality. Starling-RM-34B and tulu-v3.1-8b-rl-rm are examples. Reward models are a critical component of the RLHF pipeline and are also used standalone for best-of-N reranking at inference time. These are classifier-like models, not generators, so you call them differently from chat models.",
       "seen_in": [
         "model-name"
       ],
@@ -4027,7 +4264,7 @@
       "expansion": "Relative scale/quality tiers within a model family",
       "category": "scale-tags",
       "oneliner": "NOT standardized across families. Mistral 'Small' = 24B. Phi 'Mini' = 3.8B. Always check actual param count. -Turbo = speed-optimized (OpenAI convention).",
-      "explanation": "These are relative to each family's range, not absolute sizes. -Lite usually implies deliberate distillation. -Turbo implies speed optimization (distillation or arch changes). -Pro/-Max/-Ultra more common in API naming than HuggingFace repos.",
+      "explanation": "Scale-tier tags like -Lite, -Mini, -Small, -Pro, -Max, and -Ultra indicate relative positioning within a model family rather than absolute parameter counts. Mistral Small is 24B parameters. Phi-3 uses Mini for its 3.8B model. -Turbo typically signals speed optimization. -Pro, -Max, and -Ultra are more common in API product naming than in open-weight HuggingFace repos. Always check the actual parameter count.",
       "seen_in": [
         "model-name"
       ],
@@ -4049,7 +4286,7 @@
       "expansion": "Llama 4 MoE scale variants",
       "category": "family-tags",
       "oneliner": "Scout: 17B active, 16 experts (109B total), 10M context. Maverick: 17B active, 128 experts (400B+ total), higher quality.",
-      "explanation": "Released April 2025. Same active param count but different expert counts. 16E/128E in the name = number of experts.",
+      "explanation": "Scout and Maverick are the two variants of Meta's Llama 4 MoE family, released April 2025. Both use the same active parameter count but differ in total experts: Scout has 16 experts while Maverick has 128. The 16E/128E notation in the name tells you the expert count directly. More experts with the same active count means a larger total model requiring more memory but enabling more specialized routing per token.",
       "seen_in": [
         "model-name"
       ],
@@ -4072,7 +4309,7 @@
       "expansion": "Vision-language multimodal",
       "category": "capability-tags",
       "oneliner": "Accepts image (and sometimes video) inputs. -VL (Qwen), -Vision (Llama). Has an added vision encoder (often ViT) + projection layers.",
-      "explanation": "Qwen2.5-VL-7B, Llama-3.2-11B-Vision. These are architecturally different from text-only — contain a vision encoder.",
+      "explanation": "A -Vision or -VL tag indicates a multimodal model that accepts both text and image inputs. Qwen2.5-VL-7B, Llama-3.2-11B-Vision, and InternVL are examples. These are architecturally distinct from text-only variants because they include a vision encoder (often a ViT) plus a projection layer that maps image patches into the token embedding space. Parameter counts usually include the vision encoder.",
       "seen_in": [
         "model-name"
       ],
@@ -4087,6 +4324,40 @@
           "url": "https://huggingface.co/meta-llama/Llama-3.2-11B-Vision-Instruct"
         }
       ]
+    },
+    "token": {
+      "id": "token",
+      "name": "Token",
+      "expansion": "Token (subword unit)",
+      "category": "core-concepts",
+      "oneliner": "The smallest text unit an LLM reads and generates — typically a subword piece, not a full word.",
+      "explanation": "A token is the atomic unit of text that a language model processes. Before any text reaches a model, a tokenizer splits it into tokens — subword pieces drawn from a fixed vocabulary. The word 'unbelievable' might become ['un', 'believ', 'able']. Vocabulary size is a key design choice: GPT-2 uses 50,257 tokens, LLaMA 2 uses 32,000, and GPT-4 uses roughly 100,000. Larger vocabularies encode text more efficiently but increase embedding table size and softmax cost. Most modern tokenizers use Byte-Pair Encoding.",
+      "fundamentals": "Byte-Pair Encoding starts with a character-level vocabulary and iteratively merges the most frequent adjacent pair into a new token. After $k$ merges the vocabulary has $|V_0| + k$ entries. The compression ratio — characters per token — typically lands between 3 and 5 for English. The final softmax over the vocabulary has cost $O(|V| \\cdot d_{\\text{model}})$, so doubling $|V|$ roughly doubles that layer's compute.",
+      "related": [
+        "tokenizer-bpe",
+        "tokenizer-spm"
+      ],
+      "seen_in": [
+        "model-config",
+        "code",
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Neural Machine Translation of Rare Words with Subword Units",
+          "authors": "Sennrich et al.",
+          "venue": "ACL 2016",
+          "arxiv": "1508.07909"
+        }
+      ],
+      "resources": [
+        {
+          "label": "OpenAI Tokenizer Tool",
+          "url": "https://platform.openai.com/tokenizer"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     },
     "tokenizer-bpe": {
       "id": "tokenizer-bpe",
@@ -4416,6 +4687,39 @@
         }
       ]
     },
+    "transfer-learning": {
+      "id": "transfer-learning",
+      "name": "Transfer Learning",
+      "expansion": "Transfer Learning",
+      "category": "training-pipeline",
+      "oneliner": "Reusing a model pretrained on a large general corpus as the starting point for a new, often smaller, downstream task.",
+      "explanation": "Transfer learning is the practice of taking a model trained on a broad dataset and adapting it to a specific task, rather than training from scratch. The pretrained weights already encode grammar, facts, and reasoning patterns, so the downstream task needs far less data and compute. GPT-3 demonstrated that very large models can transfer to new tasks with zero or few examples via in-context learning, without any weight updates. Transfer learning is the conceptual foundation underlying all modern fine-tuning methods — full fine-tuning, LoRA, QLoRA, and prefix tuning are all strategies for how much of the pretrained weights to adapt.",
+      "fundamentals": "Transfer assumes features learned on $P_{\\text{source}}(x)$ are useful for $P_{\\text{target}}(x)$. Fine-tuning updates $\\theta_{\\text{pretrained}} \\to \\theta + \\Delta\\theta$ using a task-specific loss. PEFT methods constrain $\\Delta\\theta$: LoRA uses $\\Delta W = BA$ with $B \\in \\mathbb{R}^{d \\times r}$, $r \\ll d$, reducing trainable params from $O(d^2)$ to $O(rd)$.",
+      "related": [
+        "pre-training",
+        "sft",
+        "lora"
+      ],
+      "seen_in": [
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "BERT: Pre-training of Deep Bidirectional Transformers",
+          "authors": "Devlin et al.",
+          "venue": "NAACL 2019",
+          "arxiv": "1810.04805"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Sebastian Ruder — Transfer Learning in NLP",
+          "url": "https://ruder.io/transfer-learning/"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "unsloth-dynamic": {
       "id": "unsloth-dynamic",
       "name": "Unsloth Dynamic (UD)",
@@ -4487,7 +4791,7 @@
       "expansion": "8-bit Weights, 8-bit Activations",
       "category": "core-concepts",
       "oneliner": "Both weights and activations quantized to 8-bit — saves memory AND compute via integer arithmetic. Standard for data-center serving.",
-      "explanation": "Both operands of the matrix multiply are int8, enabling INT8 GEMM with INT32 accumulation. Provides both memory bandwidth savings (2$\\times$ vs fp16) and compute savings (INT8 Tensor Cores are faster). Requires quantizing activations at runtime, which is harder due to input-dependent distributions and outliers. Standard for production serving via TensorRT-LLM, vLLM. SmoothQuant makes this viable by mathematically migrating quantization difficulty from activations to weights.",
+      "explanation": "W8A8 quantization stores both weights and activations in 8-bit integer format, enabling integer matrix multiplication on tensor cores. Unlike weight-only quantization which only saves memory bandwidth, W8A8 provides both memory savings and a compute speedup because both operands of the matrix multiply are quantized. The challenge is that activations must be quantized at runtime, which is harder due to input-dependent distributions and outlier values. SmoothQuant makes this practical by redistributing quantization difficulty from activations to weights.",
       "fundamentals": "Inference: 1) Quantize activation: X_int8 = round(X_fp16/s_x). 2) Read int8 weights. 3) INT8 GEMM: Y_int32 = X_int8 @ W_int8. 4) Dequantize: Y_fp16 = Y_int32 $\\times$ s_x $\\times$ s_w. Key difference from W4A16: saves both bandwidth AND compute. For large batch sizes (compute-bound workloads), W8A8 provides real speedup while W4A16 does not.",
       "seen_in": [
         "documentation",
@@ -4517,7 +4821,7 @@
       "expansion": "Yet another RoPE extensioN",
       "category": "position-encodings",
       "oneliner": "Improved RoPE extension: divides frequency bands into three zones (untouched / ramped / fully interpolated) plus attention temperature scaling. Achieves 64-128$\\times$ extension with ~400 fine-tuning steps.",
-      "explanation": "Refines NTK-aware scaling (Peng et al., 2023). NTK applies smooth monotonic adjustment across all bands — suboptimal. YaRN divides bands by wavelength-to-context ratio: (a) high-freq bands ($\\lambda$ << L): untouched, (b) low-freq bands ($\\lambda$ ≥ L): fully interpolated by factor s, (c) transition zone: smooth ramp. Plus temperature scaling $\\sqrt{1/t}$ on attention logits to counter entropy shift from extension. Achieves LLaMA 2 4K→128K (32$\\times$) with ~400 training steps. Used in Mistral/Mixtral long-context variants. Supported in HuggingFace Transformers.",
+      "explanation": "Yet Another RoPE Extension improves on NTK-aware scaling by treating different frequency bands in the position encoding separately rather than applying a single smooth adjustment. High-frequency bands encoding local positions are left untouched, low-frequency bands encoding global positions are fully interpolated, and a transition zone gets a smooth ramp between the two. YaRN also applies temperature scaling to attention logits to counter entropy shifts. It achieved 32x context extension on Llama 2 with only about 400 training steps.",
       "fundamentals": "Define $r_i$ = $\\lambda_i$/L (wavelength/context ratio). Thresholds $\\alpha$=1, $\\beta$=32. If $r_i$<$\\alpha$: no scaling. If $r_i$>$\\beta$: full interpolation (÷s). Between: ramp $\\gamma_i$ = ($r_i$-$\\alpha$)/($\\beta$-$\\alpha$), scale = 1/(1+$\\gamma_i$·(s-1)). Temperature: attention *= $\\sqrt{1/t}$ where t $\\approx$ 0.1·ln(s)+1. Three-part approach preserves local precision while extending global range — key improvement over uniform NTK. Extension: LLaMA 2 7B/13B to 64K-128K, passkey retrieval passing at 128K.",
       "seen_in": [
         "model-config"
@@ -4541,6 +4845,40 @@
           "arxiv": "2309.00071"
         }
       ]
+    },
+    "zero": {
+      "id": "zero",
+      "name": "ZeRO",
+      "expansion": "Zero Redundancy Optimizer",
+      "category": "scaling-patterns",
+      "oneliner": "DeepSpeed's memory optimization that shards optimizer states, gradients, and parameters across GPUs to eliminate redundant copies.",
+      "explanation": "ZeRO is a family of memory optimizations from Microsoft's DeepSpeed library that makes it possible to train very large models across many GPUs without the massive memory waste of naive data parallelism. In standard data parallelism, every GPU holds a full copy of the model, optimizer states, and gradients. ZeRO comes in three stages: ZeRO-1 shards only optimizer states, ZeRO-2 also shards gradients, and ZeRO-3 shards everything including parameters. ZeRO-3 enabled training of 100B+ parameter models on clusters of commodity GPUs. It is complementary to tensor and pipeline parallelism.",
+      "fundamentals": "With $N$ GPUs and mixed-precision Adam, per-GPU memory under standard DP is $16P$ bytes (2P params + 2P grads + 12P optimizer). ZeRO-1: $4P + 12P/N$. ZeRO-2: $2P + 14P/N$. ZeRO-3: $16P/N$. Communication: ZeRO-1/2 same as allreduce ($2P$ bytes/step). ZeRO-3 adds all-gather ($+P$ bytes), total $3P$ — 1.5x increase.",
+      "related": [
+        "tp-pp",
+        "full-ft"
+      ],
+      "seen_in": [
+        "model-config",
+        "code",
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "ZeRO: Memory Optimizations Toward Training Trillion Parameter Models",
+          "authors": "Rajbhandari et al.",
+          "venue": "SC 2020",
+          "arxiv": "1910.02054"
+        }
+      ],
+      "resources": [
+        {
+          "label": "DeepSpeed ZeRO documentation",
+          "url": "https://www.deepspeed.ai/tutorials/zero/"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     }
   }
 }

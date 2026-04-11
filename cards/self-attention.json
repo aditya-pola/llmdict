@@ -1,0 +1,35 @@
+{
+  "id": "self-attention",
+  "name": "Self-Attention",
+  "expansion": "Self-Attention (Scaled Dot-Product Attention)",
+  "category": "attention-variants",
+  "oneliner": "The mechanism where every position in a sequence computes a weighted sum over all other positions to capture contextual relationships.",
+  "explanation": "Self-attention lets each token in a sequence look at every other token to decide what context matters most. Each token is projected into a query, a key, and a value vector. The attention score between two positions is the dot product of the query of one and the key of the other, scaled and softmaxed into a weight. The output is the weighted sum of value vectors. This is the core building block inside Multi-Head Attention, Multi-Query Attention, and Grouped-Query Attention, giving transformers their ability to model long-range dependencies in a single layer.",
+  "fundamentals": "Given input $X \\in \\mathbb{R}^{n \\times d}$, self-attention computes $Q = XW^Q$, $K = XW^K$, $V = XW^V$ and returns $\\text{Attention}(Q,K,V) = \\text{softmax}\\left(\\frac{QK^\\top}{\\sqrt{d_k}}\\right)V$. Cost is $O(n^2 d)$ in time and $O(n^2)$ in memory.",
+  "related": [
+    "mha",
+    "mqa",
+    "gqa",
+    "sdpa"
+  ],
+  "seen_in": [
+    "code",
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Attention Is All You Need",
+      "authors": "Vaswani et al.",
+      "venue": "NeurIPS 2017",
+      "arxiv": "1706.03762"
+    }
+  ],
+  "resources": [
+    {
+      "label": "The Illustrated Transformer",
+      "url": "https://jalammar.github.io/illustrated-transformer/"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

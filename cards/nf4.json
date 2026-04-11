@@ -4,7 +4,7 @@
   "expansion": "4-bit NormalFloat — normal-distribution-optimal 4-bit data type",
   "category": "precision-formats",
   "oneliner": "Non-uniform 4-bit format with levels spaced at quantiles of a Gaussian — optimal for neural network weights, used by QLoRA/bitsandbytes.",
-  "explanation": "Introduced in the QLoRA paper (Dettmers 2023). Neural network weights $\\approx$ Gaussian when normalized. Uniform int4 wastes levels in sparse tails and under-resolves the dense center. nf4 places 16 levels at N(0,1) quantiles so each level covers equal probability mass (1/16). Reduces quantization error vs uniform int4 for the same 4-bit budget. With 'double quantization' (quantizing scale factors to fp8), effective ~4.127 bpw. Default in bitsandbytes load_in_4bit.",
+  "explanation": "NormalFloat4 is a non-uniform 4-bit data type designed specifically for neural network weights, introduced in the QLoRA paper. Neural network weights approximately follow a Gaussian distribution when normalized, so uniform 4-bit quantization wastes resolution in the sparse tails and under-resolves the dense center. NF4 places its 16 levels at the quantiles of a standard normal distribution so each level covers equal probability mass, minimizing quantization error. It is the default format in bitsandbytes load_in_4bit.",
   "fundamentals": "Lookup table: $\\{-1.0, -0.6962, -0.5251, -0.3949, -0.2844, -0.1848, -0.0911, 0.0, 0.0796, 0.1609, 0.2461, 0.3379, 0.4407, 0.5626, 0.7230, 1.0\\}$. Levels are denser near zero (spacing 0.08) and sparser in tails (spacing 0.28). Quantize: normalize per group $w_{\\text{norm}} = w/\\text{absmax}$, map to nearest level. Dequantize: $\\text{nf4\\_lookup}[\\text{index}] \\times \\text{absmax}$.",
   "seen_in": [
     "model-config",

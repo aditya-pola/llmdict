@@ -4,7 +4,7 @@
   "expansion": "bitsandbytes — Tim Dettmers' quantization library",
   "category": "quantization-methods",
   "oneliner": "The library behind LLM.int8() and QLoRA. Offers 8-bit (absmax) and 4-bit (nf4/fp4) quantization with deep HuggingFace integration.",
-  "explanation": "Two main modes. 8-bit (LLM.int8()): vector-wise absmax quantization with mixed-precision decomposition — outlier features (>~6$\\sigma$) kept in fp16, rest in int8. Solved the activation outlier problem. 4-bit (QLoRA): loads base model in nf4/fp4, trains LoRA adapters in fp16. Double quantization compresses scale factors. Tightly integrated with HuggingFace Transformers (load_in_8bit/load_in_4bit). Primary use: memory-efficient fine-tuning, not production serving.",
+  "explanation": "Bitsandbytes is a CUDA library that enables 8-bit and 4-bit quantization for large language models. Its 8-bit mode uses vector-wise quantization with mixed-precision decomposition, keeping statistical outlier features in 16-bit while compressing the rest to 8-bit. Its 4-bit mode powers QLoRA, loading base model weights in NF4 format while training LoRA adapters in 16-bit. It integrates directly with HuggingFace Transformers via load_in_8bit and load_in_4bit flags, making it the go-to tool for memory-efficient fine-tuning.",
   "fundamentals": "8-bit: per-vector absmax scaling. Outlier decomposition: X = X_normal + X_outlier, compute separately in int8 and fp16, sum results. 4-bit: per-group (g=64 default) with nf4 or fp4 dtype. Double quant: group the fp32 absmax values into blocks of 256, quantize to fp8 with their own absmax.",
   "seen_in": [
     "model-name",

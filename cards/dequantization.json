@@ -4,7 +4,7 @@
   "expansion": "Inverse Quantization",
   "category": "core-concepts",
   "oneliner": "Reverse mapping from low-precision quantized values back to approximate floats — happens on-the-fly during inference.",
-  "explanation": "In W4A16: int4 weights read from memory, multiplied by group scale in registers/shared memory, fed directly into fp16 GEMM. Fused with computation to avoid materializing full fp16 weight matrix — only 4 bits traverse the memory bus. In W8A8: dequantization happens AFTER the integer GEMM (output $\\times$ scale product), which is cheaper since it operates on the smaller output tensor. Dequantization is cheap: $O(KN)$ vs $O(MKN)$ for the GEMM itself.",
+  "explanation": "Dequantization is the process of converting quantized weights back to a higher-precision format during inference so they can participate in standard matrix multiplication. In a 4-bit weight scheme, integer weights are read from memory at 4 bits, multiplied by their group scale factor, and fed directly into 16-bit matrix math. This is fused with the computation so the full-precision weight matrix is never materialized in memory, meaning only 4 bits per weight travel across the memory bus. The dequantization cost is negligible compared to the matrix multiply itself.",
   "fundamentals": "Integer: W_approx = scale $\\times$ (W_q - zero_point). Error: |W_original - W_approx| ≤ scale/2. nf4: W_approx = nf4_codebook[index] $\\times$ absmax. W8A8 output: Y_fp16 = Y_int32 $\\times$ (s_x $\\times$ s_w).",
   "seen_in": [
     "documentation"

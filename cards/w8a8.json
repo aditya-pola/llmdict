@@ -4,7 +4,7 @@
   "expansion": "8-bit Weights, 8-bit Activations",
   "category": "core-concepts",
   "oneliner": "Both weights and activations quantized to 8-bit — saves memory AND compute via integer arithmetic. Standard for data-center serving.",
-  "explanation": "Both operands of the matrix multiply are int8, enabling INT8 GEMM with INT32 accumulation. Provides both memory bandwidth savings (2$\\times$ vs fp16) and compute savings (INT8 Tensor Cores are faster). Requires quantizing activations at runtime, which is harder due to input-dependent distributions and outliers. Standard for production serving via TensorRT-LLM, vLLM. SmoothQuant makes this viable by mathematically migrating quantization difficulty from activations to weights.",
+  "explanation": "W8A8 quantization stores both weights and activations in 8-bit integer format, enabling integer matrix multiplication on tensor cores. Unlike weight-only quantization which only saves memory bandwidth, W8A8 provides both memory savings and a compute speedup because both operands of the matrix multiply are quantized. The challenge is that activations must be quantized at runtime, which is harder due to input-dependent distributions and outlier values. SmoothQuant makes this practical by redistributing quantization difficulty from activations to weights.",
   "fundamentals": "Inference: 1) Quantize activation: X_int8 = round(X_fp16/s_x). 2) Read int8 weights. 3) INT8 GEMM: Y_int32 = X_int8 @ W_int8. 4) Dequantize: Y_fp16 = Y_int32 $\\times$ s_x $\\times$ s_w. Key difference from W4A16: saves both bandwidth AND compute. For large batch sizes (compute-bound workloads), W8A8 provides real speedup while W4A16 does not.",
   "seen_in": [
     "documentation",

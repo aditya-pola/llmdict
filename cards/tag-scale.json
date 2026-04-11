@@ -4,7 +4,7 @@
   "expansion": "Relative scale/quality tiers within a model family",
   "category": "scale-tags",
   "oneliner": "NOT standardized across families. Mistral 'Small' = 24B. Phi 'Mini' = 3.8B. Always check actual param count. -Turbo = speed-optimized (OpenAI convention).",
-  "explanation": "These are relative to each family's range, not absolute sizes. -Lite usually implies deliberate distillation. -Turbo implies speed optimization (distillation or arch changes). -Pro/-Max/-Ultra more common in API naming than HuggingFace repos.",
+  "explanation": "Scale-tier tags like -Lite, -Mini, -Small, -Pro, -Max, and -Ultra indicate relative positioning within a model family rather than absolute parameter counts. Mistral Small is 24B parameters. Phi-3 uses Mini for its 3.8B model. -Turbo typically signals speed optimization. -Pro, -Max, and -Ultra are more common in API product naming than in open-weight HuggingFace repos. Always check the actual parameter count.",
   "seen_in": [
     "model-name"
   ],

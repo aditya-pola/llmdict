@@ -1,0 +1,33 @@
+{
+  "id": "attention-mask",
+  "name": "Attention Mask",
+  "expansion": "Attention Mask",
+  "category": "attention-variants",
+  "oneliner": "A binary mask that controls which token pairs can attend to each other, handling padding, causality, and custom patterns.",
+  "explanation": "An attention mask tells the attention mechanism which positions a given token is allowed to look at. Padding masks prevent tokens from attending to padding positions when sequences of different lengths are batched together. Causal masks enforce the left-to-right constraint in autoregressive generation by blocking attention to future positions. In HuggingFace Transformers, the attention_mask tensor is typically 1 for real tokens and 0 for padding. Internally this is converted to large negative values added to attention logits before softmax, so masked positions get near-zero weight.",
+  "fundamentals": "Applied as: $\\text{Attention}(Q,K,V) = \\text{softmax}\\left(\\frac{QK^\\top}{\\sqrt{d_k}} + M_{\\text{add}}\\right)V$, where $M_{\\text{add}}$ contains $0$ for allowed positions and $-\\infty$ for blocked positions. For padded batches, the padding mask has shape $1 \\times L$ and is broadcast to $L \\times L$, combined with the causal mask via element-wise minimum.",
+  "related": [
+    "mha",
+    "token"
+  ],
+  "seen_in": [
+    "code",
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Attention Is All You Need",
+      "authors": "Vaswani et al.",
+      "venue": "NeurIPS 2017",
+      "arxiv": "1706.03762"
+    }
+  ],
+  "resources": [
+    {
+      "label": "HuggingFace Glossary: Attention mask",
+      "url": "https://huggingface.co/docs/transformers/glossary#attention-mask"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

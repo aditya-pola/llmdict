@@ -4,7 +4,7 @@
   "expansion": "32-bit IEEE 754 Single-Precision Floating Point",
   "category": "precision-formats",
   "oneliner": "The standard 32-bit floating-point format — baseline 'full precision' for neural networks.",
-  "explanation": "Each parameter stored as 4 bytes. A 7B model = 28 GB. Provides ~7.2 decimal digits of precision and range up to $\\pm$3.4$\\times 10^{38}$. Now considered overkill for inference; still used for optimizer states and master weight copies in mixed-precision training. When people say a model is 'quantized,' they mean converted from fp32/bf16 to something smaller.",
+  "explanation": "FP32 is the standard 32-bit floating-point format where each parameter occupies 4 bytes, so a 7-billion parameter model requires about 28 GB of memory. It provides roughly 7.2 decimal digits of precision and an enormous numerical range. FP32 is now considered overkill for inference and has been replaced by 16-bit or smaller formats for model weights. It is still used for optimizer states and master weight copies in mixed-precision training. When people say a model is quantized, they mean converted from FP32 or BFloat16 to a more compact representation.",
   "fundamentals": "Bit layout: 1 sign | 8 exponent (bias 127) | 23 mantissa. Value = (-1)^sign $\\times$ 2^(exp-127) $\\times$ 1.mantissa. The 23-bit mantissa + implicit leading 1 = 24 bits of significand $\\approx$ 7.2 decimal digits. Special values: $\\pm$inf (exp all 1s, mantissa 0), NaN (exp all 1s, mantissa ≠0), subnormals (exp all 0s).",
   "seen_in": [
     "model-weights",

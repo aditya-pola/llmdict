@@ -4,7 +4,7 @@
   "expansion": "Reward model",
   "category": "capability-tags",
   "oneliner": "Outputs scalar preference scores for (prompt, response) pairs. Used in RLHF pipelines or best-of-N reranking. Not generative.",
-  "explanation": "Starling-RM-34B, tulu-v3.1-8b-rl-rm. Critical RLHF component. Takes (prompt, response) → scalar score.",
+  "explanation": "A reward model takes a prompt-response pair and outputs a scalar score indicating quality. Starling-RM-34B and tulu-v3.1-8b-rl-rm are examples. Reward models are a critical component of the RLHF pipeline and are also used standalone for best-of-N reranking at inference time. These are classifier-like models, not generators, so you call them differently from chat models.",
   "seen_in": [
     "model-name"
   ],

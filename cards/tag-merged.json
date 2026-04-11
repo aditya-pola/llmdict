@@ -4,7 +4,7 @@
   "expansion": "Adapter merge state",
   "category": "adapter-tags",
   "oneliner": "-merged: LoRA folded into base weights (standalone, no overhead, irreversible). -unmerged: adapter separate (can hot-swap, needs PEFT loading).",
-  "explanation": "Merged = larger files (full model) but simpler deployment. Unmerged = small adapter files + base model, flexible but needs PEFT-aware code.",
+  "explanation": "A merged adapter model has the LoRA weight deltas baked into the base model weights, producing full-size checkpoint files that load like any standard model. An unmerged model ships the adapter files separately alongside a pointer to the base model, which saves storage but requires PEFT-aware loading code. If you see -merged in the name, expect larger files but simpler deployment.",
   "seen_in": [
     "model-name",
     "filename"

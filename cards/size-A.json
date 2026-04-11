@@ -4,7 +4,7 @@
   "expansion": "Active parameters per token in MoE",
   "category": "size-conventions",
   "oneliner": "Active parameters per forward pass in MoE. Qwen2.5-A14B = 57B total, 14B active. Gemma 26B-A4B = 25.2B total, 3.8B active.",
-  "explanation": "Crucial for understanding actual compute cost. All params must be in memory, but only A params compute per token. Introduced by Qwen MoE and Gemma teams.",
+  "explanation": "A marks the active parameter count in a Mixture-of-Experts model, which is the number of parameters that actually compute for each token. For example, Qwen2.5-MoE-A2.7B-Instruct has 14.3B total parameters but only 2.7 billion fire per token because the router selects a small subset of experts. This distinction is critical for estimating inference speed and GPU cost: all parameters must fit in memory, but latency and FLOPs scale with the active count.",
   "seen_in": [
     "model-name"
   ],

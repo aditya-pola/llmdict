@@ -4,7 +4,7 @@
   "expansion": "Billion parameters",
   "category": "size-conventions",
   "oneliner": "The universal size marker. 7B = 7 billion parameters. Refers to total params unless combined with A (active).",
-  "explanation": "Nearly universal. Some older models use lowercase (7b). When a model card lists a single number without total/active distinction, it's the total (and the model is dense).",
+  "explanation": "When you see a number followed by B in a model name, it means billion parameters. Llama-3.1-8B has eight billion, Qwen2.5-72B has seventy-two billion. The convention is nearly universal, though some older repos use lowercase (7b instead of 7B). If the name shows a single number with no active/total distinction, assume the model is dense and every parameter fires on every token.",
   "seen_in": [
     "model-name"
   ],

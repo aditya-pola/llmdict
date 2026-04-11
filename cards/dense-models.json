@@ -4,7 +4,7 @@
   "expansion": "Dense Model (all parameters active per token)",
   "category": "scaling-patterns",
   "oneliner": "100% of parameters active for every token — the standard transformer design. Simpler than MoE but compute scales linearly with param count.",
-  "explanation": "The default transformer architecture: every attention head and FFN layer processes every token. Term became necessary to distinguish from MoE/sparse. Advantages: simplicity (no routing instabilities, no load balancing, simpler serving), sample efficiency (every param sees every token). Disadvantage: compute = $O(params)$. Preferred when: memory is the bottleneck and you want max quality per byte, simpler infrastructure needed, fine-tuning, or single-GPU deployment. Chinchilla scaling: N params should train on ~20N tokens.",
+  "explanation": "Dense models are the standard transformer architecture where every parameter is active for every token, meaning all attention heads and feed-forward layers participate in each computation. The term became necessary to distinguish from Mixture-of-Experts and other sparse architectures. Dense models are simpler to train, serve, and fine-tune, with no routing instabilities or load-balancing concerns. They are preferred when memory rather than compute is the bottleneck, when infrastructure simplicity matters, or when deploying on a single GPU.",
   "fundamentals": "Per-token FLOPS $\\approx$ 2 $\\times$ total_params (rough approximation). 70B dense model: ~140 TFLOPS/token. Same capacity as MoE ~280B total/70B active — same compute, 4$\\times$ less memory. When model card lists single param count without total/active distinction → dense. Examples: LLaMA 3 8B/70B/405B, Mistral 7B, Qwen 2.5 72B, Gemma 31B.",
   "seen_in": [
     "model-cards",

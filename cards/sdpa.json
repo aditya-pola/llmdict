@@ -4,7 +4,7 @@
   "expansion": "Scaled Dot-Product Attention (PyTorch API)",
   "category": "attention-variants",
   "oneliner": "PyTorch's fused attention primitive — auto-dispatches to Flash Attention, Memory-Efficient, or math fallback based on hardware and input constraints.",
-  "explanation": "torch.nn.functional.scaled_dot_product_attention (PyTorch 2.0+). Fuses Q·K^T scaling, masking, softmax, dropout, V multiplication into one kernel call. Before SDPA, users wrote attention manually or used xformers. Now the default in HuggingFace Transformers (v4.36+). Backend dispatch order: 1) Flash Attention (requires CUDA, fp16/bf16, head_dim≤256, no arbitrary mask). 2) Memory-Efficient (CUDA, arbitrary masks). 3) Math fallback (CPU or unsupported dtypes, materializes full N$\\times$N matrix).",
+  "explanation": "Scaled Dot-Product Attention in PyTorch 2.0 and later fuses the entire attention computation into a single optimized kernel call. Before this API, users had to implement attention manually or rely on external libraries. It automatically selects the best backend: Flash Attention when possible for maximum speed, memory-efficient attention for arbitrary masks, or a math fallback for CPU and unsupported data types. It is now the default attention implementation in HuggingFace Transformers.",
   "fundamentals": "API: F.scaled_dot_product_attention(query, key, value, attn_mask=None, is_causal=False, scale=None). Shapes: Q [batch, n_heads, seq_q, head_dim], K/V [batch, n_heads, seq_kv, head_dim]. Override backend: torch.backends.cuda.sdp_kernel(enable_flash=True, enable_mem_efficient=False, enable_math=False). Performance on A100 seq_len=2048: Math=baseline, Memory-Efficient=2-3$\\times$ faster, Flash=3-5$\\times$ faster.",
   "seen_in": [
     "code",

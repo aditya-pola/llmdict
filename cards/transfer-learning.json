@@ -1,0 +1,33 @@
+{
+  "id": "transfer-learning",
+  "name": "Transfer Learning",
+  "expansion": "Transfer Learning",
+  "category": "training-pipeline",
+  "oneliner": "Reusing a model pretrained on a large general corpus as the starting point for a new, often smaller, downstream task.",
+  "explanation": "Transfer learning is the practice of taking a model trained on a broad dataset and adapting it to a specific task, rather than training from scratch. The pretrained weights already encode grammar, facts, and reasoning patterns, so the downstream task needs far less data and compute. GPT-3 demonstrated that very large models can transfer to new tasks with zero or few examples via in-context learning, without any weight updates. Transfer learning is the conceptual foundation underlying all modern fine-tuning methods — full fine-tuning, LoRA, QLoRA, and prefix tuning are all strategies for how much of the pretrained weights to adapt.",
+  "fundamentals": "Transfer assumes features learned on $P_{\\text{source}}(x)$ are useful for $P_{\\text{target}}(x)$. Fine-tuning updates $\\theta_{\\text{pretrained}} \\to \\theta + \\Delta\\theta$ using a task-specific loss. PEFT methods constrain $\\Delta\\theta$: LoRA uses $\\Delta W = BA$ with $B \\in \\mathbb{R}^{d \\times r}$, $r \\ll d$, reducing trainable params from $O(d^2)$ to $O(rd)$.",
+  "related": [
+    "pre-training",
+    "sft",
+    "lora"
+  ],
+  "seen_in": [
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "BERT: Pre-training of Deep Bidirectional Transformers",
+      "authors": "Devlin et al.",
+      "venue": "NAACL 2019",
+      "arxiv": "1810.04805"
+    }
+  ],
+  "resources": [
+    {
+      "label": "Sebastian Ruder — Transfer Learning in NLP",
+      "url": "https://ruder.io/transfer-learning/"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

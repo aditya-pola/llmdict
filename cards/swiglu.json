@@ -4,7 +4,7 @@
   "expansion": "Swish-activated Gated Linear Unit",
   "category": "layer-types",
   "oneliner": "Element-wise product of a Swish-activated gate projection and a value projection — the de facto standard FFN activation in modern LLMs.",
-  "explanation": "From Shazeer (2020). Replaces simple ReLU FFN with gated mechanism: one projection produces gates (via Swish), another produces values, element-wise multiply, then down-project. Swish(x) = x·$\\sigma$(x) is smooth, non-monotonic, allows small negatives through. ~0.02-0.05 lower perplexity than ReLU at same compute. Three matrices instead of two, but d_ff reduced to compensate. Used by LLaMA 1/2/3, Mistral, Mixtral, Qwen, Gemma, Yi, DeepSeek, Command-R — essentially every major open-weight model since 2023.",
+  "explanation": "SwiGLU is a gated activation function that replaced ReLU in the feed-forward blocks of modern transformers. It works by having one linear projection produce gate values through the Swish activation, while a second projection produces the values to be gated. The two are multiplied element-wise before a final down-projection. SwiGLU achieves measurably lower perplexity than ReLU at equivalent compute cost. It is used by virtually every major open-weight LLM including Llama, Mistral, Qwen, and DeepSeek.",
   "fundamentals": "SwiGLU(x) = (Swish(xW_gate) ⊙ xW_up)W_down. Swish(z) = z·$\\sigma$(z). For LLaMA 7B: W_gate [4096, 11008], W_up [4096, 11008], W_down [11008, 4096]. Params: 3$\\times$4096$\\times$11008 $\\approx$ 135M $\\approx$ 8$d^2$. In HuggingFace config: hidden_act='silu' (SiLU is the activation within the GLU structure). Code pattern: act_fn(gate_proj(x)) * up_proj(x) then down_proj(...).",
   "seen_in": [
     "model-config",

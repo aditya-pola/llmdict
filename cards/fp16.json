@@ -4,7 +4,7 @@
   "expansion": "16-bit IEEE 754 Half-Precision Floating Point",
   "category": "precision-formats",
   "oneliner": "A 16-bit float that halves memory vs fp32 but has limited dynamic range — fast for inference, needs loss scaling for training.",
-  "explanation": "Cuts memory in half (7B model = 14 GB). Enables Tensor Cores on NVIDIA Volta+ GPUs for 2-8$\\times$ throughput. Critical limitation: max value is only 65,504 — gradients during training can overflow, requiring loss scaling. For inference, overflow is rarely an issue. Largely supplanted by bf16 for training where hardware supports it.",
+  "explanation": "FP16 is a 16-bit floating-point format that halves memory compared to 32-bit, so a 7-billion parameter model fits in about 14 GB. It enables tensor core acceleration on NVIDIA Volta and newer GPUs for significant throughput gains. The critical limitation is its small maximum representable value of 65,504, which means training gradients can overflow and require loss scaling to work around. For inference this is rarely an issue. FP16 has been largely supplanted by BFloat16 for training on hardware that supports it.",
   "fundamentals": "Bit layout: 1 sign | 5 exponent (bias 15) | 10 mantissa. Value = (-1)^sign $\\times$ 2^(exp-15) $\\times$ 1.mantissa. Range: $\\pm$65,504. Precision: ~3.3 decimal digits. Compared to fp32: range drops from ~$10^{38}$ to ~6.5$\\times 10^{4}$ (34 orders of magnitude less), precision from ~7.2 to ~3.3 digits.",
   "seen_in": [
     "model-name",

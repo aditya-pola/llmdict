@@ -4,7 +4,7 @@
   "expansion": "Embedding model",
   "category": "capability-tags",
   "oneliner": "Produces fixed-size vectors for retrieval/similarity, not generative text. Often encoder-only or uses mean pooling over decoder.",
-  "explanation": "bge-large, gte-Qwen2-7B, nomic-embed-text. Output: single vector per input. Used for RAG, search, similarity.",
+  "explanation": "An embedding model outputs a single fixed-length vector for each input rather than generating text. These vectors are used for retrieval-augmented generation, semantic search, clustering, and similarity scoring. Unlike generative models, embedding models are loaded differently and called without a generate loop. Check the model card for the recommended prompt prefix and output dimension, as these vary across families.",
   "seen_in": [
     "model-name"
   ],

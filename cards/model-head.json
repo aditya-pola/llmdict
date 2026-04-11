@@ -1,0 +1,26 @@
+{
+  "id": "model-head",
+  "name": "Model Head",
+  "expansion": "Task-Specific Model Head",
+  "category": "layer-types",
+  "oneliner": "The output layer(s) stacked on top of a pretrained backbone that adapt it to a specific task like classification or text generation.",
+  "explanation": "A model head is the task-specific projection layer that sits on top of a shared backbone. In a causal language model, the LM head is a linear layer that projects hidden states to vocabulary-sized logits for next-token prediction, often weight-tied with the input embedding table. For classification, a classification head pools the sequence representation and projects it to the number of classes. In HuggingFace, the distinction is explicit: GPT2Model is the backbone while GPT2LMHeadModel adds the language modeling head. Swapping heads lets you reuse the same backbone for different tasks.",
+  "fundamentals": "For an LM head with weight tying, logits are $z = h W_E^\\top$ where $h \\in \\mathbb{R}^{d}$ is the hidden state and $W_E \\in \\mathbb{R}^{|V| \\times d}$ is the shared embedding matrix. Weight tying reduces parameters by $|V| \\times d$. A classification head applies $\\text{softmax}(W_c h + b_c)$ where $W_c \\in \\mathbb{R}^{C \\times d}$.",
+  "related": [
+    "ffn",
+    "backbone"
+  ],
+  "seen_in": [
+    "code",
+    "model-config"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "HuggingFace Model summary",
+      "url": "https://huggingface.co/docs/transformers/model_summary"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

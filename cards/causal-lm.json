@@ -1,0 +1,33 @@
+{
+  "id": "causal-lm",
+  "name": "Causal Language Modeling",
+  "expansion": "Causal (Autoregressive) Language Modeling",
+  "category": "training-pipeline",
+  "oneliner": "The training objective where a model predicts the next token using only the tokens to its left — the foundation of GPT-style generation.",
+  "explanation": "Causal language modeling trains a model to predict each token given all preceding tokens, never peeking at future positions. A causal attention mask ensures position i can only attend to positions 0 through i. This is the pre-training objective behind GPT-2, GPT-3, GPT-4, LLaMA, and Mistral. At inference time the same left-to-right constraint enables autoregressive generation: sample one token, append it, repeat. Because every position provides a training signal, causal LM is highly data-efficient compared to masked LM approaches.",
+  "fundamentals": "The causal LM objective maximises $\\mathcal{L} = \\sum_{t=1}^{T} \\log P(x_t \\mid x_{<t}; \\theta)$. The causal mask is a lower-triangular binary matrix $M$ where $M_{ij} = 1$ iff $j \\leq i$. Perplexity $= \\exp(-\\mathcal{L}/T)$ is the standard evaluation metric.",
+  "related": [
+    "pre-training",
+    "sft"
+  ],
+  "seen_in": [
+    "model-config",
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Language Models are Few-Shot Learners",
+      "authors": "Brown et al.",
+      "venue": "NeurIPS 2020",
+      "arxiv": "2005.14165"
+    }
+  ],
+  "resources": [
+    {
+      "label": "HuggingFace CLM training guide",
+      "url": "https://huggingface.co/docs/transformers/tasks/language_modeling"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

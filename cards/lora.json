@@ -4,7 +4,7 @@
   "expansion": "Low-Rank Adaptation of Large Language Models",
   "category": "fine-tuning-methods",
   "oneliner": "Freeze base weights, add trainable low-rank bypass $W_0$ + ($\\alpha$/r)·B·A. Typically 0.1-0.6% of params. Zero inference overhead after merging.",
-  "explanation": "Fine-tuning updates have low intrinsic rank. Freeze $W_0$, add $\\Delta$W = BA where B$\\in\\mathbb{R}$^(d$\\times$r), A$\\in\\mathbb{R}$^(r$\\times$d), r<<d. B init to 0 (starts from pretrained). Scaling $\\alpha$/r. Apply to Q,K,V,O + FFN for best results. r typically 8-16. Merge: W = $W_0$ + ($\\alpha$/r)·BA. The default PEFT method.",
+  "explanation": "Low-Rank Adaptation freezes all original model weights and injects small trainable low-rank matrices alongside them, typically training only 0.1 to 0.6 percent of the total parameters. The key insight is that fine-tuning weight updates naturally have low intrinsic rank, so two small matrices can capture the needed changes. One matrix is initialized to zero so training starts from the exact pretrained behavior. After training, the adapter matrices can be merged back into the base weights for zero inference overhead. LoRA is the dominant parameter-efficient fine-tuning method.",
   "fundamentals": "Forward: $h = W_0 x + (\\alpha/r) \\cdot B \\cdot A \\cdot x$. LLaMA 7B $r$=16 all linear: ~40M params (0.6%). Memory: ~14.8GB (vs ~84GB full FT). Merge: one-time matrix add $W = W_0 + (\\alpha/r) \\cdot BA$. Files: adapter_model.safetensors (~80MB) + adapter_config.json.",
   "seen_in": [
     "model-name",
