@@ -9,7 +9,7 @@
   padding: 0;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@500&family=Playfair+Display:ital,wght@0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap');
 
 :root {
   --bg: #fff;
@@ -23,7 +23,7 @@
     0px 4px 16px 0px rgba(0, 0, 0, 0.35),
     0px 34px 44px 0px rgba(0, 0, 0, 0.17);
   --font: 'Inter', -apple-system, 'Segoe UI', system-ui, sans-serif;
-  --font-display: 'Playfair Display', Georgia, serif;
+  --font-display: 'Inter', -apple-system, 'Segoe UI', system-ui, sans-serif;
   --transition: 0.15s ease;
   --transition-slow: 0.4s ease;
 }
@@ -33,9 +33,9 @@ html {
   color: #000;
   font-family: var(--font);
   font-weight: 500;
-  font-size: 14px;
-  line-height: 17px;
-  letter-spacing: -0.28px;
+  font-size: 15px;
+  line-height: 1.5;
+  letter-spacing: -0.3px;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -190,6 +190,7 @@ main {
   width: 100%;
   align-items: center;
   height: 100%;
+  perspective: 1200px;
 }
 .carousel-track::-webkit-scrollbar { display: none; }
 
@@ -208,11 +209,13 @@ main {
   color: #fff;
   position: relative;
   overflow: hidden;
+  will-change: transform;
+  transform-style: preserve-3d;
 
   /* Pop-in: start hidden */
   opacity: 0;
   transform: scale(0.7) rotate(-4deg);
-  transition: transform var(--transition), box-shadow var(--transition);
+  transition: box-shadow var(--transition);
 }
 
 /* Spring pop-in animation */
@@ -229,14 +232,10 @@ main {
 /* After animation clears (JS sets animation:none), hover works via transition */
 @media (hover: hover) {
   .card:hover {
-    transform: scale(1.02) !important;
     box-shadow:
       0px 6px 20px 0px rgba(0, 0, 0, 0.4),
       0px 40px 50px 0px rgba(0, 0, 0, 0.2) !important;
   }
-}
-.card:active {
-  transform: scale(0.97) !important;
 }
 
 /* --- Home card --- */
@@ -245,16 +244,16 @@ main {
 }
 .card--home .home-title {
   font-family: var(--font-display);
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: -0.56px;
-  margin-bottom: 6px;
+  font-size: 36px;
+  font-weight: 500;
+  letter-spacing: -1.8px;
+  margin-bottom: 8px;
 }
 .card--home .home-subtitle {
-  font-size: 12px;
+  font-size: 14px;
   color: #adadad;
-  margin-bottom: 20px;
-  letter-spacing: -0.24px;
+  margin-bottom: 24px;
+  letter-spacing: -0.28px;
 }
 .card--home .category-list {
   list-style: none;
@@ -265,9 +264,9 @@ main {
   flex: 1;
 }
 .card--home .category-link {
-  font-size: 13px;
-  letter-spacing: -0.26px;
-  padding: 4px 0;
+  font-size: 14px;
+  letter-spacing: -0.28px;
+  padding: 5px 0;
   color: rgba(255, 255, 255, 0.5);
   cursor: pointer;
   transition: color 0.3s ease;
@@ -296,18 +295,18 @@ main {
   }
 }
 .card--category .cat-label {
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 1.6px;
   text-transform: uppercase;
   color: rgba(0, 0, 0, 0.3);
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 .card--category .cat-title {
   font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.44px;
-  margin-bottom: 16px;
+  font-size: 26px;
+  font-weight: 500;
+  letter-spacing: -1.2px;
+  margin-bottom: 18px;
   color: #000;
 }
 .card--category .term-list {
@@ -319,9 +318,9 @@ main {
   flex: 1;
 }
 .card--category .term-link {
-  font-size: 13px;
-  letter-spacing: -0.26px;
-  padding: 4px 0;
+  font-size: 14px;
+  letter-spacing: -0.28px;
+  padding: 5px 0;
   color: rgba(0, 0, 0, 0.4);
   cursor: pointer;
   transition: color 0.3s ease;
@@ -340,25 +339,24 @@ main {
 /* --- Term card (dictionary style) --- */
 .card.card--term .term-name {
   font-family: var(--font-display);
-  font-size: 26px;
-  font-weight: 700;
-  letter-spacing: -0.52px;
-  line-height: 1.15;
-  margin-bottom: 2px;
+  font-size: 32px;
+  font-weight: 500;
+  letter-spacing: -1.6px;
+  line-height: 1.1;
+  margin-bottom: 4px;
 }
 .card--term .term-expansion {
-  font-family: var(--font-display);
-  font-size: 12px;
+  font-size: 13px;
   font-style: italic;
   font-weight: 400;
   color: rgba(255, 255, 255, 0.35);
-  margin-bottom: 14px;
-  letter-spacing: 0;
+  margin-bottom: 16px;
+  letter-spacing: -0.1px;
 }
 .card--term .term-explanation {
-  font-size: 13px;
-  line-height: 19px;
-  letter-spacing: -0.26px;
+  font-size: 14px;
+  line-height: 1.6;
+  letter-spacing: -0.28px;
   color: #adadad;
   overflow-y: auto;
   flex: 1;
@@ -452,18 +450,18 @@ main {
 /* Overlay content */
 .overlay-name {
   font-family: var(--font-display);
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: -0.56px;
-  margin-bottom: 2px;
+  font-size: 34px;
+  font-weight: 500;
+  letter-spacing: -1.7px;
+  margin-bottom: 4px;
 }
 .overlay-expansion {
-  font-family: var(--font-display);
-  font-size: 12px;
+  font-size: 13px;
   font-style: italic;
   font-weight: 400;
   color: rgba(255, 255, 255, 0.35);
-  margin-bottom: 20px;
+  margin-bottom: 22px;
+  letter-spacing: -0.1px;
 }
 .overlay-section {
   margin-bottom: 20px;
@@ -476,9 +474,9 @@ main {
   margin-bottom: 8px;
 }
 .overlay-section-body {
-  font-size: 13px;
-  line-height: 19px;
-  letter-spacing: -0.26px;
+  font-size: 14px;
+  line-height: 1.65;
+  letter-spacing: -0.28px;
   color: #adadad;
 }
 .overlay-section-body .inline-link {
