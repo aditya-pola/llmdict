@@ -109,8 +109,7 @@ def validate():
         if vdate and not re.match(r'^\d{4}-\d{2}-\d{2}$', vdate):
             warnings.append(f'{fname}: verified_date should be YYYY-MM-DD format, got "{vdate}"')
 
-    # --- Connectivity check: do new/edited cards mention existing terms they should link to? ---
-    # Load all cards for cross-referencing
+    # --- Connectivity check: suggest related links ---
     all_cards = {}
     for fname in sorted(os.listdir(CARDS_DIR)):
         if not fname.endswith('.json') or fname.startswith('_'): continue
@@ -118,29 +117,61 @@ def validate():
             try: all_cards[fname[:-5]] = json.load(f)
             except: pass
 
-    # Build name→id lookup
+    # Build name→id lookup (sorted longest first to avoid partial matches)
     name_to_id = {}
     for cid, c in all_cards.items():
         name_lower = c.get('name', '').lower()
-        if len(name_lower) >= 3:
+        if len(name_lower) >= 4:
             name_to_id[name_lower] = cid
+        # Also index the id itself as a matchable term
+        if len(cid) >= 4:
+            name_to_id[cid.replace('-', ' ')] = cid
 
-    # For each card, check if explanation mentions other card names not in related
+    cards_with_suggestions = []
+
     for cid, c in all_cards.items():
-        explanation = c.get('explanation', '')
+        text = (c.get('explanation', '') + ' ' + c.get('fundamentals', '')).lower()
         current_related = set(c.get('related', []))
-        missing_links = []
+        same_category = set(
+            oid for oid, oc in all_cards.items()
+            if oc.get('category') == c.get('category') and oid != cid
+        )
+        suggested = set()
 
+        # 1. Terms mentioned in explanation/fundamentals
         for name, target_id in name_to_id.items():
             if target_id == cid: continue
             if target_id in current_related: continue
-            if len(name) < 4: continue  # skip very short names to avoid false positives
-            # Case-insensitive word boundary match
-            if re.search(r'\b' + re.escape(name) + r'\b', explanation, re.IGNORECASE):
-                missing_links.append(target_id)
+            if re.search(r'\b' + re.escape(name) + r'\b', text):
+                suggested.add(target_id)
 
-        if missing_links:
-            warnings.append(f'{cid}.json: explanation mentions [{", ".join(missing_links[:5])}] but they are not in "related" — consider adding them')
+        # 2. Same-category neighbors not already linked
+        for neighbor in same_category:
+            if neighbor not in current_related and neighbor not in suggested:
+                # Only suggest if they share a related term (transitive connection)
+                neighbor_related = set(all_cards[neighbor].get('related', []))
+                if current_related & neighbor_related:
+                    suggested.add(neighbor)
+
+        if suggested:
+            cards_with_suggestions.append((cid, current_related, suggested))
+
+    # Only show suggestions for cards with NO related links or very few
+    notable_suggestions = [
+        (cid, current, suggested)
+        for cid, current, suggested in cards_with_suggestions
+        if len(current) == 0 or (len(current) <= 2 and len(suggested) >= 2)
+    ]
+
+    if notable_suggestions:
+        print(f'\nLINK SUGGESTIONS ({len(notable_suggestions)} cards need better connectivity):\n')
+        for cid, current, suggested in notable_suggestions:
+            all_links = sorted(current | suggested)
+            new_links = sorted(suggested)
+            print(f'  {cid}.json:')
+            print(f'    + add: {", ".join(new_links[:8])}')
+            print(f'    copy-paste: "related": {json.dumps(all_links[:12])}')
+            print()
 
     # --- Report ---
     print(f'Validated {cards_checked} cards\n')
