@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LLM Glossary</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=2">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -17,7 +17,6 @@
       <div id="search-results" class="search-results hidden"></div>
     </div>
     <div class="header-right">
-      <button class="header-btn" id="home-btn">Home</button>
       <a href="graph.html" class="header-btn">Graph</a>
     </div>
   </header>
@@ -31,6 +30,11 @@
   </main>
 
   <footer class="history-bar" id="history-bar"></footer>
+  <button class="home-fab" id="home-btn" title="Go to Home">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+  </button>
+  <button class="history-toggle" id="history-toggle">History <span class="history-count" id="history-count">0</span></button>
+  <div class="history-mode-label" id="history-mode-label">Viewing history &middot; click a card or toggle off to return</div>
 
   <div class="overlay hidden" id="overlay">
     <div class="overlay-card" id="overlay-card">

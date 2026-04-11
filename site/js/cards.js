@@ -9,19 +9,25 @@ const Cards = (() => {
    */
   function linkifyText(text, entries) {
     if (!text) return '';
+
+    // Protect $...$ LaTeX blocks from linkification
+    const mathBlocks = [];
+    let protected = text.replace(/\$\$[\s\S]+?\$\$|\$[^$]+?\$/g, (match) => {
+      mathBlocks.push(match);
+      return `%%MATH${mathBlocks.length - 1}%%`;
+    });
+
     // Build a map of names/IDs to look for
     const terms = Object.values(entries)
       .map(e => ({ id: e.id, name: e.name, patterns: [e.name] }))
       .sort((a, b) => b.name.length - a.name.length); // longest first
 
-    let result = text;
     const used = new Set();
     for (const t of terms) {
       for (const pattern of t.patterns) {
-        // Case-insensitive match, but only if not already linked
         const regex = new RegExp(`\\b(${escapeRegex(pattern)})\\b`, 'gi');
-        if (regex.test(result) && !used.has(t.id)) {
-          result = result.replace(regex, (match) => {
+        if (regex.test(protected) && !used.has(t.id)) {
+          protected = protected.replace(regex, (match) => {
             return `<span class="inline-link" data-target="${t.id}">${match}</span>`;
           });
           used.add(t.id);
@@ -29,7 +35,10 @@ const Cards = (() => {
         }
       }
     }
-    return result;
+
+    // Restore math blocks
+    protected = protected.replace(/%%MATH(\d+)%%/g, (_, i) => mathBlocks[parseInt(i)]);
+    return protected;
   }
 
   function escapeRegex(str) {
@@ -41,20 +50,23 @@ const Cards = (() => {
    */
   function createHomeCard(categories) {
     const totalEntries = categories.reduce((s, c) => s + c.entries.length, 0);
+    const previewCount = 8;
     const card = document.createElement('div');
     card.className = 'card card--home';
     card.id = 'card-home';
     card.innerHTML = `
-      <div class="home-title">LLM Glossary</div>
+      <div class="home-title"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px; margin-right:8px; opacity:0.4"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</div>
       <div class="home-title-underline"></div>
       <div class="home-subtitle">${totalEntries} terms across ${categories.length} categories</div>
       <ul class="category-list">
-        ${categories.map(c =>
+        ${categories.slice(0, previewCount).map(c =>
           `<li><span class="category-link" data-target="cat-${c.id}">${c.label} <span style="opacity:0.4">(${c.entries.length})</span></span></li>`
         ).join('')}
       </ul>
-      <div class="category-list-overflow">scroll to explore &rarr;</div>
+      <div class="card-hint">click to see all &middot; scroll to explore &rarr;</div>
     `;
+    // Store full categories for overlay
+    card.dataset.allCategories = JSON.stringify(categories.map(c => ({ id: c.id, label: c.label, count: c.entries.length })));
     return card;
   }
 
@@ -62,21 +74,30 @@ const Cards = (() => {
    * Create a Category card
    */
   function createCategoryCard(cat, entries) {
+    const previewCount = 8;
     const card = document.createElement('div');
     card.className = 'card card--category';
     card.id = `card-cat-${cat.id}`;
+    const previewEntries = cat.entries.slice(0, previewCount);
+    const hasMore = cat.entries.length > previewCount;
     card.innerHTML = `
       <div class="cat-label">Category</div>
       <div class="cat-title">${cat.label}</div>
       <ul class="term-list">
-        ${cat.entries.map(eid => {
+        ${previewEntries.map(eid => {
           const e = entries[eid];
           if (!e) return '';
           return `<li><span class="term-link" data-target="${e.id}">${e.name}</span></li>`;
         }).join('')}
       </ul>
-      <div class="category-list-overflow">${cat.entries.length} terms &middot; click or scroll &rarr;</div>
+      <div class="card-hint">${hasMore ? 'click to see all ' + cat.entries.length + ' terms &middot; ' : ''}scroll &rarr;</div>
     `;
+    // Store full term list for overlay
+    card.dataset.allTerms = JSON.stringify(cat.entries.map(eid => {
+      const e = entries[eid];
+      return e ? { id: e.id, name: e.name } : null;
+    }).filter(Boolean));
+    card.dataset.catLabel = cat.label;
     return card;
   }
 

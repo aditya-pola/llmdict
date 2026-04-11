@@ -239,17 +239,15 @@ main {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 40px;
-  font-size: 12px;
+  width: 44px;
+  font-size: 16px;
   font-weight: 500;
-  letter-spacing: 0.5px;
-  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: -0.6px;
+  color: rgba(255, 255, 255, 0.8);
   pointer-events: none;
-  /* Center text vertically within the strip */
-  display: none;
   align-items: center;
   justify-content: center;
-  padding: 20px 0;
+  padding: 24px 0;
   overflow: hidden;
 }
 
@@ -257,7 +255,7 @@ main {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-height: 90%;
+  max-height: 85%;
   display: block;
 }
 
@@ -381,11 +379,13 @@ main {
   text-overflow: ellipsis;
 }
 @media (hover: hover) { .category-link:hover { color: #000; } }
-.category-list-overflow {
-  font-size: 12px;
+.card-hint {
+  font-size: 10px;
   color: rgba(0, 0, 0, 0.3);
-  padding-top: 8px;
-  letter-spacing: -0.24px;
+  padding-top: 10px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  text-align: right;
 }
 
 /* --- Category card --- */
@@ -468,8 +468,13 @@ main {
   color: rgba(255, 255, 255, 0.35);
   margin-top: 12px;
   text-align: right;
-  letter-spacing: 1.6px;
+  letter-spacing: 1.2px;
   text-transform: uppercase;
+}
+/* Dark-on-light hint for inverted cards */
+.card--home .card-hint,
+.card--category .card-hint {
+  color: rgba(0, 0, 0, 0.25);
 }
 
 /* --- Overlay --- */
@@ -505,6 +510,51 @@ main {
   box-shadow: var(--card-shadow);
 }
 .overlay.active .overlay-card { transform: translateY(0); opacity: 1; }
+
+/* Light overlay variant (for home/category cards) */
+.overlay.overlay--light {
+  background: rgba(255, 255, 255, 0.8);
+}
+.overlay.overlay--light .overlay-card {
+  background: #fff;
+  color: #000;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0px 4px 16px 0px rgba(0, 0, 0, 0.08),
+    0px 34px 44px 0px rgba(0, 0, 0, 0.05);
+}
+.overlay.overlay--light .overlay-name { color: #000; }
+.overlay.overlay--light .overlay-expansion { color: rgba(0, 0, 0, 0.35); }
+.overlay.overlay--light .overlay-section-title { color: rgba(0, 0, 0, 0.3); }
+.overlay.overlay--light .overlay-section-body { color: rgba(0, 0, 0, 0.55); }
+.overlay.overlay--light .overlay-close {
+  background: rgba(0, 0, 0, 0.06);
+  color: rgba(0, 0, 0, 0.4);
+}
+@media (hover: hover) {
+  .overlay.overlay--light .overlay-close:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: #000;
+  }
+}
+.overlay.overlay--light .related-tag {
+  color: rgba(0, 0, 0, 0.5);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+@media (hover: hover) {
+  .overlay.overlay--light .related-tag:hover {
+    color: #000;
+    border-color: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.03);
+  }
+}
+.overlay.overlay--light .overlay-card::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+}
+/* Light overlay list item borders */
+.overlay.overlay--light li {
+  border-bottom-color: rgba(0, 0, 0, 0.06) !important;
+}
 
 .overlay-close {
   position: absolute;
@@ -591,25 +641,144 @@ main {
   .related-tag:hover { color: #fff; border-color: rgba(255, 255, 255, 0.3); }
 }
 
-/* --- History Bar --- */
-.history-bar {
-  display: flex; gap: 6px; padding: 10px 30px;
-  overflow-x: auto; scrollbar-width: none;
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
-  min-height: 40px; align-items: center; flex-shrink: 0;
-}
-.history-bar::-webkit-scrollbar { display: none; }
-
-.history-chip {
-  flex: 0 0 auto; font-size: 11px; letter-spacing: -0.22px;
-  padding: 3px 10px; background: none;
-  border: 1px solid rgba(0, 0, 0, 0.08); border-radius: 58px;
-  color: #808080; cursor: pointer; white-space: nowrap;
-  transition: color 0.3s ease, border-color 0.3s ease;
+/* --- Home FAB (floating action button) --- */
+.home-fab {
+  position: fixed;
+  bottom: 20px;
+  right: 28px;
+  z-index: 91;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #000;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0px 2px 8px rgba(0, 0, 0, 0.2),
+    0px 12px 24px rgba(0, 0, 0, 0.1);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 @media (hover: hover) {
-  .history-chip:hover { color: #000; border-color: rgba(0, 0, 0, 0.15); background: #f5f5f5; }
+  .home-fab:hover {
+    transform: scale(1.08);
+    box-shadow:
+      0px 4px 12px rgba(0, 0, 0, 0.25),
+      0px 16px 32px rgba(0, 0, 0, 0.15);
+  }
 }
+.home-fab:active { transform: scale(0.94); }
+
+/* --- History Locate Button (on cards in history mode) --- */
+.history-locate-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 58px;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: var(--font);
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: -0.22px;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  width: fit-content;
+}
+@media (hover: hover) {
+  .history-locate-btn:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+}
+.history-locate-btn:active { transform: scale(0.97); }
+
+/* Locate button on light cards (home/category) */
+.card--home .history-locate-btn,
+.card--category .history-locate-btn {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.08);
+  color: rgba(0, 0, 0, 0.45);
+}
+@media (hover: hover) {
+  .card--home .history-locate-btn:hover,
+  .card--category .history-locate-btn:hover {
+    color: #000;
+    background: rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* --- History Toggle Button --- */
+.history-toggle {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 90;
+  font-family: var(--font);
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: -0.22px;
+  padding: 8px 18px;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(16px);
+  border: none;
+  border-radius: 58px;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+  transition: transform 0.15s ease, color 0.3s ease, background 0.3s ease;
+}
+.history-toggle .history-count {
+  display: inline-block;
+  min-width: 18px;
+  height: 18px;
+  line-height: 18px;
+  text-align: center;
+  font-size: 10px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  margin-left: 6px;
+}
+@media (hover: hover) {
+  .history-toggle:hover { color: #fff; }
+}
+.history-toggle:active { transform: translateX(-50%) scale(0.97); }
+.history-toggle.active {
+  background: #fff;
+  color: #000;
+}
+.history-toggle.active .history-count {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* --- History Mode Indicator --- */
+.history-mode-label {
+  position: fixed;
+  bottom: 56px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.25);
+  z-index: 90;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.history-mode-label.visible { opacity: 1; }
+
+/* Hidden footer (no longer a visible reel) */
+.history-bar { display: none; }
 
 /* --- Scrollbars --- */
 .overlay-card::-webkit-scrollbar,
@@ -619,7 +788,8 @@ main {
 .card--category ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.1); }
 
 /* KaTeX */
-.card .katex, .overlay-card .katex { color: #adadad; font-size: 0.95em; }
+.card .katex { color: #ccc; font-size: 1.15em; }
+.overlay-card .katex { color: #ccc; font-size: 1.2em; }
 .katex .katex-mathml { display: none; }
 
 /* --- Responsive --- */

@@ -14,7 +14,7 @@
   const searchResults = document.getElementById('search-results');
 
   Stack.init(container);
-  History.init(historyBar);
+  History.init();
 
   // --- Build cards: Home → [Category → Terms]... ---
 
@@ -43,6 +43,9 @@
   // --- Navigation ---
 
   function navigateTo(id) {
+    // Exit history mode if active, then navigate in full cabinet
+    History.exitAndNavigate(id);
+
     let cardId = id;
     Stack.goToCard(cardId);
 
@@ -59,6 +62,16 @@
   // --- Event delegation ---
 
   document.addEventListener('click', (e) => {
+    // History locate button → exit history, go to card in full carousel
+    const locateBtn = e.target.closest('.history-locate-btn');
+    if (locateBtn) {
+      e.preventDefault();
+      e.stopPropagation();
+      const id = locateBtn.dataset.locateId;
+      if (id) navigateTo(id);
+      return;
+    }
+
     // Inline links and data-target links
     const link = e.target.closest('[data-target]');
     if (link) {
@@ -95,6 +108,47 @@
       if (entry) openOverlay(entry);
       return;
     }
+
+    // Click active home card → expand to show all categories
+    const homeCard = e.target.closest('.card--home.card--active');
+    if (homeCard && !e.target.closest('[data-target]')) {
+      try {
+        const allCats = JSON.parse(homeCard.dataset.allCategories);
+        openOverlayRaw(`
+          <div class="overlay-name">All Categories</div>
+          <div class="overlay-expansion">${allCats.reduce((s, c) => s + c.count, 0)} terms</div>
+          <div class="overlay-section">
+            <ul style="list-style:none; display:flex; flex-direction:column; gap:0;">
+              ${allCats.map(c =>
+                `<li style="border-bottom:1px solid rgba(255,255,255,0.06);"><span class="related-tag" data-target="cat-${c.id}" style="display:block; border:none; border-radius:0; padding:9px 0; font-size:14px;">${c.label} <span style="opacity:0.35">(${c.count})</span></span></li>`
+              ).join('')}
+            </ul>
+          </div>
+        `, true);
+      } catch (err) {}
+      return;
+    }
+
+    // Click active category card → expand to show all terms
+    const catCard = e.target.closest('.card--category.card--active');
+    if (catCard && !e.target.closest('[data-target]')) {
+      try {
+        const allTerms = JSON.parse(catCard.dataset.allTerms);
+        const catLabel = catCard.dataset.catLabel;
+        openOverlayRaw(`
+          <div class="overlay-name">${catLabel}</div>
+          <div class="overlay-expansion">${allTerms.length} terms</div>
+          <div class="overlay-section">
+            <ul style="list-style:none; display:flex; flex-direction:column; gap:0;">
+              ${allTerms.map(t =>
+                `<li style="border-bottom:1px solid rgba(255,255,255,0.06);"><span class="related-tag" data-target="${t.id}" style="display:block; border:none; border-radius:0; padding:9px 0; font-size:14px;">${t.name}</span></li>`
+              ).join('')}
+            </ul>
+          </div>
+        `, true);
+      } catch (err) {}
+      return;
+    }
   });
 
   // --- Overlay ---
@@ -102,14 +156,25 @@
   function openOverlay(entry) {
     overlayContent.innerHTML = Cards.renderOverlayContent(entry, entries);
     Cards.renderMath(overlayContent);
-    overlay.classList.remove('hidden');
+    overlay.classList.remove('hidden', 'overlay--light');
     requestAnimationFrame(() => overlay.classList.add('active'));
     History.push(entry.id, entry.name);
   }
 
+  function openOverlayRaw(html, light) {
+    overlayContent.innerHTML = html;
+    overlay.classList.remove('hidden');
+    if (light) overlay.classList.add('overlay--light');
+    else overlay.classList.remove('overlay--light');
+    requestAnimationFrame(() => overlay.classList.add('active'));
+  }
+
   function closeOverlay() {
     overlay.classList.remove('active');
-    setTimeout(() => overlay.classList.add('hidden'), 250);
+    setTimeout(() => {
+      overlay.classList.add('hidden');
+      overlay.classList.remove('overlay--light');
+    }, 250);
   }
 
   overlayClose.addEventListener('click', closeOverlay);
@@ -118,7 +183,11 @@
 
   // --- Home button ---
   const homeBtn = document.getElementById('home-btn');
-  if (homeBtn) homeBtn.addEventListener('click', () => Stack.goTo(0));
+  if (homeBtn) homeBtn.addEventListener('click', () => {
+    closeOverlay();
+    History.exitAndNavigate('home');
+    Stack.goTo(0);
+  });
 
   // --- Search ---
   Search.init(searchInput, searchResults, navigateTo);

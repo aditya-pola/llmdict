@@ -224,5 +224,21 @@ const Stack = (() => {
     requestAnimationFrame(tick);
   }
 
-  return { init, addCard, getCardCount, goTo, goToCard, getCurrentCard };
+  // --- History mode: filtered card set ---
+  let _allCards = []; // full set backup
+
+  function setFilteredCards(filteredCards) {
+    if (_allCards.length === 0) _allCards = [..._cards];
+    _cards = filteredCards;
+    _currentIndex = Math.min(_currentIndex, _cards.length - 1);
+  }
+
+  function clearFilter() {
+    if (_allCards.length > 0) {
+      _cards = [..._allCards];
+      _allCards = [];
+    }
+  }
+
+  return { init, addCard, getCardCount, goTo, goToCard, getCurrentCard, setFilteredCards, clearFilter };
 })();
