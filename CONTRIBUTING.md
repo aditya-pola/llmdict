@@ -1,6 +1,6 @@
 # Contributing a Card
 
-This glossary is built from individual JSON files in the `cards/` directory. Each file is one glossary entry. To add or edit a term, you only need to touch one file.
+LLM Dictionary is built from individual JSON files in the `cards/` directory. Each file is one dictionary entry. To add or edit a term, you only need to touch one file.
 
 ---
 
@@ -8,8 +8,8 @@ This glossary is built from individual JSON files in the `cards/` directory. Eac
 
 1. Fork the repo
 2. Create `cards/your-term.json` (see schema below)
-3. If your term needs a new category, add it to `cards/_categories.json`
-4. Submit a PR — the build runs automatically on merge
+3. If your term needs a new category, also edit `cards/_categories.json`
+4. Submit a PR — automated validation runs on every PR, and the glossary rebuilds on merge
 
 ---
 
@@ -47,20 +47,20 @@ This glossary is built from individual JSON files in the `cards/` directory. Eac
 
 ### Required Fields
 
-| Field | Required | Notes |
-|-------|----------|-------|
-| `id` | Yes | Lowercase kebab-case. Must match filename (without `.json`). |
-| `name` | Yes | Display name as it appears on the card. |
-| `expansion` | Yes | Full expansion of an acronym, or a short subtitle. |
-| `category` | Yes | Must exist in `cards/_categories.json`. |
-| `oneliner` | Yes | 80-160 characters. |
-| `explanation` | Yes | 300-480 characters. |
-| `fundamentals` | Encouraged | For technical entries. Omit for orgs/tools/tags if not applicable. |
-| `related` | Yes | At least 1 related card ID. Check that the IDs exist. |
-| `resources` | Yes | At least 1 external link (GitHub, docs, HF page, blog post). |
-| `foundational_papers` | When applicable | For techniques with a defining paper. Not needed for tools/orgs. |
-| `confidence` | Yes | `"high"` or `"medium"`. |
-| `verified_date` | Yes | Date you wrote or last verified the content. |
+| Field | Required | Limits | Notes |
+|-------|----------|--------|-------|
+| `id` | Yes | — | Lowercase kebab-case. Must match filename (without `.json`). |
+| `name` | Yes | — | Display name as it appears on the card. |
+| `expansion` | Yes | — | Full expansion of an acronym, or a short subtitle. |
+| `category` | Yes | — | Must exist in `cards/_categories.json`. |
+| `oneliner` | Yes | 80-160 chars (ideal), 40-200 allowed | One sentence. |
+| `explanation` | Yes | 300-480 chars (ideal), 150-500 allowed | The walk-away text. See writing rules. |
+| `fundamentals` | Encouraged | 150-800 chars | For technical entries. Omit for orgs/tools/tags if not applicable. |
+| `related` | Yes | — | At least 1 related card ID. All IDs must exist as card files. |
+| `resources` | Yes | — | At least 1 external link with `url` and `label` fields. |
+| `foundational_papers` | When applicable | — | For techniques with a defining paper. Not needed for tools/orgs. |
+| `confidence` | Yes | — | `"high"` or `"medium"`. |
+| `verified_date` | Yes | — | Date you wrote or last verified the content (YYYY-MM-DD). |
 
 ---
 
@@ -147,20 +147,25 @@ Categories are defined in `cards/_categories.json`. Each has:
 | ID | Label | What goes here |
 |----|-------|---------------|
 | `precision-formats` | Precision Formats | fp32, fp16, bf16, fp8, int8, int4, nf4, E2M1 |
-| `quantization-basics` | Quantization Basics | Core concepts: what quantization is, calibration, PTQ vs QAT |
-| `quantization-methods` | Quantization Methods | Specific methods: GPTQ, AWQ, EXL2, etc. |
+| `quantization-basics` | Quantization Basics | Core concepts: quantization, calibration, PTQ vs QAT |
+| `quantization-methods` | Quantization Methods | Specific methods: GPTQ, AWQ, EXL2, SmoothQuant, etc. |
 | `formats` | Formats | File formats: GGUF, safetensors, ONNX, K-quants, IQ-quants |
 | `attention-variants` | Attention & Memory | MHA, GQA, MLA, Flash Attention, KV cache, PagedAttention |
 | `position-encodings` | Position Encodings | RoPE, ALiBi, YaRN, NTK, sinusoidal, learned |
-| `layer-types` | Layer Types | FFN, SwiGLU, model head, backbone, seq2seq |
-| `scaling-patterns` | Scaling & Serving | MoE, inference, speculative decoding, TP/PP, ZeRO |
-| `training-pipeline` | Training Pipeline | Pre-training, SFT, RLHF, DPO, ORPO, KTO |
+| `layer-types` | Layer Types | FFN, SwiGLU, ViT, Mamba, backbone, seq2seq, diffusion |
+| `sampling-decoding` | Sampling & Decoding | temperature, top-p, top-k, structured output, beam search |
+| `scaling-patterns` | Scaling & Serving | MoE, inference, speculative decoding, TP/PP, ZeRO, benchmarks |
+| `training-pipeline` | Training Pipeline | Pre-training, SFT, RLHF, DPO, GRPO, scaling laws |
 | `fine-tuning-methods` | Fine-Tuning Methods | LoRA, QLoRA, DoRA, IA3, PEFT, full fine-tuning |
-| `model-naming` | Model Naming | Size conventions, training tags, capability tags |
-| `hf-organizations` | HF Organizations | Meta, Mistral, Qwen, Google, community quantizers |
-| `serving-tools` | Serving Tools | vLLM, TGI, llama.cpp, Ollama, LM Studio |
+| `model-naming` | Model Naming | Size conventions, training tags, capability tags, chat templates |
+| `hf-organizations` | HF Organizations | Meta, Mistral, Qwen, Google, DeepSeek, community quantizers |
+| `serving-tools` | Serving Tools | vLLM, TGI, llama.cpp, Ollama, Triton, Ray, LangSmith |
 | `tokenizers` | Tokenizers | BPE, SentencePiece, tiktoken, WordPiece |
-| `datasets-recipes` | Datasets & Recipes | Hermes, Dolphin, Platypus, UltraChat, etc. |
+| `safety-alignment` | Safety & Alignment | hallucination, prompt injection, constitutional AI, RLAIF |
+| `prompting` | Prompting | prompt engineering, system prompt, few-shot, zero-shot |
+| `embeddings-retrieval` | Embeddings & Retrieval | embeddings, vector databases, FAISS |
+| `datasets-recipes` | Datasets & Recipes | Hermes, Dolphin, synthetic data, data mixing |
+| `agents-and-tools` | Agents & Tool Use | agentic AI, function calling, MCP, DSPy, guardrails |
 
 ### Adding a New Category
 
@@ -176,12 +181,43 @@ The build script rejects unknown categories — you must add it to `_categories.
 
 ## Automated Checks
 
-The build script (`build.py`) validates:
-- Every card has an `id` field
-- Every card's `category` exists in `_categories.json`
-- Valid JSON syntax
+Two GitHub Actions run on every PR:
 
-The GitHub Action runs `build.py` on every push to `main` that touches `cards/`. If it fails, the merge is blocked.
+### 1. Card Validation (`validate-cards.yml`)
+
+Runs `validate.py` on every PR touching `cards/`. Checks:
+
+| Check | Fails PR? | Details |
+|-------|-----------|---------|
+| Valid JSON | Yes | Must parse without errors |
+| Required fields | Yes | `id`, `name`, `expansion`, `category`, `oneliner`, `explanation` |
+| `id` matches filename | Yes | `gptq.json` must have `"id": "gptq"` |
+| Category exists | Yes | Must be in `_categories.json` |
+| Oneliner length | Yes if <40 or >200 | Warns if outside 80-160 ideal range |
+| Explanation length | Yes if <150 or >500 | Warns if outside 300-480 ideal range |
+| No LaTeX in explanation | Yes | `$` in explanation is an error |
+| No paper-citation opener | Yes | "Introduced by X" as first sentence |
+| Related links valid | Yes | Every ID in `related` must exist as a card file |
+| Resources format | Yes | Each must have `url` and `label` |
+| Missing related/resources | Warning | Not blocking but flagged |
+| Confidence value | Warning | Should be "high" or "medium" |
+| Date format | Warning | Should be YYYY-MM-DD |
+
+### 2. Build Glossary (`build-glossary.yml`)
+
+Runs `build.py` on merge to main. Merges all `cards/*.json` into `docs/data/glossary.json` and updates the card count in README.md. This is automatic — you never need to edit `glossary.json` directly.
+
+### Running Checks Locally
+
+Before submitting your PR:
+
+```bash
+# Validate all cards
+python3 validate.py
+
+# Build the glossary (optional — to preview)
+python3 build.py
+```
 
 ---
 
@@ -191,11 +227,11 @@ Before submitting, verify:
 
 - [ ] `id` matches the filename (without `.json`)
 - [ ] First sentence of `explanation` answers "What is this?" in plain language
-- [ ] `explanation` is 300-480 characters
-- [ ] No LaTeX (`$`) in `explanation` — move formulas to `fundamentals`
+- [ ] `explanation` is 300-480 characters, no LaTeX
 - [ ] No paper citations as the opening sentence
 - [ ] `oneliner` is 80-160 characters
 - [ ] At least 1 entry in `related` (and the IDs exist as card files)
 - [ ] At least 1 entry in `resources` with a working URL
 - [ ] `category` exists in `_categories.json`
 - [ ] `verified_date` is set to today's date
+- [ ] `python3 validate.py` passes with no errors
