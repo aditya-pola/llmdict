@@ -454,6 +454,8 @@ main {
   color: #adadad;
   overflow-y: auto;
   flex: 1;
+  cursor: text;
+  user-select: text;
 }
 .term-explanation .inline-link {
   color: #fff;
@@ -604,6 +606,8 @@ main {
   line-height: 1.65;
   letter-spacing: -0.28px;
   color: #adadad;
+  cursor: text;
+  user-select: text;
 }
 .overlay-section-body .inline-link {
   color: #fff;

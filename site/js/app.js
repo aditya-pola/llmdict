@@ -62,6 +62,10 @@
   // --- Event delegation ---
 
   document.addEventListener('click', (e) => {
+    // If user was selecting text, don't trigger card actions
+    const selection = window.getSelection();
+    if (selection && selection.toString().trim().length > 0) return;
+
     // History locate button → exit history, go to card in full carousel
     const locateBtn = e.target.closest('.history-locate-btn');
     if (locateBtn) {
@@ -250,6 +254,9 @@
 
     // Don't handle shortcuts when typing in search
     if (e.target.tagName === 'INPUT') return;
+
+    // Don't intercept when Ctrl/Meta/Alt is held (browser shortcuts like Ctrl+R, Ctrl+Shift+R)
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
 
     // Don't handle navigation shortcuts when overlay is open (except Escape, handled above)
     const overlayOpen = overlay && overlay.classList.contains('active');
