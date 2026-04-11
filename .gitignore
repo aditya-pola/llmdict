@@ -1,3 +1,18 @@
+# Build artifacts
 minimalist-reference-*.zip
+
+# Internal dev docs (not for public)
+docs/ui/UI_FINDINGS.md
+docs/ui/IDEAS.md
+docs/glossary.md
+
+# Claude Code session
+.claude/
+
+# Raw research notes
 docs/data/phase1_fundamentals_raw.md
 docs/data/phase1_methods_raw.md
+
+# OS files
+.DS_Store
+Thumbs.db

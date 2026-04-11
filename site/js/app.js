@@ -185,25 +185,25 @@
   overlay.addEventListener('click', (e) => { if (e.target === overlay) closeOverlay(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeOverlay(); });
 
-  // --- Position graph + globe buttons beside the header bar ---
+  // --- Position header action buttons in a row beside the bar ---
   function positionHeaderButtons() {
     const header = document.querySelector('.site-header');
-    const graphBtn = document.querySelector('.graph-pill');
-    const globeBtn = document.getElementById('globe-toggle');
-    if (!header) return;
+    const buttons = [
+      document.querySelector('.graph-pill'),
+      document.getElementById('globe-toggle'),
+      document.getElementById('contribute-btn'),
+    ].filter(Boolean);
+    if (!header || !buttons.length) return;
+
     const rect = header.getBoundingClientRect();
     const btnSize = 36;
     const gap = 8;
     const topCenter = rect.top + (rect.height - btnSize) / 2;
 
-    if (graphBtn) {
-      graphBtn.style.left = (rect.right + 10) + 'px';
-      graphBtn.style.top = topCenter + 'px';
-    }
-    if (globeBtn) {
-      globeBtn.style.left = (rect.right + 10 + btnSize + gap) + 'px';
-      globeBtn.style.top = topCenter + 'px';
-    }
+    buttons.forEach((btn, i) => {
+      btn.style.left = (rect.right + 10 + i * (btnSize + gap)) + 'px';
+      btn.style.top = topCenter + 'px';
+    });
   }
   positionHeaderButtons();
   window.addEventListener('resize', positionHeaderButtons);
