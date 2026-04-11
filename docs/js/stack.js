@@ -76,11 +76,20 @@ const Stack = (() => {
         const dir = offset < 0 ? 'left' : 'right';
         card.classList.add(`card--${dir}`);
 
-        // Stack position: each card peeks a bit further out
+        // Position peek cards
         const peekOffset = (PEEK_WIDTH + PEEK_GAP) * absOff;
-        const tx = offset < 0
+        let tx = offset < 0
           ? -(cardWidth / 2 + peekOffset)
           : (cardWidth / 2 + peekOffset);
+
+        // Mobile only: clamp so the label edge stays on screen
+        if (getIsMobile()) {
+          const screenHalf = window.innerWidth / 2;
+          const cardFarEdge = Math.abs(tx) + cardWidth / 2;
+          if (cardFarEdge > screenHalf) {
+            tx = Math.sign(tx) * (screenHalf - cardWidth / 2);
+          }
+        }
 
         const scale = 1 - absOff * 0.015;
         const opacity = Math.max(0.3, 0.85 - absOff * 0.1);
