@@ -1,0 +1,32 @@
+{
+  "id": "tool-accelerate",
+  "name": "Accelerate",
+  "expansion": "HuggingFace Accelerate — Distributed Training Library",
+  "category": "serving-tools",
+  "oneliner": "HuggingFace's library that makes PyTorch training code run on any hardware setup — single GPU, multi-GPU, or TPU — with minimal code changes.",
+  "explanation": "Accelerate is a HuggingFace library that abstracts away distributed training complexity. You write standard PyTorch code, and Accelerate distributes it across multiple GPUs, TPU pods, or mixed-precision setups with minimal wrapper calls. It supports DeepSpeed ZeRO, FSDP, and gradient accumulation. For LLM fine-tuning, Accelerate is the layer between your training script and the hardware, used internally by HuggingFace Trainer and TRL.",
+  "fundamentals": "Core pattern: wrap model, optimizer, and dataloader with `accelerator.prepare()`, replace `loss.backward()` with `accelerator.backward(loss)`. Accelerate auto-detects available hardware and configures the appropriate distributed backend (DDP, FSDP, DeepSpeed). Configuration via `accelerate config` CLI or YAML. Supports mixed precision (fp16, bf16, fp8), gradient checkpointing, and model sharding.",
+  "related": [
+    "zero",
+    "full-ft",
+    "lora",
+    "qlora"
+  ],
+  "seen_in": [
+    "code",
+    "documentation"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "Accelerate docs",
+      "url": "https://huggingface.co/docs/accelerate"
+    },
+    {
+      "label": "Accelerate GitHub",
+      "url": "https://github.com/huggingface/accelerate"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

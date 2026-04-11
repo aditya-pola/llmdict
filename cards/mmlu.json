@@ -1,0 +1,37 @@
+{
+  "id": "mmlu",
+  "name": "MMLU",
+  "expansion": "Massive Multitask Language Understanding",
+  "category": "scaling-patterns",
+  "oneliner": "A 57-subject multiple-choice benchmark spanning high school to professional level — the most commonly cited LLM knowledge evaluation.",
+  "explanation": "MMLU is a benchmark that tests a language model's knowledge across 57 academic subjects from high school to professional level, using four-way multiple-choice questions. It became the standard way to report general LLM capability, appearing on virtually every model card. Frontier models now score above 88 percent, approaching saturation. Harder successors like MMLU-Pro are replacing it for frontier evaluation, but MMLU remains the most widely cited baseline.",
+  "fundamentals": "MMLU uses few-shot evaluation (typically 5-shot): the model sees 5 example question-answer pairs as context, then must answer a new question by selecting A/B/C/D. Scoring is simple accuracy across all 57 subjects. The benchmark has 14,042 questions total. Subjects are grouped into STEM, humanities, social sciences, and other. Per-subject scores reveal capability patterns: a model might score 95% on history but 60% on abstract algebra.",
+  "related": [
+    "pre-training",
+    "inference"
+  ],
+  "seen_in": [
+    "model-cards",
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Measuring Massive Multitask Language Understanding",
+      "authors": "Hendrycks et al.",
+      "venue": "ICLR 2021",
+      "arxiv": "2009.03300"
+    }
+  ],
+  "resources": [
+    {
+      "label": "MMLU on Papers With Code",
+      "url": "https://paperswithcode.com/dataset/mmlu"
+    },
+    {
+      "label": "Open LLM Leaderboard",
+      "url": "https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

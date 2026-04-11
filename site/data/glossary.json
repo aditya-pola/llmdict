@@ -45,6 +45,7 @@
         "gptq",
         "hqq",
         "imatrix",
+        "kv-cache-quantization",
         "marlin",
         "quanto",
         "quip-sharp",
@@ -111,6 +112,7 @@
         "ffn",
         "geglu",
         "layernorm",
+        "mamba",
         "model-head",
         "ple",
         "pre-norm",
@@ -126,14 +128,21 @@
       "order": 7,
       "entries": [
         "chain-of-thought",
+        "chunked-prefill",
         "continuous-batching",
         "dense-models",
+        "expert-parallelism",
         "expert-routing",
+        "humaneval",
         "inference-engine",
+        "inference-metrics",
         "inference",
         "knowledge-distillation",
+        "mmlu",
         "model-merging",
         "moe",
+        "prefix-caching",
+        "rag",
         "reasoning-models",
         "speculative-decoding",
         "test-time-compute",
@@ -229,13 +238,17 @@
       "label": "Serving Tools",
       "order": 12,
       "entries": [
+        "tool-accelerate",
+        "tool-dask",
         "tool-exllamav2",
         "tool-llamacpp",
         "tool-lmstudio",
         "tool-ollama",
+        "tool-ray",
         "tool-sglang",
         "tool-tensorrt-llm",
         "tool-tgi",
+        "tool-triton",
         "tool-vllm"
       ]
     },
@@ -660,7 +673,7 @@
       "expansion": "Chain-of-Thought (CoT)",
       "category": "scaling-patterns",
       "oneliner": "Prompting or training a model to show intermediate reasoning steps before the final answer — converts System-2 problems into sequences of easier System-1 steps.",
-      "explanation": "Chain-of-thought is a technique where a language model generates intermediate reasoning steps before producing a final answer. Originally introduced as a prompting method by Wei et al. in 2022, adding phrases like 'let's think step by step' dramatically improved accuracy on math and logic tasks. In the reasoning model era, chain-of-thought shifted from a prompting trick to a trained behavior: models like o1 and R1 are reinforcement-learned to produce thousands of reasoning tokens internally. CoT is now the core mechanism that enables test-time compute scaling.",
+      "explanation": "Chain-of-thought is a technique where a language model generates intermediate reasoning steps before producing a final answer. Introduced as a prompting method by Wei et al. in 2022, it dramatically improved accuracy on math and logic tasks. In the reasoning model era, CoT shifted from a prompting trick to a trained behavior: o1 and R1 are RL-trained to produce thousands of reasoning tokens internally, making CoT the core mechanism behind test-time compute scaling.",
       "fundamentals": "Prompting form: $(x, z_1, z_2, \\ldots, z_n, y)$ where $z_i$ are reasoning steps. Few-shot CoT provides exemplar traces; zero-shot CoT uses a trigger phrase. Trained CoT (reasoning models): RL optimizes $\\pi_\\theta(z_{1:T}, y | x)$ end-to-end, rewarding only final-answer correctness. Self-consistency: sample $k$ CoT paths, majority-vote on $y$, boosts accuracy at $O(k)$ inference cost. Process Reward Models (PRMs) score individual steps $r(z_i)$ to guide search over reasoning traces.",
       "related": [
         "reasoning-models",
@@ -702,6 +715,41 @@
         {
           "label": "Wei et al. CoT paper",
           "url": "https://arxiv.org/abs/2201.11903"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
+    "chunked-prefill": {
+      "id": "chunked-prefill",
+      "name": "Chunked Prefill",
+      "expansion": "Chunked Prefill (Disaggregated Prompt Processing)",
+      "category": "scaling-patterns",
+      "oneliner": "Splitting long prompt processing into smaller chunks so a single large request doesn't block token generation for other users.",
+      "explanation": "Chunked prefill breaks the processing of a long input prompt into smaller pieces interleaved with decode steps for other requests. Without it, a single request with a very long prompt would monopolize the GPU while other users wait. By processing the prompt in chunks, the server alternates between prefill and decode work, keeping latency low for concurrent users. This is a standard feature in vLLM and SGLang for production serving.",
+      "fundamentals": "Prefill is compute-bound ($O(n^2 d)$ for attention over $n$ input tokens), while decode is bandwidth-bound ($O(Pd)$ per token). A naive scheduler runs the full prefill as one operation, blocking all decode steps. Chunked prefill splits input into chunks of size $C$ (e.g., 2048 tokens), processing one chunk per scheduler iteration. Between chunks, pending decode requests get their next token. The tradeoff: smaller $C$ = better latency for other users but slower total prefill time due to repeated KV cache loads.",
+      "related": [
+        "inference",
+        "continuous-batching",
+        "kv-cache",
+        "inference-metrics"
+      ],
+      "seen_in": [
+        "serving-config",
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Sarathi-Serve: Chunked Prefill for Efficient LLM Inference",
+          "authors": "Agrawal et al.",
+          "venue": "2024",
+          "arxiv": "2403.02310"
+        }
+      ],
+      "resources": [
+        {
+          "label": "vLLM chunked prefill docs",
+          "url": "https://docs.vllm.ai/en/latest/features/chunked_prefill.html"
         }
       ],
       "confidence": "high",
@@ -1154,6 +1202,46 @@
       ],
       "confidence": "high",
       "verified_date": "2026-04-10"
+    },
+    "expert-parallelism": {
+      "id": "expert-parallelism",
+      "name": "Expert Parallelism",
+      "expansion": "Expert Parallelism (EP)",
+      "category": "scaling-patterns",
+      "oneliner": "Distribute MoE experts across GPUs so each device holds a subset of experts, enabling models with hundreds of experts to scale beyond single-node memory.",
+      "explanation": "Expert parallelism is a distribution strategy for Mixture-of-Experts models where different experts in each MoE layer are placed on different GPUs. When a token is routed to a particular expert, it is sent via all-to-all communication to the GPU hosting that expert, processed, and returned. This complements tensor parallelism and pipeline parallelism as a third axis of model distribution. DeepSeek-V3 relies heavily on expert parallelism to serve 256 routed experts. The main bottleneck is the all-to-all communication overhead, which MegaScale-MoE and disaggregated expert parallelism address.",
+      "fundamentals": "Given $E$ experts and $G$ GPUs, each GPU holds $E/G$ experts. Forward pass: 1) router selects top-$k$ experts per token; 2) all-to-all dispatch sends tokens to correct GPUs; 3) each GPU runs its local experts on received tokens; 4) all-to-all combine returns results. Communication volume: $O(B \\times k \\times d / G)$ per layer, where $B$ = tokens in batch, $d$ = hidden dim. Can combine with TP (split each expert) and PP (split layers). Load balancing is critical: skewed routing wastes GPU cycles on idle experts.",
+      "related": [
+        "tp-pp",
+        "moe",
+        "expert-routing"
+      ],
+      "seen_in": [
+        "code",
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "GShard: Scaling Giant Models with Conditional Computation and Automatic Sharding",
+          "authors": "Lepikhin et al.",
+          "venue": "ICLR 2021",
+          "arxiv": "2006.16668"
+        },
+        {
+          "title": "MegaScale-Infer: Serving Mixture-of-Experts at Scale with Disaggregated Expert Parallelism",
+          "authors": "Jiang et al.",
+          "venue": "arXiv 2025",
+          "arxiv": "2504.02263"
+        }
+      ],
+      "resources": [
+        {
+          "label": "LMSYS: Large-scale EP for DeepSeek",
+          "url": "https://www.lmsys.org/blog/2025-05-05-large-scale-ep/"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     },
     "expert-routing": {
       "id": "expert-routing",
@@ -1655,7 +1743,7 @@
       "expansion": "Group Relative Policy Optimization",
       "category": "training-pipeline",
       "oneliner": "PPO variant that drops the critic model — estimates advantages by normalizing rewards across a group of sampled outputs for the same prompt. Powers DeepSeek R1.",
-      "explanation": "Group Relative Policy Optimization is a reinforcement learning algorithm that simplifies PPO by removing the value function (critic) model entirely. For each prompt, GRPO samples a group of outputs, scores them with a reward function, then normalizes the rewards within the group to estimate advantages. This group-relative baseline replaces the learned critic, cutting memory by 40 to 60 percent while remaining stable. GRPO was introduced in DeepSeekMath and became the core training algorithm for DeepSeek R1, where it trained reasoning capabilities from scratch using only correctness rewards.",
+      "explanation": "Group Relative Policy Optimization is an RL algorithm that simplifies PPO by removing the critic model entirely. For each prompt, GRPO samples a group of outputs, scores them, then normalizes rewards within the group to estimate advantages. This replaces the learned value function, cutting memory by 40 to 60 percent. Introduced in DeepSeekMath, GRPO became the training algorithm for DeepSeek R1, where it trained reasoning from scratch using only correctness rewards.",
       "fundamentals": "Sample group $\\{o_1, \\ldots, o_G\\}$ from $\\pi_{\\theta_{\\text{old}}}(\\cdot|q)$. Compute rewards $r_i$. Normalize: $\\hat{A}_i = \\frac{r_i - \\mathrm{mean}(\\mathbf{r})}{\\mathrm{std}(\\mathbf{r})}$. Clipped objective per token $t$: $\\mathcal{L} = -\\frac{1}{G}\\sum_i \\frac{1}{|o_i|}\\sum_t \\min\\!\\bigl(\\rho_t \\hat{A}_i,\\; \\mathrm{clip}(\\rho_t, 1\\pm\\varepsilon)\\hat{A}_i\\bigr) + \\beta\\,\\mathrm{KL}(\\pi_\\theta \\| \\pi_{\\mathrm{ref}})$ where $\\rho_t = \\pi_\\theta(o_t|q,o_{<t})/\\pi_{\\theta_{\\text{old}}}(o_t|q,o_{<t})$. R1 settings: $G$=16, $\\varepsilon$=10, $\\beta$=0.001, lr=3e-6, max length 32K tokens, batch 512.",
       "related": [
         "rlhf",
@@ -1727,6 +1815,43 @@
           "arxiv": "2309.15531"
         }
       ]
+    },
+    "humaneval": {
+      "id": "humaneval",
+      "name": "HumanEval",
+      "expansion": "HumanEval Code Generation Benchmark",
+      "category": "scaling-patterns",
+      "oneliner": "A benchmark of 164 Python programming problems where models write functions from docstrings and are graded by unit test pass rate.",
+      "explanation": "HumanEval is a code generation benchmark containing 164 hand-written Python programming problems. Each provides a function signature and docstring, and the model must generate a correct implementation graded by hidden unit tests. Results are reported as pass@k — the probability that at least one of k samples passes. HumanEval is the standard benchmark for code models like CodeLlama and DeepSeek-Coder.",
+      "fundamentals": "The pass@k metric generates $n \\geq k$ samples per problem and computes the probability that at least one of $k$ randomly chosen samples passes. The unbiased estimator is $\\text{pass@k} = 1 - \\binom{n-c}{k} / \\binom{n}{k}$ where $c$ is the number of correct samples out of $n$. Temperature and top-p sampling settings significantly affect scores. EvalPlus extends HumanEval with 80x more test cases to catch solutions that pass original tests by luck.",
+      "related": [
+        "tag-coder",
+        "inference"
+      ],
+      "seen_in": [
+        "model-cards",
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Evaluating Large Language Models Trained on Code",
+          "authors": "Chen et al.",
+          "venue": "2021",
+          "arxiv": "2107.03374"
+        }
+      ],
+      "resources": [
+        {
+          "label": "HumanEval on GitHub",
+          "url": "https://github.com/openai/human-eval"
+        },
+        {
+          "label": "EvalPlus leaderboard",
+          "url": "https://evalplus.github.io/leaderboard.html"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     },
     "ia3": {
       "id": "ia3",
@@ -1853,6 +1978,38 @@
       "sources": [
         "Kwon et al., arXiv:2309.06180",
         "Yu et al., OSDI 2022"
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
+    "inference-metrics": {
+      "id": "inference-metrics",
+      "name": "Inference Metrics",
+      "expansion": "TTFT, ITL, TPS — Core LLM Serving Performance Metrics",
+      "category": "scaling-patterns",
+      "oneliner": "The three numbers that define LLM serving performance: Time to First Token, Inter-Token Latency, and Tokens Per Second.",
+      "explanation": "Inference metrics are the standard measurements for evaluating LLM serving performance. Time to First Token (TTFT) measures how long a user waits before seeing any output, reflecting prefill speed and queuing delays. Inter-Token Latency (ITL) measures the average gap between consecutive output tokens, governing how smooth a streaming response feels. Tokens Per Second (TPS) measures aggregate throughput across all concurrent requests. These three metrics capture fundamental tradeoffs: batching more requests improves system TPS but can worsen TTFT and ITL for individual users.",
+      "fundamentals": "TTFT = time from request arrival to first generated token. Dominated by prefill compute ($O(n \\cdot P)$ where $n$ = input length, $P$ = params) plus any queuing delay. ITL = time between consecutive decode tokens. Dominated by memory bandwidth ($P \\cdot \\text{bytes\\_per\\_param} / \\text{bandwidth}$). TPS = total tokens generated per second across all requests in a batch. For batch size $B$: TPS $\\approx B / \\text{ITL}$ (amortized). Key insight: TTFT is compute-bound, ITL is bandwidth-bound.",
+      "related": [
+        "inference",
+        "inference-engine",
+        "continuous-batching",
+        "speculative-decoding"
+      ],
+      "seen_in": [
+        "documentation",
+        "serving-config"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "BentoML — LLM Inference Metrics",
+          "url": "https://bentoml.com/llm/inference-optimization/llm-inference-metrics"
+        },
+        {
+          "label": "Anyscale — LLM Performance Metrics",
+          "url": "https://www.anyscale.com/blog/llm-performance-metrics"
+        }
       ],
       "confidence": "high",
       "verified_date": "2026-04-11"
@@ -2098,6 +2255,51 @@
       "confidence": "high",
       "verified_date": "2026-04-10"
     },
+    "kv-cache-quantization": {
+      "id": "kv-cache-quantization",
+      "name": "KV Cache Quantization",
+      "expansion": "Key-Value Cache Quantization",
+      "category": "quantization-methods",
+      "oneliner": "Quantize the KV cache tensors themselves (not model weights) to FP8, INT4, or even 2-bit, slashing memory so more requests or longer contexts fit in GPU RAM.",
+      "explanation": "KV cache quantization reduces the precision of stored key and value vectors in the attention cache, independently of any weight quantization. Because the KV cache can exceed the size of the model weights at long contexts and large batches, compressing it to FP8 or INT4 directly increases the number of concurrent requests a server can handle. KIVI showed that keys benefit from per-channel quantization while values benefit from per-token quantization, achieving 2-bit precision with minimal quality loss. KVQuant pushed further toward 10-million-token contexts by combining quantization with sparse outlier handling.",
+      "fundamentals": "KV cache memory: $2 \\times n_{\\text{layers}} \\times n_{\\text{kv\\_heads}} \\times d_{\\text{head}} \\times \\text{seq\\_len} \\times \\text{batch} \\times \\text{bytes}$. Quantising from FP16 (2 B) to FP8 (1 B) halves cache; to INT4 (0.5 B) quarters it. KIVI: keys quantised per-channel (outliers concentrate on specific channels), values per-token. 2-bit asymmetric quantisation retains >98% of FP16 quality on Llama-2-7B. Residual length: keep last $r$ tokens in full precision to preserve recent context fidelity. Compatible with PagedAttention: quantise when writing blocks, dequantise on read.",
+      "related": [
+        "kv-cache",
+        "fp8",
+        "int4",
+        "quantization"
+      ],
+      "seen_in": [
+        "serving-config",
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "KIVI: A Tuning-Free Asymmetric 2bit Quantization for KV Cache",
+          "authors": "Liu et al.",
+          "venue": "ICML 2024",
+          "arxiv": "2402.02750"
+        },
+        {
+          "title": "KVQuant: Towards 10 Million Context Length LLM Inference with KV Cache Quantization",
+          "authors": "Hooper et al.",
+          "venue": "NeurIPS 2024",
+          "arxiv": "2401.18079"
+        }
+      ],
+      "resources": [
+        {
+          "label": "KIVI paper",
+          "url": "https://arxiv.org/abs/2402.02750"
+        },
+        {
+          "label": "KVQuant paper",
+          "url": "https://arxiv.org/abs/2401.18079"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "kv-cache": {
       "id": "kv-cache",
       "name": "KV Cache",
@@ -2251,6 +2453,44 @@
       "confidence": "high",
       "verified_date": "2026-04-10"
     },
+    "mamba": {
+      "id": "mamba",
+      "name": "Mamba / SSM",
+      "expansion": "Mamba (Selective State Space Model)",
+      "category": "layer-types",
+      "oneliner": "A non-transformer architecture that models sequences in linear time using selective state spaces instead of quadratic attention.",
+      "explanation": "Mamba is an alternative to the transformer that replaces self-attention with a selective state space mechanism, reducing sequence processing from quadratic to linear time. Instead of attending between every token pair, it processes sequences through a learned recurrence that selectively remembers or forgets information. This makes it faster for long sequences while matching transformer quality. Mamba-based models appear on HuggingFace and have influenced hybrid architectures.",
+      "fundamentals": "State space models compute $y = \\text{SSM}(A, B, C)(x)$ where $A \\in \\mathbb{R}^{N \\times N}$ is the state transition matrix, discretized for each timestep. Mamba's key innovation is making $B$, $C$, and $\\Delta$ (discretization step) input-dependent via learned projections, enabling content-based selection. Computation uses a parallel scan algorithm: $O(L \\cdot N \\cdot D)$ time and $O(L \\cdot D)$ memory vs attention's $O(L^2 \\cdot D)$.",
+      "related": [
+        "self-attention",
+        "mha",
+        "flash-attention"
+      ],
+      "seen_in": [
+        "model-config",
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Mamba: Linear-Time Sequence Modeling with Selective State Spaces",
+          "authors": "Gu & Dao",
+          "venue": "2023",
+          "arxiv": "2312.00752"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Mamba paper",
+          "url": "https://arxiv.org/abs/2312.00752"
+        },
+        {
+          "label": "The Annotated Mamba",
+          "url": "https://srush.github.io/annotated-mamba/hard.html"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "marlin": {
       "id": "marlin",
       "name": "Marlin",
@@ -2354,6 +2594,43 @@
           "arxiv": "2405.04434"
         }
       ]
+    },
+    "mmlu": {
+      "id": "mmlu",
+      "name": "MMLU",
+      "expansion": "Massive Multitask Language Understanding",
+      "category": "scaling-patterns",
+      "oneliner": "A 57-subject multiple-choice benchmark spanning high school to professional level — the most commonly cited LLM knowledge evaluation.",
+      "explanation": "MMLU is a benchmark that tests a language model's knowledge across 57 academic subjects from high school to professional level, using four-way multiple-choice questions. It became the standard way to report general LLM capability, appearing on virtually every model card. Frontier models now score above 88 percent, approaching saturation. Harder successors like MMLU-Pro are replacing it for frontier evaluation, but MMLU remains the most widely cited baseline.",
+      "fundamentals": "MMLU uses few-shot evaluation (typically 5-shot): the model sees 5 example question-answer pairs as context, then must answer a new question by selecting A/B/C/D. Scoring is simple accuracy across all 57 subjects. The benchmark has 14,042 questions total. Subjects are grouped into STEM, humanities, social sciences, and other. Per-subject scores reveal capability patterns: a model might score 95% on history but 60% on abstract algebra.",
+      "related": [
+        "pre-training",
+        "inference"
+      ],
+      "seen_in": [
+        "model-cards",
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Measuring Massive Multitask Language Understanding",
+          "authors": "Hendrycks et al.",
+          "venue": "ICLR 2021",
+          "arxiv": "2009.03300"
+        }
+      ],
+      "resources": [
+        {
+          "label": "MMLU on Papers With Code",
+          "url": "https://paperswithcode.com/dataset/mmlu"
+        },
+        {
+          "label": "Open LLM Leaderboard",
+          "url": "https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     },
     "model-head": {
       "id": "model-head",
@@ -3210,6 +3487,46 @@
       "confidence": "high",
       "verified_date": "2026-04-10"
     },
+    "prefix-caching": {
+      "id": "prefix-caching",
+      "name": "Prefix Caching",
+      "expansion": "Automatic Prefix Caching (APC)",
+      "category": "scaling-patterns",
+      "oneliner": "Reuse precomputed KV cache blocks for shared prompt prefixes (system prompts, few-shot examples) across requests, avoiding redundant prefill computation.",
+      "explanation": "Prefix caching stores the KV cache blocks produced during prompt prefill and reuses them when a subsequent request shares the same token prefix. Because the KV computation for any token depends only on preceding tokens, identical prefixes yield identical cache entries. This is especially effective for system prompts, few-shot templates, and multi-turn conversations where a large shared context is prepended to each query. vLLM implements this via hash-based block lookup, while SGLang uses a radix tree (RadixAttention). The technique can cut time-to-first-token dramatically when hit rates are high.",
+      "fundamentals": "Each KV block is identified by a hash of the tokens it covers plus all preceding tokens. A global hash table maps hashes to physical GPU memory blocks. On a new request the scheduler walks the token sequence block-by-block: cache hit $\\rightarrow$ skip prefill for that block; cache miss $\\rightarrow$ compute and store. Eviction follows LRU. Best practice: place static content (system prompt, instructions) at the beginning to maximise prefix overlap. SGLang RadixAttention uses a trie structure enabling shared caching for tree-shaped conversation histories.",
+      "related": [
+        "kv-cache",
+        "paged-attention",
+        "continuous-batching"
+      ],
+      "seen_in": [
+        "serving-config",
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Efficient Memory Management for Large Language Model Serving with PagedAttention",
+          "authors": "Kwon et al.",
+          "venue": "SOSP 2023",
+          "arxiv": "2309.06180"
+        },
+        {
+          "title": "SGLang: Efficient Execution of Structured Language Model Programs",
+          "authors": "Zheng et al.",
+          "venue": "arXiv 2024",
+          "arxiv": "2312.07104"
+        }
+      ],
+      "resources": [
+        {
+          "label": "vLLM APC docs",
+          "url": "https://docs.vllm.ai/en/stable/design/prefix_caching/"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "ptq": {
       "id": "ptq",
       "name": "PTQ",
@@ -3405,6 +3722,41 @@
         }
       ]
     },
+    "rag": {
+      "id": "rag",
+      "name": "RAG",
+      "expansion": "Retrieval-Augmented Generation",
+      "category": "scaling-patterns",
+      "oneliner": "Augment an LLM with retrieved documents at inference time so it can answer questions grounded in external knowledge without retraining.",
+      "explanation": "Retrieval-Augmented Generation is an inference pattern that pairs a language model with an external retrieval system. When a query arrives, a retriever (typically a dense embedding model) fetches relevant documents from a knowledge base, and those documents are concatenated into the prompt before generation. This grounds the model's output in up-to-date, verifiable facts, reducing hallucination and eliminating the need to bake all knowledge into model weights. RAG is the dominant production pattern for knowledge-intensive LLM applications.",
+      "fundamentals": "Pipeline: query $\\rightarrow$ embed(query) $\\rightarrow$ vector search top-$k$ $\\rightarrow$ concat(docs, query) $\\rightarrow$ LLM generate. Retriever: bi-encoder (e.g. DPR) maps query and documents to shared embedding space; cosine similarity selects top-$k$. Generator: any causal LM conditioned on retrieved context. Original RAG formulation: $p(y|x) = \\sum_{z \\in \\text{top-}k} p(z|x)\\,p(y|x,z)$, marginalising over retrieved documents $z$. Chunking strategy, chunk size, overlap, and reranking significantly affect quality.",
+      "related": [
+        "token",
+        "inference",
+        "tag-embed"
+      ],
+      "seen_in": [
+        "code",
+        "serving-config",
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+          "authors": "Lewis et al.",
+          "venue": "NeurIPS 2020",
+          "arxiv": "2005.11401"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Original paper",
+          "url": "https://arxiv.org/abs/2005.11401"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "reasoning-models": {
       "id": "reasoning-models",
       "name": "Reasoning Models",
@@ -3552,7 +3904,7 @@
       "expansion": "Reinforcement Learning with Verifiable Rewards",
       "category": "training-pipeline",
       "oneliner": "RL training where rewards come from automated verification (math checker, code tests, format rules) rather than human labels or learned reward models.",
-      "explanation": "Reinforcement Learning with Verifiable Rewards is a training paradigm where the reward signal comes from automatic, objectively checkable criteria rather than human preferences or a learned reward model. For math, the verifier checks whether the final numerical answer matches ground truth. For code, it runs test cases. This eliminates reward hacking and removes the cost of human annotation entirely. RLVR is the reward scheme behind DeepSeek R1-Zero and R1, where only accuracy and format rewards were used, yet complex reasoning behaviors like self-verification and backtracking emerged spontaneously.",
+      "explanation": "Reinforcement Learning with Verifiable Rewards is a training paradigm where reward signals come from automatic, objectively checkable criteria rather than human labels or learned reward models. For math the verifier checks the answer against ground truth; for code it runs test cases. This eliminates reward hacking and annotation cost. RLVR powered DeepSeek R1-Zero, where only accuracy and format rewards were used, yet self-verification and backtracking emerged spontaneously.",
       "fundamentals": "Reward function: $r(x, y) = r_{\\text{accuracy}}(x, y) + r_{\\text{format}}(x, y)$. Accuracy reward is binary (1 if answer matches ground truth, 0 otherwise) or graded. Format reward enforces structural constraints (e.g., answer within \\texttt{\\textbackslash boxed\\{\\}}). No learned reward model — verification is deterministic and unhackable. Training data: question-answer pairs where answers are machine-checkable (math, code, logic puzzles). Scales to millions of problems via synthetic generation. Limitation: only works for domains with verifiable answers; open-ended generation still needs RLHF/DPO.",
       "related": [
         "rlhf",
@@ -4585,7 +4937,7 @@
       "expansion": "Test-Time Compute Scaling",
       "category": "scaling-patterns",
       "oneliner": "Spending more compute at inference rather than training — letting the model 'think longer' on hard problems to improve accuracy without retraining.",
-      "explanation": "Test-time compute scaling is the principle that allocating additional computation during inference can improve model accuracy, sometimes more effectively than scaling model parameters. Rather than building a bigger model, you let a smaller model generate more reasoning tokens, sample multiple solutions, or search over candidate answers. Snell et al. showed a compute-optimal inference strategy can match a 14x larger model. This idea underpins reasoning models: o1 and R1 adaptively spend more tokens on harder problems, making inference cost proportional to difficulty.",
+      "explanation": "Test-time compute scaling is the principle that spending more computation at inference can improve accuracy more effectively than scaling model parameters. You let a smaller model generate more reasoning tokens, sample multiple solutions, or search over candidates. Snell et al. showed a compute-optimal strategy can match a 14x larger model. This underpins reasoning models: o1 and R1 adaptively spend more tokens on harder problems, making cost proportional to difficulty.",
       "fundamentals": "Two main mechanisms: (1) search against verifiers — generate $k$ candidates, score with a Process Reward Model $r(z_i)$, select best; (2) sequential revision — model iteratively refines its own answer. Compute-optimal allocation: for easy prompts, revision dominates; for hard prompts, parallel search dominates. FLOPs budget: $C_{\\text{inference}} = k \\cdot T \\cdot c_{\\text{fwd}}$ where $k$ = samples, $T$ = tokens per sample, $c_{\\text{fwd}}$ = cost per forward token. Diminishing returns above ~64 samples for most tasks. Configurable effort levels (o3: low/medium/high) expose this tradeoff to users.",
       "related": [
         "reasoning-models",
@@ -4631,7 +4983,7 @@
       "expansion": "Thinking Tokens / Extended Thinking",
       "category": "scaling-patterns",
       "oneliner": "Hidden reasoning tokens generated before the visible answer — they consume context window and billing but are discarded from the final output shown to users.",
-      "explanation": "Thinking tokens are the intermediate reasoning tokens that reasoning models generate internally before producing a visible answer. In OpenAI's o1 and o3, these tokens are hidden from the user and only a summary is shown. In open models like DeepSeek R1, the full chain of thought is visible between special tags. Thinking tokens occupy context window space and are billed as output tokens, ranging from a few hundred for simple queries to tens of thousands for hard problems. This variable-length generation is what makes reasoning models adaptive: they automatically allocate more compute to harder problems.",
+      "explanation": "Thinking tokens are intermediate reasoning tokens that models generate before producing a visible answer. In OpenAI o1 and o3, they are hidden and only a summary is shown; in DeepSeek R1, the full trace appears between think tags. They occupy context window space and are billed as output tokens, ranging from hundreds for easy queries to tens of thousands for hard ones. This variable-length generation makes reasoning models adaptive, spending more compute on harder problems.",
       "fundamentals": "Generation pattern: $[\\texttt{<think>}\\; z_1, z_2, \\ldots, z_T\\; \\texttt{</think>}\\; y]$. Context budget: $C_{\\text{ctx}} = |\\text{input}| + |\\text{thinking}| + |\\text{output}|$ must fit model window (e.g., 128K for o1, 128K for R1). API billing: thinking tokens count as output tokens. OpenAI hides raw thinking tokens, shows model-generated summary. Anthropic's Claude extended thinking exposes the full trace. Configurable thinking budgets: o3 low/medium/high, Claude \\texttt{budget\\_tokens} parameter. R1 uses \\texttt{<think>}...\\texttt{</think>} delimiters in the actual generation.",
       "related": [
         "reasoning-models",
@@ -4800,6 +5152,68 @@
       "verified_date": "2026-04-10",
       "explanation": "WordPiece is a subword tokenization algorithm that selects merges by maximizing the likelihood of the training corpus rather than simply picking the most frequent pair, as BPE does. Continuation tokens are marked with a ## prefix, so 'playing' might become 'play' and '##ing'. It is the tokenizer behind BERT, DistilBERT, and most models in the original Transformer encoder family from Google."
     },
+    "tool-accelerate": {
+      "id": "tool-accelerate",
+      "name": "Accelerate",
+      "expansion": "HuggingFace Accelerate — Distributed Training Library",
+      "category": "serving-tools",
+      "oneliner": "HuggingFace's library that makes PyTorch training code run on any hardware setup — single GPU, multi-GPU, or TPU — with minimal code changes.",
+      "explanation": "Accelerate is a HuggingFace library that abstracts away distributed training complexity. You write standard PyTorch code, and Accelerate distributes it across multiple GPUs, TPU pods, or mixed-precision setups with minimal wrapper calls. It supports DeepSpeed ZeRO, FSDP, and gradient accumulation. For LLM fine-tuning, Accelerate is the layer between your training script and the hardware, used internally by HuggingFace Trainer and TRL.",
+      "fundamentals": "Core pattern: wrap model, optimizer, and dataloader with `accelerator.prepare()`, replace `loss.backward()` with `accelerator.backward(loss)`. Accelerate auto-detects available hardware and configures the appropriate distributed backend (DDP, FSDP, DeepSpeed). Configuration via `accelerate config` CLI or YAML. Supports mixed precision (fp16, bf16, fp8), gradient checkpointing, and model sharding.",
+      "related": [
+        "zero",
+        "full-ft",
+        "lora",
+        "qlora"
+      ],
+      "seen_in": [
+        "code",
+        "documentation"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "Accelerate docs",
+          "url": "https://huggingface.co/docs/accelerate"
+        },
+        {
+          "label": "Accelerate GitHub",
+          "url": "https://github.com/huggingface/accelerate"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
+    "tool-dask": {
+      "id": "tool-dask",
+      "name": "Dask",
+      "expansion": "Dask — Parallel Computing Library",
+      "category": "serving-tools",
+      "oneliner": "A Python parallel computing library that scales pandas, NumPy, and scikit-learn workflows to clusters, used for large-scale data preprocessing in LLM pipelines.",
+      "explanation": "Dask is a parallel computing library that scales pandas, NumPy, and scikit-learn workflows to datasets larger than memory and across clusters. In LLM pipelines, Dask is primarily used for data preprocessing — cleaning trillion-token training corpora, computing dataset statistics, and managing large-scale tokenization. While not directly involved in model training or inference, Dask handles the data engineering that feeds LLM training.",
+      "fundamentals": "Dask represents computations as directed acyclic graphs (DAGs) of tasks. A Dask DataFrame partitions data into pandas DataFrames across workers. Lazy evaluation: operations build the graph without executing until `.compute()` is called. Schedulers: single-machine threaded/multiprocess, or distributed across a cluster via `dask.distributed`. Integration with cloud storage (S3, GCS) makes it practical for TB-scale training data.",
+      "related": [
+        "pre-training",
+        "tool-ray"
+      ],
+      "seen_in": [
+        "code",
+        "documentation"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "Dask docs",
+          "url": "https://docs.dask.org"
+        },
+        {
+          "label": "Dask GitHub",
+          "url": "https://github.com/dask/dask"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "tool-exllamav2": {
       "id": "tool-exllamav2",
       "name": "ExLlamaV2",
@@ -4903,6 +5317,45 @@
       ],
       "explanation": "Ollama is a command-line tool and background service that wraps llama.cpp into a seamless local experience. A single command like 'ollama run llama3' downloads the model weights and starts an interactive chat. It exposes a local REST API compatible with the OpenAI format, so apps can swap between local and cloud models easily. Modelfiles let users customize system prompts, parameters, and adapters in a Dockerfile-like syntax."
     },
+    "tool-ray": {
+      "id": "tool-ray",
+      "name": "Ray",
+      "expansion": "Ray — Distributed Computing Framework",
+      "category": "serving-tools",
+      "oneliner": "A general-purpose distributed computing framework used to scale LLM training, serving, and data processing across clusters.",
+      "explanation": "Ray is an open-source framework for scaling Python applications across clusters. In the LLM ecosystem, Ray Serve powers vLLM's multi-node deployment, Ray Train handles distributed fine-tuning, and Ray Data processes large training datasets. It provides a simple API where decorating a function distributes it across workers automatically. Many production LLM deployments use Ray for cluster orchestration under higher-level tools.",
+      "fundamentals": "Ray uses an actor-based distributed execution model. Tasks (`@ray.remote` functions) and actors (`@ray.remote` classes) are scheduled across a cluster by a centralized GCS (Global Control Store). Ray Serve builds on this for model serving with autoscaling and request batching. Ray Train wraps PyTorch distributed training with fault tolerance and checkpoint management.",
+      "related": [
+        "tool-vllm",
+        "zero",
+        "tp-pp"
+      ],
+      "seen_in": [
+        "code",
+        "documentation",
+        "serving-config"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Ray: A Distributed Framework for Emerging AI Applications",
+          "authors": "Moritz et al.",
+          "venue": "OSDI 2018",
+          "arxiv": "1712.05889"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Ray docs",
+          "url": "https://docs.ray.io"
+        },
+        {
+          "label": "Ray GitHub",
+          "url": "https://github.com/ray-project/ray"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "tool-sglang": {
       "id": "tool-sglang",
       "name": "SGLang",
@@ -4978,6 +5431,44 @@
         }
       ],
       "explanation": "Text Generation Inference (TGI) is HuggingFace's production-grade serving solution for large language models. It pairs a high-performance Rust-based HTTP router with Python model backends, handling continuous batching, token streaming, and quantization out of the box. TGI integrates tightly with the HuggingFace Hub, making it straightforward to deploy any compatible model. It powers the Inference API behind many HuggingFace-hosted endpoints."
+    },
+    "tool-triton": {
+      "id": "tool-triton",
+      "name": "Triton (OpenAI)",
+      "expansion": "Triton — Python-based GPU Kernel Language",
+      "category": "serving-tools",
+      "oneliner": "A Python language for writing custom GPU kernels without CUDA, used to build high-performance attention and quantization kernels for LLMs.",
+      "explanation": "Triton is an open-source programming language from OpenAI that lets developers write GPU kernels in Python instead of CUDA C++. It handles memory management, thread scheduling, and hardware optimizations automatically. Many key LLM kernels are written in Triton, including Flash Attention implementations and custom quantization kernels in vLLM. It compiles to optimized GPU code for NVIDIA and AMD hardware.",
+      "fundamentals": "Triton programs use a block-based programming model: each kernel instance processes a tile of data specified by `tl.program_id` and block sizes. The compiler auto-tunes block dimensions, memory coalescing, and shared memory usage. Key operations: `tl.load`, `tl.store`, `tl.dot` (matrix multiply), `tl.sum`. A Flash Attention kernel in Triton is ~100 lines vs ~1000 in CUDA.",
+      "related": [
+        "flash-attention",
+        "marlin",
+        "tool-vllm"
+      ],
+      "seen_in": [
+        "code",
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Triton: An Intermediate Language and Compiler for Tiled Neural Network Computations",
+          "authors": "Tillet et al.",
+          "venue": "MAPL 2019",
+          "arxiv": "1907.00587"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Triton GitHub",
+          "url": "https://github.com/triton-lang/triton"
+        },
+        {
+          "label": "Triton tutorials",
+          "url": "https://triton-lang.org/main/getting-started/tutorials/index.html"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     },
     "tool-vllm": {
       "id": "tool-vllm",

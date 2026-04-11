@@ -1,0 +1,35 @@
+{
+  "id": "chunked-prefill",
+  "name": "Chunked Prefill",
+  "expansion": "Chunked Prefill (Disaggregated Prompt Processing)",
+  "category": "scaling-patterns",
+  "oneliner": "Splitting long prompt processing into smaller chunks so a single large request doesn't block token generation for other users.",
+  "explanation": "Chunked prefill breaks the processing of a long input prompt into smaller pieces interleaved with decode steps for other requests. Without it, a single request with a very long prompt would monopolize the GPU while other users wait. By processing the prompt in chunks, the server alternates between prefill and decode work, keeping latency low for concurrent users. This is a standard feature in vLLM and SGLang for production serving.",
+  "fundamentals": "Prefill is compute-bound ($O(n^2 d)$ for attention over $n$ input tokens), while decode is bandwidth-bound ($O(Pd)$ per token). A naive scheduler runs the full prefill as one operation, blocking all decode steps. Chunked prefill splits input into chunks of size $C$ (e.g., 2048 tokens), processing one chunk per scheduler iteration. Between chunks, pending decode requests get their next token. The tradeoff: smaller $C$ = better latency for other users but slower total prefill time due to repeated KV cache loads.",
+  "related": [
+    "inference",
+    "continuous-batching",
+    "kv-cache",
+    "inference-metrics"
+  ],
+  "seen_in": [
+    "serving-config",
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Sarathi-Serve: Chunked Prefill for Efficient LLM Inference",
+      "authors": "Agrawal et al.",
+      "venue": "2024",
+      "arxiv": "2403.02310"
+    }
+  ],
+  "resources": [
+    {
+      "label": "vLLM chunked prefill docs",
+      "url": "https://docs.vllm.ai/en/latest/features/chunked_prefill.html"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

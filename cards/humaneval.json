@@ -1,0 +1,37 @@
+{
+  "id": "humaneval",
+  "name": "HumanEval",
+  "expansion": "HumanEval Code Generation Benchmark",
+  "category": "scaling-patterns",
+  "oneliner": "A benchmark of 164 Python programming problems where models write functions from docstrings and are graded by unit test pass rate.",
+  "explanation": "HumanEval is a code generation benchmark containing 164 hand-written Python programming problems. Each provides a function signature and docstring, and the model must generate a correct implementation graded by hidden unit tests. Results are reported as pass@k — the probability that at least one of k samples passes. HumanEval is the standard benchmark for code models like CodeLlama and DeepSeek-Coder.",
+  "fundamentals": "The pass@k metric generates $n \\geq k$ samples per problem and computes the probability that at least one of $k$ randomly chosen samples passes. The unbiased estimator is $\\text{pass@k} = 1 - \\binom{n-c}{k} / \\binom{n}{k}$ where $c$ is the number of correct samples out of $n$. Temperature and top-p sampling settings significantly affect scores. EvalPlus extends HumanEval with 80x more test cases to catch solutions that pass original tests by luck.",
+  "related": [
+    "tag-coder",
+    "inference"
+  ],
+  "seen_in": [
+    "model-cards",
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Evaluating Large Language Models Trained on Code",
+      "authors": "Chen et al.",
+      "venue": "2021",
+      "arxiv": "2107.03374"
+    }
+  ],
+  "resources": [
+    {
+      "label": "HumanEval on GitHub",
+      "url": "https://github.com/openai/human-eval"
+    },
+    {
+      "label": "EvalPlus leaderboard",
+      "url": "https://evalplus.github.io/leaderboard.html"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

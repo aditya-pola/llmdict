@@ -1,0 +1,38 @@
+{
+  "id": "tool-triton",
+  "name": "Triton (OpenAI)",
+  "expansion": "Triton — Python-based GPU Kernel Language",
+  "category": "serving-tools",
+  "oneliner": "A Python language for writing custom GPU kernels without CUDA, used to build high-performance attention and quantization kernels for LLMs.",
+  "explanation": "Triton is an open-source programming language from OpenAI that lets developers write GPU kernels in Python instead of CUDA C++. It handles memory management, thread scheduling, and hardware optimizations automatically. Many key LLM kernels are written in Triton, including Flash Attention implementations and custom quantization kernels in vLLM. It compiles to optimized GPU code for NVIDIA and AMD hardware.",
+  "fundamentals": "Triton programs use a block-based programming model: each kernel instance processes a tile of data specified by `tl.program_id` and block sizes. The compiler auto-tunes block dimensions, memory coalescing, and shared memory usage. Key operations: `tl.load`, `tl.store`, `tl.dot` (matrix multiply), `tl.sum`. A Flash Attention kernel in Triton is ~100 lines vs ~1000 in CUDA.",
+  "related": [
+    "flash-attention",
+    "marlin",
+    "tool-vllm"
+  ],
+  "seen_in": [
+    "code",
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Triton: An Intermediate Language and Compiler for Tiled Neural Network Computations",
+      "authors": "Tillet et al.",
+      "venue": "MAPL 2019",
+      "arxiv": "1907.00587"
+    }
+  ],
+  "resources": [
+    {
+      "label": "Triton GitHub",
+      "url": "https://github.com/triton-lang/triton"
+    },
+    {
+      "label": "Triton tutorials",
+      "url": "https://triton-lang.org/main/getting-started/tutorials/index.html"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

@@ -1,0 +1,39 @@
+{
+  "id": "tool-ray",
+  "name": "Ray",
+  "expansion": "Ray — Distributed Computing Framework",
+  "category": "serving-tools",
+  "oneliner": "A general-purpose distributed computing framework used to scale LLM training, serving, and data processing across clusters.",
+  "explanation": "Ray is an open-source framework for scaling Python applications across clusters. In the LLM ecosystem, Ray Serve powers vLLM's multi-node deployment, Ray Train handles distributed fine-tuning, and Ray Data processes large training datasets. It provides a simple API where decorating a function distributes it across workers automatically. Many production LLM deployments use Ray for cluster orchestration under higher-level tools.",
+  "fundamentals": "Ray uses an actor-based distributed execution model. Tasks (`@ray.remote` functions) and actors (`@ray.remote` classes) are scheduled across a cluster by a centralized GCS (Global Control Store). Ray Serve builds on this for model serving with autoscaling and request batching. Ray Train wraps PyTorch distributed training with fault tolerance and checkpoint management.",
+  "related": [
+    "tool-vllm",
+    "zero",
+    "tp-pp"
+  ],
+  "seen_in": [
+    "code",
+    "documentation",
+    "serving-config"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Ray: A Distributed Framework for Emerging AI Applications",
+      "authors": "Moritz et al.",
+      "venue": "OSDI 2018",
+      "arxiv": "1712.05889"
+    }
+  ],
+  "resources": [
+    {
+      "label": "Ray docs",
+      "url": "https://docs.ray.io"
+    },
+    {
+      "label": "Ray GitHub",
+      "url": "https://github.com/ray-project/ray"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

@@ -1,0 +1,38 @@
+{
+  "id": "mamba",
+  "name": "Mamba / SSM",
+  "expansion": "Mamba (Selective State Space Model)",
+  "category": "layer-types",
+  "oneliner": "A non-transformer architecture that models sequences in linear time using selective state spaces instead of quadratic attention.",
+  "explanation": "Mamba is an alternative to the transformer that replaces self-attention with a selective state space mechanism, reducing sequence processing from quadratic to linear time. Instead of attending between every token pair, it processes sequences through a learned recurrence that selectively remembers or forgets information. This makes it faster for long sequences while matching transformer quality. Mamba-based models appear on HuggingFace and have influenced hybrid architectures.",
+  "fundamentals": "State space models compute $y = \\text{SSM}(A, B, C)(x)$ where $A \\in \\mathbb{R}^{N \\times N}$ is the state transition matrix, discretized for each timestep. Mamba's key innovation is making $B$, $C$, and $\\Delta$ (discretization step) input-dependent via learned projections, enabling content-based selection. Computation uses a parallel scan algorithm: $O(L \\cdot N \\cdot D)$ time and $O(L \\cdot D)$ memory vs attention's $O(L^2 \\cdot D)$.",
+  "related": [
+    "self-attention",
+    "mha",
+    "flash-attention"
+  ],
+  "seen_in": [
+    "model-config",
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Mamba: Linear-Time Sequence Modeling with Selective State Spaces",
+      "authors": "Gu & Dao",
+      "venue": "2023",
+      "arxiv": "2312.00752"
+    }
+  ],
+  "resources": [
+    {
+      "label": "Mamba paper",
+      "url": "https://arxiv.org/abs/2312.00752"
+    },
+    {
+      "label": "The Annotated Mamba",
+      "url": "https://srush.github.io/annotated-mamba/hard.html"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

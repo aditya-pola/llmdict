@@ -1,0 +1,30 @@
+{
+  "id": "tool-dask",
+  "name": "Dask",
+  "expansion": "Dask — Parallel Computing Library",
+  "category": "serving-tools",
+  "oneliner": "A Python parallel computing library that scales pandas, NumPy, and scikit-learn workflows to clusters, used for large-scale data preprocessing in LLM pipelines.",
+  "explanation": "Dask is a parallel computing library that scales pandas, NumPy, and scikit-learn workflows to datasets larger than memory and across clusters. In LLM pipelines, Dask is primarily used for data preprocessing — cleaning trillion-token training corpora, computing dataset statistics, and managing large-scale tokenization. While not directly involved in model training or inference, Dask handles the data engineering that feeds LLM training.",
+  "fundamentals": "Dask represents computations as directed acyclic graphs (DAGs) of tasks. A Dask DataFrame partitions data into pandas DataFrames across workers. Lazy evaluation: operations build the graph without executing until `.compute()` is called. Schedulers: single-machine threaded/multiprocess, or distributed across a cluster via `dask.distributed`. Integration with cloud storage (S3, GCS) makes it practical for TB-scale training data.",
+  "related": [
+    "pre-training",
+    "tool-ray"
+  ],
+  "seen_in": [
+    "code",
+    "documentation"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "Dask docs",
+      "url": "https://docs.dask.org"
+    },
+    {
+      "label": "Dask GitHub",
+      "url": "https://github.com/dask/dask"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

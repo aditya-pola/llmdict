@@ -1,0 +1,32 @@
+{
+  "id": "inference-metrics",
+  "name": "Inference Metrics",
+  "expansion": "TTFT, ITL, TPS — Core LLM Serving Performance Metrics",
+  "category": "scaling-patterns",
+  "oneliner": "The three numbers that define LLM serving performance: Time to First Token, Inter-Token Latency, and Tokens Per Second.",
+  "explanation": "Inference metrics are the standard measurements for evaluating LLM serving performance. Time to First Token (TTFT) measures how long a user waits before seeing any output, reflecting prefill speed and queuing delays. Inter-Token Latency (ITL) measures the average gap between consecutive output tokens, governing how smooth a streaming response feels. Tokens Per Second (TPS) measures aggregate throughput across all concurrent requests. These three metrics capture fundamental tradeoffs: batching more requests improves system TPS but can worsen TTFT and ITL for individual users.",
+  "fundamentals": "TTFT = time from request arrival to first generated token. Dominated by prefill compute ($O(n \\cdot P)$ where $n$ = input length, $P$ = params) plus any queuing delay. ITL = time between consecutive decode tokens. Dominated by memory bandwidth ($P \\cdot \\text{bytes\\_per\\_param} / \\text{bandwidth}$). TPS = total tokens generated per second across all requests in a batch. For batch size $B$: TPS $\\approx B / \\text{ITL}$ (amortized). Key insight: TTFT is compute-bound, ITL is bandwidth-bound.",
+  "related": [
+    "inference",
+    "inference-engine",
+    "continuous-batching",
+    "speculative-decoding"
+  ],
+  "seen_in": [
+    "documentation",
+    "serving-config"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "BentoML — LLM Inference Metrics",
+      "url": "https://bentoml.com/llm/inference-optimization/llm-inference-metrics"
+    },
+    {
+      "label": "Anyscale — LLM Performance Metrics",
+      "url": "https://www.anyscale.com/blog/llm-performance-metrics"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}
