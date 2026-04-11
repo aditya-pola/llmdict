@@ -20,20 +20,19 @@
 
   // Home card
   const homeCard = Cards.createHomeCard(categories);
-  homeCard.innerHTML = `<span class="peek-label">Home</span><div class="card-content">${homeCard.innerHTML}</div>`;
+  homeCard.innerHTML = `<div class="peek-label"><span>Home</span></div><div class="card-content">${homeCard.innerHTML}</div>`;
   Stack.addCard(homeCard);
 
   for (const cat of categories) {
-    // Category card
     const catCard = Cards.createCategoryCard(cat, entries);
-    catCard.innerHTML = `<span class="peek-label">${cat.label}</span><div class="card-content">${catCard.innerHTML}</div>`;
+    catCard.innerHTML = `<div class="peek-label"><span>${cat.label}</span></div><div class="card-content">${catCard.innerHTML}</div>`;
     Stack.addCard(catCard);
 
     for (const eid of cat.entries) {
       const entry = entries[eid];
       if (!entry) continue;
       const termCard = Cards.createTermCard(entry, entries);
-      termCard.innerHTML = `<span class="peek-label">${entry.name}</span><div class="card-content">${termCard.innerHTML}</div>`;
+      termCard.innerHTML = `<div class="peek-label"><span>${entry.name}</span></div><div class="card-content">${termCard.innerHTML}</div>`;
       Stack.addCard(termCard);
     }
   }
@@ -159,13 +158,18 @@
   handleHash();
   window.addEventListener('hashchange', handleHash);
 
-  // --- Math render ---
+  // --- Math render (retry until KaTeX loads) ---
   function renderAllMath() {
-    if (typeof renderMathInElement === 'function') {
-      container.querySelectorAll('.card--term').forEach(c => Cards.renderMath(c));
-    }
+    if (typeof renderMathInElement !== 'function') return false;
+    container.querySelectorAll('.card-content').forEach(c => Cards.renderMath(c));
+    return true;
   }
-  if (typeof renderMathInElement === 'function') renderAllMath();
-  else window.addEventListener('load', () => setTimeout(renderAllMath, 100));
+  if (!renderAllMath()) {
+    const mathInterval = setInterval(() => {
+      if (renderAllMath()) clearInterval(mathInterval);
+    }, 200);
+    // Give up after 5 seconds
+    setTimeout(() => clearInterval(mathInterval), 5000);
+  }
 
 })();

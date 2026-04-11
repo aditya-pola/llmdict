@@ -21,8 +21,8 @@ const Stack = (() => {
   const EDGE_ACCEL = 0.003;       // edge hover accumulation rate per frame
   const FRICTION = 0.88;
   const SNAP_THRESHOLD = 0.35;    // accumulator > this → navigate
-  const MAX_TILT = 5;
-  const TILT_SMOOTHING = 0.12;
+  const MAX_TILT = 3;
+  const TILT_SMOOTHING = 0.1;
 
   function init(containerEl) {
     _container = containerEl;
@@ -73,8 +73,8 @@ const Stack = (() => {
           ? -(cardWidth / 2 + peekOffset)
           : (cardWidth / 2 + peekOffset);
 
-        const scale = 1 - absOff * 0.03;
-        const opacity = Math.max(0.15, 0.7 - absOff * 0.12);
+        const scale = 1 - absOff * 0.015;
+        const opacity = Math.max(0.3, 0.85 - absOff * 0.1);
         const z = MAX_PEEK - absOff + 1;
 
         card.style.transform = `translateX(${tx}px) scale(${scale}) rotateY(${tiltDeg * 0.3}deg)`;
@@ -129,6 +129,9 @@ const Stack = (() => {
       const overlay = document.getElementById('overlay');
       if (overlay && overlay.classList.contains('active')) return;
 
+      // Let history bar and search results scroll natively
+      if (e.target.closest('.history-bar, .search-results, .overlay-card')) return;
+
       e.preventDefault();
       const delta = e.deltaY !== 0 ? e.deltaY : e.deltaX;
       _accumulator += delta * WHEEL_IMPULSE;
@@ -150,21 +153,36 @@ const Stack = (() => {
   }
 
   function _setupTouchSwipe() {
-    let startX = 0, startY = 0;
-    _container.addEventListener('touchstart', (e) => {
+    let startX = 0, startY = 0, startTime = 0;
+
+    document.addEventListener('touchstart', (e) => {
       startX = e.touches[0].clientX;
       startY = e.touches[0].clientY;
+      startTime = performance.now();
       _velocity = 0;
       _accumulator = 0;
     }, { passive: true });
 
-    _container.addEventListener('touchend', (e) => {
+    document.addEventListener('touchend', (e) => {
+      // Don't hijack if overlay open or touching history/search
+      const overlay = document.getElementById('overlay');
+      if (overlay && overlay.classList.contains('active')) return;
+      if (e.target.closest('.history-bar, .search-results, .search-wrapper')) return;
+
       const dx = e.changedTouches[0].clientX - startX;
       const dy = e.changedTouches[0].clientY - startY;
-      if (Math.abs(dx) >= 50 && Math.abs(dx) > Math.abs(dy)) {
-        if (dx < 0) goTo(_currentIndex + 1);
-        else goTo(_currentIndex - 1);
-      }
+      const dt = performance.now() - startTime;
+
+      if (Math.abs(dx) < 30 || Math.abs(dx) < Math.abs(dy)) return;
+
+      // Fast flick = jump more cards
+      const speed = Math.abs(dx) / dt;
+      let jump = 1;
+      if (speed > 1.5) jump = 3;
+      else if (speed > 0.8) jump = 2;
+
+      if (dx < 0) goTo(_currentIndex + jump);
+      else goTo(_currentIndex - jump);
     }, { passive: true });
   }
 

@@ -40,17 +40,20 @@ const Cards = (() => {
    * Create the Home card
    */
   function createHomeCard(categories) {
+    const totalEntries = categories.reduce((s, c) => s + c.entries.length, 0);
     const card = document.createElement('div');
     card.className = 'card card--home';
     card.id = 'card-home';
     card.innerHTML = `
       <div class="home-title">LLM Glossary</div>
-      <div class="home-subtitle">141 terms across ${categories.length} categories</div>
+      <div class="home-title-underline"></div>
+      <div class="home-subtitle">${totalEntries} terms across ${categories.length} categories</div>
       <ul class="category-list">
         ${categories.map(c =>
-          `<li><span class="category-link" data-target="cat-${c.id}">${c.label} <span style="color:var(--text-tertiary)">(${c.entries.length})</span></span></li>`
+          `<li><span class="category-link" data-target="cat-${c.id}">${c.label} <span style="opacity:0.4">(${c.entries.length})</span></span></li>`
         ).join('')}
       </ul>
+      <div class="category-list-overflow">scroll to explore &rarr;</div>
     `;
     return card;
   }
@@ -72,6 +75,7 @@ const Cards = (() => {
           return `<li><span class="term-link" data-target="${e.id}">${e.name}</span></li>`;
         }).join('')}
       </ul>
+      <div class="category-list-overflow">${cat.entries.length} terms &middot; click or scroll &rarr;</div>
     `;
     return card;
   }
