@@ -4,7 +4,7 @@
   "expansion": "Position Interpolation",
   "category": "position-encodings",
   "oneliner": "Extends context by linearly downscaling position indices so longer sequences map into the original training range — simple but damages high-frequency resolution.",
-  "explanation": "Position Interpolation extends a model's context window by dividing all position indices by a scaling factor so they fit within the original training range. For example, extending from 2K to 32K context means dividing positions by 16, which requires only about 1000 fine-tuning steps for the model to adjust. Meta demonstrated this with Llama, achieving 16x context extension. It was superseded by NTK-aware scaling and YaRN because it compresses all frequency bands equally, damaging local position resolution.",
+  "explanation": "Position Interpolation extends a model's context window by dividing all position indices by a scaling factor so they fit within the original training range. Extending from 2K to 32K context means dividing positions by 16, requiring only about 1000 fine-tuning steps to adjust. It was demonstrated by Meta on Llama with 16x context extension. It was later superseded by NTK-aware scaling and YaRN, which avoid compressing all frequency bands equally.",
   "fundamentals": "Modified angle: (m/s)·$\\theta_i$ instead of m·$\\theta_i$. Effective position m'=m/s. For L'=s·L: positions [0, L'-1] → effective [0, L-1/s] ⊂ [0, L). All within training range. Fine-tuning needed: adjacent tokens now separated by 1/s in position space (was 1). Comparison: PI uniformly compresses all frequencies by s. NTK preserves high-freq, stretches low-freq. YaRN: per-band treatment. In HuggingFace: called 'linear' scaling, not 'pi'.",
   "seen_in": [
     "model-config"

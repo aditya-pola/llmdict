@@ -4,7 +4,7 @@
   "expansion": "K-quant block quantization system",
   "category": "formats",
   "oneliner": "llama.cpp's standard quantization types — hierarchical super-blocks of 256 elements with mixed-precision sub-block scales.",
-  "explanation": "Designed by Iwan Kawrakow (PR #1684). The 'K' does NOT stand for K-means — it's a custom method. Structure: super-blocks of 256 elements, divided into sub-blocks. Each sub-block has its own quantized scale/min. The S/M/L suffixes (e.g., Q4_K_S, Q4_K_M, Q4_K_L) control how many bits are spent on scales vs data. Q4_K_M is the most popular default: good balance of quality and size. Range: Q2_K (~2.6 bpw) through Q8_K (~8.5 bpw).",
+  "explanation": "K-quants are llama.cpp's standard family of quantization types, organized into levels from Q2_K through Q8_K. Each type uses hierarchical super-blocks of 256 elements divided into sub-blocks, each with its own quantized scale and minimum. The letter suffixes S, M, and L indicate how many bits are spent on scale precision versus data. Q4_K_M is the most popular default, offering a good balance of quality and compression for local inference.",
   "fundamentals": "Q4_K_M example: super-block of 256 values, split into 8 sub-blocks of 32. Each sub-block: 32 $\\times$ 4-bit values + 6-bit scale + 6-bit min. Super-block has fp16 master scale and fp16 master min. Effective bpw: 4 + (6+6)/32 + (16+16)/256 $\\approx$ 4.5 bpw. S tier: fewer scale bits, smaller. M tier: balanced. L tier: more scale bits, larger/better.",
   "seen_in": [
     "gguf-filename"

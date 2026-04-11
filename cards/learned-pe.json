@@ -4,7 +4,7 @@
   "expansion": "Learned (Absolute) Position Embeddings",
   "category": "position-encodings",
   "oneliner": "A trainable lookup table of position vectors (like a vocabulary for positions) — simple but has a hard max length limit. Used by GPT-2, BERT, GPT-3.",
-  "explanation": "Learned positional embeddings use a trainable lookup table where each position index maps to a learned vector that gets added to the token embedding. The model learns whatever positional representation is useful during training, and the result often converges to patterns resembling sinusoidal encoding. The hard limitation is that the model cannot handle sequences longer than the maximum position trained, since no embedding exists beyond that point. This approach has been replaced by RoPE in modern LLMs but is still used in BERT variants and Vision Transformers.",
+  "explanation": "Learned positional embeddings use a trainable lookup table where each position index maps to a learned vector added to the token embedding. The model discovers whatever positional patterns are useful during training. The key limitation is that it cannot handle sequences longer than the maximum position trained. This approach has been replaced by RoPE in modern LLMs but remains common in BERT variants and Vision Transformers.",
   "fundamentals": "x'_m = x_m + W_pos[m]. W_pos trained via backpropagation. GPT-2: L_max=1024, d=768 → 786K params. For 128K context: would be 537M params — impractical. Learned embeddings often show: low-freq sinusoidal patterns in principal components, nearby positions more similar, boundary effects at first/last positions. Cannot extrapolate — position L_max+1 has no representation.",
   "seen_in": [
     "model-config",

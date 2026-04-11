@@ -4,7 +4,7 @@
   "expansion": "Layer Normalization",
   "category": "layer-types",
   "oneliner": "Standardizes activations across the hidden dimension per token — zero mean, unit variance, then learnable scale and shift. The original transformer normalization.",
-  "explanation": "Layer normalization stabilizes training by normalizing activations across the hidden dimension of each token independently, making it insensitive to batch size. It computes the mean and variance over all hidden dimensions, normalizes to zero mean and unit variance, then applies a learnable scale and shift. LayerNorm was the default in the original Transformer, GPT-2, GPT-3, BERT, and T5. Post-2022 decoder LLMs have largely replaced it with RMSNorm, which drops the mean subtraction for better speed with equivalent quality.",
+  "explanation": "Layer normalization stabilizes training by normalizing activations across the hidden dimension of each token independently. It computes the mean and variance over all hidden dimensions, normalizes to zero mean and unit variance, then applies a learnable scale and shift. LayerNorm was the default in the original Transformer, GPT-2, and BERT. Post-2022 decoder LLMs have largely replaced it with RMSNorm, which is faster and performs equivalently.",
   "fundamentals": "$\\text{LayerNorm}(x) = \\gamma \\cdot \\frac{x - \\mu}{\\sqrt{\\sigma^2 + \\varepsilon}} + \\beta$. Where $\\mu = \\frac{1}{d}\\sum_i x_i$ and $\\sigma^2 = \\frac{1}{d}\\sum_i (x_i - \\mu)^2$. $\\gamma, \\beta \\in \\mathbb{R}^d$ are learnable (init: $\\gamma=1, \\beta=0$). Params: $2 \\times d_{\\text{model}}$. Requires 2 reductions (mean, variance) vs RMSNorm's 1 (sum of squares). Batch-independent (unlike BatchNorm), no running stats at inference.",
   "seen_in": [
     "model-config",

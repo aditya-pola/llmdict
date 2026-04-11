@@ -4,7 +4,7 @@
   "expansion": "Byte-Pair Encoding",
   "category": "tokenizers",
   "oneliner": "Dominant subword tokenization. Iteratively merge most frequent adjacent pairs. Byte-level BPE (GPT-2+) handles any text with no unknown tokens.",
-  "explanation": "Start with byte/char vocabulary, count adjacent pairs, merge most frequent, repeat. Used by GPT-2/3/4, Llama, Mistral, Falcon.",
+  "explanation": "Byte-Pair Encoding is the dominant tokenization algorithm for modern LLMs. It starts with a character or byte-level vocabulary and iteratively merges the most frequent adjacent pair into a new token, repeating until the desired vocabulary size is reached. Byte-level BPE, introduced with GPT-2, can encode any text without unknown tokens. The resulting vocabulary balances compression efficiency with handling rare and novel words. Used by GPT, Llama, and Mistral.",
   "seen_in": [
     "documentation",
     "tokenizer-config"

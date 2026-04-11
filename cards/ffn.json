@@ -4,7 +4,7 @@
   "expansion": "Feed-Forward Network / Multi-Layer Perceptron",
   "category": "layer-types",
   "oneliner": "The position-wise fully connected sub-block in each transformer layer — up-project, activate, down-project. Stores ~67% of each layer's parameters.",
-  "explanation": "The feed-forward network is the component of each transformer layer that processes tokens independently, with no cross-token interaction. It serves as the primary knowledge and pattern storage, holding roughly two-thirds of the total model parameters. The standard design projects each token to a larger intermediate dimension, applies an activation function, and projects back down. Modern LLMs have replaced the original ReLU activation with SwiGLU, which uses three projection matrices instead of two but reduces the intermediate dimension to compensate.",
+  "explanation": "The feed-forward network is the component of each transformer layer that processes tokens independently with no cross-token interaction. It projects each token to a larger intermediate dimension, applies an activation function, and projects back down. The FFN holds roughly two-thirds of each layer's total parameters and serves as the model's primary knowledge store. Modern LLMs use SwiGLU activation, which adds a third projection matrix.",
   "fundamentals": "Standard: FFN(x) = $W_2$·activation($W_1$·x). Gated (SwiGLU): FFN(x) = (Swish(xW_gate) ⊙ xW_up)W_down. LLaMA 7B: d_model=4096, d_ff=11008. FFN params: 3$\\times$4096$\\times$11008 = 135M vs Attention: 4$\\times$409$6^2$ = 67M. The '2/3 of 4x' rule: d_ff $\\approx$ (8/3)$\\times$d_model, rounded to multiple of 256 for hardware efficiency.",
   "seen_in": [
     "model-config",

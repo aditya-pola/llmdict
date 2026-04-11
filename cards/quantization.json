@@ -4,7 +4,7 @@
   "expansion": "Model Quantization / Neural Network Quantization",
   "category": "quantization-basics",
   "oneliner": "Converting a model's high-precision floats to lower-precision representations — the single most impactful optimization for LLM serving.",
-  "explanation": "Quantization maps model weights from their original 16-bit or 32-bit format to smaller representations like 8-bit, 4-bit, or even lower. This matters because LLM inference is memory-bandwidth-bound: generating each token requires reading every weight from memory, so shrinking the weights directly speeds up generation. A 70-billion parameter model in 16-bit takes about 140 GB; in 4-bit it fits in roughly 35 GB. Quality impact varies by precision: 8-bit is essentially lossless, 4-bit adds small but measurable degradation, and below 4-bit requires specialized techniques.",
+  "explanation": "Quantization converts a model's weights from 16-bit or 32-bit floats to smaller formats like 8-bit or 4-bit integers. This matters because LLM inference is memory-bandwidth-bound: every generated token requires reading all weights from memory, so smaller weights mean faster generation. A 70B-parameter model shrinks from 140 GB to roughly 35 GB at 4-bit. Quality at 8-bit is nearly lossless; at 4-bit there is small but measurable degradation.",
   "fundamentals": "Uniform affine quantization: $x_q = \\text{clamp}(\\text{round}(x/s + z),\\, q_{\\min},\\, q_{\\max})$. Dequantize: $\\hat{x} = s \\cdot (x_q - z)$. Scale $s = (x_{\\max} - x_{\\min})/(q_{\\max} - q_{\\min})$. Symmetric: $z=0$, $s = \\max(|x|)/q_{\\max}$. Error per value bounded by $s/2$. Not all weights contribute equally — attention layers and first/last layers are typically more sensitive.",
   "seen_in": [
     "documentation",

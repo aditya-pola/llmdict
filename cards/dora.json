@@ -4,7 +4,7 @@
   "expansion": "Weight-Decomposed Low-Rank Adaptation",
   "category": "fine-tuning-methods",
   "oneliner": "Decompose weights into magnitude + direction, apply LoRA to direction only. More like full FT behavior, negligible extra params.",
-  "explanation": "Weight-Decomposed Low-Rank Adaptation splits each pre-trained weight matrix into a magnitude component and a direction component, then applies LoRA only to the direction while training the magnitude scalar separately. This decomposition is motivated by the observation that full fine-tuning primarily changes weight direction, while standard LoRA couples magnitude and direction changes in a suboptimal way. DoRA consistently outperforms LoRA across tasks with minimal additional parameters, just one scalar per output dimension per layer. It is available in PEFT with a simple use_dora flag.",
+  "explanation": "Weight-Decomposed Low-Rank Adaptation splits each weight matrix into a magnitude component and a direction component, then applies LoRA only to the direction while training magnitude separately. This is motivated by the finding that full fine-tuning primarily changes weight direction while standard LoRA couples direction and magnitude changes suboptimally. DoRA consistently outperforms LoRA with minimal additional parameters and is available in PEFT.",
   "fundamentals": "W' = m·(V+($\\alpha$/r)·BA)/$\\|\\|V+($\\alpha$/r)·BA\\|\\|$_c. Extra params: d_out per layer. LLaMA 7B: 0.004% overhead. Based on weight normalization.",
   "seen_in": [
     "model-config"

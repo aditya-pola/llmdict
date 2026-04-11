@@ -4,7 +4,7 @@
   "expansion": "Brain Floating Point 16-bit (Google Brain Float 16)",
   "category": "precision-formats",
   "oneliner": "A 16-bit float with fp32's exponent range but reduced mantissa — designed for deep learning training without loss scaling.",
-  "explanation": "BFloat16 is a 16-bit floating-point format developed by Google Brain for TPUs. It keeps the same 8-bit exponent as standard 32-bit float, giving it the same enormous numerical range, so training gradients almost never overflow and loss scaling is unnecessary. The tradeoff is a shorter 7-bit mantissa, meaning less precision than fp16, but neural networks are tolerant of this. BFloat16 is the default training format at Google, Meta, and most major labs, supported on TPUs, NVIDIA Ampere and newer, and AMD MI200 and newer GPUs.",
+  "explanation": "BFloat16 is a 16-bit floating-point format developed by Google Brain that keeps the same 8-bit exponent as 32-bit float, giving it an enormous numerical range. This means training gradients almost never overflow and loss scaling is unnecessary, unlike with fp16. The tradeoff is a shorter mantissa giving less precision, but neural networks tolerate this well. BFloat16 is the default training format for most major labs and runs on TPUs, NVIDIA Ampere GPUs, and newer.",
   "fundamentals": "Bit layout: 1 sign | 8 exponent (bias 127) | 7 mantissa. Same exponent as fp32 — conversion is just truncating the lower 16 bits. Precision: ~2.4 decimal digits (vs fp16's ~3.3). Two values differing by less than 1 part in 128 map to the same bf16.",
   "seen_in": [
     "model-name",

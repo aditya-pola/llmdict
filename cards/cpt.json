@@ -4,7 +4,7 @@
   "expansion": "Continued Pre-Training (Domain-Adaptive Pre-Training)",
   "category": "training-pipeline",
   "oneliner": "Additional pre-training on domain-specific data (code, medical, legal) to inject specialized knowledge — same loss as pre-training, 2-10% of the cost.",
-  "explanation": "Continued pre-training takes an existing general-purpose base model and runs additional pre-training on a domain-specific corpus using the same next-token prediction objective. The key challenge is catastrophic forgetting, which is mitigated by mixing in 10 to 30 percent general data and using a lower learning rate. Notable examples include Code Llama trained on 500 billion code tokens, Meditron for medical text, SaulLM for legal documents, and Minerva for math and science. CPT typically costs 2 to 10 percent of the original pre-training budget.",
+  "explanation": "Continued pre-training takes an existing base model and runs additional pre-training on a domain-specific corpus such as code, medical text, or legal documents. It uses the same next-token prediction objective as original pre-training but shifts the data distribution toward the target domain. The main risk is catastrophic forgetting, mitigated by mixing in general data. Examples include Code Llama, Meditron, and SaulLM.",
   "fundamentals": "Loss: identical to pre-training (autoregressive CE). Only data distribution changes. Hyperparams: lr 1e-5 to 5e-5, cosine or constant schedule. Data mixing: ~70-90% domain + 10-30% general replay.",
   "seen_in": [
     "model-name",

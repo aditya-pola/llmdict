@@ -4,7 +4,7 @@
   "expansion": "Direct Preference Optimization",
   "category": "training-pipeline",
   "oneliner": "Reparameterizes RLHF into a classification loss on preference pairs — no reward model, no PPO, 2 models in memory. The default open-source alignment method.",
-  "explanation": "Direct Preference Optimization simplifies reinforcement learning from human feedback into a single supervised loss function that directly optimizes the language model using preference pairs, eliminating the need to train and maintain a separate reward model. This makes alignment two to five times cheaper than traditional RLHF while producing comparable results. DPO has become the default alignment method for open-source models including Zephyr, Tulu 2, and Llama 3.1. Known failure modes include distribution shift and overfitting to the chosen responses.",
+  "explanation": "Direct Preference Optimization turns reinforcement learning from human feedback into a simple supervised loss that trains directly on preferred and rejected response pairs, eliminating the separate reward model and PPO training. This makes alignment two to five times cheaper while producing comparable results. DPO has become the default alignment method for open-source models including Zephyr, Tulu, and Llama 3.1.",
   "fundamentals": "Loss: $\\mathcal{L} = -\\mathbb{E}\\left[\\log \\sigma\\left(\\beta \\log \\frac{\\pi_\\theta(y_w|x)}{\\pi_{\\text{ref}}(y_w|x)} - \\beta \\log \\frac{\\pi_\\theta(y_l|x)}{\\pi_{\\text{ref}}(y_l|x)}\\right)\\right]$. $\\beta$ typically 0.1-0.5. lr 1e-6 to 5e-7. Same preference data as RLHF RM.",
   "seen_in": [
     "model-name",

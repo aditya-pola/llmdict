@@ -4,7 +4,7 @@
   "expansion": "Multi-Query Attention",
   "category": "attention-variants",
   "oneliner": "All query heads share a single K and V head — reduces KV cache by n_heads$\\times$ (e.g., 32$\\times$) with small quality tradeoff.",
-  "explanation": "Multi-Query Attention shares a single key head and a single value head across all query heads, dramatically reducing the size of the KV cache. In standard multi-head attention, every head has its own key and value, but during autoregressive decoding the bottleneck is reading all cached keys and values from memory, not the computation itself. MQA shrinks this cache by a factor equal to the number of query heads. Quality loss is small but measurable. MQA is used in PaLM, Falcon, and StarCoder, and led to the GQA compromise.",
+  "explanation": "Multi-Query Attention shares a single key head and value head across all query heads, dramatically shrinking the KV cache. During autoregressive decoding the bottleneck is reading cached keys and values from memory, not computation, so reducing cache size directly improves throughput. MQA shrinks this cache by a factor equal to the number of query heads, with only a small quality loss. It is used in PaLM, Falcon, and StarCoder, and inspired the GQA compromise.",
   "fundamentals": "For hidden_dim=4096, n_query_heads=32, n_kv_heads=1, head_dim=128: W_Q [4096, 4096], W_K [4096, 128] (32$\\times$ smaller), W_V [4096, 128] (32$\\times$ smaller), W_O [4096, 4096]. K and V broadcast to match query heads during attention. KV cache per token per layer: 2 $\\times$ 1 $\\times$ 128 $\\times$ 2 = 512 bytes (vs 16 KB in MHA). For 32 layers at 4096 tokens: ~64 MB (vs ~2 GB). Bandwidth per decode step at seq_len=2048: ~32 MB (vs ~1 GB in MHA).",
   "seen_in": [
     "model-config"

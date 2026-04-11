@@ -4,7 +4,7 @@
   "expansion": "Zero Redundancy Optimizer",
   "category": "scaling-patterns",
   "oneliner": "DeepSpeed's memory optimization that shards optimizer states, gradients, and parameters across GPUs to eliminate redundant copies.",
-  "explanation": "ZeRO is a family of memory optimizations from Microsoft's DeepSpeed library that makes it possible to train very large models across many GPUs without the massive memory waste of naive data parallelism. In standard data parallelism, every GPU holds a full copy of the model, optimizer states, and gradients. ZeRO comes in three stages: ZeRO-1 shards only optimizer states, ZeRO-2 also shards gradients, and ZeRO-3 shards everything including parameters. ZeRO-3 enabled training of 100B+ parameter models on clusters of commodity GPUs. It is complementary to tensor and pipeline parallelism.",
+  "explanation": "ZeRO is a family of memory optimizations from DeepSpeed that eliminates redundant copies of model state across GPUs during distributed training. In standard data parallelism, every GPU stores a full copy of weights, gradients, and optimizer states. ZeRO shards these across GPUs in three stages: stage one shards optimizer states, stage two adds gradients, and stage three shards everything including parameters. This enabled training 100B-plus models on commodity GPU clusters.",
   "fundamentals": "With $N$ GPUs and mixed-precision Adam, per-GPU memory under standard DP is $16P$ bytes (2P params + 2P grads + 12P optimizer). ZeRO-1: $4P + 12P/N$. ZeRO-2: $2P + 14P/N$. ZeRO-3: $16P/N$. Communication: ZeRO-1/2 same as allreduce ($2P$ bytes/step). ZeRO-3 adds all-gather ($+P$ bytes), total $3P$ — 1.5x increase.",
   "related": [
     "tp-pp",

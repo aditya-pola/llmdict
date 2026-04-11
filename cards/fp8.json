@@ -4,7 +4,7 @@
   "expansion": "8-bit Floating Point — two variants for forward and backward passes",
   "category": "precision-formats",
   "oneliner": "Two 8-bit float formats: E4M3 for weights/activations (more precision) and E5M2 for gradients (more range). 2$\\times$ throughput vs fp16.",
-  "explanation": "FP8 is an 8-bit floating-point format jointly proposed by NVIDIA, ARM, and Intel in 2022, available in two variants. E4M3 has more mantissa precision and is used for forward-pass weights and activations, while E5M2 has more dynamic range and is used for backward-pass gradients. FP8 runs natively on H100 and H200 tensor cores at double the throughput of FP16, with NVIDIA Transformer Engine automatically managing per-tensor scaling. For inference only E4M3 is needed, and accuracy loss is typically under 0.1 percent compared to FP16.",
+  "explanation": "FP8 is an 8-bit floating-point format available in two variants optimized for different parts of the training loop. The E4M3 variant provides more precision for forward-pass weights and activations, while E5M2 provides more dynamic range for backward-pass gradients. FP8 runs natively on NVIDIA H100 tensor cores at double the throughput of FP16, with accuracy loss typically under 0.1 percent.",
   "fundamentals": "E4M3: 1 sign | 4 exp (bias 7) | 3 mantissa. No infinity — all exp=1111 patterns are finite (deliberate departure from IEEE 754). Only 16 values per sign per binade. E5M2: 1 sign | 5 exp (bias 15) | 2 mantissa. Follows IEEE 754 conventions (has inf/NaN). Per-tensor scaling factors are essential — without them, clipping destroys quality.",
   "seen_in": [
     "model-name",

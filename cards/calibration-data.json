@@ -4,7 +4,7 @@
   "expansion": "Quantization Calibration Dataset",
   "category": "quantization-basics",
   "oneliner": "A small dataset (~128 samples) run through the model to collect activation statistics needed by quantization methods to set scale factors.",
-  "explanation": "Calibration data is a small representative dataset used to measure how activations behave inside a model, so quantization methods can set accurate scaling parameters. The standard benchmark established by the GPTQ paper is 128 samples of 2048 tokens from the C4 or WikiText-2 datasets. Methods like GPTQ, AWQ, and SmoothQuant require calibration because they need to observe real activation ranges, while simpler approaches like round-to-nearest and dynamic quantization do not. Using domain-matched calibration data yields slightly better results.",
+  "explanation": "Calibration data is a small representative dataset used to measure activation ranges inside a model so quantization methods can set accurate scaling parameters. The standard practice is 128 samples of 2048 tokens, typically from the C4 or WikiText-2 datasets. Methods like GPTQ and AWQ require calibration, while simpler round-to-nearest approaches do not. Using data matched to the deployment domain yields slightly better quantized model quality.",
   "fundamentals": "For layer Y=XW+b: calibration records per-layer activation stats. Approaches: min/max (simple but outlier-sensitive), percentile (clips outliers), MSE-optimal (minimizes reconstruction error), entropy/KL-based (TensorRT). For GPTQ: calibration computes Hessian H = 2XX^T, used to solve layer-wise optimization min_Q $\\|\\|WX - QX\\|\\|^2$.",
   "seen_in": [
     "documentation",

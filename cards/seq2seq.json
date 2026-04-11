@@ -4,7 +4,7 @@
   "expansion": "Sequence-to-Sequence (Encoder-Decoder)",
   "category": "layer-types",
   "oneliner": "An encoder-decoder architecture that reads an input sequence in full, then generates an output sequence token by token.",
-  "explanation": "Sequence-to-sequence models use an encoder to process the full input with bidirectional attention, producing context vectors, and a decoder to generate the output autoregressively using causal self-attention plus cross-attention over the encoder's output. This design is natural for tasks where input and output are different sequences: translation, summarization, and question answering. T5 and BART are the most prominent seq2seq transformers. While decoder-only models like GPT dominate chat applications, seq2seq models remain strong for structured generation tasks and are the architecture behind most neural machine translation systems.",
+  "explanation": "A sequence-to-sequence model uses an encoder to read an entire input sequence with bidirectional attention, then a decoder to generate the output one token at a time using the encoder's representations. This design fits tasks where input and output are different sequences, such as translation and summarization. T5 and BART are the best-known seq2seq transformers, though decoder-only models now dominate chat and general generation.",
   "fundamentals": "The encoder produces $H_{\\text{enc}} = \\text{Encoder}(x_1, \\ldots, x_n)$ using bidirectional attention. The decoder at step $t$ computes causal self-attention over $y_{<t}$, then cross-attention: $\\text{softmax}\\left(\\frac{Q_{\\text{dec}} K_{\\text{enc}}^\\top}{\\sqrt{d_k}}\\right) V_{\\text{enc}}$. Encoder KV cache computed once during prefill.",
   "related": [
     "mha",

@@ -4,7 +4,7 @@
   "expansion": "Sinusoidal Position Encoding",
   "category": "position-encodings",
   "oneliner": "The original Transformer position encoding: sin/cos at geometrically spaced frequencies, added to token embeddings. Mostly replaced by RoPE.",
-  "explanation": "Sinusoidal positional encoding, introduced in the original Transformer paper, solves the fundamental problem that self-attention treats tokens as an unordered set. Each position is assigned a unique vector of sine and cosine values at geometrically spaced frequencies, which is added to the token embedding. This encoding is deterministic with no learned parameters and was designed so that relative positions could be represented as linear transformations. It has been replaced in modern LLMs by RoPE and other methods that better preserve positional information across layers.",
+  "explanation": "Sinusoidal positional encoding, from the original Transformer paper, gives the model a sense of token order by adding a fixed vector of sine and cosine values at geometrically spaced frequencies to each token embedding. It has no learned parameters and was designed so that relative positions could be represented as linear transformations. Modern LLMs have largely replaced it with RoPE, which better preserves positional information across layers.",
   "fundamentals": "PE(pos, 2i) = sin(pos/$10000^{2i/d}$). PE(pos, 2i+1) = cos(pos/$10000^{2i/d}$). Frequencies: $\\omega_k = 1/10000^{2k/d}$, geometric from 1 to 1/10000. Added to token embedding: $x'(pos) = x(pos) + PE(pos)$. Properties: $\\|PE(pos)\\|^2 = d/2$ (bounded, constant). $PE(pos+k) = M_k \\cdot PE(pos)$ where $M_k$ is a block-diagonal rotation matrix — relative position as linear transform. 0 learned params.",
   "seen_in": [
     "legacy-models",

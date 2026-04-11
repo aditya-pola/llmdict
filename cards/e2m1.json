@@ -4,7 +4,7 @@
   "expansion": "2-bit Exponent, 1-bit Mantissa — Microscaling FP4",
   "category": "precision-formats",
   "oneliner": "4-bit micro-float: only 15 distinct values, made viable by sharing an 8-bit block scale across 32 elements. Next-gen format for Blackwell GPUs.",
-  "explanation": "E2M1 is a tiny 4-bit floating-point format with 2 exponent bits and 1 mantissa bit, capable of representing only 15 distinct values. On its own it would be nearly useless, but the OCP Microscaling specification groups 32 E2M1 elements under a single shared 8-bit scale factor. The scale handles overall magnitude while E2M1 captures relative differences within each block. This delivers double the compute density compared to 8-bit formats. NVIDIA Blackwell GPUs have native MXFP4 tensor core support for this format.",
+  "explanation": "E2M1 is a tiny 4-bit floating-point format with 2 exponent bits and 1 mantissa bit, capable of representing only 15 distinct values. It becomes practical through the Microscaling specification, which groups 32 elements under a single shared 8-bit scale factor. The scale handles overall magnitude while individual elements capture relative differences. This format delivers double the compute density of 8-bit and is supported natively on NVIDIA Blackwell GPUs.",
   "fundamentals": "E2M1: 1 sign | 2 exp (bias 1) | 1 mantissa. No inf/NaN. Positive values: 0, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0. With sign: 15 distinct values. E8M0 block scale: pure power of 2 (2^(exp-127)), range 2^-127 to $2^{127}$. Effective value = E2M1_value $\\times$ 2^(shared_exp - 127). Effective bpw: 4 + 8/32 = 4.25 bits.",
   "seen_in": [
     "gguf-filename",

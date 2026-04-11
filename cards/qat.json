@@ -4,7 +4,7 @@
   "expansion": "Quantization-Aware Training",
   "category": "quantization-basics",
   "oneliner": "Simulate quantization during training so the model learns to be robust to quantization noise — better quality than PTQ but requires full training infrastructure.",
-  "explanation": "Forward pass uses 'fake quantization' (quantize then immediately dequantize, introducing realistic noise). Gradients flow through rounding via Straight-Through Estimator (STE). Over many steps, weights adapt to quantize well. Quality gap vs PTQ widens at lower bits: at int8 no benefit, at int4 meaningful, at int2 essential. Cost: requires training/fine-tuning infrastructure (hundreds of GPUs for 70B). Meta and Google have published LLM QAT results. Google's Gemma uses QAT for official quantized variants.",
+  "explanation": "Quantization-Aware Training simulates low-precision math during the training forward pass so the model learns weights that survive quantization gracefully. Gradients still flow in full precision using a straight-through estimator to approximate rounding. The result is noticeably better quality than post-training quantization at 4-bit and below, but it requires full training infrastructure to run.",
   "fundamentals": "Forward: W_fake_q = dequantize(quantize(W)), Y = X @ W_fake_q. Backward: STE approximates d(round(x))/dx $\\approx$ 1 — gradients pass through as if rounding wasn't there. Optimizer updates full-precision master weights. The model learns weights that happen to quantize well.",
   "seen_in": [
     "model-cards",

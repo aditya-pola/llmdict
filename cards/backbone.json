@@ -4,7 +4,7 @@
   "expansion": "Model Backbone (trunk)",
   "category": "layer-types",
   "oneliner": "The main body of a model — embedding layer plus transformer blocks — that produces contextual representations before any task-specific head.",
-  "explanation": "The backbone is everything in a transformer between the raw token IDs and the task-specific output head. It includes the token embedding table, positional encoding, and the stack of transformer layers with self-attention, feed-forward blocks, normalization, and residual connections. The backbone's job is to convert a sequence of token IDs into rich contextual hidden states. When people say LLaMA-3 70B, they mostly mean the backbone — the 80 transformer layers and 8192-dimensional hidden states. The backbone is what gets pretrained once and reused across many downstream tasks via different heads or fine-tuning.",
+  "explanation": "The backbone is the main body of a transformer model, comprising the embedding table, positional encoding, and the full stack of transformer layers. It converts a sequence of token IDs into rich contextual hidden states that a task-specific head then uses to make predictions. When people reference a model like LLaMA-3 70B, they mostly mean the backbone. The backbone is pretrained once and can be reused across many tasks via different heads or fine-tuning.",
   "fundamentals": "A decoder-only backbone maps tokens $x_1, \\ldots, x_n$ to hidden states through $L$ layers. Each layer: $h' = h + \\text{Attention}(\\text{Norm}(h))$, then $h'' = h' + \\text{FFN}(\\text{Norm}(h'))$. Total params $\\approx L \\cdot 12d^2$ for standard MHA with $4d$ FFN, plus embedding $|V| \\cdot d$.",
   "related": [
     "model-head",
