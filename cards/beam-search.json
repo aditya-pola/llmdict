@@ -1,0 +1,26 @@
+{
+  "id": "beam-search",
+  "name": "Beam Search",
+  "expansion": "Beam Search Decoding",
+  "category": "sampling-decoding",
+  "oneliner": "A decoding algorithm that tracks the top-k most probable partial sequences at each step, finding higher-quality outputs than greedy decoding at the cost of more compute.",
+  "explanation": "Beam search maintains a set of k candidate sequences (the beam) at each generation step, expanding each by one token and keeping only the k most probable paths. This explores a wider search space than greedy decoding, often finding better overall sequences. It was the standard decoding method for machine translation before sampling became popular for chat.",
+  "related": [
+    "greedy-decoding",
+    "temperature",
+    "top-p"
+  ],
+  "seen_in": [
+    "code",
+    "documentation"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "HuggingFace — Decoding strategies",
+      "url": "https://huggingface.co/blog/mlabonne/decoding-strategies"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

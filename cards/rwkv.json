@@ -1,0 +1,33 @@
+{
+  "id": "rwkv",
+  "name": "RWKV",
+  "expansion": "RWKV (Receptance Weighted Key Value)",
+  "category": "layer-types",
+  "oneliner": "An RNN-based architecture that combines transformer-style parallelizable training with constant-memory recurrent inference — an alternative to both transformers and Mamba.",
+  "explanation": "RWKV is an architecture that achieves transformer-quality language modeling while using a linear-complexity recurrence instead of quadratic attention. During training it can be parallelized like a transformer, but during inference it processes tokens one at a time with constant memory, like an RNN. This makes it particularly attractive for long-context and resource-constrained deployment. RWKV models up to 14B parameters are available on HuggingFace.",
+  "related": [
+    "mamba",
+    "self-attention",
+    "mha"
+  ],
+  "seen_in": [
+    "model-config",
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "RWKV: Reinventing RNNs for the Transformer Era",
+      "authors": "Peng et al.",
+      "venue": "EMNLP 2023",
+      "arxiv": "2305.13048"
+    }
+  ],
+  "resources": [
+    {
+      "label": "RWKV GitHub",
+      "url": "https://github.com/BlinkDL/RWKV-LM"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

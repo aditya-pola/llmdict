@@ -1,0 +1,32 @@
+{
+  "id": "data-deduplication",
+  "name": "Data Deduplication",
+  "expansion": "Training Data Deduplication",
+  "category": "datasets-recipes",
+  "oneliner": "Removing duplicate or near-duplicate text from training corpora to improve model quality, reduce memorization, and lower training cost.",
+  "explanation": "Data deduplication removes repeated or near-identical content from training datasets before pre-training begins. Without it, the model memorizes duplicated passages and wastes training compute on redundant data. Exact dedup removes identical documents via hashing. Fuzzy dedup uses MinHash or SimHash to find near-duplicates with small edits. The Llama 3 training pipeline removed duplicates at both document and paragraph level.",
+  "related": [
+    "pre-training",
+    "training-recipe",
+    "scaling-laws"
+  ],
+  "seen_in": [
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Deduplicating Training Data Makes Language Models Better",
+      "authors": "Lee et al.",
+      "venue": "ACL 2022",
+      "arxiv": "2107.06499"
+    }
+  ],
+  "resources": [
+    {
+      "label": "NVIDIA NeMo Curator",
+      "url": "https://github.com/NVIDIA/NeMo-Curator"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

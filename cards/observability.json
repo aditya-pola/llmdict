@@ -1,0 +1,30 @@
+{
+  "id": "observability",
+  "name": "LLM Observability",
+  "expansion": "LLM Observability (Tracing and Monitoring)",
+  "category": "scaling-patterns",
+  "oneliner": "Tracing every LLM call in production — recording prompts, completions, latency, token counts, and costs — to debug, optimize, and monitor quality.",
+  "explanation": "LLM observability is the practice of instrumenting every LLM interaction in a production system so you can see exactly what went in, what came out, how long it took, and how much it cost. Traces capture the full chain: user input, system prompt, retrieved context, model response, and any tool calls. This is essential for debugging agent failures, detecting quality regressions, optimizing prompts, and tracking spend.",
+  "related": [
+    "llmops",
+    "inference-metrics",
+    "evals"
+  ],
+  "seen_in": [
+    "documentation",
+    "code"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "LangFuse docs",
+      "url": "https://langfuse.com/docs"
+    },
+    {
+      "label": "Arize Phoenix",
+      "url": "https://github.com/Arize-ai/phoenix"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

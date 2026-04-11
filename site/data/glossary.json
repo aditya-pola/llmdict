@@ -81,6 +81,7 @@
         "flash-attention",
         "gqa",
         "kv-cache",
+        "linear-attention",
         "mha",
         "mla",
         "mqa",
@@ -122,8 +123,10 @@
         "pre-norm",
         "residual-connection",
         "rmsnorm",
+        "rwkv",
         "seq2seq",
         "swiglu",
+        "vit",
         "vlm",
         "weight-tying"
       ]
@@ -134,9 +137,11 @@
       "order": 7,
       "entries": [
         "chain-of-thought",
+        "chatbot-arena",
         "chunked-prefill",
         "context-engineering",
         "continuous-batching",
+        "data-contamination",
         "data-parallelism",
         "dense-models",
         "evals",
@@ -148,10 +153,12 @@
         "inference",
         "knowledge-distillation",
         "llm-as-judge",
+        "llmops",
         "metr",
         "mmlu",
         "model-merging",
         "moe",
+        "observability",
         "perplexity",
         "prefix-caching",
         "pruning",
@@ -195,7 +202,9 @@
       "label": "Sampling & Decoding",
       "order": 8,
       "entries": [
+        "beam-search",
         "greedy-decoding",
+        "repetition-penalty",
         "structured-output",
         "temperature",
         "top-k",
@@ -277,11 +286,14 @@
         "tool-dask",
         "tool-exllamav2",
         "tool-langchain",
+        "tool-langfuse",
+        "tool-langsmith",
         "tool-llamacpp",
         "tool-llamaindex",
         "tool-lmstudio",
         "tool-n8n",
         "tool-ollama",
+        "tool-outlines",
         "tool-ray",
         "tool-sglang",
         "tool-tensorrt-llm",
@@ -306,6 +318,7 @@
       "label": "Datasets & Recipes",
       "order": 14,
       "entries": [
+        "data-deduplication",
         "dataset-dolphin",
         "dataset-evolinstruct",
         "dataset-hermes",
@@ -326,7 +339,8 @@
         "function-calling",
         "guardrails",
         "mcp",
-        "pydantic-ai"
+        "pydantic-ai",
+        "react"
       ]
     },
     {
@@ -358,6 +372,7 @@
       "order": 18,
       "entries": [
         "embeddings",
+        "faiss",
         "vector-database"
       ]
     }
@@ -691,6 +706,32 @@
       "confidence": "high",
       "verified_date": "2026-04-11"
     },
+    "beam-search": {
+      "id": "beam-search",
+      "name": "Beam Search",
+      "expansion": "Beam Search Decoding",
+      "category": "sampling-decoding",
+      "oneliner": "A decoding algorithm that tracks the top-k most probable partial sequences at each step, finding higher-quality outputs than greedy decoding at the cost of more compute.",
+      "explanation": "Beam search maintains a set of k candidate sequences (the beam) at each generation step, expanding each by one token and keeping only the k most probable paths. This explores a wider search space than greedy decoding, often finding better overall sequences. It was the standard decoding method for machine translation before sampling became popular for chat.",
+      "related": [
+        "greedy-decoding",
+        "temperature",
+        "top-p"
+      ],
+      "seen_in": [
+        "code",
+        "documentation"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "HuggingFace — Decoding strategies",
+          "url": "https://huggingface.co/blog/mlabonne/decoding-strategies"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "bf16": {
       "id": "bf16",
       "name": "bf16 / bfloat16",
@@ -899,6 +940,42 @@
         {
           "label": "Wei et al. CoT paper",
           "url": "https://arxiv.org/abs/2201.11903"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
+    "chatbot-arena": {
+      "id": "chatbot-arena",
+      "name": "Chatbot Arena",
+      "expansion": "LMSYS Chatbot Arena",
+      "category": "scaling-patterns",
+      "oneliner": "A crowdsourced evaluation platform where users chat with two anonymous models side-by-side and vote for the better one, producing Elo-style rankings.",
+      "explanation": "Chatbot Arena is a live evaluation platform from LMSYS where users interact with two anonymous language models simultaneously and vote for the preferred response. Votes are aggregated into an Elo-style leaderboard that ranks models by human preference. Unlike static benchmarks that test narrow skills, Arena captures real-world conversational quality across diverse user intents.",
+      "related": [
+        "evals",
+        "mmlu",
+        "llm-as-judge"
+      ],
+      "seen_in": [
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Chatbot Arena: An Open Platform for Evaluating LLMs by Human Preference",
+          "authors": "Chiang et al.",
+          "venue": "ICML 2024",
+          "arxiv": "2403.04132"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Chatbot Arena",
+          "url": "https://lmarena.ai"
+        },
+        {
+          "label": "Arena leaderboard",
+          "url": "https://huggingface.co/spaces/lmsys/chatbot-arena-leaderboard"
         }
       ],
       "confidence": "high",
@@ -1154,6 +1231,60 @@
       ],
       "confidence": "high",
       "verified_date": "2026-04-10"
+    },
+    "data-contamination": {
+      "id": "data-contamination",
+      "name": "Data Contamination",
+      "expansion": "Benchmark Data Contamination",
+      "category": "scaling-patterns",
+      "oneliner": "When evaluation benchmark data leaks into training sets, inflating reported model scores and making comparisons unreliable.",
+      "explanation": "Data contamination occurs when text from evaluation benchmarks accidentally appears in a model's training data, artificially inflating the model's scores on those benchmarks. Since LLMs are trained on massive web crawls, and many benchmarks are publicly available online, overlap is almost inevitable. Contamination makes benchmark comparisons between models unreliable — a model trained on MMLU questions will score higher without being genuinely smarter.",
+      "related": [
+        "evals",
+        "mmlu",
+        "humaneval",
+        "pre-training"
+      ],
+      "seen_in": [
+        "model-cards",
+        "documentation"
+      ],
+      "foundational_papers": [],
+      "resources": [],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
+    "data-deduplication": {
+      "id": "data-deduplication",
+      "name": "Data Deduplication",
+      "expansion": "Training Data Deduplication",
+      "category": "datasets-recipes",
+      "oneliner": "Removing duplicate or near-duplicate text from training corpora to improve model quality, reduce memorization, and lower training cost.",
+      "explanation": "Data deduplication removes repeated or near-identical content from training datasets before pre-training begins. Without it, the model memorizes duplicated passages and wastes training compute on redundant data. Exact dedup removes identical documents via hashing. Fuzzy dedup uses MinHash or SimHash to find near-duplicates with small edits. The Llama 3 training pipeline removed duplicates at both document and paragraph level.",
+      "related": [
+        "pre-training",
+        "training-recipe",
+        "scaling-laws"
+      ],
+      "seen_in": [
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Deduplicating Training Data Makes Language Models Better",
+          "authors": "Lee et al.",
+          "venue": "ACL 2022",
+          "arxiv": "2107.06499"
+        }
+      ],
+      "resources": [
+        {
+          "label": "NVIDIA NeMo Curator",
+          "url": "https://github.com/NVIDIA/NeMo-Curator"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     },
     "data-parallelism": {
       "id": "data-parallelism",
@@ -1785,6 +1916,36 @@
           "url": "https://cameronrwolfe.substack.com/p/moe-llms"
         }
       ]
+    },
+    "faiss": {
+      "id": "faiss",
+      "name": "FAISS",
+      "expansion": "FAISS — Facebook AI Similarity Search",
+      "category": "embeddings-retrieval",
+      "oneliner": "Meta's open-source library for efficient similarity search and clustering of dense vectors — the most widely used engine for nearest-neighbor retrieval in RAG pipelines.",
+      "explanation": "FAISS is a library from Meta for searching through large collections of dense vectors using approximate nearest neighbor algorithms. It powers the retrieval step in most RAG systems, finding the document chunks most semantically similar to a user's query. FAISS supports multiple index types trading accuracy for speed: flat (exact but slow), IVF (inverted file for faster approximate search), and HNSW (graph-based for high recall). It runs on CPU and GPU, handling billions of vectors.",
+      "related": [
+        "vector-database",
+        "embeddings",
+        "rag"
+      ],
+      "seen_in": [
+        "code",
+        "documentation"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "FAISS GitHub",
+          "url": "https://github.com/facebookresearch/faiss"
+        },
+        {
+          "label": "FAISS tutorial",
+          "url": "https://github.com/facebookresearch/faiss/wiki"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     },
     "few-shot": {
       "id": "few-shot",
@@ -3195,6 +3356,34 @@
         }
       ]
     },
+    "linear-attention": {
+      "id": "linear-attention",
+      "name": "Linear Attention",
+      "expansion": "Linear Attention (Kernel-Based Attention)",
+      "category": "attention-variants",
+      "oneliner": "A family of attention variants that replace softmax with linear kernels to achieve O(n) complexity instead of O(n²), enabling much longer sequences.",
+      "explanation": "Linear attention replaces the softmax in standard attention with a kernel function that allows the computation to be rearranged from O(n²) to O(n) in sequence length. Instead of computing the full n-by-n attention matrix, it factorizes the computation so keys and values are aggregated first, then multiplied by each query. This enables processing very long sequences with constant memory per token.",
+      "related": [
+        "self-attention",
+        "flash-attention",
+        "mamba",
+        "swa"
+      ],
+      "seen_in": [
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Transformers are RNNs: Fast Autoregressive Transformers with Linear Attention",
+          "authors": "Katharopoulos et al.",
+          "venue": "ICML 2020",
+          "arxiv": "2006.16236"
+        }
+      ],
+      "resources": [],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "llm-as-judge": {
       "id": "llm-as-judge",
       "name": "LLM-as-a-Judge",
@@ -3224,6 +3413,36 @@
         {
           "label": "MT-Bench paper",
           "url": "https://arxiv.org/abs/2306.05685"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
+    "llmops": {
+      "id": "llmops",
+      "name": "LLMOps",
+      "expansion": "LLM Operations",
+      "category": "scaling-patterns",
+      "oneliner": "The operational discipline for managing LLMs in production — prompt versioning, evaluation pipelines, cost tracking, monitoring, and deployment automation.",
+      "explanation": "LLMOps is the practice of managing the full lifecycle of LLM-powered applications in production. It extends traditional MLOps with LLM-specific concerns: prompt version control and testing, evaluation pipelines that run automatically on prompt changes, cost monitoring per request, latency tracking, hallucination detection, and A/B testing of model versions. Tools in this space include LangSmith, LangFuse, Weights & Biases, and Braintrust.",
+      "related": [
+        "inference-metrics",
+        "evals",
+        "tool-langchain",
+        "guardrails"
+      ],
+      "seen_in": [
+        "documentation"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "LangSmith",
+          "url": "https://smith.langchain.com"
+        },
+        {
+          "label": "LangFuse",
+          "url": "https://langfuse.com"
         }
       ],
       "confidence": "high",
@@ -3886,6 +4105,36 @@
           "url": "https://arxiv.org/abs/2309.00071"
         }
       ]
+    },
+    "observability": {
+      "id": "observability",
+      "name": "LLM Observability",
+      "expansion": "LLM Observability (Tracing and Monitoring)",
+      "category": "scaling-patterns",
+      "oneliner": "Tracing every LLM call in production — recording prompts, completions, latency, token counts, and costs — to debug, optimize, and monitor quality.",
+      "explanation": "LLM observability is the practice of instrumenting every LLM interaction in a production system so you can see exactly what went in, what came out, how long it took, and how much it cost. Traces capture the full chain: user input, system prompt, retrieved context, model response, and any tool calls. This is essential for debugging agent failures, detecting quality regressions, optimizing prompts, and tracking spend.",
+      "related": [
+        "llmops",
+        "inference-metrics",
+        "evals"
+      ],
+      "seen_in": [
+        "documentation",
+        "code"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "LangFuse docs",
+          "url": "https://langfuse.com/docs"
+        },
+        {
+          "label": "Arize Phoenix",
+          "url": "https://github.com/Arize-ai/phoenix"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     },
     "olmo": {
       "id": "olmo",
@@ -4992,6 +5241,40 @@
       "confidence": "high",
       "verified_date": "2026-04-11"
     },
+    "react": {
+      "id": "react",
+      "name": "ReAct",
+      "expansion": "ReAct (Reasoning + Acting)",
+      "category": "agents-and-tools",
+      "oneliner": "A prompting framework that interleaves reasoning traces with action steps, enabling LLMs to think about a problem and use tools in alternating steps.",
+      "explanation": "ReAct is a prompting strategy that combines chain-of-thought reasoning with tool use in an interleaved loop. At each step, the model generates a thought (reasoning about what to do next), then an action (calling a tool like search or calculator), then observes the result, and repeats until it has enough information to answer. This think-act-observe loop is the foundation of most LLM agent architectures.",
+      "related": [
+        "agentic-ai",
+        "chain-of-thought",
+        "function-calling",
+        "tool-langchain"
+      ],
+      "seen_in": [
+        "code",
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+          "authors": "Yao et al.",
+          "venue": "ICLR 2023",
+          "arxiv": "2210.03629"
+        }
+      ],
+      "resources": [
+        {
+          "label": "ReAct paper",
+          "url": "https://arxiv.org/abs/2210.03629"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "reasoning-models": {
       "id": "reasoning-models",
       "name": "Reasoning Models",
@@ -5073,6 +5356,27 @@
           "url": "https://arxiv.org/abs/2209.07858"
         }
       ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
+    "repetition-penalty": {
+      "id": "repetition-penalty",
+      "name": "Repetition Penalty",
+      "expansion": "Repetition Penalty / Frequency Penalty",
+      "category": "sampling-decoding",
+      "oneliner": "An inference-time parameter that reduces the probability of tokens already generated, preventing the model from repeating phrases or getting stuck in loops.",
+      "explanation": "Repetition penalty is applied during decoding to discourage the model from generating the same tokens or phrases repeatedly. It works by dividing the logit of any previously generated token by a penalty factor (typically 1.1-1.3), making it less likely to be selected again. Frequency penalty variants scale the penalty by how many times a token has appeared. Without repetition penalty, models often degenerate into repetitive loops, especially with greedy or low-temperature decoding.",
+      "related": [
+        "temperature",
+        "greedy-decoding",
+        "top-p"
+      ],
+      "seen_in": [
+        "model-config",
+        "code"
+      ],
+      "foundational_papers": [],
+      "resources": [],
       "confidence": "high",
       "verified_date": "2026-04-11"
     },
@@ -5371,6 +5675,39 @@
           "url": "https://lilianweng.github.io/posts/2023-01-27-the-transformer-family-v2/"
         }
       ]
+    },
+    "rwkv": {
+      "id": "rwkv",
+      "name": "RWKV",
+      "expansion": "RWKV (Receptance Weighted Key Value)",
+      "category": "layer-types",
+      "oneliner": "An RNN-based architecture that combines transformer-style parallelizable training with constant-memory recurrent inference — an alternative to both transformers and Mamba.",
+      "explanation": "RWKV is an architecture that achieves transformer-quality language modeling while using a linear-complexity recurrence instead of quadratic attention. During training it can be parallelized like a transformer, but during inference it processes tokens one at a time with constant memory, like an RNN. This makes it particularly attractive for long-context and resource-constrained deployment. RWKV models up to 14B parameters are available on HuggingFace.",
+      "related": [
+        "mamba",
+        "self-attention",
+        "mha"
+      ],
+      "seen_in": [
+        "model-config",
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "RWKV: Reinventing RNNs for the Transformer Era",
+          "authors": "Peng et al.",
+          "venue": "EMNLP 2023",
+          "arxiv": "2305.13048"
+        }
+      ],
+      "resources": [
+        {
+          "label": "RWKV GitHub",
+          "url": "https://github.com/BlinkDL/RWKV-LM"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     },
     "safetensors": {
       "id": "safetensors",
@@ -6936,6 +7273,64 @@
       "confidence": "high",
       "verified_date": "2026-04-11"
     },
+    "tool-langfuse": {
+      "id": "tool-langfuse",
+      "name": "LangFuse",
+      "expansion": "LangFuse — Open-Source LLM Observability",
+      "category": "serving-tools",
+      "oneliner": "An open-source alternative to LangSmith for tracing LLM calls, managing prompts, running evaluations, and tracking costs — self-hostable and framework-agnostic.",
+      "explanation": "LangFuse is an open-source LLM observability platform that provides tracing, prompt management, evaluation, and cost tracking for LLM applications. It captures the full execution trace of every request, including nested LLM calls, retrieval steps, and tool invocations. LangFuse is framework-agnostic with integrations for LangChain, LlamaIndex, OpenAI SDK, and others. Being open-source and self-hostable, it appeals to teams that need data privacy or want to avoid vendor lock-in.",
+      "related": [
+        "llmops",
+        "observability",
+        "evals",
+        "tool-langsmith"
+      ],
+      "seen_in": [
+        "documentation",
+        "code"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "LangFuse GitHub",
+          "url": "https://github.com/langfuse/langfuse"
+        },
+        {
+          "label": "LangFuse docs",
+          "url": "https://langfuse.com/docs"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
+    "tool-langsmith": {
+      "id": "tool-langsmith",
+      "name": "LangSmith",
+      "expansion": "LangSmith — LLM Observability Platform",
+      "category": "serving-tools",
+      "oneliner": "LangChain's platform for tracing, evaluating, and monitoring LLM application calls in production — the most adopted LLMOps tool.",
+      "explanation": "LangSmith is an observability and evaluation platform from LangChain for managing LLM applications in production. It traces every LLM call, tool invocation, and retrieval step with full input/output visibility. Developers use it to debug agent failures by replaying exact traces, run automated evaluations against prompt changes, manage prompt versions, and track cost and latency. LangSmith works with any LLM provider (not just LangChain) via a lightweight SDK.",
+      "related": [
+        "llmops",
+        "observability",
+        "tool-langchain",
+        "evals"
+      ],
+      "seen_in": [
+        "documentation",
+        "code"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "LangSmith docs",
+          "url": "https://docs.smith.langchain.com"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "tool-llamacpp": {
       "id": "tool-llamacpp",
       "name": "llama.cpp",
@@ -7080,6 +7475,40 @@
         }
       ],
       "explanation": "Ollama is a command-line tool and background service that wraps llama.cpp into a seamless local experience. A single command like 'ollama run llama3' downloads the model weights and starts an interactive chat. It exposes a local REST API compatible with the OpenAI format, so apps can swap between local and cloud models easily. Modelfiles let users customize system prompts, parameters, and adapters in a Dockerfile-like syntax."
+    },
+    "tool-outlines": {
+      "id": "tool-outlines",
+      "name": "Outlines",
+      "expansion": "Outlines — Grammar-Guided Generation Library",
+      "category": "serving-tools",
+      "oneliner": "A Python library that implements grammar-guided constrained decoding, guaranteeing LLM outputs conform to JSON schemas, regex patterns, or arbitrary grammars.",
+      "explanation": "Outlines is a library from dottxt that forces LLM output to conform to a specified format by masking invalid tokens at each generation step. You provide a JSON Schema, Pydantic model, regex pattern, or context-free grammar, and Outlines computes which tokens are valid continuations at each position, setting all others to negative infinity before sampling. This guarantees structurally valid output without retries or post-processing. It integrates with vLLM, llama.cpp, and Transformers.",
+      "related": [
+        "structured-output",
+        "pydantic-ai",
+        "function-calling",
+        "tool-vllm"
+      ],
+      "seen_in": [
+        "code",
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Efficient Guided Generation for Large Language Models",
+          "authors": "Willard & Louf",
+          "venue": "2023",
+          "arxiv": "2307.09702"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Outlines GitHub",
+          "url": "https://github.com/dottxt-ai/outlines"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     },
     "tool-ray": {
       "id": "tool-ray",
@@ -7486,6 +7915,40 @@
         {
           "label": "Pinecone — What is a Vector Database?",
           "url": "https://www.pinecone.io/learn/vector-database/"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
+    "vit": {
+      "id": "vit",
+      "name": "ViT",
+      "expansion": "Vision Transformer",
+      "category": "layer-types",
+      "oneliner": "A transformer that processes images by splitting them into fixed-size patches and treating each patch as a token — the dominant vision encoder in modern VLMs.",
+      "explanation": "Vision Transformer applies the standard transformer architecture to images by dividing them into a grid of fixed-size patches (typically 14x14 or 16x16 pixels), flattening each patch into a vector, and projecting it into the model's embedding dimension. These patch embeddings are processed by standard transformer layers with self-attention, just like text tokens. ViT proved that transformers can match or beat CNNs for vision tasks when trained at scale.",
+      "related": [
+        "vlm",
+        "clip",
+        "self-attention",
+        "backbone"
+      ],
+      "seen_in": [
+        "model-config",
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale",
+          "authors": "Dosovitskiy et al.",
+          "venue": "ICLR 2021",
+          "arxiv": "2010.11929"
+        }
+      ],
+      "resources": [
+        {
+          "label": "ViT paper",
+          "url": "https://arxiv.org/abs/2010.11929"
         }
       ],
       "confidence": "high",

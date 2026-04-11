@@ -1,0 +1,34 @@
+{
+  "id": "tool-outlines",
+  "name": "Outlines",
+  "expansion": "Outlines — Grammar-Guided Generation Library",
+  "category": "serving-tools",
+  "oneliner": "A Python library that implements grammar-guided constrained decoding, guaranteeing LLM outputs conform to JSON schemas, regex patterns, or arbitrary grammars.",
+  "explanation": "Outlines is a library from dottxt that forces LLM output to conform to a specified format by masking invalid tokens at each generation step. You provide a JSON Schema, Pydantic model, regex pattern, or context-free grammar, and Outlines computes which tokens are valid continuations at each position, setting all others to negative infinity before sampling. This guarantees structurally valid output without retries or post-processing. It integrates with vLLM, llama.cpp, and Transformers.",
+  "related": [
+    "structured-output",
+    "pydantic-ai",
+    "function-calling",
+    "tool-vllm"
+  ],
+  "seen_in": [
+    "code",
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Efficient Guided Generation for Large Language Models",
+      "authors": "Willard & Louf",
+      "venue": "2023",
+      "arxiv": "2307.09702"
+    }
+  ],
+  "resources": [
+    {
+      "label": "Outlines GitHub",
+      "url": "https://github.com/dottxt-ai/outlines"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

@@ -1,0 +1,31 @@
+{
+  "id": "tool-langfuse",
+  "name": "LangFuse",
+  "expansion": "LangFuse — Open-Source LLM Observability",
+  "category": "serving-tools",
+  "oneliner": "An open-source alternative to LangSmith for tracing LLM calls, managing prompts, running evaluations, and tracking costs — self-hostable and framework-agnostic.",
+  "explanation": "LangFuse is an open-source LLM observability platform that provides tracing, prompt management, evaluation, and cost tracking for LLM applications. It captures the full execution trace of every request, including nested LLM calls, retrieval steps, and tool invocations. LangFuse is framework-agnostic with integrations for LangChain, LlamaIndex, OpenAI SDK, and others. Being open-source and self-hostable, it appeals to teams that need data privacy or want to avoid vendor lock-in.",
+  "related": [
+    "llmops",
+    "observability",
+    "evals",
+    "tool-langsmith"
+  ],
+  "seen_in": [
+    "documentation",
+    "code"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "LangFuse GitHub",
+      "url": "https://github.com/langfuse/langfuse"
+    },
+    {
+      "label": "LangFuse docs",
+      "url": "https://langfuse.com/docs"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

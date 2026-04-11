@@ -1,0 +1,30 @@
+{
+  "id": "faiss",
+  "name": "FAISS",
+  "expansion": "FAISS — Facebook AI Similarity Search",
+  "category": "embeddings-retrieval",
+  "oneliner": "Meta's open-source library for efficient similarity search and clustering of dense vectors — the most widely used engine for nearest-neighbor retrieval in RAG pipelines.",
+  "explanation": "FAISS is a library from Meta for searching through large collections of dense vectors using approximate nearest neighbor algorithms. It powers the retrieval step in most RAG systems, finding the document chunks most semantically similar to a user's query. FAISS supports multiple index types trading accuracy for speed: flat (exact but slow), IVF (inverted file for faster approximate search), and HNSW (graph-based for high recall). It runs on CPU and GPU, handling billions of vectors.",
+  "related": [
+    "vector-database",
+    "embeddings",
+    "rag"
+  ],
+  "seen_in": [
+    "code",
+    "documentation"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "FAISS GitHub",
+      "url": "https://github.com/facebookresearch/faiss"
+    },
+    {
+      "label": "FAISS tutorial",
+      "url": "https://github.com/facebookresearch/faiss/wiki"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

@@ -1,0 +1,22 @@
+{
+  "id": "data-contamination",
+  "name": "Data Contamination",
+  "expansion": "Benchmark Data Contamination",
+  "category": "scaling-patterns",
+  "oneliner": "When evaluation benchmark data leaks into training sets, inflating reported model scores and making comparisons unreliable.",
+  "explanation": "Data contamination occurs when text from evaluation benchmarks accidentally appears in a model's training data, artificially inflating the model's scores on those benchmarks. Since LLMs are trained on massive web crawls, and many benchmarks are publicly available online, overlap is almost inevitable. Contamination makes benchmark comparisons between models unreliable — a model trained on MMLU questions will score higher without being genuinely smarter.",
+  "related": [
+    "evals",
+    "mmlu",
+    "humaneval",
+    "pre-training"
+  ],
+  "seen_in": [
+    "model-cards",
+    "documentation"
+  ],
+  "foundational_papers": [],
+  "resources": [],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

@@ -1,0 +1,28 @@
+{
+  "id": "linear-attention",
+  "name": "Linear Attention",
+  "expansion": "Linear Attention (Kernel-Based Attention)",
+  "category": "attention-variants",
+  "oneliner": "A family of attention variants that replace softmax with linear kernels to achieve O(n) complexity instead of O(n²), enabling much longer sequences.",
+  "explanation": "Linear attention replaces the softmax in standard attention with a kernel function that allows the computation to be rearranged from O(n²) to O(n) in sequence length. Instead of computing the full n-by-n attention matrix, it factorizes the computation so keys and values are aggregated first, then multiplied by each query. This enables processing very long sequences with constant memory per token.",
+  "related": [
+    "self-attention",
+    "flash-attention",
+    "mamba",
+    "swa"
+  ],
+  "seen_in": [
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Transformers are RNNs: Fast Autoregressive Transformers with Linear Attention",
+      "authors": "Katharopoulos et al.",
+      "venue": "ICML 2020",
+      "arxiv": "2006.16236"
+    }
+  ],
+  "resources": [],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

@@ -1,0 +1,36 @@
+{
+  "id": "chatbot-arena",
+  "name": "Chatbot Arena",
+  "expansion": "LMSYS Chatbot Arena",
+  "category": "scaling-patterns",
+  "oneliner": "A crowdsourced evaluation platform where users chat with two anonymous models side-by-side and vote for the better one, producing Elo-style rankings.",
+  "explanation": "Chatbot Arena is a live evaluation platform from LMSYS where users interact with two anonymous language models simultaneously and vote for the preferred response. Votes are aggregated into an Elo-style leaderboard that ranks models by human preference. Unlike static benchmarks that test narrow skills, Arena captures real-world conversational quality across diverse user intents.",
+  "related": [
+    "evals",
+    "mmlu",
+    "llm-as-judge"
+  ],
+  "seen_in": [
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Chatbot Arena: An Open Platform for Evaluating LLMs by Human Preference",
+      "authors": "Chiang et al.",
+      "venue": "ICML 2024",
+      "arxiv": "2403.04132"
+    }
+  ],
+  "resources": [
+    {
+      "label": "Chatbot Arena",
+      "url": "https://lmarena.ai"
+    },
+    {
+      "label": "Arena leaderboard",
+      "url": "https://huggingface.co/spaces/lmsys/chatbot-arena-leaderboard"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

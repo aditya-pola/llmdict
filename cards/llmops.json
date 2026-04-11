@@ -1,0 +1,30 @@
+{
+  "id": "llmops",
+  "name": "LLMOps",
+  "expansion": "LLM Operations",
+  "category": "scaling-patterns",
+  "oneliner": "The operational discipline for managing LLMs in production — prompt versioning, evaluation pipelines, cost tracking, monitoring, and deployment automation.",
+  "explanation": "LLMOps is the practice of managing the full lifecycle of LLM-powered applications in production. It extends traditional MLOps with LLM-specific concerns: prompt version control and testing, evaluation pipelines that run automatically on prompt changes, cost monitoring per request, latency tracking, hallucination detection, and A/B testing of model versions. Tools in this space include LangSmith, LangFuse, Weights & Biases, and Braintrust.",
+  "related": [
+    "inference-metrics",
+    "evals",
+    "tool-langchain",
+    "guardrails"
+  ],
+  "seen_in": [
+    "documentation"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "LangSmith",
+      "url": "https://smith.langchain.com"
+    },
+    {
+      "label": "LangFuse",
+      "url": "https://langfuse.com"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

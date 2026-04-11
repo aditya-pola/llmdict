@@ -1,0 +1,27 @@
+{
+  "id": "tool-langsmith",
+  "name": "LangSmith",
+  "expansion": "LangSmith — LLM Observability Platform",
+  "category": "serving-tools",
+  "oneliner": "LangChain's platform for tracing, evaluating, and monitoring LLM application calls in production — the most adopted LLMOps tool.",
+  "explanation": "LangSmith is an observability and evaluation platform from LangChain for managing LLM applications in production. It traces every LLM call, tool invocation, and retrieval step with full input/output visibility. Developers use it to debug agent failures by replaying exact traces, run automated evaluations against prompt changes, manage prompt versions, and track cost and latency. LangSmith works with any LLM provider (not just LangChain) via a lightweight SDK.",
+  "related": [
+    "llmops",
+    "observability",
+    "tool-langchain",
+    "evals"
+  ],
+  "seen_in": [
+    "documentation",
+    "code"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "LangSmith docs",
+      "url": "https://docs.smith.langchain.com"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

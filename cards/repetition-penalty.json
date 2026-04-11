@@ -1,0 +1,21 @@
+{
+  "id": "repetition-penalty",
+  "name": "Repetition Penalty",
+  "expansion": "Repetition Penalty / Frequency Penalty",
+  "category": "sampling-decoding",
+  "oneliner": "An inference-time parameter that reduces the probability of tokens already generated, preventing the model from repeating phrases or getting stuck in loops.",
+  "explanation": "Repetition penalty is applied during decoding to discourage the model from generating the same tokens or phrases repeatedly. It works by dividing the logit of any previously generated token by a penalty factor (typically 1.1-1.3), making it less likely to be selected again. Frequency penalty variants scale the penalty by how many times a token has appeared. Without repetition penalty, models often degenerate into repetitive loops, especially with greedy or low-temperature decoding.",
+  "related": [
+    "temperature",
+    "greedy-decoding",
+    "top-p"
+  ],
+  "seen_in": [
+    "model-config",
+    "code"
+  ],
+  "foundational_papers": [],
+  "resources": [],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}
