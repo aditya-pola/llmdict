@@ -10,7 +10,7 @@ import json, os, sys
 
 CARDS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cards')
 CATEGORIES_FILE = os.path.join(CARDS_DIR, '_categories.json')
-OUTPUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'site', 'data', 'glossary.json')
+OUTPUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'docs', 'data', 'glossary.json')
 
 def build():
     # Load categories
