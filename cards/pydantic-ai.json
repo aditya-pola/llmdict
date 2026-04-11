@@ -1,0 +1,31 @@
+{
+  "id": "pydantic-ai",
+  "name": "Pydantic AI / Instructor",
+  "expansion": "Type-Safe Structured Output from LLMs",
+  "category": "agents-and-tools",
+  "oneliner": "Libraries that force LLM outputs into validated Python types using Pydantic models, eliminating manual JSON parsing and handling retries automatically.",
+  "explanation": "Pydantic AI and Instructor are libraries that extract structured, type-safe data from language model outputs. You define a Pydantic model describing the expected output schema, and the library handles prompt construction, JSON mode activation, parsing, and automatic retry on validation failure. This replaces fragile regex-based output parsing with reliable, schema-validated responses. Instructor works with OpenAI, Anthropic, and open-source models.",
+  "fundamentals": "Core flow: define Pydantic model → library injects schema into system prompt or tool definition → model generates JSON → library validates against schema → retry with error feedback if invalid. Uses function calling / tool use APIs where available, falls back to JSON mode. Instructor: lightweight, focused on extraction. Pydantic AI: full agent framework with typed dependencies, streaming, and multi-step workflows. Both leverage Pydantic v2 for fast validation.",
+  "related": [
+    "function-calling",
+    "agentic-ai",
+    "guardrails"
+  ],
+  "seen_in": [
+    "code",
+    "documentation"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "Instructor library",
+      "url": "https://github.com/jxnl/instructor"
+    },
+    {
+      "label": "Pydantic AI docs",
+      "url": "https://ai.pydantic.dev"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

@@ -1,0 +1,39 @@
+{
+  "id": "dspy",
+  "name": "DSPy",
+  "expansion": "DSPy — Declarative Self-improving Language Programs",
+  "category": "agents-and-tools",
+  "oneliner": "A framework from Stanford that replaces hand-written prompts with modular, optimizable programs where the framework automatically tunes prompts and few-shot examples.",
+  "explanation": "DSPy is a programming framework that treats LLM interactions as optimizable modules rather than fixed prompt templates. You define what each step should accomplish using Python signatures, and DSPy automatically searches for the best prompts, few-shot examples, and even fine-tuning strategies to maximize a metric you specify. This eliminates brittle prompt engineering by making prompts a learnable parameter.",
+  "fundamentals": "Core abstractions: Signature (input/output spec), Module (a composable step like ChainOfThought or ReAct), Teleprompter/Optimizer (searches for optimal prompts). Optimization: given a training set and metric, the optimizer evaluates candidate prompts via few-shot bootstrap, random search, or Bayesian optimization. Output: a compiled program with frozen, optimized prompts. Philosophy: prompts are like weights — they should be learned, not hand-written.",
+  "related": [
+    "agentic-ai",
+    "chain-of-thought",
+    "rag",
+    "function-calling"
+  ],
+  "seen_in": [
+    "code",
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines",
+      "authors": "Khattab et al.",
+      "venue": "ICLR 2024",
+      "arxiv": "2310.03714"
+    }
+  ],
+  "resources": [
+    {
+      "label": "DSPy GitHub",
+      "url": "https://github.com/stanfordnlp/dspy"
+    },
+    {
+      "label": "DSPy docs",
+      "url": "https://dspy.ai"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

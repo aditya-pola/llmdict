@@ -1,0 +1,31 @@
+{
+  "id": "inspect-eval",
+  "name": "Inspect",
+  "expansion": "Inspect — LLM Evaluation Framework (UK AISI)",
+  "category": "serving-tools",
+  "oneliner": "An open-source framework from the UK AI Safety Institute for building reproducible, composable LLM evaluations with built-in sandboxing.",
+  "explanation": "Inspect is an evaluation framework developed by the UK AI Safety Institute for rigorously testing language model capabilities and safety properties. It provides a Python API for defining evaluation tasks as composable pipelines of solvers, scorers, and datasets. Inspect supports sandboxed code execution, multi-turn agent evaluations, and tool-use tasks out of the box. It has become a standard tool for frontier model safety evaluations and is used by several AI labs for pre-deployment assessment.",
+  "fundamentals": "Core abstractions: Task (dataset + solver + scorer), Solver (the strategy for generating answers, e.g., chain-of-thought, tool-use agent), Scorer (grading function: exact match, model-graded, code execution). Sandboxing via Docker containers for safe code execution. Built-in support for OpenAI, Anthropic, Google, and local model APIs. Evaluation logs stored as structured JSON for reproducibility.",
+  "related": [
+    "evals",
+    "mmlu",
+    "humaneval"
+  ],
+  "seen_in": [
+    "documentation",
+    "code"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "Inspect documentation",
+      "url": "https://inspect.ai-safety-institute.org.uk/"
+    },
+    {
+      "label": "Inspect GitHub",
+      "url": "https://github.com/UKGovernmentBEIS/inspect_ai"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

@@ -1,0 +1,35 @@
+{
+  "id": "context-engineering",
+  "name": "Context Engineering",
+  "expansion": "Context Engineering (Prompt Architecture)",
+  "category": "scaling-patterns",
+  "oneliner": "The practice of carefully structuring everything that goes into an LLM's context window — system prompts, retrieved documents, conversation history, and tool results.",
+  "explanation": "Context engineering is the discipline of designing what information fills a model's context window and how it is organized. Unlike simple prompt engineering which focuses on phrasing a single question, context engineering manages the entire input architecture: system instructions, retrieved RAG documents, conversation history, tool call results, and few-shot examples.",
+  "fundamentals": "Key techniques: system prompt design (persona, constraints, output format), RAG chunk selection and ordering (recency vs relevance), conversation history compression (summarization of older turns), tool result formatting (structured vs natural language), few-shot example selection (diversity, difficulty progression). Lost-in-the-middle: models attend most to the beginning and end of context, so place critical information there. Token budgeting: allocate fixed proportions of the context window to each component.",
+  "related": [
+    "rag",
+    "context-window",
+    "kv-cache",
+    "prefix-caching"
+  ],
+  "seen_in": [
+    "documentation",
+    "code"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Lost in the Middle: How Language Models Use Long Contexts",
+      "authors": "Liu et al.",
+      "venue": "TACL 2024",
+      "arxiv": "2307.03172"
+    }
+  ],
+  "resources": [
+    {
+      "label": "Anthropic — Building effective agents",
+      "url": "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

@@ -1,0 +1,43 @@
+{
+  "id": "diffusion-models",
+  "name": "Diffusion Models",
+  "expansion": "Denoising Diffusion Probabilistic Models",
+  "category": "layer-types",
+  "oneliner": "Generative models that create images by learning to reverse a gradual noising process — the architecture behind Stable Diffusion, DALL-E, and Flux.",
+  "explanation": "Diffusion models generate images by learning to reverse a process that gradually adds noise to data. Training teaches a neural network to predict and remove noise at each step. At generation time, the model starts from pure random noise and iteratively denoises it into a coherent image, guided by a text prompt via cross-attention with a text encoder like CLIP or T5.",
+  "fundamentals": "Forward process: $x_t = \\sqrt{\\bar{\\alpha}_t} x_0 + \\sqrt{1-\\bar{\\alpha}_t} \\epsilon$ adds Gaussian noise over $T$ steps. Reverse process: a U-Net (or DiT transformer) predicts $\\epsilon_\\theta(x_t, t, c)$ where $c$ is the conditioning (text embedding). Loss: $\\|\\epsilon - \\epsilon_\\theta(x_t, t, c)\\|^2$. Latent diffusion: encode image to latent $z = E(x)$, diffuse in latent space, decode $\\hat{x} = D(\\hat{z})$. Classifier-free guidance scales the conditioning signal for quality vs diversity.",
+  "related": [
+    "self-attention",
+    "backbone"
+  ],
+  "seen_in": [
+    "model-config",
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Denoising Diffusion Probabilistic Models",
+      "authors": "Ho et al.",
+      "venue": "NeurIPS 2020",
+      "arxiv": "2006.11239"
+    },
+    {
+      "title": "High-Resolution Image Synthesis with Latent Diffusion Models",
+      "authors": "Rombach et al.",
+      "venue": "CVPR 2022",
+      "arxiv": "2112.10752"
+    }
+  ],
+  "resources": [
+    {
+      "label": "Lilian Weng — What are Diffusion Models?",
+      "url": "https://lilianweng.github.io/posts/2021-07-11-diffusion-models/"
+    },
+    {
+      "label": "Stable Diffusion on HuggingFace",
+      "url": "https://huggingface.co/docs/diffusers"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

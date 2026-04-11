@@ -1,0 +1,30 @@
+{
+  "id": "a2a",
+  "name": "A2A Protocol",
+  "expansion": "Agent-to-Agent Protocol (Google)",
+  "category": "agents-and-tools",
+  "oneliner": "Google's open protocol for AI agents to discover each other's capabilities and collaborate on tasks across different frameworks and vendors.",
+  "explanation": "The Agent-to-Agent (A2A) protocol is an open standard from Google for enabling AI agents built on different frameworks to communicate and collaborate. Each agent publishes an Agent Card describing its capabilities, and agents can delegate tasks to each other through a standardized JSON-RPC interface. A2A complements Anthropic's MCP — while MCP connects agents to tools and data sources, A2A connects agents to other agents.",
+  "fundamentals": "Core concepts: Agent Card (JSON capability description published at /.well-known/agent.json), Task (unit of work with lifecycle: submitted → working → completed/failed), Message (communication between agents within a task), Artifact (output produced by a task). Transport: HTTP + JSON-RPC 2.0, with optional SSE for streaming. Discovery: clients fetch Agent Cards to understand what an agent can do before sending tasks. Designed for interop across LangChain, CrewAI, Vertex AI, and other frameworks.",
+  "related": [
+    "mcp",
+    "agentic-ai",
+    "function-calling"
+  ],
+  "seen_in": [
+    "documentation"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "A2A Protocol spec",
+      "url": "https://github.com/google/A2A"
+    },
+    {
+      "label": "Google A2A announcement",
+      "url": "https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

@@ -1,0 +1,35 @@
+{
+  "id": "red-teaming",
+  "name": "Red Teaming",
+  "expansion": "Red Teaming (Adversarial Testing of LLMs)",
+  "category": "scaling-patterns",
+  "oneliner": "Systematically probing a language model for failures, biases, and safety vulnerabilities through adversarial prompting before deployment.",
+  "explanation": "Red teaming is the practice of deliberately trying to make a language model produce harmful, incorrect, or undesirable outputs. Human red teamers craft adversarial prompts that probe for jailbreaks, bias, hallucinations, and policy violations. Automated red teaming uses one model to generate attacks against another at scale. Red teaming is a standard step in the post-training safety pipeline at major labs — both Anthropic and OpenAI publish red teaming reports alongside model releases.",
+  "fundamentals": "Manual red teaming: domain experts systematically probe categories (violence, deception, bias, privacy, CBRN). Automated red teaming: an attacker model generates adversarial prompts, optimized via gradient-based search (GCG), genetic algorithms, or RL. Jailbreak categories: role-playing, encoding tricks, multi-turn escalation, indirect injection. Defense: safety training (RLHF with red team data), input/output filters, constitutional AI.",
+  "related": [
+    "evals",
+    "rlhf",
+    "tag-guard",
+    "guardrails"
+  ],
+  "seen_in": [
+    "documentation",
+    "model-cards"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Red Teaming Language Models to Reduce Harms",
+      "authors": "Ganguli et al.",
+      "venue": "2022",
+      "arxiv": "2209.07858"
+    }
+  ],
+  "resources": [
+    {
+      "label": "Anthropic red teaming paper",
+      "url": "https://arxiv.org/abs/2209.07858"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

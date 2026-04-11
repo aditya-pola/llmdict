@@ -1,0 +1,35 @@
+{
+  "id": "scaling-test-time",
+  "name": "Test-Time Compute Scaling",
+  "expansion": "Test-Time Compute Scaling (Inference-Time Scaling)",
+  "category": "scaling-patterns",
+  "oneliner": "Spending more computation at inference time on harder problems — generating longer reasoning chains or sampling multiple answers — rather than just using a bigger model.",
+  "explanation": "Test-time compute scaling is the principle that you can improve model performance by spending more compute during inference rather than during training. Instead of always generating one quick answer, the model generates extended reasoning chains, samples multiple candidate solutions, or uses a verifier to select the best one. This shifts the scaling paradigm from bigger models to smarter inference.",
+  "fundamentals": "Two axes: serial scaling (longer chains of thought within one generation, controlled by token budget) and parallel scaling (generating N candidates and selecting the best via majority vote or a reward model). Snell et al. showed that a smaller model with optimal test-time compute allocation can outperform a 14x larger model on hard problems. Compute-optimal strategy: easy problems get short answers, hard problems get extended reasoning. The difficulty estimator decides how much compute to allocate per problem.",
+  "related": [
+    "reasoning-models",
+    "chain-of-thought",
+    "thinking-tokens",
+    "speculative-decoding"
+  ],
+  "seen_in": [
+    "documentation",
+    "model-cards"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Scaling LLM Test-Time Compute Optimally Can be More Effective than Scaling Model Parameters",
+      "authors": "Snell et al.",
+      "venue": "ICLR 2025",
+      "arxiv": "2408.03314"
+    }
+  ],
+  "resources": [
+    {
+      "label": "Snell et al. paper",
+      "url": "https://arxiv.org/abs/2408.03314"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

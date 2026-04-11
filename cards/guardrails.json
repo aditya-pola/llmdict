@@ -1,0 +1,33 @@
+{
+  "id": "guardrails",
+  "name": "Guardrails",
+  "expansion": "LLM Guardrails (Input/Output Safety Filters)",
+  "category": "agents-and-tools",
+  "oneliner": "Programmable filters that check LLM inputs and outputs against safety rules, content policies, and format constraints in real time.",
+  "explanation": "Guardrails are runtime filters placed around an LLM to enforce safety policies and output quality. They inspect prompts before they reach the model (blocking jailbreaks, prompt injections, off-topic requests) and check generated responses before they reach the user (filtering harmful content, enforcing format constraints, validating facts). NVIDIA NeMo Guardrails and Guardrails AI are the two main frameworks.",
+  "fundamentals": "Architecture: input rail → LLM → output rail. Rails can be: regex pattern matching, classifier-based (using a small model like Llama Guard), LLM-as-judge (using a second model to evaluate), or programmatic (Pydantic schema validation). NeMo Guardrails uses Colang, a domain-specific language for defining conversational rails. Guardrails AI uses validators composable in a pipeline. Latency overhead: 50-200ms per rail depending on implementation.",
+  "related": [
+    "tag-guard",
+    "red-teaming",
+    "agentic-ai",
+    "function-calling"
+  ],
+  "seen_in": [
+    "code",
+    "documentation",
+    "serving-config"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "NVIDIA NeMo Guardrails",
+      "url": "https://github.com/NVIDIA/NeMo-Guardrails"
+    },
+    {
+      "label": "Guardrails AI",
+      "url": "https://github.com/guardrails-ai/guardrails"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

@@ -1,0 +1,38 @@
+{
+  "id": "training-recipe",
+  "name": "Training Recipe",
+  "expansion": "LLM Training Recipe (End-to-End Reproduction Guide)",
+  "category": "training-pipeline",
+  "oneliner": "The complete specification for reproducing a foundation model — data mix, tokenizer, hyperparameters, learning rate schedule, and infrastructure setup.",
+  "explanation": "A training recipe is the full set of decisions and configurations needed to reproduce a language model from scratch. It covers data sourcing and filtering, tokenizer training, model architecture choices, hyperparameters, learning rate schedules, batch size ramp-up, hardware configuration, and checkpoint management. AI2's OLMo project pioneered fully open training recipes, publishing not just weights but the complete training code, data pipelines, and intermediate checkpoints.",
+  "fundamentals": "Key recipe components: data mix (web text ratios, code, books, domain-specific), data cleaning (deduplication, quality filtering, toxicity removal), tokenizer (BPE vocabulary size, special tokens), architecture (layers, heads, hidden dim, GQA ratio), optimizer (AdamW, weight decay, betas), schedule (warmup steps, cosine decay, final LR), batch ramp (start small, increase), context length (may increase during training), infrastructure (GPU type, parallelism strategy, checkpointing frequency).",
+  "related": [
+    "pre-training",
+    "scaling-laws",
+    "mixed-precision-training",
+    "zero"
+  ],
+  "seen_in": [
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "OLMo: Accelerating the Science of Language Models",
+      "authors": "Groeneveld et al.",
+      "venue": "ACL 2024",
+      "arxiv": "2402.00838"
+    }
+  ],
+  "resources": [
+    {
+      "label": "OLMo GitHub",
+      "url": "https://github.com/allenai/OLMo"
+    },
+    {
+      "label": "Llama 3 training details",
+      "url": "https://arxiv.org/abs/2407.21783"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

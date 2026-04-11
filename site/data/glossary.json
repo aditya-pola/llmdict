@@ -111,6 +111,7 @@
       "order": 6,
       "entries": [
         "backbone",
+        "diffusion-models",
         "ffn",
         "geglu",
         "layernorm",
@@ -132,9 +133,11 @@
       "entries": [
         "chain-of-thought",
         "chunked-prefill",
+        "context-engineering",
         "continuous-batching",
         "data-parallelism",
         "dense-models",
+        "evals",
         "expert-parallelism",
         "expert-routing",
         "humaneval",
@@ -142,6 +145,7 @@
         "inference-metrics",
         "inference",
         "knowledge-distillation",
+        "metr",
         "mmlu",
         "model-merging",
         "moe",
@@ -150,6 +154,8 @@
         "pruning",
         "rag",
         "reasoning-models",
+        "red-teaming",
+        "scaling-test-time",
         "speculative-decoding",
         "test-time-compute",
         "thinking-tokens",
@@ -170,12 +176,14 @@
         "kto",
         "mixed-precision-training",
         "orpo",
+        "post-training",
         "pre-training",
         "rlhf",
         "rlvr",
         "scaling-laws",
         "sft",
         "simpo",
+        "training-recipe",
         "transfer-learning"
       ]
     },
@@ -228,6 +236,7 @@
       "label": "HF Organizations",
       "order": 11,
       "entries": [
+        "olmo",
         "org-bartowski",
         "org-deepseek",
         "org-google",
@@ -247,6 +256,7 @@
       "label": "Serving Tools",
       "order": 12,
       "entries": [
+        "inspect-eval",
         "tool-accelerate",
         "tool-crewai",
         "tool-dask",
@@ -294,13 +304,47 @@
       "label": "Agents & Tool Use",
       "order": 15,
       "entries": [
+        "a2a",
         "agentic-ai",
+        "dspy",
         "function-calling",
-        "mcp"
+        "guardrails",
+        "mcp",
+        "pydantic-ai"
       ]
     }
   ],
   "entries": {
+    "a2a": {
+      "id": "a2a",
+      "name": "A2A Protocol",
+      "expansion": "Agent-to-Agent Protocol (Google)",
+      "category": "agents-and-tools",
+      "oneliner": "Google's open protocol for AI agents to discover each other's capabilities and collaborate on tasks across different frameworks and vendors.",
+      "explanation": "The Agent-to-Agent (A2A) protocol is an open standard from Google for enabling AI agents built on different frameworks to communicate and collaborate. Each agent publishes an Agent Card describing its capabilities, and agents can delegate tasks to each other through a standardized JSON-RPC interface. A2A complements Anthropic's MCP — while MCP connects agents to tools and data sources, A2A connects agents to other agents.",
+      "fundamentals": "Core concepts: Agent Card (JSON capability description published at /.well-known/agent.json), Task (unit of work with lifecycle: submitted → working → completed/failed), Message (communication between agents within a task), Artifact (output produced by a task). Transport: HTTP + JSON-RPC 2.0, with optional SSE for streaming. Discovery: clients fetch Agent Cards to understand what an agent can do before sending tasks. Designed for interop across LangChain, CrewAI, Vertex AI, and other frameworks.",
+      "related": [
+        "mcp",
+        "agentic-ai",
+        "function-calling"
+      ],
+      "seen_in": [
+        "documentation"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "A2A Protocol spec",
+          "url": "https://github.com/google/A2A"
+        },
+        {
+          "label": "Google A2A announcement",
+          "url": "https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "abf": {
       "id": "abf",
       "name": "ABF",
@@ -847,6 +891,41 @@
       "confidence": "high",
       "verified_date": "2026-04-11"
     },
+    "context-engineering": {
+      "id": "context-engineering",
+      "name": "Context Engineering",
+      "expansion": "Context Engineering (Prompt Architecture)",
+      "category": "scaling-patterns",
+      "oneliner": "The practice of carefully structuring everything that goes into an LLM's context window — system prompts, retrieved documents, conversation history, and tool results.",
+      "explanation": "Context engineering is the discipline of designing what information fills a model's context window and how it is organized. Unlike simple prompt engineering which focuses on phrasing a single question, context engineering manages the entire input architecture: system instructions, retrieved RAG documents, conversation history, tool call results, and few-shot examples.",
+      "fundamentals": "Key techniques: system prompt design (persona, constraints, output format), RAG chunk selection and ordering (recency vs relevance), conversation history compression (summarization of older turns), tool result formatting (structured vs natural language), few-shot example selection (diversity, difficulty progression). Lost-in-the-middle: models attend most to the beginning and end of context, so place critical information there. Token budgeting: allocate fixed proportions of the context window to each component.",
+      "related": [
+        "rag",
+        "context-window",
+        "kv-cache",
+        "prefix-caching"
+      ],
+      "seen_in": [
+        "documentation",
+        "code"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Lost in the Middle: How Language Models Use Long Contexts",
+          "authors": "Liu et al.",
+          "venue": "TACL 2024",
+          "arxiv": "2307.03172"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Anthropic — Building effective agents",
+          "url": "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "context-window": {
       "id": "context-window",
       "name": "Context Window",
@@ -1195,6 +1274,49 @@
         }
       ]
     },
+    "diffusion-models": {
+      "id": "diffusion-models",
+      "name": "Diffusion Models",
+      "expansion": "Denoising Diffusion Probabilistic Models",
+      "category": "layer-types",
+      "oneliner": "Generative models that create images by learning to reverse a gradual noising process — the architecture behind Stable Diffusion, DALL-E, and Flux.",
+      "explanation": "Diffusion models generate images by learning to reverse a process that gradually adds noise to data. Training teaches a neural network to predict and remove noise at each step. At generation time, the model starts from pure random noise and iteratively denoises it into a coherent image, guided by a text prompt via cross-attention with a text encoder like CLIP or T5.",
+      "fundamentals": "Forward process: $x_t = \\sqrt{\\bar{\\alpha}_t} x_0 + \\sqrt{1-\\bar{\\alpha}_t} \\epsilon$ adds Gaussian noise over $T$ steps. Reverse process: a U-Net (or DiT transformer) predicts $\\epsilon_\\theta(x_t, t, c)$ where $c$ is the conditioning (text embedding). Loss: $\\|\\epsilon - \\epsilon_\\theta(x_t, t, c)\\|^2$. Latent diffusion: encode image to latent $z = E(x)$, diffuse in latent space, decode $\\hat{x} = D(\\hat{z})$. Classifier-free guidance scales the conditioning signal for quality vs diversity.",
+      "related": [
+        "self-attention",
+        "backbone"
+      ],
+      "seen_in": [
+        "model-config",
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Denoising Diffusion Probabilistic Models",
+          "authors": "Ho et al.",
+          "venue": "NeurIPS 2020",
+          "arxiv": "2006.11239"
+        },
+        {
+          "title": "High-Resolution Image Synthesis with Latent Diffusion Models",
+          "authors": "Rombach et al.",
+          "venue": "CVPR 2022",
+          "arxiv": "2112.10752"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Lilian Weng — What are Diffusion Models?",
+          "url": "https://lilianweng.github.io/posts/2021-07-11-diffusion-models/"
+        },
+        {
+          "label": "Stable Diffusion on HuggingFace",
+          "url": "https://huggingface.co/docs/diffusers"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "dora": {
       "id": "dora",
       "name": "DoRA",
@@ -1286,6 +1408,45 @@
         }
       ]
     },
+    "dspy": {
+      "id": "dspy",
+      "name": "DSPy",
+      "expansion": "DSPy — Declarative Self-improving Language Programs",
+      "category": "agents-and-tools",
+      "oneliner": "A framework from Stanford that replaces hand-written prompts with modular, optimizable programs where the framework automatically tunes prompts and few-shot examples.",
+      "explanation": "DSPy is a programming framework that treats LLM interactions as optimizable modules rather than fixed prompt templates. You define what each step should accomplish using Python signatures, and DSPy automatically searches for the best prompts, few-shot examples, and even fine-tuning strategies to maximize a metric you specify. This eliminates brittle prompt engineering by making prompts a learnable parameter.",
+      "fundamentals": "Core abstractions: Signature (input/output spec), Module (a composable step like ChainOfThought or ReAct), Teleprompter/Optimizer (searches for optimal prompts). Optimization: given a training set and metric, the optimizer evaluates candidate prompts via few-shot bootstrap, random search, or Bayesian optimization. Output: a compiled program with frozen, optimized prompts. Philosophy: prompts are like weights — they should be learned, not hand-written.",
+      "related": [
+        "agentic-ai",
+        "chain-of-thought",
+        "rag",
+        "function-calling"
+      ],
+      "seen_in": [
+        "code",
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines",
+          "authors": "Khattab et al.",
+          "venue": "ICLR 2024",
+          "arxiv": "2310.03714"
+        }
+      ],
+      "resources": [
+        {
+          "label": "DSPy GitHub",
+          "url": "https://github.com/stanfordnlp/dspy"
+        },
+        {
+          "label": "DSPy docs",
+          "url": "https://dspy.ai"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "e2m1": {
       "id": "e2m1",
       "name": "E2M1 (MXFP4)",
@@ -1347,6 +1508,38 @@
       ],
       "confidence": "high",
       "verified_date": "2026-04-10"
+    },
+    "evals": {
+      "id": "evals",
+      "name": "Evals",
+      "expansion": "LLM Evaluations (Benchmarks and Assessment)",
+      "category": "scaling-patterns",
+      "oneliner": "The practice of systematically measuring LLM capabilities using benchmarks, human judgment, and automated scoring to compare models and detect regressions.",
+      "explanation": "Evals are systematic tests that measure what a language model can and cannot do. They range from standardized benchmarks like MMLU and HumanEval to custom task-specific tests and human preference ratings. Good evals are the foundation of responsible model development — they detect capability regressions, compare training recipes, and surface safety issues.",
+      "fundamentals": "Major eval categories: knowledge (MMLU), coding (HumanEval, MBPP), reasoning (GPQA, ARC), math (GSM8K, MATH), safety (TruthfulQA, BBQ), instruction-following (IFEval, AlpacaEval, MT-Bench). Metrics: accuracy, pass@k, Elo rating (Chatbot Arena), perplexity. Contamination: overlap between eval data and training data inflates scores. Saturation: when frontier models hit 90%+, the benchmark loses discriminating power.",
+      "related": [
+        "mmlu",
+        "humaneval",
+        "perplexity",
+        "pre-training"
+      ],
+      "seen_in": [
+        "model-cards",
+        "documentation"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "Open LLM Leaderboard",
+          "url": "https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard"
+        },
+        {
+          "label": "Chatbot Arena",
+          "url": "https://lmarena.ai"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     },
     "exl2": {
       "id": "exl2",
@@ -2068,6 +2261,39 @@
       "confidence": "high",
       "verified_date": "2026-04-11"
     },
+    "guardrails": {
+      "id": "guardrails",
+      "name": "Guardrails",
+      "expansion": "LLM Guardrails (Input/Output Safety Filters)",
+      "category": "agents-and-tools",
+      "oneliner": "Programmable filters that check LLM inputs and outputs against safety rules, content policies, and format constraints in real time.",
+      "explanation": "Guardrails are runtime filters placed around an LLM to enforce safety policies and output quality. They inspect prompts before they reach the model (blocking jailbreaks, prompt injections, off-topic requests) and check generated responses before they reach the user (filtering harmful content, enforcing format constraints, validating facts). NVIDIA NeMo Guardrails and Guardrails AI are the two main frameworks.",
+      "fundamentals": "Architecture: input rail → LLM → output rail. Rails can be: regex pattern matching, classifier-based (using a small model like Llama Guard), LLM-as-judge (using a second model to evaluate), or programmatic (Pydantic schema validation). NeMo Guardrails uses Colang, a domain-specific language for defining conversational rails. Guardrails AI uses validators composable in a pipeline. Latency overhead: 50-200ms per rail depending on implementation.",
+      "related": [
+        "tag-guard",
+        "red-teaming",
+        "agentic-ai",
+        "function-calling"
+      ],
+      "seen_in": [
+        "code",
+        "documentation",
+        "serving-config"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "NVIDIA NeMo Guardrails",
+          "url": "https://github.com/NVIDIA/NeMo-Guardrails"
+        },
+        {
+          "label": "Guardrails AI",
+          "url": "https://github.com/guardrails-ai/guardrails"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "hqq": {
       "id": "hqq",
       "name": "HQQ",
@@ -2333,6 +2559,37 @@
         {
           "label": "Lilian Weng — LLM Inference Optimization",
           "url": "https://lilianweng.github.io/posts/2023-01-10-inference-optimization/"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
+    "inspect-eval": {
+      "id": "inspect-eval",
+      "name": "Inspect",
+      "expansion": "Inspect — LLM Evaluation Framework (UK AISI)",
+      "category": "serving-tools",
+      "oneliner": "An open-source framework from the UK AI Safety Institute for building reproducible, composable LLM evaluations with built-in sandboxing.",
+      "explanation": "Inspect is an evaluation framework developed by the UK AI Safety Institute for rigorously testing language model capabilities and safety properties. It provides a Python API for defining evaluation tasks as composable pipelines of solvers, scorers, and datasets. Inspect supports sandboxed code execution, multi-turn agent evaluations, and tool-use tasks out of the box. It has become a standard tool for frontier model safety evaluations and is used by several AI labs for pre-deployment assessment.",
+      "fundamentals": "Core abstractions: Task (dataset + solver + scorer), Solver (the strategy for generating answers, e.g., chain-of-thought, tool-use agent), Scorer (grading function: exact match, model-graded, code execution). Sandboxing via Docker containers for safe code execution. Built-in support for OpenAI, Anthropic, Google, and local model APIs. Evaluation logs stored as structured JSON for reproducibility.",
+      "related": [
+        "evals",
+        "mmlu",
+        "humaneval"
+      ],
+      "seen_in": [
+        "documentation",
+        "code"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "Inspect documentation",
+          "url": "https://inspect.ai-safety-institute.org.uk/"
+        },
+        {
+          "label": "Inspect GitHub",
+          "url": "https://github.com/UKGovernmentBEIS/inspect_ai"
         }
       ],
       "confidence": "high",
@@ -2885,6 +3142,36 @@
       "confidence": "high",
       "verified_date": "2026-04-11"
     },
+    "metr": {
+      "id": "metr",
+      "name": "METR",
+      "expansion": "METR — Model Evaluation & Threat Research",
+      "category": "scaling-patterns",
+      "oneliner": "An organization that designs task-based evaluations measuring whether AI models can autonomously perform dangerous capabilities like cyberattacks or self-replication.",
+      "explanation": "METR is a nonprofit research organization that develops evaluations for measuring dangerous autonomous capabilities in AI models. Their task suites test whether a model can accomplish multi-step real-world goals like writing exploits, conducting research, or acquiring resources without human guidance. METR evaluations are used by frontier labs including OpenAI and Anthropic as part of pre-deployment safety assessments.",
+      "fundamentals": "METR tasks are agent-based: the model operates in a sandboxed environment with a shell, browser, and file system, attempting to complete a goal autonomously. Scoring is binary (task completed or not) with time limits. Task categories include: software engineering, cybersecurity, research, and resource acquisition. Results inform responsible scaling frameworks — if a model passes certain capability thresholds, labs agree to implement additional safeguards before deployment.",
+      "related": [
+        "evals",
+        "red-teaming",
+        "agentic-ai"
+      ],
+      "seen_in": [
+        "documentation"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "METR website",
+          "url": "https://metr.org"
+        },
+        {
+          "label": "METR task suite",
+          "url": "https://github.com/METR/task-standard"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "mha": {
       "id": "mha",
       "name": "MHA",
@@ -3342,6 +3629,44 @@
           "url": "https://arxiv.org/abs/2309.00071"
         }
       ]
+    },
+    "olmo": {
+      "id": "olmo",
+      "name": "OLMo",
+      "expansion": "OLMo — Open Language Model (AI2)",
+      "category": "hf-organizations",
+      "oneliner": "AI2's fully open foundation model that publishes not just weights but the complete training data, code, intermediate checkpoints, and evaluation suite.",
+      "explanation": "OLMo is a family of language models from the Allen Institute for AI (AI2) designed to be the most open foundation model project. Unlike most open-weight models that release only final weights, OLMo publishes the complete training code, the full training dataset (Dolma), all intermediate checkpoints, training logs, and evaluation results. This radical openness enables the research community to study training dynamics, reproduce results, and build on the work.",
+      "fundamentals": "Dolma dataset: ~3 trillion tokens from Common Crawl, Wikipedia, books, code, academic papers. Architecture: standard decoder-only transformer with SwiGLU, RoPE, GQA, RMSNorm. Training: AdamW, cosine LR schedule, context length 4096. Released: full training code (PyTorch + Composer), Dolma dataset, ~500 intermediate checkpoints per run, Weights & Biases training logs, evaluation framework (Catwalk). License: Apache 2.0 for code, ODC-By for data.",
+      "related": [
+        "pre-training",
+        "training-recipe",
+        "org-meta"
+      ],
+      "seen_in": [
+        "model-cards",
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "OLMo: Accelerating the Science of Language Models",
+          "authors": "Groeneveld et al.",
+          "venue": "ACL 2024",
+          "arxiv": "2402.00838"
+        }
+      ],
+      "resources": [
+        {
+          "label": "OLMo GitHub",
+          "url": "https://github.com/allenai/OLMo"
+        },
+        {
+          "label": "AI2 OLMo page",
+          "url": "https://allenai.org/olmo"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     },
     "org-bartowski": {
       "id": "org-bartowski",
@@ -3867,6 +4192,46 @@
         }
       ]
     },
+    "post-training": {
+      "id": "post-training",
+      "name": "Post-Training",
+      "expansion": "Post-Training (the full alignment and safety pipeline after pre-training)",
+      "category": "training-pipeline",
+      "oneliner": "Everything that happens to a model after pre-training — SFT, preference alignment, safety training, and capability fine-tuning — turning a base model into a deployable assistant.",
+      "explanation": "Post-training is the umbrella term for all training stages that follow pre-training, transforming a raw base model into a safe, helpful assistant. A typical post-training recipe includes supervised fine-tuning on instruction data, preference alignment via DPO or RLHF, safety training with red-team data, and capability-specific tuning for code, math, or tool use.",
+      "fundamentals": "Typical pipeline: SFT (instruction following, 10K-1M examples) → preference alignment (DPO/RLHF, 50K-500K pairs) → safety training (red-team data, refusal training) → capability tuning (code, math, tool use). Some labs iterate: Llama 2 used multiple rounds of RLHF with rejection sampling. Data quality matters more than quantity at this stage (LIMA principle). Post-training can degrade pre-training capabilities (alignment tax), so careful evaluation between stages is essential.",
+      "related": [
+        "sft",
+        "dpo",
+        "rlhf",
+        "pre-training",
+        "red-teaming"
+      ],
+      "seen_in": [
+        "model-cards",
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Training language models to follow instructions with human feedback (InstructGPT)",
+          "authors": "Ouyang et al.",
+          "venue": "NeurIPS 2022",
+          "arxiv": "2203.02155"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Llama 2 post-training details",
+          "url": "https://arxiv.org/abs/2307.09288"
+        },
+        {
+          "label": "Sebastian Raschka — Understanding Reasoning LLMs",
+          "url": "https://magazine.sebastianraschka.com/p/understanding-reasoning-llms"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "pre-norm": {
       "id": "pre-norm",
       "name": "Pre-Norm vs Post-Norm",
@@ -4066,6 +4431,37 @@
           "url": "https://arxiv.org/abs/2106.08295"
         }
       ]
+    },
+    "pydantic-ai": {
+      "id": "pydantic-ai",
+      "name": "Pydantic AI / Instructor",
+      "expansion": "Type-Safe Structured Output from LLMs",
+      "category": "agents-and-tools",
+      "oneliner": "Libraries that force LLM outputs into validated Python types using Pydantic models, eliminating manual JSON parsing and handling retries automatically.",
+      "explanation": "Pydantic AI and Instructor are libraries that extract structured, type-safe data from language model outputs. You define a Pydantic model describing the expected output schema, and the library handles prompt construction, JSON mode activation, parsing, and automatic retry on validation failure. This replaces fragile regex-based output parsing with reliable, schema-validated responses. Instructor works with OpenAI, Anthropic, and open-source models.",
+      "fundamentals": "Core flow: define Pydantic model → library injects schema into system prompt or tool definition → model generates JSON → library validates against schema → retry with error feedback if invalid. Uses function calling / tool use APIs where available, falls back to JSON mode. Instructor: lightweight, focused on extraction. Pydantic AI: full agent framework with typed dependencies, streaming, and multi-step workflows. Both leverage Pydantic v2 for fast validation.",
+      "related": [
+        "function-calling",
+        "agentic-ai",
+        "guardrails"
+      ],
+      "seen_in": [
+        "code",
+        "documentation"
+      ],
+      "foundational_papers": [],
+      "resources": [
+        {
+          "label": "Instructor library",
+          "url": "https://github.com/jxnl/instructor"
+        },
+        {
+          "label": "Pydantic AI docs",
+          "url": "https://ai.pydantic.dev"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     },
     "qat": {
       "id": "qat",
@@ -4326,6 +4722,41 @@
         {
           "label": "HuggingFace LLM Course: DeepSeek R1",
           "url": "https://huggingface.co/learn/llm-course/en/chapter12/3"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
+    "red-teaming": {
+      "id": "red-teaming",
+      "name": "Red Teaming",
+      "expansion": "Red Teaming (Adversarial Testing of LLMs)",
+      "category": "scaling-patterns",
+      "oneliner": "Systematically probing a language model for failures, biases, and safety vulnerabilities through adversarial prompting before deployment.",
+      "explanation": "Red teaming is the practice of deliberately trying to make a language model produce harmful, incorrect, or undesirable outputs. Human red teamers craft adversarial prompts that probe for jailbreaks, bias, hallucinations, and policy violations. Automated red teaming uses one model to generate attacks against another at scale. Red teaming is a standard step in the post-training safety pipeline at major labs — both Anthropic and OpenAI publish red teaming reports alongside model releases.",
+      "fundamentals": "Manual red teaming: domain experts systematically probe categories (violence, deception, bias, privacy, CBRN). Automated red teaming: an attacker model generates adversarial prompts, optimized via gradient-based search (GCG), genetic algorithms, or RL. Jailbreak categories: role-playing, encoding tricks, multi-turn escalation, indirect injection. Defense: safety training (RLHF with red team data), input/output filters, constitutional AI.",
+      "related": [
+        "evals",
+        "rlhf",
+        "tag-guard",
+        "guardrails"
+      ],
+      "seen_in": [
+        "documentation",
+        "model-cards"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Red Teaming Language Models to Reduce Harms",
+          "authors": "Ganguli et al.",
+          "venue": "2022",
+          "arxiv": "2209.07858"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Anthropic red teaming paper",
+          "url": "https://arxiv.org/abs/2209.07858"
         }
       ],
       "confidence": "high",
@@ -4614,6 +5045,41 @@
         {
           "label": "Sebastian Raschka — State of LLMs 2025",
           "url": "https://magazine.sebastianraschka.com/p/state-of-llms-2025"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
+    "scaling-test-time": {
+      "id": "scaling-test-time",
+      "name": "Test-Time Compute Scaling",
+      "expansion": "Test-Time Compute Scaling (Inference-Time Scaling)",
+      "category": "scaling-patterns",
+      "oneliner": "Spending more computation at inference time on harder problems — generating longer reasoning chains or sampling multiple answers — rather than just using a bigger model.",
+      "explanation": "Test-time compute scaling is the principle that you can improve model performance by spending more compute during inference rather than during training. Instead of always generating one quick answer, the model generates extended reasoning chains, samples multiple candidate solutions, or uses a verifier to select the best one. This shifts the scaling paradigm from bigger models to smarter inference.",
+      "fundamentals": "Two axes: serial scaling (longer chains of thought within one generation, controlled by token budget) and parallel scaling (generating N candidates and selecting the best via majority vote or a reward model). Snell et al. showed that a smaller model with optimal test-time compute allocation can outperform a 14x larger model on hard problems. Compute-optimal strategy: easy problems get short answers, hard problems get extended reasoning. The difficulty estimator decides how much compute to allocate per problem.",
+      "related": [
+        "reasoning-models",
+        "chain-of-thought",
+        "thinking-tokens",
+        "speculative-decoding"
+      ],
+      "seen_in": [
+        "documentation",
+        "model-cards"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Scaling LLM Test-Time Compute Optimally Can be More Effective than Scaling Model Parameters",
+          "authors": "Snell et al.",
+          "venue": "ICLR 2025",
+          "arxiv": "2408.03314"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Snell et al. paper",
+          "url": "https://arxiv.org/abs/2408.03314"
         }
       ],
       "confidence": "high",
@@ -6336,6 +6802,44 @@
           "arxiv": "1811.06965"
         }
       ]
+    },
+    "training-recipe": {
+      "id": "training-recipe",
+      "name": "Training Recipe",
+      "expansion": "LLM Training Recipe (End-to-End Reproduction Guide)",
+      "category": "training-pipeline",
+      "oneliner": "The complete specification for reproducing a foundation model — data mix, tokenizer, hyperparameters, learning rate schedule, and infrastructure setup.",
+      "explanation": "A training recipe is the full set of decisions and configurations needed to reproduce a language model from scratch. It covers data sourcing and filtering, tokenizer training, model architecture choices, hyperparameters, learning rate schedules, batch size ramp-up, hardware configuration, and checkpoint management. AI2's OLMo project pioneered fully open training recipes, publishing not just weights but the complete training code, data pipelines, and intermediate checkpoints.",
+      "fundamentals": "Key recipe components: data mix (web text ratios, code, books, domain-specific), data cleaning (deduplication, quality filtering, toxicity removal), tokenizer (BPE vocabulary size, special tokens), architecture (layers, heads, hidden dim, GQA ratio), optimizer (AdamW, weight decay, betas), schedule (warmup steps, cosine decay, final LR), batch ramp (start small, increase), context length (may increase during training), infrastructure (GPU type, parallelism strategy, checkpointing frequency).",
+      "related": [
+        "pre-training",
+        "scaling-laws",
+        "mixed-precision-training",
+        "zero"
+      ],
+      "seen_in": [
+        "documentation"
+      ],
+      "foundational_papers": [
+        {
+          "title": "OLMo: Accelerating the Science of Language Models",
+          "authors": "Groeneveld et al.",
+          "venue": "ACL 2024",
+          "arxiv": "2402.00838"
+        }
+      ],
+      "resources": [
+        {
+          "label": "OLMo GitHub",
+          "url": "https://github.com/allenai/OLMo"
+        },
+        {
+          "label": "Llama 3 training details",
+          "url": "https://arxiv.org/abs/2407.21783"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
     },
     "transfer-learning": {
       "id": "transfer-learning",

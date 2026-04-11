@@ -1,0 +1,30 @@
+{
+  "id": "metr",
+  "name": "METR",
+  "expansion": "METR — Model Evaluation & Threat Research",
+  "category": "scaling-patterns",
+  "oneliner": "An organization that designs task-based evaluations measuring whether AI models can autonomously perform dangerous capabilities like cyberattacks or self-replication.",
+  "explanation": "METR is a nonprofit research organization that develops evaluations for measuring dangerous autonomous capabilities in AI models. Their task suites test whether a model can accomplish multi-step real-world goals like writing exploits, conducting research, or acquiring resources without human guidance. METR evaluations are used by frontier labs including OpenAI and Anthropic as part of pre-deployment safety assessments.",
+  "fundamentals": "METR tasks are agent-based: the model operates in a sandboxed environment with a shell, browser, and file system, attempting to complete a goal autonomously. Scoring is binary (task completed or not) with time limits. Task categories include: software engineering, cybersecurity, research, and resource acquisition. Results inform responsible scaling frameworks — if a model passes certain capability thresholds, labs agree to implement additional safeguards before deployment.",
+  "related": [
+    "evals",
+    "red-teaming",
+    "agentic-ai"
+  ],
+  "seen_in": [
+    "documentation"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "METR website",
+      "url": "https://metr.org"
+    },
+    {
+      "label": "METR task suite",
+      "url": "https://github.com/METR/task-standard"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

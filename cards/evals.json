@@ -1,0 +1,32 @@
+{
+  "id": "evals",
+  "name": "Evals",
+  "expansion": "LLM Evaluations (Benchmarks and Assessment)",
+  "category": "scaling-patterns",
+  "oneliner": "The practice of systematically measuring LLM capabilities using benchmarks, human judgment, and automated scoring to compare models and detect regressions.",
+  "explanation": "Evals are systematic tests that measure what a language model can and cannot do. They range from standardized benchmarks like MMLU and HumanEval to custom task-specific tests and human preference ratings. Good evals are the foundation of responsible model development — they detect capability regressions, compare training recipes, and surface safety issues.",
+  "fundamentals": "Major eval categories: knowledge (MMLU), coding (HumanEval, MBPP), reasoning (GPQA, ARC), math (GSM8K, MATH), safety (TruthfulQA, BBQ), instruction-following (IFEval, AlpacaEval, MT-Bench). Metrics: accuracy, pass@k, Elo rating (Chatbot Arena), perplexity. Contamination: overlap between eval data and training data inflates scores. Saturation: when frontier models hit 90%+, the benchmark loses discriminating power.",
+  "related": [
+    "mmlu",
+    "humaneval",
+    "perplexity",
+    "pre-training"
+  ],
+  "seen_in": [
+    "model-cards",
+    "documentation"
+  ],
+  "foundational_papers": [],
+  "resources": [
+    {
+      "label": "Open LLM Leaderboard",
+      "url": "https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard"
+    },
+    {
+      "label": "Chatbot Arena",
+      "url": "https://lmarena.ai"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

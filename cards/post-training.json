@@ -1,0 +1,40 @@
+{
+  "id": "post-training",
+  "name": "Post-Training",
+  "expansion": "Post-Training (the full alignment and safety pipeline after pre-training)",
+  "category": "training-pipeline",
+  "oneliner": "Everything that happens to a model after pre-training — SFT, preference alignment, safety training, and capability fine-tuning — turning a base model into a deployable assistant.",
+  "explanation": "Post-training is the umbrella term for all training stages that follow pre-training, transforming a raw base model into a safe, helpful assistant. A typical post-training recipe includes supervised fine-tuning on instruction data, preference alignment via DPO or RLHF, safety training with red-team data, and capability-specific tuning for code, math, or tool use.",
+  "fundamentals": "Typical pipeline: SFT (instruction following, 10K-1M examples) → preference alignment (DPO/RLHF, 50K-500K pairs) → safety training (red-team data, refusal training) → capability tuning (code, math, tool use). Some labs iterate: Llama 2 used multiple rounds of RLHF with rejection sampling. Data quality matters more than quantity at this stage (LIMA principle). Post-training can degrade pre-training capabilities (alignment tax), so careful evaluation between stages is essential.",
+  "related": [
+    "sft",
+    "dpo",
+    "rlhf",
+    "pre-training",
+    "red-teaming"
+  ],
+  "seen_in": [
+    "model-cards",
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Training language models to follow instructions with human feedback (InstructGPT)",
+      "authors": "Ouyang et al.",
+      "venue": "NeurIPS 2022",
+      "arxiv": "2203.02155"
+    }
+  ],
+  "resources": [
+    {
+      "label": "Llama 2 post-training details",
+      "url": "https://arxiv.org/abs/2307.09288"
+    },
+    {
+      "label": "Sebastian Raschka — Understanding Reasoning LLMs",
+      "url": "https://magazine.sebastianraschka.com/p/understanding-reasoning-llms"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

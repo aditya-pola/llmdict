@@ -1,0 +1,38 @@
+{
+  "id": "olmo",
+  "name": "OLMo",
+  "expansion": "OLMo — Open Language Model (AI2)",
+  "category": "hf-organizations",
+  "oneliner": "AI2's fully open foundation model that publishes not just weights but the complete training data, code, intermediate checkpoints, and evaluation suite.",
+  "explanation": "OLMo is a family of language models from the Allen Institute for AI (AI2) designed to be the most open foundation model project. Unlike most open-weight models that release only final weights, OLMo publishes the complete training code, the full training dataset (Dolma), all intermediate checkpoints, training logs, and evaluation results. This radical openness enables the research community to study training dynamics, reproduce results, and build on the work.",
+  "fundamentals": "Dolma dataset: ~3 trillion tokens from Common Crawl, Wikipedia, books, code, academic papers. Architecture: standard decoder-only transformer with SwiGLU, RoPE, GQA, RMSNorm. Training: AdamW, cosine LR schedule, context length 4096. Released: full training code (PyTorch + Composer), Dolma dataset, ~500 intermediate checkpoints per run, Weights & Biases training logs, evaluation framework (Catwalk). License: Apache 2.0 for code, ODC-By for data.",
+  "related": [
+    "pre-training",
+    "training-recipe",
+    "org-meta"
+  ],
+  "seen_in": [
+    "model-cards",
+    "documentation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "OLMo: Accelerating the Science of Language Models",
+      "authors": "Groeneveld et al.",
+      "venue": "ACL 2024",
+      "arxiv": "2402.00838"
+    }
+  ],
+  "resources": [
+    {
+      "label": "OLMo GitHub",
+      "url": "https://github.com/allenai/OLMo"
+    },
+    {
+      "label": "AI2 OLMo page",
+      "url": "https://allenai.org/olmo"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}
