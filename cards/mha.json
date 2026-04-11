@@ -31,5 +31,19 @@
       "venue": "NeurIPS 2017",
       "arxiv": "1706.03762"
     }
+  ],
+  "resources": [
+    {
+      "label": "The Illustrated Transformer (Jay Alammar)",
+      "url": "https://jalammar.github.io/illustrated-transformer/"
+    },
+    {
+      "label": "3Blue1Brown — Attention in Transformers",
+      "url": "https://www.3blue1brown.com/lessons/attention"
+    },
+    {
+      "label": "Sebastian Raschka — LLM Architecture Gallery",
+      "url": "https://sebastianraschka.com/llm-architecture-gallery/"
+    }
   ]
 }

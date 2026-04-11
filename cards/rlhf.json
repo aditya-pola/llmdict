@@ -56,5 +56,15 @@
     "Ouyang et al., arXiv:2203.02155"
   ],
   "confidence": "high",
-  "verified_date": "2026-04-10"
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "Lilian Weng — Reward Hacking in RL",
+      "url": "https://lilianweng.github.io/posts/2024-11-28-reward-hacking/"
+    },
+    {
+      "label": "HuggingFace Deep RL Course — RLHF",
+      "url": "https://huggingface.co/learn/deep-rl-course/en/unitbonus3/rlhf"
+    }
+  ]
 }

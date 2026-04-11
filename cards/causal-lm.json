@@ -29,6 +29,14 @@
     {
       "label": "HuggingFace CLM training guide",
       "url": "https://huggingface.co/docs/transformers/tasks/language_modeling"
+    },
+    {
+      "label": "Jay Alammar — The Illustrated GPT-2",
+      "url": "https://jalammar.github.io/illustrated-gpt2/"
+    },
+    {
+      "label": "Andrej Karpathy — Let's Build GPT",
+      "url": "https://karpathy.ai/zero-to-hero.html"
     }
   ],
   "confidence": "high",

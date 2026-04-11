@@ -41,5 +41,15 @@
     "Rafailov et al., arXiv:2305.18290"
   ],
   "confidence": "high",
-  "verified_date": "2026-04-10"
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "Cameron Wolfe — Direct Preference Optimization",
+      "url": "https://cameronrwolfe.substack.com/p/direct-preference-optimization"
+    },
+    {
+      "label": "HuggingFace TRL docs",
+      "url": "https://huggingface.co/docs/trl/en/index"
+    }
+  ]
 }

@@ -26,6 +26,10 @@
     {
       "label": "Attention Is All You Need (original Transformer)",
       "url": "https://arxiv.org/abs/1706.03762"
+    },
+    {
+      "label": "Sebastian Raschka — LLM Architecture Gallery",
+      "url": "https://sebastianraschka.com/llm-architecture-gallery/"
     }
   ]
 }

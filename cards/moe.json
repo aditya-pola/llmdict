@@ -44,5 +44,15 @@
       "venue": "2024",
       "arxiv": "2401.04088"
     }
+  ],
+  "resources": [
+    {
+      "label": "Cameron Wolfe — MoE LLMs",
+      "url": "https://cameronrwolfe.substack.com/p/moe-llms"
+    },
+    {
+      "label": "Lilian Weng — The Transformer Family v2",
+      "url": "https://lilianweng.github.io/posts/2023-01-27-the-transformer-family-v2/"
+    }
   ]
 }

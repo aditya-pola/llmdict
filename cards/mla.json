@@ -30,5 +30,11 @@
       "venue": "2024",
       "arxiv": "2405.04434"
     }
+  ],
+  "resources": [
+    {
+      "label": "Sebastian Raschka — Visual Attention Variants",
+      "url": "https://magazine.sebastianraschka.com/p/visual-attention-variants"
+    }
   ]
 }

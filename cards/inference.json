@@ -28,6 +28,10 @@
     {
       "label": "Kipply — Transformer Inference Arithmetic",
       "url": "https://kipp.ly/transformer-inference-arithmetic/"
+    },
+    {
+      "label": "Lilian Weng — LLM Inference Optimization",
+      "url": "https://lilianweng.github.io/posts/2023-01-10-inference-optimization/"
     }
   ],
   "confidence": "high",

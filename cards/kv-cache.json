@@ -33,5 +33,15 @@
       "venue": "MLSys 2023",
       "arxiv": "2211.05102"
     }
+  ],
+  "resources": [
+    {
+      "label": "Lilian Weng — LLM Inference Optimization",
+      "url": "https://lilianweng.github.io/posts/2023-01-10-inference-optimization/"
+    },
+    {
+      "label": "Jay Alammar — The Illustrated GPT-2",
+      "url": "https://jalammar.github.io/illustrated-gpt2/"
+    }
   ]
 }

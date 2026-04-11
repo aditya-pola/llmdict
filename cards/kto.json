@@ -31,5 +31,11 @@
     "Ethayarajh et al., arXiv:2402.01306"
   ],
   "confidence": "high",
-  "verified_date": "2026-04-10"
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "HuggingFace TRL docs",
+      "url": "https://huggingface.co/docs/trl/en/index"
+    }
+  ]
 }

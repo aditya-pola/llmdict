@@ -28,5 +28,11 @@
       "venue": "CVPR 2016",
       "arxiv": "1512.03385"
     }
+  ],
+  "resources": [
+    {
+      "label": "Jay Alammar — The Illustrated Transformer",
+      "url": "https://jalammar.github.io/illustrated-transformer/"
+    }
   ]
 }

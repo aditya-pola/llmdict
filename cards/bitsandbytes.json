@@ -40,5 +40,11 @@
       "venue": "NeurIPS 2023",
       "arxiv": "2305.14314"
     }
+  ],
+  "resources": [
+    {
+      "label": "HuggingFace — bitsandbytes quantization",
+      "url": "https://huggingface.co/docs/transformers/en/quantization/bitsandbytes"
+    }
   ]
 }

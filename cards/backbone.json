@@ -29,6 +29,10 @@
     {
       "label": "HuggingFace Model summary",
       "url": "https://huggingface.co/docs/transformers/model_summary"
+    },
+    {
+      "label": "Sebastian Raschka — The Big LLM Architecture Comparison",
+      "url": "https://magazine.sebastianraschka.com/p/the-big-llm-architecture-comparison"
     }
   ],
   "confidence": "high",

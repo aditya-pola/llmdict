@@ -28,5 +28,11 @@
       "venue": "ICLR 2023",
       "arxiv": "2210.17323"
     }
+  ],
+  "resources": [
+    {
+      "label": "HuggingFace — Selecting a Quantization Method",
+      "url": "https://huggingface.co/docs/transformers/quantization/selecting"
+    }
   ]
 }

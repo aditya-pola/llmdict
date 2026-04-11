@@ -30,5 +30,11 @@
       "venue": "2021",
       "arxiv": "2104.09864"
     }
+  ],
+  "resources": [
+    {
+      "label": "Lilian Weng — The Transformer Family v2",
+      "url": "https://lilianweng.github.io/posts/2023-01-27-the-transformer-family-v2/"
+    }
   ]
 }

@@ -45,5 +45,19 @@
     "Hu et al., arXiv:2106.09685"
   ],
   "confidence": "high",
-  "verified_date": "2026-04-10"
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "Sebastian Raschka — Practical Tips for LoRA",
+      "url": "https://magazine.sebastianraschka.com/p/practical-tips-for-finetuning-llms"
+    },
+    {
+      "label": "Cameron Wolfe — PEFT, LoRA, QLoRA",
+      "url": "https://cameronrwolfe.substack.com/p/easily-train-a-specialized-llm-peft"
+    },
+    {
+      "label": "HuggingFace PEFT LoRA docs",
+      "url": "https://huggingface.co/docs/peft/en/package_reference/lora"
+    }
+  ]
 }

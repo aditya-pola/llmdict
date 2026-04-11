@@ -27,5 +27,11 @@
       "venue": "ICML 2020",
       "arxiv": "2002.04745"
     }
+  ],
+  "resources": [
+    {
+      "label": "Sebastian Raschka — LLM Architecture Gallery",
+      "url": "https://sebastianraschka.com/llm-architecture-gallery/"
+    }
   ]
 }

@@ -47,5 +47,15 @@
     "Ouyang et al., arXiv:2203.02155"
   ],
   "confidence": "high",
-  "verified_date": "2026-04-10"
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "Cameron Wolfe — Understanding SFT",
+      "url": "https://cameronrwolfe.substack.com/p/understanding-and-using-supervised"
+    },
+    {
+      "label": "HuggingFace TRL docs",
+      "url": "https://huggingface.co/docs/trl/en/index"
+    }
+  ]
 }

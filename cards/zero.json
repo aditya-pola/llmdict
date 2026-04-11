@@ -27,6 +27,10 @@
     {
       "label": "DeepSpeed ZeRO documentation",
       "url": "https://www.deepspeed.ai/tutorials/zero/"
+    },
+    {
+      "label": "Lilian Weng — How to Train Really Large Models",
+      "url": "https://lilianweng.github.io/posts/2021-09-25-train-large/"
     }
   ],
   "confidence": "high",

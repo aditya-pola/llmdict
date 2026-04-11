@@ -28,5 +28,15 @@
       "venue": "EMNLP 2023",
       "arxiv": "2305.13245"
     }
+  ],
+  "resources": [
+    {
+      "label": "Sebastian Raschka — Visual Attention Variants",
+      "url": "https://magazine.sebastianraschka.com/p/visual-attention-variants"
+    },
+    {
+      "label": "Lilian Weng — The Transformer Family v2",
+      "url": "https://lilianweng.github.io/posts/2023-01-27-the-transformer-family-v2/"
+    }
   ]
 }

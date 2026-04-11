@@ -28,5 +28,11 @@
       "venue": "MLSys 2024",
       "arxiv": "2306.00978"
     }
+  ],
+  "resources": [
+    {
+      "label": "HuggingFace — Selecting a Quantization Method",
+      "url": "https://huggingface.co/docs/transformers/quantization/selecting"
+    }
   ]
 }

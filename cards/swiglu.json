@@ -26,5 +26,11 @@
       "venue": "2020",
       "arxiv": "2002.05202"
     }
+  ],
+  "resources": [
+    {
+      "label": "Sebastian Raschka — LLM Architecture Gallery",
+      "url": "https://sebastianraschka.com/llm-architecture-gallery/"
+    }
   ]
 }

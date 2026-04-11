@@ -483,6 +483,12 @@
           "venue": "MLSys 2024",
           "arxiv": "2306.00978"
         }
+      ],
+      "resources": [
+        {
+          "label": "HuggingFace — Selecting a Quantization Method",
+          "url": "https://huggingface.co/docs/transformers/quantization/selecting"
+        }
       ]
     },
     "backbone": {
@@ -516,6 +522,10 @@
         {
           "label": "HuggingFace Model summary",
           "url": "https://huggingface.co/docs/transformers/model_summary"
+        },
+        {
+          "label": "Sebastian Raschka — The Big LLM Architecture Comparison",
+          "url": "https://magazine.sebastianraschka.com/p/the-big-llm-architecture-comparison"
         }
       ],
       "confidence": "high",
@@ -594,6 +604,12 @@
           "venue": "NeurIPS 2023",
           "arxiv": "2305.14314"
         }
+      ],
+      "resources": [
+        {
+          "label": "HuggingFace — bitsandbytes quantization",
+          "url": "https://huggingface.co/docs/transformers/en/quantization/bitsandbytes"
+        }
       ]
     },
     "calibration-data": {
@@ -662,6 +678,14 @@
         {
           "label": "HuggingFace CLM training guide",
           "url": "https://huggingface.co/docs/transformers/tasks/language_modeling"
+        },
+        {
+          "label": "Jay Alammar — The Illustrated GPT-2",
+          "url": "https://jalammar.github.io/illustrated-gpt2/"
+        },
+        {
+          "label": "Andrej Karpathy — Let's Build GPT",
+          "url": "https://karpathy.ai/zero-to-hero.html"
         }
       ],
       "confidence": "high",
@@ -786,6 +810,12 @@
           "authors": "Yu et al.",
           "venue": "OSDI 2022",
           "arxiv": null
+        }
+      ],
+      "resources": [
+        {
+          "label": "Lilian Weng — LLM Inference Optimization",
+          "url": "https://lilianweng.github.io/posts/2023-01-10-inference-optimization/"
         }
       ]
     },
@@ -1114,7 +1144,17 @@
         "Rafailov et al., arXiv:2305.18290"
       ],
       "confidence": "high",
-      "verified_date": "2026-04-10"
+      "verified_date": "2026-04-10",
+      "resources": [
+        {
+          "label": "Cameron Wolfe — Direct Preference Optimization",
+          "url": "https://cameronrwolfe.substack.com/p/direct-preference-optimization"
+        },
+        {
+          "label": "HuggingFace TRL docs",
+          "url": "https://huggingface.co/docs/trl/en/index"
+        }
+      ]
     },
     "e2m1": {
       "id": "e2m1",
@@ -1273,6 +1313,12 @@
           "venue": "NeurIPS 2022",
           "arxiv": "2202.09368"
         }
+      ],
+      "resources": [
+        {
+          "label": "Cameron Wolfe — MoE LLMs",
+          "url": "https://cameronrwolfe.substack.com/p/moe-llms"
+        }
       ]
     },
     "ffn": {
@@ -1303,6 +1349,10 @@
         {
           "label": "Attention Is All You Need (original Transformer)",
           "url": "https://arxiv.org/abs/1706.03762"
+        },
+        {
+          "label": "Sebastian Raschka — LLM Architecture Gallery",
+          "url": "https://sebastianraschka.com/llm-architecture-gallery/"
         }
       ]
     },
@@ -1344,6 +1394,12 @@
           "authors": "Dao",
           "venue": "2023",
           "arxiv": "2307.08691"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Lilian Weng — LLM Inference Optimization",
+          "url": "https://lilianweng.github.io/posts/2023-01-10-inference-optimization/"
         }
       ]
     },
@@ -1703,6 +1759,12 @@
           "venue": "ICLR 2023",
           "arxiv": "2210.17323"
         }
+      ],
+      "resources": [
+        {
+          "label": "HuggingFace — Selecting a Quantization Method",
+          "url": "https://huggingface.co/docs/transformers/quantization/selecting"
+        }
       ]
     },
     "gqa": {
@@ -1734,6 +1796,16 @@
           "authors": "Ainslie et al.",
           "venue": "EMNLP 2023",
           "arxiv": "2305.13245"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Sebastian Raschka — Visual Attention Variants",
+          "url": "https://magazine.sebastianraschka.com/p/visual-attention-variants"
+        },
+        {
+          "label": "Lilian Weng — The Transformer Family v2",
+          "url": "https://lilianweng.github.io/posts/2023-01-27-the-transformer-family-v2/"
         }
       ]
     },
@@ -1778,6 +1850,10 @@
         {
           "label": "HuggingFace LLM Course: GRPO",
           "url": "https://huggingface.co/learn/llm-course/en/chapter12/3b"
+        },
+        {
+          "label": "Sebastian Raschka — Understanding Reasoning LLMs",
+          "url": "https://magazine.sebastianraschka.com/p/understanding-reasoning-llms"
         }
       ],
       "confidence": "high",
@@ -2044,6 +2120,10 @@
         {
           "label": "Kipply — Transformer Inference Arithmetic",
           "url": "https://kipp.ly/transformer-inference-arithmetic/"
+        },
+        {
+          "label": "Lilian Weng — LLM Inference Optimization",
+          "url": "https://lilianweng.github.io/posts/2023-01-10-inference-optimization/"
         }
       ],
       "confidence": "high",
@@ -2218,6 +2298,12 @@
           "venue": "NeurIPS Workshop 2015",
           "arxiv": "1503.02531"
         }
+      ],
+      "resources": [
+        {
+          "label": "Lilian Weng — LLM Inference Optimization",
+          "url": "https://lilianweng.github.io/posts/2023-01-10-inference-optimization/"
+        }
       ]
     },
     "kto": {
@@ -2253,7 +2339,13 @@
         "Ethayarajh et al., arXiv:2402.01306"
       ],
       "confidence": "high",
-      "verified_date": "2026-04-10"
+      "verified_date": "2026-04-10",
+      "resources": [
+        {
+          "label": "HuggingFace TRL docs",
+          "url": "https://huggingface.co/docs/trl/en/index"
+        }
+      ]
     },
     "kv-cache-quantization": {
       "id": "kv-cache-quantization",
@@ -2334,6 +2426,16 @@
           "authors": "Pope et al.",
           "venue": "MLSys 2023",
           "arxiv": "2211.05102"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Lilian Weng — LLM Inference Optimization",
+          "url": "https://lilianweng.github.io/posts/2023-01-10-inference-optimization/"
+        },
+        {
+          "label": "Jay Alammar — The Illustrated GPT-2",
+          "url": "https://jalammar.github.io/illustrated-gpt2/"
         }
       ]
     },
@@ -2451,7 +2553,21 @@
         "Hu et al., arXiv:2106.09685"
       ],
       "confidence": "high",
-      "verified_date": "2026-04-10"
+      "verified_date": "2026-04-10",
+      "resources": [
+        {
+          "label": "Sebastian Raschka — Practical Tips for LoRA",
+          "url": "https://magazine.sebastianraschka.com/p/practical-tips-for-finetuning-llms"
+        },
+        {
+          "label": "Cameron Wolfe — PEFT, LoRA, QLoRA",
+          "url": "https://cameronrwolfe.substack.com/p/easily-train-a-specialized-llm-peft"
+        },
+        {
+          "label": "HuggingFace PEFT LoRA docs",
+          "url": "https://huggingface.co/docs/peft/en/package_reference/lora"
+        }
+      ]
     },
     "mamba": {
       "id": "mamba",
@@ -2559,6 +2675,20 @@
           "venue": "NeurIPS 2017",
           "arxiv": "1706.03762"
         }
+      ],
+      "resources": [
+        {
+          "label": "The Illustrated Transformer (Jay Alammar)",
+          "url": "https://jalammar.github.io/illustrated-transformer/"
+        },
+        {
+          "label": "3Blue1Brown — Attention in Transformers",
+          "url": "https://www.3blue1brown.com/lessons/attention"
+        },
+        {
+          "label": "Sebastian Raschka — LLM Architecture Gallery",
+          "url": "https://sebastianraschka.com/llm-architecture-gallery/"
+        }
       ]
     },
     "mla": {
@@ -2592,6 +2722,12 @@
           "authors": "DeepSeek-AI",
           "venue": "2024",
           "arxiv": "2405.04434"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Sebastian Raschka — Visual Attention Variants",
+          "url": "https://magazine.sebastianraschka.com/p/visual-attention-variants"
         }
       ]
     },
@@ -2781,6 +2917,16 @@
           "venue": "2024",
           "arxiv": "2401.04088"
         }
+      ],
+      "resources": [
+        {
+          "label": "Cameron Wolfe — MoE LLMs",
+          "url": "https://cameronrwolfe.substack.com/p/moe-llms"
+        },
+        {
+          "label": "Lilian Weng — The Transformer Family v2",
+          "url": "https://lilianweng.github.io/posts/2023-01-27-the-transformer-family-v2/"
+        }
       ]
     },
     "mqa": {
@@ -2811,6 +2957,12 @@
           "authors": "Shazeer",
           "venue": "2019",
           "arxiv": "1911.02150"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Lilian Weng — The Transformer Family v2",
+          "url": "https://lilianweng.github.io/posts/2023-01-27-the-transformer-family-v2/"
         }
       ]
     },
@@ -3225,7 +3377,13 @@
         "Hong et al., arXiv:2403.07691"
       ],
       "confidence": "high",
-      "verified_date": "2026-04-10"
+      "verified_date": "2026-04-10",
+      "resources": [
+        {
+          "label": "HuggingFace TRL docs",
+          "url": "https://huggingface.co/docs/trl/en/index"
+        }
+      ]
     },
     "paged-attention": {
       "id": "paged-attention",
@@ -3431,6 +3589,12 @@
           "venue": "ICML 2020",
           "arxiv": "2002.04745"
         }
+      ],
+      "resources": [
+        {
+          "label": "Sebastian Raschka — LLM Architecture Gallery",
+          "url": "https://sebastianraschka.com/llm-architecture-gallery/"
+        }
       ]
     },
     "pre-training": {
@@ -3631,7 +3795,17 @@
         "Dettmers et al., arXiv:2305.14314"
       ],
       "confidence": "high",
-      "verified_date": "2026-04-10"
+      "verified_date": "2026-04-10",
+      "resources": [
+        {
+          "label": "Sebastian Raschka — Practical Tips for LoRA",
+          "url": "https://magazine.sebastianraschka.com/p/practical-tips-for-finetuning-llms"
+        },
+        {
+          "label": "HuggingFace PEFT quantization guide",
+          "url": "https://huggingface.co/docs/peft/en/developer_guides/quantization"
+        }
+      ]
     },
     "quantization": {
       "id": "quantization",
@@ -3664,6 +3838,16 @@
           "authors": "Gholami et al.",
           "venue": "2021",
           "arxiv": "2103.13630"
+        }
+      ],
+      "resources": [
+        {
+          "label": "HuggingFace — Quantization overview",
+          "url": "https://huggingface.co/docs/transformers/en/main_classes/quantization"
+        },
+        {
+          "label": "Lilian Weng — LLM Inference Optimization",
+          "url": "https://lilianweng.github.io/posts/2023-01-10-inference-optimization/"
         }
       ]
     },
@@ -3836,6 +4020,12 @@
           "venue": "CVPR 2016",
           "arxiv": "1512.03385"
         }
+      ],
+      "resources": [
+        {
+          "label": "Jay Alammar — The Illustrated Transformer",
+          "url": "https://jalammar.github.io/illustrated-transformer/"
+        }
       ]
     },
     "rlhf": {
@@ -3896,7 +4086,17 @@
         "Ouyang et al., arXiv:2203.02155"
       ],
       "confidence": "high",
-      "verified_date": "2026-04-10"
+      "verified_date": "2026-04-10",
+      "resources": [
+        {
+          "label": "Lilian Weng — Reward Hacking in RL",
+          "url": "https://lilianweng.github.io/posts/2024-11-28-reward-hacking/"
+        },
+        {
+          "label": "HuggingFace Deep RL Course — RLHF",
+          "url": "https://huggingface.co/learn/deep-rl-course/en/unitbonus3/rlhf"
+        }
+      ]
     },
     "rlvr": {
       "id": "rlvr",
@@ -3971,6 +4171,12 @@
           "venue": "NeurIPS 2019",
           "arxiv": "1910.07467"
         }
+      ],
+      "resources": [
+        {
+          "label": "Sebastian Raschka — LLM Architecture Gallery",
+          "url": "https://sebastianraschka.com/llm-architecture-gallery/"
+        }
       ]
     },
     "rope": {
@@ -4004,6 +4210,12 @@
           "authors": "Su et al.",
           "venue": "2021",
           "arxiv": "2104.09864"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Lilian Weng — The Transformer Family v2",
+          "url": "https://lilianweng.github.io/posts/2023-01-27-the-transformer-family-v2/"
         }
       ]
     },
@@ -4087,6 +4299,10 @@
         {
           "label": "The Illustrated Transformer",
           "url": "https://jalammar.github.io/illustrated-transformer/"
+        },
+        {
+          "label": "3Blue1Brown — Attention in Transformers",
+          "url": "https://www.3blue1brown.com/lessons/attention"
         }
       ],
       "confidence": "high",
@@ -4177,7 +4393,17 @@
         "Ouyang et al., arXiv:2203.02155"
       ],
       "confidence": "high",
-      "verified_date": "2026-04-10"
+      "verified_date": "2026-04-10",
+      "resources": [
+        {
+          "label": "Cameron Wolfe — Understanding SFT",
+          "url": "https://cameronrwolfe.substack.com/p/understanding-and-using-supervised"
+        },
+        {
+          "label": "HuggingFace TRL docs",
+          "url": "https://huggingface.co/docs/trl/en/index"
+        }
+      ]
     },
     "simpo": {
       "id": "simpo",
@@ -4426,6 +4652,12 @@
           "venue": "2023",
           "arxiv": "2302.01318"
         }
+      ],
+      "resources": [
+        {
+          "label": "Lilian Weng — LLM Inference Optimization",
+          "url": "https://lilianweng.github.io/posts/2023-01-10-inference-optimization/"
+        }
       ]
     },
     "spinquant": {
@@ -4526,6 +4758,12 @@
           "authors": "Shazeer",
           "venue": "2020",
           "arxiv": "2002.05202"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Sebastian Raschka — LLM Architecture Gallery",
+          "url": "https://sebastianraschka.com/llm-architecture-gallery/"
         }
       ]
     },
@@ -5048,6 +5286,14 @@
         {
           "label": "OpenAI Tokenizer Tool",
           "url": "https://platform.openai.com/tokenizer"
+        },
+        {
+          "label": "Andrej Karpathy — minbpe tokenizer",
+          "url": "https://github.com/karpathy/minbpe"
+        },
+        {
+          "label": "3Blue1Brown — Transformers",
+          "url": "https://www.3blue1brown.com/lessons/gpt"
         }
       ],
       "confidence": "high",
@@ -5729,6 +5975,10 @@
         {
           "label": "DeepSpeed ZeRO documentation",
           "url": "https://www.deepspeed.ai/tutorials/zero/"
+        },
+        {
+          "label": "Lilian Weng — How to Train Really Large Models",
+          "url": "https://lilianweng.github.io/posts/2021-09-25-train-large/"
         }
       ],
       "confidence": "high",

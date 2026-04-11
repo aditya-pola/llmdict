@@ -39,6 +39,10 @@
     {
       "label": "HuggingFace LLM Course: GRPO",
       "url": "https://huggingface.co/learn/llm-course/en/chapter12/3b"
+    },
+    {
+      "label": "Sebastian Raschka — Understanding Reasoning LLMs",
+      "url": "https://magazine.sebastianraschka.com/p/understanding-reasoning-llms"
     }
   ],
   "confidence": "high",

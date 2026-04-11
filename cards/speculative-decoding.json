@@ -34,5 +34,11 @@
       "venue": "2023",
       "arxiv": "2302.01318"
     }
+  ],
+  "resources": [
+    {
+      "label": "Lilian Weng — LLM Inference Optimization",
+      "url": "https://lilianweng.github.io/posts/2023-01-10-inference-optimization/"
+    }
   ]
 }

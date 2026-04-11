@@ -35,5 +35,15 @@
     "Dettmers et al., arXiv:2305.14314"
   ],
   "confidence": "high",
-  "verified_date": "2026-04-10"
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "Sebastian Raschka — Practical Tips for LoRA",
+      "url": "https://magazine.sebastianraschka.com/p/practical-tips-for-finetuning-llms"
+    },
+    {
+      "label": "HuggingFace PEFT quantization guide",
+      "url": "https://huggingface.co/docs/peft/en/developer_guides/quantization"
+    }
+  ]
 }
