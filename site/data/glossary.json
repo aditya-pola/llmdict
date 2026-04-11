@@ -949,7 +949,7 @@
       "expansion": "bitsandbytes — Tim Dettmers' quantization library",
       "category": "quantization-methods",
       "oneliner": "The library behind LLM.int8() and QLoRA. Offers 8-bit (absmax) and 4-bit (nf4/fp4) quantization with deep HuggingFace integration.",
-      "explanation": "Two main modes. 8-bit (LLM.int8()): vector-wise absmax quantization with mixed-precision decomposition — outlier features (>~6σ) kept in fp16, rest in int8. Solved the activation outlier problem. 4-bit (QLoRA): loads base model in nf4/fp4, trains LoRA adapters in fp16. Double quantization compresses scale factors. Tightly integrated with HuggingFace Transformers (load_in_8bit/load_in_4bit). Primary use: memory-efficient fine-tuning, not production serving.",
+      "explanation": "Two main modes. 8-bit (LLM.int8()): vector-wise absmax quantization with mixed-precision decomposition — outlier features (>~6$\\sigma$) kept in fp16, rest in int8. Solved the activation outlier problem. 4-bit (QLoRA): loads base model in nf4/fp4, trains LoRA adapters in fp16. Double quantization compresses scale factors. Tightly integrated with HuggingFace Transformers (load_in_8bit/load_in_4bit). Primary use: memory-efficient fine-tuning, not production serving.",
       "fundamentals": "8-bit: per-vector absmax scaling. Outlier decomposition: X = X_normal + X_outlier, compute separately in int8 and fp16, sum results. 4-bit: per-group (g=64 default) with nf4 or fp4 dtype. Double quant: group the fp32 absmax values into blocks of 256, quantize to fp8 with their own absmax.",
       "seen_in": [
         "model-name",
@@ -1162,7 +1162,7 @@
       "category": "quantization-methods",
       "oneliner": "Per-weight importance scores computed from calibration data — used by llama.cpp to weight quantization decisions. Powers IQ-quant methods.",
       "explanation": "An importance matrix records how much each weight contributes to the model's output. Computed by running calibration data through the model and accumulating squared activation magnitudes per weight position. Weights with high importance scores get quantized more carefully (in IQ methods, they get mapped to closer codebook entries). Importance matrices are what distinguish IQ-quants from Q-quants in llama.cpp — same bitwidth, but IQ uses importance data to make smarter rounding decisions.",
-      "fundamentals": "For each layer with input X: importance[i,j] ∝ Σ_samples (X[:,j])^2. This approximates the diagonal of the Hessian — weights multiplied by large activations matter more. The imatrix is stored as a file and loaded during quantization. IQ-quant codebook assignment is weighted by these scores.",
+      "fundamentals": "For each layer with input X: importance[i,j] $\\propto\\Sigma$_samples (X[:,j])^2. This approximates the diagonal of the Hessian — weights multiplied by large activations matter more. The imatrix is stored as a file and loaded during quantization. IQ-quant codebook assignment is weighted by these scores.",
       "seen_in": [
         "gguf-filename",
         "quantization-scripts"
@@ -1750,7 +1750,7 @@
       "category": "position-encodings",
       "oneliner": "Adds a fixed linear penalty to attention scores based on query-key distance — no position embeddings at all, with good length extrapolation.",
       "explanation": "Instead of position embeddings, ALiBi subtracts m_h·|i-j| from attention logits, where m_h is a head-specific slope. Nearby tokens get small penalty, distant tokens get large penalty. Slopes are a geometric sequence: m_h = 2^(-8/H · h), not learned. Primary motivation: length extrapolation — models trained at 1024 tokens work at 2048+ with minimal degradation, unlike learned/sinusoidal embeddings. Used by BLOOM, Falcon, MPT. Less common now due to RoPE's dominance + scaling extensions. Drawback: fixed monotonic decay is rigid.",
-      "fundamentals": "Modified attention: a_{i,j} = qᵢᵀ·kⱼ - m_h·|i-j|. For H=8 heads: slopes = {1/2, 1/4, 1/8, ..., 1/256}. Steep slopes = strong locality, gentle slopes = far attention. Causal: bias = -m_h·(i-j) for j≤i. The bias matrix is lower-triangular. $O(1)$ additional params (fixed slopes). Extrapolation works because linear function is defined for any distance — no OOD issue. Cannot learn to attend strongly to a specific far position through positional info alone (content can override).",
+      "fundamentals": "Modified attention: a_{i,j} = $q_i^T$·$k_j$ - m_h·|i-j|. For H=8 heads: slopes = {1/2, 1/4, 1/8, ..., 1/256}. Steep slopes = strong locality, gentle slopes = far attention. Causal: bias = -m_h·(i-j) for j≤i. The bias matrix is lower-triangular. $O(1)$ additional params (fixed slopes). Extrapolation works because linear function is defined for any distance — no OOD issue. Cannot learn to attend strongly to a specific far position through positional info alone (content can override).",
       "seen_in": [
         "model-config"
       ],
@@ -1780,7 +1780,7 @@
       "category": "position-encodings",
       "oneliner": "Extends RoPE context by increasing base frequency — preserves high-frequency local resolution while stretching low-frequency global capacity. Works zero-shot.",
       "explanation": "Proposed by Reddit user /u/bloc97 (June 2023). Problem: extending context (e.g., 4K→16K) without fine-tuning. PI (Position Interpolation) compresses all frequencies equally, damaging local resolution. NTK insight: different frequency bands encode different scales. High-freq dimensions (local position) should stay untouched; low-freq dimensions (global) should stretch. Increasing base achieves this automatically because $\\theta_i = \\text{base}^{-2i/d}$ — larger base reduces all frequencies, but proportionally more for already-slow bands. Works surprisingly well zero-shot; better with light fine-tuning.",
-      "fundamentals": "New base: base' = base · $\\alpha$^(d/(d-2)) where $\\alpha$ = context extension factor. For $\\alpha$=4, d=128: base' $\\approx$ 40,440. Effect on wavelengths: highest-freq band (i=0) unchanged (λ₀=2π always), lowest-freq band scales by ~$\\alpha$. Intermediate bands interpolate smoothly. Compare PI: all frequencies compressed uniformly by $\\alpha$ — damages high-freq resolution. NTK preserves local while extending global.",
+      "fundamentals": "New base: base' = base · $\\alpha$^(d/(d-2)) where $\\alpha$ = context extension factor. For $\\alpha$=4, d=128: base' $\\approx$ 40,440. Effect on wavelengths: highest-freq band (i=0) unchanged ($\\lambda_0$=2$\\pi$ always), lowest-freq band scales by ~$\\alpha$. Intermediate bands interpolate smoothly. Compare PI: all frequencies compressed uniformly by $\\alpha$ — damages high-freq resolution. NTK preserves local while extending global.",
       "seen_in": [
         "model-config"
       ],
@@ -1814,7 +1814,7 @@
       "category": "position-encodings",
       "oneliner": "Improved RoPE extension: divides frequency bands into three zones (untouched / ramped / fully interpolated) plus attention temperature scaling. Achieves 64-128$\\times$ extension with ~400 fine-tuning steps.",
       "explanation": "Refines NTK-aware scaling (Peng et al., 2023). NTK applies smooth monotonic adjustment across all bands — suboptimal. YaRN divides bands by wavelength-to-context ratio: (a) high-freq bands ($\\lambda$ << L): untouched, (b) low-freq bands ($\\lambda$ ≥ L): fully interpolated by factor s, (c) transition zone: smooth ramp. Plus temperature scaling $\\sqrt{1/t}$ on attention logits to counter entropy shift from extension. Achieves LLaMA 2 4K→128K (32$\\times$) with ~400 training steps. Used in Mistral/Mixtral long-context variants. Supported in HuggingFace Transformers.",
-      "fundamentals": "Define rᵢ = λᵢ/L (wavelength/context ratio). Thresholds $\\alpha$=1, $\\beta$=32. If rᵢ<$\\alpha$: no scaling. If rᵢ>$\\beta$: full interpolation (÷s). Between: ramp γᵢ = (rᵢ-$\\alpha$)/($\\beta$-$\\alpha$), scale = 1/(1+γᵢ·(s-1)). Temperature: attention *= $\\sqrt{1/t}$ where t $\\approx$ 0.1·ln(s)+1. Three-part approach preserves local precision while extending global range — key improvement over uniform NTK. Extension: LLaMA 2 7B/13B to 64K-128K, passkey retrieval passing at 128K.",
+      "fundamentals": "Define $r_i$ = $\\lambda_i$/L (wavelength/context ratio). Thresholds $\\alpha$=1, $\\beta$=32. If $r_i$<$\\alpha$: no scaling. If $r_i$>$\\beta$: full interpolation (÷s). Between: ramp $\\gamma_i$ = ($r_i$-$\\alpha$)/($\\beta$-$\\alpha$), scale = 1/(1+$\\gamma_i$·(s-1)). Temperature: attention *= $\\sqrt{1/t}$ where t $\\approx$ 0.1·ln(s)+1. Three-part approach preserves local precision while extending global range — key improvement over uniform NTK. Extension: LLaMA 2 7B/13B to 64K-128K, passkey retrieval passing at 128K.",
       "seen_in": [
         "model-config"
       ],
@@ -1845,7 +1845,7 @@
       "category": "position-encodings",
       "oneliner": "Simplest long-context approach: increase RoPE base from 10,000 to 500K-1M during training. No post-hoc scaling needed.",
       "explanation": "Just change the base constant in $\\theta_i = \\text{base}^{-2i/d}$ to a much larger value and train with it. Larger base = longer wavelengths = model can represent longer-range positions. High-freq band (i=0) always has $\\theta_0$=1 regardless of base, so local discrimination is preserved. Requires training/continued pre-training (can't just change at inference). Used by: LLaMA 3 (base=500K, 8K context), LLaMA 3.1 (500K, 128K), Code Llama (1M, 16K→100K+), Qwen2/2.5 (1M, 32K-128K). Preferred by orgs training from scratch due to simplicity.",
-      "fundamentals": "$\\theta_i$ = B^(-2i/d). Max wavelength = 2π·B. base=10K → ~63K positions; base=500K → ~3.1M positions; base=1M → ~6.3M positions. High-freq (i=0): $\\theta_0$=1 always (base^0=1) — local info preserved for any base. Mathematically equivalent to NTK-aware with specific $\\alpha$, but applied during training not post-hoc. The model learns to use the extended position range natively — no distributional mismatch.",
+      "fundamentals": "$\\theta_i$ = B^(-2i/d). Max wavelength = 2$\\pi$·B. base=10K → ~63K positions; base=500K → ~3.1M positions; base=1M → ~6.3M positions. High-freq (i=0): $\\theta_0$=1 always (base^0=1) — local info preserved for any base. Mathematically equivalent to NTK-aware with specific $\\alpha$, but applied during training not post-hoc. The model learns to use the extended position range natively — no distributional mismatch.",
       "seen_in": [
         "model-config"
       ],
@@ -1910,8 +1910,8 @@
       "expansion": "Sinusoidal Position Encoding",
       "category": "position-encodings",
       "oneliner": "The original Transformer position encoding: sin/cos at geometrically spaced frequencies, added to token embeddings. Mostly replaced by RoPE.",
-      "explanation": "From 'Attention Is All You Need' (2017). Solves the fundamental problem: self-attention is permutation-invariant, so positions must be injected. Each position gets a vector of sin/cos values at different frequencies, added to token embeddings. Design goals: unique per position, bounded magnitude, potential relative position awareness (PE(pos+k) = linear transform of PE(pos)). Wavelengths: 2π to ~63K (geometric progression). Replaced because: (1) additive injection dilutes through layers, (2) model must learn to extract relative positions (RoPE guarantees it), (3) limited length generalization. Still used in diffusion model timestep embeddings.",
-      "fundamentals": "PE(pos, 2i) = sin(pos/10000^(2i/d)). PE(pos, 2i+1) = cos(pos/10000^(2i/d)). Frequencies: ω_k = 1/10000^(2k/d), geometric from 1 to 1/10000. Added to token embedding: x'(pos) = x(pos) + PE(pos). Properties: $\\|\\|PE(pos)\\|\\|$² = d/2 (bounded, constant). PE(pos+k) = M_k · PE(pos) where M_k is a block-diagonal rotation matrix — relative position as linear transform. 0 learned params.",
+      "explanation": "From 'Attention Is All You Need' (2017). Solves the fundamental problem: self-attention is permutation-invariant, so positions must be injected. Each position gets a vector of sin/cos values at different frequencies, added to token embeddings. Design goals: unique per position, bounded magnitude, potential relative position awareness (PE(pos+k) = linear transform of PE(pos)). Wavelengths: 2$\\pi$ to ~63K (geometric progression). Replaced because: (1) additive injection dilutes through layers, (2) model must learn to extract relative positions (RoPE guarantees it), (3) limited length generalization. Still used in diffusion model timestep embeddings.",
+      "fundamentals": "PE(pos, 2i) = sin(pos/$10000^{2i/d}$). PE(pos, 2i+1) = cos(pos/$10000^{2i/d}$). Frequencies: $\\omega_k = 1/10000^{2k/d}$, geometric from 1 to 1/10000. Added to token embedding: $x'(pos) = x(pos) + PE(pos)$. Properties: $\\|PE(pos)\\|^2 = d/2$ (bounded, constant). $PE(pos+k) = M_k \\cdot PE(pos)$ where $M_k$ is a block-diagonal rotation matrix — relative position as linear transform. 0 learned params.",
       "seen_in": [
         "legacy-models",
         "documentation"
@@ -1941,7 +1941,7 @@
       "expansion": "Learned (Absolute) Position Embeddings",
       "category": "position-encodings",
       "oneliner": "A trainable lookup table of position vectors (like a vocabulary for positions) — simple but has a hard max length limit. Used by GPT-2, BERT, GPT-3.",
-      "explanation": "Maintain learnable matrix W_pos ∈ ℝ^(L_max $\\times$ d). Position m → lookup W_pos[m], add to token embedding. Model learns whatever representation is useful — often converges to sinusoidal-like patterns. Hard limitation: cannot process sequences > L_max (no embedding exists). Parameter cost: L_max $\\times$ d (128K $\\times$ 4096 = 537M params). No inherent relative position awareness. Replaced by RoPE in modern LLMs (2022-23 shift). Still used in: BERT variants, Vision Transformers (ViT), some encoder-only models.",
+      "explanation": "Maintain learnable matrix W_pos $\\in\\mathbb{R}$^(L_max $\\times$ d). Position m → lookup W_pos[m], add to token embedding. Model learns whatever representation is useful — often converges to sinusoidal-like patterns. Hard limitation: cannot process sequences > L_max (no embedding exists). Parameter cost: L_max $\\times$ d (128K $\\times$ 4096 = 537M params). No inherent relative position awareness. Replaced by RoPE in modern LLMs (2022-23 shift). Still used in: BERT variants, Vision Transformers (ViT), some encoder-only models.",
       "fundamentals": "x'_m = x_m + W_pos[m]. W_pos trained via backpropagation. GPT-2: L_max=1024, d=768 → 786K params. For 128K context: would be 537M params — impractical. Learned embeddings often show: low-freq sinusoidal patterns in principal components, nearby positions more similar, boundary effects at first/last positions. Cannot extrapolate — position L_max+1 has no representation.",
       "seen_in": [
         "model-config",
@@ -1976,7 +1976,7 @@
       "category": "layer-types",
       "oneliner": "The position-wise fully connected sub-block in each transformer layer — up-project, activate, down-project. Stores ~67% of each layer's parameters.",
       "explanation": "Operates independently per token (no cross-token interaction). Serves as the 'memory/knowledge storage' component — factual knowledge and patterns predominantly stored in FFN weights. Standard design: project up to larger intermediate dim, apply activation, project back down. In original Transformer, d_ff = 4 $\\times$ d_model with ReLU. Modern models use SwiGLU with 3 matrices and d_ff $\\approx$ 2.67 $\\times$ d_model to keep total params constant. FFN is the dominant parameter consumer: ~67% of layer params in gated variants.",
-      "fundamentals": "Standard: FFN(x) = W₂·activation(W₁·x). Gated (SwiGLU): FFN(x) = (Swish(xW_gate) ⊙ xW_up)W_down. LLaMA 7B: d_model=4096, d_ff=11008. FFN params: 3$\\times$4096$\\times$11008 = 135M vs Attention: 4$\\times$409$6^2$ = 67M. The '2/3 of 4x' rule: d_ff $\\approx$ (8/3)$\\times$d_model, rounded to multiple of 256 for hardware efficiency.",
+      "fundamentals": "Standard: FFN(x) = $W_2$·activation($W_1$·x). Gated (SwiGLU): FFN(x) = (Swish(xW_gate) ⊙ xW_up)W_down. LLaMA 7B: d_model=4096, d_ff=11008. FFN params: 3$\\times$4096$\\times$11008 = 135M vs Attention: 4$\\times$409$6^2$ = 67M. The '2/3 of 4x' rule: d_ff $\\approx$ (8/3)$\\times$d_model, rounded to multiple of 256 for hardware efficiency.",
       "seen_in": [
         "model-config",
         "code"
@@ -2037,8 +2037,8 @@
       "expansion": "GELU-activated Gated Linear Unit",
       "category": "layer-types",
       "oneliner": "GLU variant using GELU activation instead of Swish — performs nearly identically to SwiGLU, used in T5 v1.1 and Flan-T5.",
-      "explanation": "From the same Shazeer (2020) paper. GELU(x) = x·Φ(x) where Φ is Gaussian CDF. Practically indistinguishable from SwiGLU in quality (both ~21.3 perplexity vs ReLU's ~22.5 in Shazeer's T5 experiments). The ecosystem split: LLaMA-inspired models standardized on SwiGLU, T5/Flan-T5 family uses GeGLU. GELU was already standard in BERT/GPT-2, so GeGLU was a natural extension. Less common in decoder-only LLMs post-2023.",
-      "fundamentals": "GeGLU(x) = (GELU(xW_gate) ⊙ xW_up)W_down. GELU(z) $\\approx$ z·0.5·(1 + tanh($\\sqrt{2/π}$·(z + 0.044715$z^3$))). Same parameter count as SwiGLU: 3 $\\times$ d_model $\\times$ d_ff. Swish vs GELU: Φ(x) has slightly steeper transition than $\\sigma$(x), negligible practical difference.",
+      "explanation": "From the same Shazeer (2020) paper. GELU(x) = x·$\\Phi$(x) where $\\Phi$ is Gaussian CDF. Practically indistinguishable from SwiGLU in quality (both ~21.3 perplexity vs ReLU's ~22.5 in Shazeer's T5 experiments). The ecosystem split: LLaMA-inspired models standardized on SwiGLU, T5/Flan-T5 family uses GeGLU. GELU was already standard in BERT/GPT-2, so GeGLU was a natural extension. Less common in decoder-only LLMs post-2023.",
+      "fundamentals": "GeGLU(x) = (GELU(xW_gate) ⊙ xW_up)W_down. GELU(z) $\\approx$ z·0.5·(1 + tanh($\\sqrt{2/π}$·(z + 0.044715$z^3$))). Same parameter count as SwiGLU: 3 $\\times$ d_model $\\times$ d_ff. Swish vs GELU: $\\Phi$(x) has slightly steeper transition than $\\sigma$(x), negligible practical difference.",
       "seen_in": [
         "model-config",
         "code"
@@ -2170,7 +2170,7 @@
       "category": "layer-types",
       "oneliner": "Gemma 3/4 technique: each decoder layer has its own token embedding table, adding a per-layer per-token signal to the residual stream. Inflates total param count above 'effective' count.",
       "explanation": "Introduced in Google DeepMind's Gemma 3 (2025). Standard transformers inject token identity only at input embedding. PLE gives each of N layers its own embedding lookup table — each layer gets a fresh, learnable signal about token identity. Motivation: in deep models, token identity signal dilutes through many layers of transformation; PLE provides a 'refresh.' Explains the large gap between Gemma's 'total' and 'effective' parameters (e.g., E2B: 5.1B total vs 2.3B effective). Relatively unique to Gemma family as of 2025. Conceptually related to soft prompting per layer and layer-wise adapters.",
-      "fundamentals": "Standard: h₀ = Embed(token) + PE. PLE: each layer l adds PLE_l(token_id) to residual stream. PLE_l is a lookup table [V, d_ple]. If d_ple small (e.g., 128): overhead per layer = V$\\times$128. For V=256K, L=46 layers: 46$\\times$256K$\\times$128 $\\approx$ 1.5B params — substantial but not computed per-token in the same way as attention/FFN. Solves: token identity dilution in deep models, rare token handling, per-layer specialization based on token type.",
+      "fundamentals": "Standard: $h_0$ = Embed(token) + PE. PLE: each layer l adds PLE_l(token_id) to residual stream. PLE_l is a lookup table [V, d_ple]. If d_ple small (e.g., 128): overhead per layer = V$\\times$128. For V=256K, L=46 layers: 46$\\times$256K$\\times$128 $\\approx$ 1.5B params — substantial but not computed per-token in the same way as attention/FFN. Solves: token identity dilution in deep models, rare token handling, per-layer specialization based on token type.",
       "seen_in": [
         "model-config",
         "model-cards"
@@ -2233,7 +2233,7 @@
       "category": "scaling-patterns",
       "oneliner": "Replace each FFN with N parallel expert FFNs, activate only top-k per token via learned routing. Decouples total params from per-token compute.",
       "explanation": "Each FFN layer becomes N expert FFNs + a router. Router selects top-k experts per token (typically k=1 or k=2). You get massive model capacity at fraction of compute cost. Key tradeoff: ALL params must be in memory even though only k/N are active. Mixtral 8x7B: 46.7B total, 12.9B active (8 experts, top-2). DeepSeek-V3: 671B total, 37B active (1 shared + 256 routed, top-8). Load balancing loss prevents expert collapse. Shared experts (DeepSeek) always fire as safety net alongside routed experts.",
-      "fundamentals": "Router: g(x) = softmax(W_g·x), select TopK(g(x), k). Output: y = Σᵢ∈S g(x)ᵢ·Expertᵢ(x). Load balance loss: L = $\\alpha$·N·$\\Sigma$(fᵢ·pᵢ) where fᵢ=token fraction, pᵢ=mean prob. Capacity factor CF: buffer = CF$\\times$(T/N) tokens per expert, excess dropped. Mixtral math: 32 layers $\\times$ 8 experts $\\times$ ~134M params/expert = 34.4B FFN + 12.3B attention = 46.7B total. Per token: 2/8 experts → 12.9B active. Memory: 46.7B (all loaded). FLOPS: ~13B equivalent.",
+      "fundamentals": "Router: $g(x) = \\text{softmax}(W_g \\cdot x)$, select $\\text{TopK}(g(x), k)$. Output: $y = \\sum_{i \\in S} g(x)_i \\cdot \\text{Expert}_i(x)$. Load balance loss: $L = \\alpha \\cdot N \\cdot \\sum_i (f_i \\cdot p_i)$ where $f_i$=token fraction, $p_i$=mean prob. Capacity factor CF: buffer = $CF \\times (T/N)$ tokens per expert, excess dropped. Mixtral math: 32 layers $\\times$ 8 experts $\\times$ ~134M params/expert = 34.4B FFN + 12.3B attention = 46.7B total. Per token: 2/8 experts $\\to$ 12.9B active. Memory: 46.7B (all loaded). FLOPS: ~13B equivalent.",
       "seen_in": [
         "model-name",
         "model-config"
@@ -2313,7 +2313,7 @@
       "category": "scaling-patterns",
       "oneliner": "Train a small 'student' to mimic a large 'teacher's output distributions — transfers 'dark knowledge' from soft probabilities that hard labels miss.",
       "explanation": "Hinton et al. (2015). Teacher's soft probability distribution over vocabulary contains far more information than one-hot labels — inter-class relationships, relative similarities. Student trained on combined loss: cross-entropy vs ground truth + KL divergence vs teacher's softened outputs (temperature T=2-20 amplifies dark knowledge). Modern LLM distillation often uses synthetic data generation instead of logit matching. Typical retention: 85-95% of teacher quality at 1/10th size. Examples: LLaMA 3.2 1B/3B from 8B/70B, Phi models from GPT-4-class, Gemma distilled variants.",
-      "fundamentals": "L = $\\alpha$·CE(y_true, $\\sigma$(z_s)) + (1-$\\alpha$)·$T^2$·KL($\\sigma$(z_t/T) || $\\sigma$(z_s/T)). Temperature T softens distributions. $T^2$ compensates gradient magnitude. Hard labels: ~15 bits/example (log₂(32K)). Soft labels: 32K continuous values — orders of magnitude more info. Distillation vs pruning: pruning removes params from existing model (architecture shrinks); distillation trains new smaller model from scratch using teacher signal. Can combine: prune then distill to recover (LLaMA 3.2 approach).",
+      "fundamentals": "L = $\\alpha$·CE(y_true, $\\sigma$(z_s)) + (1-$\\alpha$)·$T^2$·KL($\\sigma$(z_t/T) || $\\sigma$(z_s/T)). Temperature T softens distributions. $T^2$ compensates gradient magnitude. Hard labels: ~15 bits/example (lo$g_2$(32K)). Soft labels: 32K continuous values — orders of magnitude more info. Distillation vs pruning: pruning removes params from existing model (architecture shrinks); distillation trains new smaller model from scratch using teacher signal. Can combine: prune then distill to recover (LLaMA 3.2 approach).",
       "seen_in": [
         "model-cards",
         "documentation"
@@ -2383,7 +2383,7 @@
       "category": "scaling-patterns",
       "oneliner": "The learned mechanism assigning tokens to experts — linear projection → softmax → top-k selection. Load balancing is the central challenge.",
       "explanation": "Router must: (a) send tokens to relevant experts, (b) balance load across experts, (c) be differentiable for end-to-end training. Standard: linear gate W_g·x → softmax → top-k. Without regularization, router collapses to few popular experts. Fixes: auxiliary load-balancing loss (penalizes uneven utilization), noisy gating (Gaussian noise for exploration), expert choice routing (experts choose tokens, guarantees balance). DeepSeek innovation: shared experts (always fire) + routed experts (selected) + bias-based load balancing (avoids aux loss entirely).",
-      "fundamentals": "Top-k: scores = W_g·x, probs = softmax(scores), select top-k, output = $\\Sigma$ wᵢ·Expertᵢ(x). Noisy gating: scores += softplus(W_noise·x)·$\\varepsilon$. Load balance loss: L = $\\alpha$·N·$\\Sigma$(fᵢ·pᵢ). Expert choice (Zhou 2022): each expert picks top-c tokens from batch — perfect balance by construction. DeepSeek shared+routed: y = Expert_shared(x) + Σᵢ∈TopK gᵢ·Expert_routed_i(x). DeepSeek-V3 bias-based balance: routing_score_i = (W_g·x)ᵢ + bᵢ, biases updated from running load stats.",
+      "fundamentals": "Top-k: $\\text{scores} = W_g \\cdot x$, $\\text{probs} = \\text{softmax}(\\text{scores})$, select top-k, output = $\\sum w_i \\cdot \\text{Expert}_i(x)$. Noisy gating: scores += $\\text{softplus}(W_{\\text{noise}} \\cdot x) \\cdot \\varepsilon$. Load balance loss: $L = \\alpha \\cdot N \\cdot \\sum_i (f_i \\cdot p_i)$. Expert choice (Zhou 2022): each expert picks top-c tokens from batch — perfect balance by construction. DeepSeek shared+routed: $y = \\text{Expert}_{\\text{shared}}(x) + \\sum_{i \\in \\text{TopK}} g_i \\cdot \\text{Expert}_{\\text{routed},i}(x)$. DeepSeek-V3 bias-based balance: $\\text{routing\\_score}_i = (W_g \\cdot x)_i + b_i$, biases updated from running load stats.",
       "seen_in": [
         "model-config",
         "code"
@@ -2448,7 +2448,7 @@
       "category": "scaling-patterns",
       "oneliner": "TP splits each layer across GPUs (every GPU computes a slice of every layer). PP assigns different layers to different GPUs (sequential pipeline). TP within nodes, PP across nodes.",
       "explanation": "TP (Megatron-LM, 2019): split weight matrices across GPUs. Column-parallel up-projection, row-parallel down-projection. Requires 2 AllReduce ops per layer — needs NVLink-class bandwidth (~900 GB/s). Best within a single node (TP=8 on DGX H100). PP: layers 0-15 on GPU 0, layers 16-31 on GPU 1. Point-to-point communication (lower bandwidth OK). Suffers pipeline bubbles: bubble fraction = (P-1)/(M+P-1) with M micro-batches. Best across nodes. Large-scale uses 3D parallelism: TP within node + PP across nodes + DP across replicas. Expert Parallelism (EP) is a third dimension for MoE.",
-      "fundamentals": "TP: W split column-wise into [W₁|...|Wₚ]. GPU_i computes Y_i = X·W_i. AllGather to reconstruct or AllReduce to sum. 2 AllReduces per layer, each ~2M bytes for hidden_dim M. PP: micro-batch pipeline. Bubble = (P-1)/(M+P-1). For P=8, M=32: 18% bubble. Interleaved schedules: non-contiguous layer assignment reduces bubbles by factor v. Inference: prefer TP (minimizes latency — all GPUs work on every token). Training: 3D parallelism.",
+      "fundamentals": "TP: W split column-wise into [$W_1$|...|$W_p$]. GPU_i computes Y_i = X·W_i. AllGather to reconstruct or AllReduce to sum. 2 AllReduces per layer, each ~2M bytes for hidden_dim M. PP: micro-batch pipeline. Bubble = (P-1)/(M+P-1). For P=8, M=32: 18% bubble. Interleaved schedules: non-contiguous layer assignment reduces bubbles by factor v. Inference: prefer TP (minimizes latency — all GPUs work on every token). Training: 3D parallelism.",
       "seen_in": [
         "serving-config",
         "training-config"
@@ -2878,7 +2878,7 @@
       "category": "training-pipeline",
       "oneliner": "Only needs thumbs-up/down per response (not paired preferences) — grounded in prospect theory's loss aversion.",
       "explanation": "DPO/RLHF need PAIRED preferences. KTO works with UNPAIRED binary labels (prompt, response, good/bad). Based on prospect theory: losses loom larger than gains (~2:1). Desirable responses rewarded; undesirable penalized more heavily. Reference point = expected KL divergence. Requires reference model.",
-      "fundamentals": "Desirable: v = $\\sigma$($\\beta$·log($\\pi_\\theta$/$\\pi_{\\text{ref}}$) - z_ref). Undesirable: v = $\\sigma$(z_ref - $\\beta$·log($\\pi_\\theta$/$\\pi_{\\text{ref}}$)). Loss: -E_w[λ_w·v(y_w)] - E_l[λ_l·v(y_l)], λ_l > λ_w. Data: {prompt, response, label: bool}.",
+      "fundamentals": "Desirable: v = $\\sigma$($\\beta$·log($\\pi_\\theta$/$\\pi_{\\text{ref}}$) - z_ref). Undesirable: v = $\\sigma$(z_ref - $\\beta$·log($\\pi_\\theta$/$\\pi_{\\text{ref}}$)). Loss: -E_w[$\\lambda$_w·v(y_w)] - E_l[$\\lambda$_l·v(y_l)], $\\lambda$_l > $\\lambda$_w. Data: {prompt, response, label: bool}.",
       "seen_in": [
         "model-cards"
       ],
@@ -2941,8 +2941,8 @@
       "name": "LoRA",
       "expansion": "Low-Rank Adaptation of Large Language Models",
       "category": "fine-tuning-methods",
-      "oneliner": "Freeze base weights, add trainable low-rank bypass W₀ + ($\\alpha$/r)·B·A. Typically 0.1-0.6% of params. Zero inference overhead after merging.",
-      "explanation": "Fine-tuning updates have low intrinsic rank. Freeze W₀, add ΔW = BA where B∈ℝ^(d$\\times$r), A∈ℝ^(r$\\times$d), r<<d. B init to 0 (starts from pretrained). Scaling $\\alpha$/r. Apply to Q,K,V,O + FFN for best results. r typically 8-16. Merge: W = W₀ + ($\\alpha$/r)·BA. The default PEFT method.",
+      "oneliner": "Freeze base weights, add trainable low-rank bypass $W_0$ + ($\\alpha$/r)·B·A. Typically 0.1-0.6% of params. Zero inference overhead after merging.",
+      "explanation": "Fine-tuning updates have low intrinsic rank. Freeze $W_0$, add $\\Delta$W = BA where B$\\in\\mathbb{R}$^(d$\\times$r), A$\\in\\mathbb{R}$^(r$\\times$d), r<<d. B init to 0 (starts from pretrained). Scaling $\\alpha$/r. Apply to Q,K,V,O + FFN for best results. r typically 8-16. Merge: W = $W_0$ + ($\\alpha$/r)·BA. The default PEFT method.",
       "fundamentals": "Forward: $h = W_0 x + (\\alpha/r) \\cdot B \\cdot A \\cdot x$. LLaMA 7B $r$=16 all linear: ~40M params (0.6%). Memory: ~14.8GB (vs ~84GB full FT). Merge: one-time matrix add $W = W_0 + (\\alpha/r) \\cdot BA$. Files: adapter_model.safetensors (~80MB) + adapter_config.json.",
       "seen_in": [
         "model-name",
@@ -2988,7 +2988,7 @@
       "category": "fine-tuning-methods",
       "oneliner": "Base model in 4-bit NF4 + LoRA in fp16. Fine-tune 65B on a single 48GB GPU. Three innovations: NF4, double quantization, paged optimizers.",
       "explanation": "Frozen base weights quantized to NF4 (4-bit). LoRA adapters in bf16 compensate for quant error. NF4 optimal for Gaussian weights. Double quant: quantize the quantization constants. Paged optimizers: CPU↔GPU memory paging. 65B: ~130GB fp16 → ~41GB NF4. Quality matches 16-bit full FT.",
-      "fundamentals": "Forward: h = Dequant_NF4(W₀_q)·x + ($\\alpha$/r)·B·A·x. Memory 65B: ~33.5GB base + ~1.6GB adapters/optimizer + ~4-8GB activations $\\approx$ 40-44GB. NF4: 16 levels at N(0,1) quantile positions. Double quant: block-64 absmax → quantize to 8-bit in blocks of 256.",
+      "fundamentals": "Forward: h = Dequant_NF4($W_0$_q)·x + ($\\alpha$/r)·B·A·x. Memory 65B: ~33.5GB base + ~1.6GB adapters/optimizer + ~4-8GB activations $\\approx$ 40-44GB. NF4: 16 levels at N(0,1) quantile positions. Double quant: block-64 absmax → quantize to 8-bit in blocks of 256.",
       "seen_in": [
         "model-name",
         "model-config"
@@ -3024,7 +3024,7 @@
       "expansion": "Weight-Decomposed Low-Rank Adaptation",
       "category": "fine-tuning-methods",
       "oneliner": "Decompose weights into magnitude + direction, apply LoRA to direction only. More like full FT behavior, negligible extra params.",
-      "explanation": "LoRA couples magnitude and direction changes; full FT changes direction more. DoRA: W₀ = m·(V/$\\|\\|V\\|\\|$), freeze V, add LoRA to V, train m separately. Forward: W' = m·(V+($\\alpha$/r)·BA)/$\\|\\|V+($\\alpha$/r)·BA\\|\\|$. Extra: just m ∈ ℝ^(d_out) per layer. Consistently outperforms LoRA. PEFT: use_dora=True.",
+      "explanation": "LoRA couples magnitude and direction changes; full FT changes direction more. DoRA: $W_0$ = m·(V/$\\|\\|V\\|\\|$), freeze V, add LoRA to V, train m separately. Forward: W' = m·(V+($\\alpha$/r)·BA)/$\\|\\|V+($\\alpha$/r)·BA\\|\\|$. Extra: just m $\\in\\mathbb{R}$^(d_out) per layer. Consistently outperforms LoRA. PEFT: use_dora=True.",
       "fundamentals": "W' = m·(V+($\\alpha$/r)·BA)/$\\|\\|V+($\\alpha$/r)·BA\\|\\|$_c. Extra params: d_out per layer. LLaMA 7B: 0.004% overhead. Based on weight normalization.",
       "seen_in": [
         "model-config"
