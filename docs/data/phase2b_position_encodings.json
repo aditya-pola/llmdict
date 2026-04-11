@@ -1,0 +1,261 @@
+[
+  {
+    "id": "rope",
+    "name": "RoPE",
+    "expansion": "Rotary Position Embedding",
+    "category": "position-encodings",
+    "oneliner": "Encodes position by rotating Q and K vectors in pairs of dimensions — the dot product naturally depends only on relative position (m-n), not absolute.",
+    "explanation": "The dominant position encoding in modern LLMs. Instead of adding a position signal to embeddings, RoPE rotates Q and K vectors before the dot product. Each dimension pair (2i, 2i+1) is rotated by angle m·θᵢ at position m, where θᵢ = base^(-2i/d). The dot product of rotated Q at position m and K at position n depends only on (m-n). No learned parameters. Base=10,000 originally. Used by LLaMA 1/2/3, Mistral, Mixtral, Qwen, Gemma, Phi, DeepSeek, Yi, InternLM, Command-R. Vanilla RoPE struggles at lengths beyond training — addressed by NTK, YaRN, PI, ABF.",
+    "fundamentals": "Rotation per dimension pair: [q'₂ᵢ, q'₂ᵢ₊₁] = R(m·θᵢ) · [q₂ᵢ, q₂ᵢ₊₁] where R is 2×2 rotation matrix. θᵢ = base^(-2i/d). Complex form: zᵢ' = zᵢ · e^(j·m·θᵢ). Wavelengths: 2π (i=0, high freq, local) to 2π·base (last pair, low freq, global). For base=10,000: max wavelength ≈ 62,832 positions. Key property: qᵀ(m)·k(n) = qᵀ(0)·R(n-m)·k(0) — depends only on relative offset. No learned params. Decaying inter-token signal acts as soft locality bias.",
+    "seen_in": [
+      "model-config"
+    ],
+    "related": [
+      "alibi",
+      "ntk-rope",
+      "yarn",
+      "position-interpolation",
+      "abf",
+      "sinusoidal-pe"
+    ],
+    "sources": [
+      "Su et al., 'RoFormer: Enhanced Transformer with Rotary Position Embedding,' 2021, arXiv:2104.09864"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "foundational_papers": [
+      {
+        "title": "RoFormer: Enhanced Transformer with Rotary Position Embedding",
+        "authors": "Su et al.",
+        "venue": "2021",
+        "arxiv": "2104.09864"
+      }
+    ]
+  },
+  {
+    "id": "alibi",
+    "name": "ALiBi",
+    "expansion": "Attention with Linear Biases",
+    "category": "position-encodings",
+    "oneliner": "Adds a fixed linear penalty to attention scores based on query-key distance — no position embeddings at all, with good length extrapolation.",
+    "explanation": "Instead of position embeddings, ALiBi subtracts m_h·|i-j| from attention logits, where m_h is a head-specific slope. Nearby tokens get small penalty, distant tokens get large penalty. Slopes are a geometric sequence: m_h = 2^(-8/H · h), not learned. Primary motivation: length extrapolation — models trained at 1024 tokens work at 2048+ with minimal degradation, unlike learned/sinusoidal embeddings. Used by BLOOM, Falcon, MPT. Less common now due to RoPE's dominance + scaling extensions. Drawback: fixed monotonic decay is rigid.",
+    "fundamentals": "Modified attention: a_{i,j} = qᵢᵀ·kⱼ - m_h·|i-j|. For H=8 heads: slopes = {1/2, 1/4, 1/8, ..., 1/256}. Steep slopes = strong locality, gentle slopes = far attention. Causal: bias = -m_h·(i-j) for j≤i. The bias matrix is lower-triangular. O(1) additional params (fixed slopes). Extrapolation works because linear function is defined for any distance — no OOD issue. Cannot learn to attend strongly to a specific far position through positional info alone (content can override).",
+    "seen_in": [
+      "model-config"
+    ],
+    "related": [
+      "rope",
+      "sinusoidal-pe",
+      "learned-pe"
+    ],
+    "sources": [
+      "Press et al., 'Train Short, Test Long,' ICLR 2022, arXiv:2108.12409"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "foundational_papers": [
+      {
+        "title": "Train Short, Test Long: Attention with Linear Biases Enables Input Length Generalization",
+        "authors": "Press et al.",
+        "venue": "ICLR 2022",
+        "arxiv": "2108.12409"
+      }
+    ]
+  },
+  {
+    "id": "ntk-rope",
+    "name": "NTK-aware RoPE Scaling",
+    "expansion": "Neural Tangent Kernel-aware Rotary Position Embedding Scaling",
+    "category": "position-encodings",
+    "oneliner": "Extends RoPE context by increasing base frequency — preserves high-frequency local resolution while stretching low-frequency global capacity. Works zero-shot.",
+    "explanation": "Proposed by Reddit user /u/bloc97 (June 2023). Problem: extending context (e.g., 4K→16K) without fine-tuning. PI (Position Interpolation) compresses all frequencies equally, damaging local resolution. NTK insight: different frequency bands encode different scales. High-freq dimensions (local position) should stay untouched; low-freq dimensions (global) should stretch. Increasing base achieves this automatically because θᵢ = base^(-2i/d) — larger base reduces all frequencies, but proportionally more for already-slow bands. Works surprisingly well zero-shot; better with light fine-tuning.",
+    "fundamentals": "New base: base' = base · α^(d/(d-2)) where α = context extension factor. For α=4, d=128: base' ≈ 40,440. Effect on wavelengths: highest-freq band (i=0) unchanged (λ₀=2π always), lowest-freq band scales by ~α. Intermediate bands interpolate smoothly. Compare PI: all frequencies compressed uniformly by α — damages high-freq resolution. NTK preserves local while extending global.",
+    "seen_in": [
+      "model-config"
+    ],
+    "related": [
+      "rope",
+      "yarn",
+      "position-interpolation",
+      "abf"
+    ],
+    "sources": [
+      "/u/bloc97, 'NTK-Aware Scaled RoPE,' Reddit r/LocalLLaMA, June 2023",
+      "Formalized in Peng et al., 'YaRN,' arXiv:2309.00071"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "resources": [
+      {
+        "label": "Original Reddit post by /u/bloc97 (NTK-aware scaled RoPE)",
+        "url": "https://www.reddit.com/r/LocalLLaMA/comments/14lz7j5/ntkaware_scaled_rope_allows_llama_models_to_have/"
+      },
+      {
+        "label": "Formalized in YaRN paper",
+        "url": "https://arxiv.org/abs/2309.00071"
+      }
+    ]
+  },
+  {
+    "id": "yarn",
+    "name": "YaRN",
+    "expansion": "Yet another RoPE extensioN",
+    "category": "position-encodings",
+    "oneliner": "Improved RoPE extension: divides frequency bands into three zones (untouched / ramped / fully interpolated) plus attention temperature scaling. Achieves 64-128× extension with ~400 fine-tuning steps.",
+    "explanation": "Refines NTK-aware scaling (Peng et al., 2023). NTK applies smooth monotonic adjustment across all bands — suboptimal. YaRN divides bands by wavelength-to-context ratio: (a) high-freq bands (λ << L): untouched, (b) low-freq bands (λ ≥ L): fully interpolated by factor s, (c) transition zone: smooth ramp. Plus temperature scaling √(1/t) on attention logits to counter entropy shift from extension. Achieves LLaMA 2 4K→128K (32×) with ~400 training steps. Used in Mistral/Mixtral long-context variants. Supported in HuggingFace Transformers.",
+    "fundamentals": "Define rᵢ = λᵢ/L (wavelength/context ratio). Thresholds α=1, β=32. If rᵢ<α: no scaling. If rᵢ>β: full interpolation (÷s). Between: ramp γᵢ = (rᵢ-α)/(β-α), scale = 1/(1+γᵢ·(s-1)). Temperature: attention *= √(1/t) where t ≈ 0.1·ln(s)+1. Three-part approach preserves local precision while extending global range — key improvement over uniform NTK. Extension: LLaMA 2 7B/13B to 64K-128K, passkey retrieval passing at 128K.",
+    "seen_in": [
+      "model-config"
+    ],
+    "related": [
+      "rope",
+      "ntk-rope",
+      "position-interpolation",
+      "abf"
+    ],
+    "sources": [
+      "Peng et al., 'YaRN: Efficient Context Window Extension of Large Language Models,' 2023, arXiv:2309.00071"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "foundational_papers": [
+      {
+        "title": "YaRN: Efficient Context Window Extension of Large Language Models",
+        "authors": "Peng et al.",
+        "venue": "2023",
+        "arxiv": "2309.00071"
+      }
+    ]
+  },
+  {
+    "id": "abf",
+    "name": "ABF",
+    "expansion": "Adjusted Base Frequency",
+    "category": "position-encodings",
+    "oneliner": "Simplest long-context approach: increase RoPE base from 10,000 to 500K-1M during training. No post-hoc scaling needed.",
+    "explanation": "Just change the base constant in θᵢ = base^(-2i/d) to a much larger value and train with it. Larger base = longer wavelengths = model can represent longer-range positions. High-freq band (i=0) always has θ₀=1 regardless of base, so local discrimination is preserved. Requires training/continued pre-training (can't just change at inference). Used by: LLaMA 3 (base=500K, 8K context), LLaMA 3.1 (500K, 128K), Code Llama (1M, 16K→100K+), Qwen2/2.5 (1M, 32K-128K). Preferred by orgs training from scratch due to simplicity.",
+    "fundamentals": "θᵢ = B^(-2i/d). Max wavelength = 2π·B. base=10K → ~63K positions; base=500K → ~3.1M positions; base=1M → ~6.3M positions. High-freq (i=0): θ₀=1 always (base^0=1) — local info preserved for any base. Mathematically equivalent to NTK-aware with specific α, but applied during training not post-hoc. The model learns to use the extended position range natively — no distributional mismatch.",
+    "seen_in": [
+      "model-config"
+    ],
+    "related": [
+      "rope",
+      "ntk-rope",
+      "yarn",
+      "position-interpolation"
+    ],
+    "sources": [
+      "Meta, 'The Llama 3 Herd of Models,' 2024, arXiv:2407.21783",
+      "Qwen Team, 'Qwen2 Technical Report,' 2024, arXiv:2407.10671",
+      "Xiong et al., 'Effective Long-Context Scaling,' 2023, arXiv:2309.16039"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "resources": [
+      {
+        "label": "Llama 3 paper (rope_theta=500K)",
+        "url": "https://arxiv.org/abs/2407.21783"
+      },
+      {
+        "label": "Qwen2 Technical Report (rope_theta=1M)",
+        "url": "https://arxiv.org/abs/2407.10671"
+      }
+    ]
+  },
+  {
+    "id": "position-interpolation",
+    "name": "Position Interpolation (PI)",
+    "expansion": "Position Interpolation",
+    "category": "position-encodings",
+    "oneliner": "Extends context by linearly downscaling position indices so longer sequences map into the original training range — simple but damages high-frequency resolution.",
+    "explanation": "Meta (Chen et al., June 2023). For context extension from L to L'=s·L: divide all position indices by s. Position L'-1 maps to ~L-1, staying within training range. Requires ~1000 fine-tuning steps (model adjusts to fractional position spacing 1/s instead of 1). Extended LLaMA 2K→32K (16×). Key finding: interpolation >> extrapolation (extrapolation explodes even for modest extensions). Superseded by NTK/YaRN because PI compresses ALL frequency bands equally — high-freq local resolution damaged by factor s.",
+    "fundamentals": "Modified angle: (m/s)·θᵢ instead of m·θᵢ. Effective position m'=m/s. For L'=s·L: positions [0, L'-1] → effective [0, L-1/s] ⊂ [0, L). All within training range. Fine-tuning needed: adjacent tokens now separated by 1/s in position space (was 1). Comparison: PI uniformly compresses all frequencies by s. NTK preserves high-freq, stretches low-freq. YaRN: per-band treatment. In HuggingFace: called 'linear' scaling, not 'pi'.",
+    "seen_in": [
+      "model-config"
+    ],
+    "related": [
+      "rope",
+      "ntk-rope",
+      "yarn",
+      "abf"
+    ],
+    "sources": [
+      "Chen et al., 'Extending Context Window of Large Language Models via Positional Interpolation,' 2023, arXiv:2306.15595"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "foundational_papers": [
+      {
+        "title": "Extending Context Window of Large Language Models via Positional Interpolation",
+        "authors": "Chen et al.",
+        "venue": "2023",
+        "arxiv": "2306.15595"
+      }
+    ]
+  },
+  {
+    "id": "sinusoidal-pe",
+    "name": "Sinusoidal Position Encoding",
+    "expansion": "Sinusoidal Position Encoding",
+    "category": "position-encodings",
+    "oneliner": "The original Transformer position encoding: sin/cos at geometrically spaced frequencies, added to token embeddings. Mostly replaced by RoPE.",
+    "explanation": "From 'Attention Is All You Need' (2017). Solves the fundamental problem: self-attention is permutation-invariant, so positions must be injected. Each position gets a vector of sin/cos values at different frequencies, added to token embeddings. Design goals: unique per position, bounded magnitude, potential relative position awareness (PE(pos+k) = linear transform of PE(pos)). Wavelengths: 2π to ~63K (geometric progression). Replaced because: (1) additive injection dilutes through layers, (2) model must learn to extract relative positions (RoPE guarantees it), (3) limited length generalization. Still used in diffusion model timestep embeddings.",
+    "fundamentals": "PE(pos, 2i) = sin(pos/10000^(2i/d)). PE(pos, 2i+1) = cos(pos/10000^(2i/d)). Frequencies: ω_k = 1/10000^(2k/d), geometric from 1 to 1/10000. Added to token embedding: x'(pos) = x(pos) + PE(pos). Properties: ||PE(pos)||² = d/2 (bounded, constant). PE(pos+k) = M_k · PE(pos) where M_k is a block-diagonal rotation matrix — relative position as linear transform. 0 learned params.",
+    "seen_in": [
+      "legacy-models",
+      "documentation"
+    ],
+    "related": [
+      "learned-pe",
+      "rope",
+      "alibi"
+    ],
+    "sources": [
+      "Vaswani et al., 'Attention Is All You Need,' NeurIPS 2017, arXiv:1706.03762"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "foundational_papers": [
+      {
+        "title": "Attention Is All You Need",
+        "authors": "Vaswani et al.",
+        "venue": "NeurIPS 2017",
+        "arxiv": "1706.03762"
+      }
+    ]
+  },
+  {
+    "id": "learned-pe",
+    "name": "Learned Position Embeddings",
+    "expansion": "Learned (Absolute) Position Embeddings",
+    "category": "position-encodings",
+    "oneliner": "A trainable lookup table of position vectors (like a vocabulary for positions) — simple but has a hard max length limit. Used by GPT-2, BERT, GPT-3.",
+    "explanation": "Maintain learnable matrix W_pos ∈ ℝ^(L_max × d). Position m → lookup W_pos[m], add to token embedding. Model learns whatever representation is useful — often converges to sinusoidal-like patterns. Hard limitation: cannot process sequences > L_max (no embedding exists). Parameter cost: L_max × d (128K × 4096 = 537M params). No inherent relative position awareness. Replaced by RoPE in modern LLMs (2022-23 shift). Still used in: BERT variants, Vision Transformers (ViT), some encoder-only models.",
+    "fundamentals": "x'_m = x_m + W_pos[m]. W_pos trained via backpropagation. GPT-2: L_max=1024, d=768 → 786K params. For 128K context: would be 537M params — impractical. Learned embeddings often show: low-freq sinusoidal patterns in principal components, nearby positions more similar, boundary effects at first/last positions. Cannot extrapolate — position L_max+1 has no representation.",
+    "seen_in": [
+      "model-config",
+      "model-weights"
+    ],
+    "related": [
+      "sinusoidal-pe",
+      "rope",
+      "alibi"
+    ],
+    "sources": [
+      "Radford et al., 'Language Models are Unsupervised Multitask Learners,' 2019 (GPT-2)",
+      "Devlin et al., 'BERT,' NAACL 2019, arXiv:1810.04805"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "resources": [
+      {
+        "label": "GPT-2 paper (Radford et al., 2019)",
+        "url": "https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf"
+      },
+      {
+        "label": "BERT paper",
+        "url": "https://arxiv.org/abs/1810.04805"
+      }
+    ]
+  }
+]

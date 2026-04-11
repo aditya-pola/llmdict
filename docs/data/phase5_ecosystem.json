@@ -1,0 +1,765 @@
+[
+  {
+    "id": "org-thebloke",
+    "name": "TheBloke/",
+    "expansion": "Tom Jobbins — legacy quantizer",
+    "category": "hf-organizations",
+    "oneliner": "The original prolific HF quantizer (GPTQ, GGUF). Quantized hundreds of models mid-2023 through early 2024. Now largely inactive; replaced by bartowski.",
+    "seen_in": [
+      "repo-name"
+    ],
+    "related": [
+      "org-bartowski"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "resources": [
+      {
+        "label": "TheBloke HuggingFace profile",
+        "url": "https://huggingface.co/TheBloke"
+      }
+    ]
+  },
+  {
+    "id": "org-bartowski",
+    "name": "bartowski/",
+    "expansion": "Currently most active broad quantizer",
+    "category": "hf-organizations",
+    "oneliner": "Produces GGUF (and sometimes EXL2/AWQ) quants within hours of new model releases. Consistent naming, comprehensive quant levels. Inherited TheBloke's role.",
+    "seen_in": [
+      "repo-name"
+    ],
+    "related": [
+      "org-thebloke",
+      "gguf"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "resources": [
+      {
+        "label": "bartowski HuggingFace profile",
+        "url": "https://huggingface.co/bartowski"
+      }
+    ]
+  },
+  {
+    "id": "org-turboderp",
+    "name": "turboderp/",
+    "expansion": "ExLlamaV2 creator, EXL2 quantizer",
+    "category": "hf-organizations",
+    "oneliner": "Developer of ExLlamaV2 inference engine. Publishes EXL2-format quants with variable per-layer bitwidth. Best quality-per-bit on NVIDIA GPUs.",
+    "seen_in": [
+      "repo-name"
+    ],
+    "related": [
+      "exl2"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "resources": [
+      {
+        "label": "ExLlamaV2 GitHub",
+        "url": "https://github.com/turboderp/exllamav2"
+      }
+    ]
+  },
+  {
+    "id": "org-mlx-community",
+    "name": "mlx-community/",
+    "expansion": "Apple MLX format models",
+    "category": "hf-organizations",
+    "oneliner": "Community org publishing models in Apple MLX format for Apple Silicon Macs (M1-M4). Typically 4-bit or 8-bit MLX quants.",
+    "seen_in": [
+      "repo-name"
+    ],
+    "related": [],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "resources": [
+      {
+        "label": "mlx-community HuggingFace profile",
+        "url": "https://huggingface.co/mlx-community"
+      },
+      {
+        "label": "Apple MLX GitHub",
+        "url": "https://github.com/ml-explore/mlx"
+      }
+    ]
+  },
+  {
+    "id": "org-mradermacher",
+    "name": "Mradermacher/",
+    "expansion": "High-volume automated GGUF quantizer",
+    "category": "hf-organizations",
+    "oneliner": "Quantizes a massive breadth of models including obscure fine-tunes. GGUF specialist. Useful when bartowski hasn't covered a model.",
+    "seen_in": [
+      "repo-name"
+    ],
+    "related": [
+      "gguf",
+      "org-bartowski"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "resources": [
+      {
+        "label": "Mradermacher HuggingFace profile",
+        "url": "https://huggingface.co/mradermacher"
+      }
+    ]
+  },
+  {
+    "id": "org-meta",
+    "name": "meta-llama/",
+    "expansion": "Meta AI — Llama model family",
+    "category": "hf-organizations",
+    "oneliner": "Llama 1/2/3/4. The backbone of the open-weight ecosystem. Most fine-tuned, quantized, and experimented-with model family.",
+    "seen_in": [
+      "repo-name"
+    ],
+    "related": [],
+    "foundational_papers": [
+      {
+        "title": "LLaMA: Open and Efficient Foundation Language Models",
+        "authors": "Touvron et al.",
+        "venue": "2023",
+        "arxiv": "2302.13971"
+      }
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10"
+  },
+  {
+    "id": "org-mistral",
+    "name": "mistralai/",
+    "expansion": "Mistral AI — Mistral, Mixtral",
+    "category": "hf-organizations",
+    "oneliner": "Mistral 7B, Mixtral 8x7B/8x22B, Codestral. Pioneered SWA and open MoE. Apache 2.0 base models. Paris-based startup.",
+    "seen_in": [
+      "repo-name"
+    ],
+    "related": [],
+    "foundational_papers": [
+      {
+        "title": "Mistral 7B",
+        "authors": "Jiang et al.",
+        "venue": "2023",
+        "arxiv": "2310.06825"
+      }
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10"
+  },
+  {
+    "id": "org-qwen",
+    "name": "Qwen/",
+    "expansion": "Alibaba Cloud — Qwen (Tongyi Qianwen)",
+    "category": "hf-organizations",
+    "oneliner": "Qwen 1.5/2/2.5 + QwQ reasoning model. Strong multilingual (CJK), competitive at every size class. Apache 2.0. Among strongest open-weight families.",
+    "seen_in": [
+      "repo-name"
+    ],
+    "related": [],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "resources": [
+      {
+        "label": "Qwen HuggingFace profile",
+        "url": "https://huggingface.co/Qwen"
+      },
+      {
+        "label": "Qwen2 Technical Report",
+        "url": "https://arxiv.org/abs/2407.10671"
+      }
+    ]
+  },
+  {
+    "id": "org-google",
+    "name": "google/",
+    "expansion": "Google DeepMind — Gemma, T5",
+    "category": "hf-organizations",
+    "oneliner": "Gemma 1/2/3/4, T5, FLAN-T5, PaLiGemma. Open-weight models from Gemini research. Strong performance relative to size.",
+    "seen_in": [
+      "repo-name"
+    ],
+    "related": [],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "resources": [
+      {
+        "label": "Google HuggingFace profile",
+        "url": "https://huggingface.co/google"
+      },
+      {
+        "label": "Gemma Technical Report",
+        "url": "https://arxiv.org/abs/2403.08295"
+      }
+    ]
+  },
+  {
+    "id": "org-deepseek",
+    "name": "deepseek-ai/",
+    "expansion": "DeepSeek — V2/V3, R1, Coder",
+    "category": "hf-organizations",
+    "oneliner": "Pioneered MLA (KV-cache compression) and DeepSeekMoE. DeepSeek-R1 brought open chain-of-thought reasoning rivaling o1. Chinese quant fund backed.",
+    "seen_in": [
+      "repo-name"
+    ],
+    "related": [
+      "mla"
+    ],
+    "foundational_papers": [
+      {
+        "title": "DeepSeek-V2: A Strong, Economical, and Efficient MoE LM",
+        "authors": "DeepSeek-AI",
+        "venue": "2024",
+        "arxiv": "2405.04434"
+      }
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10"
+  },
+  {
+    "id": "org-microsoft",
+    "name": "microsoft/",
+    "expansion": "Microsoft — Phi models",
+    "category": "hf-organizations",
+    "oneliner": "Phi-1/2/3/4. Demonstrated 'textbook-quality' training data produces small models that punch far above size. MIT licensed.",
+    "seen_in": [
+      "repo-name"
+    ],
+    "related": [],
+    "foundational_papers": [
+      {
+        "title": "Textbooks Are All You Need",
+        "authors": "Gunasekar et al.",
+        "venue": "2023",
+        "arxiv": "2306.11644"
+      }
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10"
+  },
+  {
+    "id": "org-nousresearch",
+    "name": "NousResearch/",
+    "expansion": "Community collective — Hermes, Capybara",
+    "category": "hf-organizations",
+    "oneliner": "Hermes fine-tune series (strong instruction-following + function calling). One of the most respected community fine-tune recipes. ChatML format.",
+    "seen_in": [
+      "repo-name"
+    ],
+    "related": [
+      "dataset-hermes"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "resources": [
+      {
+        "label": "NousResearch HuggingFace profile",
+        "url": "https://huggingface.co/NousResearch"
+      }
+    ]
+  },
+  {
+    "id": "tool-vllm",
+    "name": "vLLM",
+    "expansion": "vLLM — high-throughput LLM serving",
+    "category": "serving-tools",
+    "oneliner": "PagedAttention + continuous batching. The default open-source production serving engine. Supports TP, GPTQ/AWQ/FP8, speculative decoding.",
+    "seen_in": [
+      "serving-config",
+      "documentation"
+    ],
+    "related": [
+      "paged-attention",
+      "continuous-batching"
+    ],
+    "foundational_papers": [
+      {
+        "title": "Efficient Memory Management for LLM Serving with PagedAttention",
+        "authors": "Kwon et al.",
+        "venue": "SOSP 2023",
+        "arxiv": "2309.06180"
+      }
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10"
+  },
+  {
+    "id": "tool-tgi",
+    "name": "TGI",
+    "expansion": "Text Generation Inference (HuggingFace)",
+    "category": "serving-tools",
+    "oneliner": "HuggingFace's production server. Rust router + Python model serving. Continuous batching, Flash Attention, grammar-constrained generation. Docker-first.",
+    "seen_in": [
+      "serving-config"
+    ],
+    "related": [
+      "tool-vllm"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "resources": [
+      {
+        "label": "TGI GitHub",
+        "url": "https://github.com/huggingface/text-generation-inference"
+      }
+    ]
+  },
+  {
+    "id": "tool-llamacpp",
+    "name": "llama.cpp",
+    "expansion": "C/C++ inference engine by Georgi Gerganov",
+    "category": "serving-tools",
+    "oneliner": "Runs LLMs on CPU (+ GPU offload). Defines GGUF format. Broad hardware support (x86, ARM, CUDA, Metal, Vulkan). Foundation of local LLM ecosystem.",
+    "seen_in": [
+      "documentation"
+    ],
+    "related": [
+      "gguf",
+      "k-quants",
+      "iq-quants"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "resources": [
+      {
+        "label": "llama.cpp GitHub",
+        "url": "https://github.com/ggerganov/llama.cpp"
+      }
+    ]
+  },
+  {
+    "id": "tool-ollama",
+    "name": "Ollama",
+    "expansion": "User-friendly llama.cpp wrapper",
+    "category": "serving-tools",
+    "oneliner": "'ollama run llama3' downloads and runs in one command. Local REST API, Modelfiles, background service. Simplest local LLM setup.",
+    "seen_in": [
+      "documentation"
+    ],
+    "related": [
+      "tool-llamacpp",
+      "gguf"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "resources": [
+      {
+        "label": "Ollama GitHub",
+        "url": "https://github.com/ollama/ollama"
+      },
+      {
+        "label": "Ollama website",
+        "url": "https://ollama.com"
+      }
+    ]
+  },
+  {
+    "id": "tool-lmstudio",
+    "name": "LM Studio",
+    "expansion": "Desktop GUI for local LLMs",
+    "category": "serving-tools",
+    "oneliner": "GUI app (Win/Mac/Linux) for discovering, downloading, running local models. Built on llama.cpp + MLX. Model search, chat UI, local server.",
+    "seen_in": [
+      "documentation"
+    ],
+    "related": [
+      "tool-llamacpp"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "resources": [
+      {
+        "label": "LM Studio website",
+        "url": "https://lmstudio.ai"
+      }
+    ]
+  },
+  {
+    "id": "tool-exllamav2",
+    "name": "ExLlamaV2",
+    "expansion": "High-performance CUDA inference engine",
+    "category": "serving-tools",
+    "oneliner": "By turboderp. EXL2 format with variable per-layer bitwidth. Very fast on NVIDIA consumer GPUs. No CPU support.",
+    "seen_in": [
+      "serving-config"
+    ],
+    "related": [
+      "exl2",
+      "org-turboderp"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "resources": [
+      {
+        "label": "ExLlamaV2 GitHub",
+        "url": "https://github.com/turboderp/exllamav2"
+      }
+    ]
+  },
+  {
+    "id": "tool-tensorrt-llm",
+    "name": "TensorRT-LLM",
+    "expansion": "NVIDIA's optimized LLM inference",
+    "category": "serving-tools",
+    "oneliner": "Compiles models into optimized TensorRT engines. FP8, INT4 AWQ/GPTQ, SmoothQuant, paged KV cache, multi-GPU. Maximum performance on NVIDIA datacenter GPUs.",
+    "seen_in": [
+      "serving-config"
+    ],
+    "related": [
+      "fp8",
+      "w8a8"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "resources": [
+      {
+        "label": "TensorRT-LLM GitHub",
+        "url": "https://github.com/NVIDIA/TensorRT-LLM"
+      }
+    ]
+  },
+  {
+    "id": "tool-sglang",
+    "name": "SGLang",
+    "expansion": "Structured Generation Language",
+    "category": "serving-tools",
+    "oneliner": "Serving backend + frontend DSL. RadixAttention (KV cache reuse via radix tree), fast constrained decoding (JSON/regex). Competitive with vLLM throughput.",
+    "seen_in": [
+      "serving-config"
+    ],
+    "related": [
+      "tool-vllm"
+    ],
+    "foundational_papers": [
+      {
+        "title": "SGLang: Efficient Execution of Structured Language Model Programs",
+        "authors": "Zheng et al.",
+        "venue": "2024",
+        "arxiv": "2312.07104"
+      }
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10"
+  },
+  {
+    "id": "format-onnx",
+    "name": "ONNX",
+    "expansion": "Open Neural Network Exchange",
+    "category": "export-formats",
+    "oneliner": "Open format for ML computation graphs. Train in PyTorch, export to ONNX, run anywhere via ONNX Runtime (CPU, CUDA, DirectML, TensorRT). Key for edge/Windows.",
+    "seen_in": [
+      "filename",
+      "model-name"
+    ],
+    "related": [],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "resources": [
+      {
+        "label": "ONNX GitHub",
+        "url": "https://github.com/onnx/onnx"
+      },
+      {
+        "label": "ONNX Runtime",
+        "url": "https://github.com/microsoft/onnxruntime"
+      }
+    ]
+  },
+  {
+    "id": "format-coreml",
+    "name": "CoreML",
+    "expansion": "Apple's ML format for on-device inference",
+    "category": "export-formats",
+    "oneliner": ".mlmodel/.mlpackage files. Runs on Apple Neural Engine, GPU, CPU transparently. For iOS/macOS apps. Converter: coremltools.",
+    "seen_in": [
+      "filename"
+    ],
+    "related": [
+      "org-mlx-community"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "resources": [
+      {
+        "label": "Apple Core ML docs",
+        "url": "https://developer.apple.com/documentation/coreml"
+      },
+      {
+        "label": "coremltools",
+        "url": "https://github.com/apple/coremltools"
+      }
+    ]
+  },
+  {
+    "id": "format-openvino",
+    "name": "OpenVINO",
+    "expansion": "Intel's inference optimization toolkit",
+    "category": "export-formats",
+    "oneliner": "Converts to OpenVINO IR format, applies INT8/INT4 quant via NNCF, hardware-specific kernels. Significantly faster than generic ONNX on Intel CPUs (AMX).",
+    "seen_in": [
+      "filename"
+    ],
+    "related": [
+      "format-onnx"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "resources": [
+      {
+        "label": "OpenVINO GitHub",
+        "url": "https://github.com/openvinotoolkit/openvino"
+      }
+    ]
+  },
+  {
+    "id": "format-ct2",
+    "name": "CTranslate2 (ct2)",
+    "expansion": "Efficient inference engine/format by OpenNMT",
+    "category": "export-formats",
+    "oneliner": "Fast CPU inference, INT8/INT16/FP16. Originally built for translation (encoder-decoder). Less common for large decoder-only LLMs. Reduced activity since late 2024.",
+    "seen_in": [
+      "filename"
+    ],
+    "related": [],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "resources": [
+      {
+        "label": "CTranslate2 GitHub",
+        "url": "https://github.com/OpenNMT/CTranslate2"
+      }
+    ]
+  },
+  {
+    "id": "tokenizer-bpe",
+    "name": "BPE",
+    "expansion": "Byte-Pair Encoding",
+    "category": "tokenizers",
+    "oneliner": "Dominant subword tokenization. Iteratively merge most frequent adjacent pairs. Byte-level BPE (GPT-2+) handles any text with no unknown tokens.",
+    "explanation": "Start with byte/char vocabulary, count adjacent pairs, merge most frequent, repeat. Used by GPT-2/3/4, Llama, Mistral, Falcon.",
+    "seen_in": [
+      "documentation",
+      "tokenizer-config"
+    ],
+    "related": [
+      "tokenizer-spm",
+      "tokenizer-tiktoken"
+    ],
+    "foundational_papers": [
+      {
+        "title": "Neural Machine Translation of Rare Words with Subword Units",
+        "authors": "Sennrich et al.",
+        "venue": "ACL 2016",
+        "arxiv": "1508.07909"
+      }
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10"
+  },
+  {
+    "id": "tokenizer-spm",
+    "name": "SentencePiece (SPM)",
+    "expansion": "Google's language-independent tokenizer",
+    "category": "tokenizers",
+    "oneliner": "Treats text as raw Unicode stream (no pre-tokenization). Two modes: BPE and Unigram. Outputs .model/.vocab files. Used by Llama 1/2 (BPE), T5 (Unigram).",
+    "seen_in": [
+      "filename",
+      "tokenizer-config"
+    ],
+    "related": [
+      "tokenizer-bpe"
+    ],
+    "foundational_papers": [
+      {
+        "title": "SentencePiece: A simple and language independent subword tokenizer",
+        "authors": "Kudo & Richardson",
+        "venue": "EMNLP 2018",
+        "arxiv": "1808.06226"
+      }
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10"
+  },
+  {
+    "id": "tokenizer-tiktoken",
+    "name": "tiktoken",
+    "expansion": "OpenAI's fast BPE tokenizer (Rust + Python)",
+    "category": "tokenizers",
+    "oneliner": "Significantly faster than HuggingFace tokenizers. Pre-compiled merge tables (cl100k_base for GPT-3.5/4, o200k_base for GPT-4o). Also used by Qwen.",
+    "seen_in": [
+      "code",
+      "tokenizer-config"
+    ],
+    "related": [
+      "tokenizer-bpe"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "resources": [
+      {
+        "label": "tiktoken GitHub",
+        "url": "https://github.com/openai/tiktoken"
+      }
+    ]
+  },
+  {
+    "id": "tokenizer-wordpiece",
+    "name": "WordPiece",
+    "expansion": "BERT's subword tokenizer",
+    "category": "tokenizers",
+    "oneliner": "Like BPE but merges by maximum likelihood (mutual information) not frequency. Continuation tokens prefixed with ##. Used by BERT, DistilBERT, Electra.",
+    "seen_in": [
+      "tokenizer-config"
+    ],
+    "related": [
+      "tokenizer-bpe"
+    ],
+    "foundational_papers": [
+      {
+        "title": "BERT: Pre-training of Deep Bidirectional Transformers",
+        "authors": "Devlin et al.",
+        "venue": "NAACL 2019",
+        "arxiv": "1810.04805"
+      }
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10"
+  },
+  {
+    "id": "dataset-hermes",
+    "name": "Hermes / OpenHermes",
+    "expansion": "NousResearch instruction-tuning dataset + fine-tunes",
+    "category": "datasets-recipes",
+    "oneliner": "~1M diverse instruction examples (OpenHermes-2.5). ChatML format. Strong instruction-following + function calling. By Teknium/NousResearch.",
+    "seen_in": [
+      "model-name",
+      "dataset-name"
+    ],
+    "related": [
+      "org-nousresearch"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "resources": [
+      {
+        "label": "OpenHermes-2.5 dataset",
+        "url": "https://huggingface.co/datasets/teknium/OpenHermes-2.5"
+      }
+    ]
+  },
+  {
+    "id": "dataset-dolphin",
+    "name": "Dolphin",
+    "expansion": "Eric Hartford's uncensored fine-tunes",
+    "category": "datasets-recipes",
+    "oneliner": "High-quality instruction data with alignment refusals systematically removed. Philosophy: censorship should be user's choice. Applied across Llama, Mistral, Phi.",
+    "seen_in": [
+      "model-name"
+    ],
+    "related": [],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "resources": [
+      {
+        "label": "Eric Hartford's 'Uncensored Models' blog post",
+        "url": "https://erichartford.com/uncensored-models"
+      }
+    ]
+  },
+  {
+    "id": "dataset-platypus",
+    "name": "Platypus",
+    "expansion": "STEM/logic fine-tuning dataset (Boston University)",
+    "category": "datasets-recipes",
+    "oneliner": "~25K curated STEM reasoning questions. Platypus2-70B briefly topped Open LLM Leaderboard (Aug 2023). Small data, big results.",
+    "seen_in": [
+      "model-name"
+    ],
+    "related": [],
+    "foundational_papers": [
+      {
+        "title": "Platypus: Quick, Cheap, and Powerful Refinement of LLMs",
+        "authors": "Lee et al.",
+        "venue": "2023",
+        "arxiv": "2308.07317"
+      }
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10"
+  },
+  {
+    "id": "dataset-evolinstruct",
+    "name": "EvolInstruct",
+    "expansion": "WizardLM synthetic data augmentation",
+    "category": "datasets-recipes",
+    "oneliner": "Iteratively 'evolves' simple instructions into complex ones using an LLM. Creates WizardLM/WizardCoder/WizardMath training sets. By Microsoft Research.",
+    "seen_in": [
+      "model-name",
+      "documentation"
+    ],
+    "related": [],
+    "foundational_papers": [
+      {
+        "title": "WizardLM: Empowering Large Language Models to Follow Complex Instructions",
+        "authors": "Xu et al.",
+        "venue": "2023",
+        "arxiv": "2304.12244"
+      }
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10"
+  },
+  {
+    "id": "dataset-orca",
+    "name": "Orca",
+    "expansion": "Microsoft's explanation-tuned models",
+    "category": "datasets-recipes",
+    "oneliner": "Smaller models learn from GPT-4's step-by-step reasoning traces, not just input-output pairs. 'Explanation tuning.' Orca 2 teaches different strategies per task.",
+    "seen_in": [
+      "model-name"
+    ],
+    "related": [
+      "knowledge-distillation"
+    ],
+    "foundational_papers": [
+      {
+        "title": "Orca: Progressive Learning from Complex Explanation Traces of GPT-4",
+        "authors": "Mukherjee et al.",
+        "venue": "2023",
+        "arxiv": "2306.02707"
+      }
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10"
+  },
+  {
+    "id": "dataset-ultrachat",
+    "name": "UltraChat / UltraFeedback",
+    "expansion": "Large-scale instruction + preference datasets (Tsinghua)",
+    "category": "datasets-recipes",
+    "oneliner": "UltraChat: ~1.5M multi-turn dialogues for SFT. UltraFeedback: ~64K instructions with 4 responses scored by GPT-4 for DPO. Used to train Zephyr.",
+    "seen_in": [
+      "dataset-name",
+      "model-cards"
+    ],
+    "related": [
+      "sft",
+      "dpo"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "resources": [
+      {
+        "label": "UltraChat dataset",
+        "url": "https://huggingface.co/datasets/stingning/ultrachat"
+      },
+      {
+        "label": "UltraFeedback dataset",
+        "url": "https://huggingface.co/datasets/openbmb/UltraFeedback"
+      }
+    ]
+  }
+]

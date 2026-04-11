@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LLM Glossary — Graph View</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { overflow: hidden; background: #000; color: #fff; }
+    main { padding: 0; flex: 1; position: relative; }
+    canvas { display: block; width: 100%; height: 100%; cursor: grab; }
+    canvas:active { cursor: grabbing; }
+    .graph-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 32px;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .graph-header .site-title {
+      font-family: var(--font-display); font-size: 16px; font-weight: 700;
+      color: #fff; letter-spacing: -0.3px;
+    }
+    .graph-btn {
+      font-family: var(--font-body); font-size: 12px; font-weight: 500;
+      padding: 5px 12px; border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 40px; color: rgba(255,255,255,0.5);
+      background: none; cursor: pointer; text-decoration: none;
+      transition: color 0.3s, border-color 0.3s;
+    }
+    .graph-btn:hover { color: #fff; border-color: rgba(255,255,255,0.4); }
+
+    .graph-tooltip {
+      position: fixed;
+      background: #111; border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px; padding: 16px 18px; max-width: 340px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+      pointer-events: none; opacity: 0;
+      transition: opacity 0.15s ease; z-index: 50;
+    }
+    .graph-tooltip.visible { opacity: 1; }
+    .graph-tooltip .tt-name {
+      font-family: var(--font-display);
+      font-size: 18px; font-weight: 700; letter-spacing: -0.4px; color: #fff;
+    }
+    .graph-tooltip .tt-expansion {
+      font-size: 11px; font-style: italic; color: rgba(255,255,255,0.3); margin-top: 2px;
+    }
+    .graph-tooltip .tt-oneliner {
+      font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 8px; line-height: 1.5;
+    }
+
+    /* Graph overlay card */
+    .graph-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(12px); z-index: 300;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
+    }
+    .graph-overlay.active { opacity: 1; pointer-events: all; }
+    .graph-overlay-card {
+      background: #111; border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px; width: 90%; max-width: 560px; max-height: 80vh;
+      overflow-y: auto; padding: 32px; position: relative; color: #fff;
+      transform: translateY(12px) scale(0.97);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    }
+    .graph-overlay.active .graph-overlay-card { transform: translateY(0) scale(1); }
+    .graph-overlay-close {
+      position: absolute; top: 14px; right: 14px; background: none;
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 50%;
+      width: 28px; height: 28px; color: rgba(255,255,255,0.4);
+      font-size: 14px; cursor: pointer; display: flex;
+      align-items: center; justify-content: center;
+      transition: color 0.3s, border-color 0.3s;
+    }
+    .graph-overlay-close:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
+    .graph-overlay-card .overlay-name { font-family: var(--font-display); font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }
+    .graph-overlay-card .overlay-expansion { font-size: 12px; font-style: italic; color: rgba(255,255,255,0.3); margin-bottom: 16px; }
+    .graph-overlay-card .overlay-section { margin-bottom: 16px; }
+    .graph-overlay-card .overlay-section-title { font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 6px; }
+    .graph-overlay-card .overlay-section-body { font-size: 13px; line-height: 1.7; color: rgba(255,255,255,0.5); }
+    .graph-overlay-card .paper-item, .graph-overlay-card .resource-item { font-size: 12px; color: rgba(255,255,255,0.5); padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .graph-overlay-card .paper-item a, .graph-overlay-card .resource-item a { color: #fff; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.15); }
+    .graph-overlay-card .paper-authors { color: rgba(255,255,255,0.25); font-size: 11px; }
+    .graph-overlay-card .related-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+    .graph-overlay-card .related-tag { font-size: 11px; padding: 3px 8px; border: 1px solid rgba(255,255,255,0.1); border-radius: 40px; color: rgba(255,255,255,0.4); cursor: pointer; background: none; transition: color 0.3s, border-color 0.3s; }
+    .graph-overlay-card .related-tag:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
+    .graph-overlay-card::-webkit-scrollbar { width: 3px; }
+    .graph-overlay-card::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+  </style>
+</head>
+<body>
+  <div class="graph-header">
+    <span class="site-title">Graph View</span>
+    <a href="index.html" class="graph-btn">Back to Glossary</a>
+  </div>
+
+  <main>
+    <canvas id="graph-canvas"></canvas>
+  </main>
+
+  <div class="graph-tooltip" id="tooltip">
+    <div class="tt-name" id="tt-name"></div>
+    <div class="tt-expansion" id="tt-expansion"></div>
+    <div class="tt-oneliner" id="tt-oneliner"></div>
+  </div>
+
+  <div class="graph-overlay" id="graph-overlay">
+    <div class="graph-overlay-card" id="graph-overlay-card">
+      <button class="graph-overlay-close" id="graph-overlay-close">&times;</button>
+      <div id="graph-overlay-content"></div>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/cards.js"></script>
+  <script>
+  (async function() {
+    const { categories, entries } = await Data.load();
+    const allEntries = Data.getAllEntries();
+    const relMap = Data.buildRelationshipMap();
+
+    const canvas = document.getElementById('graph-canvas');
+    const ctx = canvas.getContext('2d');
+    const tooltip = document.getElementById('tooltip');
+    const ttName = document.getElementById('tt-name');
+    const ttExpansion = document.getElementById('tt-expansion');
+    const ttOneliner = document.getElementById('tt-oneliner');
+    const graphOverlay = document.getElementById('graph-overlay');
+    const graphOverlayCard = document.getElementById('graph-overlay-card');
+    const graphOverlayContent = document.getElementById('graph-overlay-content');
+    const graphOverlayClose = document.getElementById('graph-overlay-close');
+
+    // Nodes
+    const nodes = allEntries.map(e => ({
+      id: e.id, name: e.name,
+      expansion: e.expansion || '', oneliner: e.oneliner || '',
+      category: e.category,
+      x: 0, y: 0, vx: 0, vy: 0,
+      color: '#fff',
+      radius: (relMap[e.id] || []).length > 4 ? 4 : 2.5
+    }));
+
+    const nodeMap = {};
+    nodes.forEach(n => nodeMap[n.id] = n);
+
+    // Edges
+    const edges = [];
+    const edgeSet = new Set();
+    for (const e of allEntries) {
+      for (const rid of (e.related || [])) {
+        if (nodeMap[rid]) {
+          const key = [e.id, rid].sort().join('|');
+          if (!edgeSet.has(key)) { edgeSet.add(key); edges.push({ source: e.id, target: rid }); }
+        }
+      }
+    }
+
+    // Layout
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    resize();
+    window.addEventListener('resize', () => { resize(); draw(); });
+
+    const cx = canvas.width / 2, cy = canvas.height / 2;
+    categories.forEach((cat, ci) => {
+      const angle0 = (ci / categories.length) * Math.PI * 2;
+      cat.entries.forEach((eid, ei) => {
+        const n = nodeMap[eid]; if (!n) return;
+        const r = 120 + Math.random() * 220;
+        const a = angle0 + (ei / Math.max(cat.entries.length, 1)) * (Math.PI * 2 / categories.length);
+        n.x = cx + Math.cos(a) * r; n.y = cy + Math.sin(a) * r;
+      });
+    });
+
+    // Force simulation
+    for (let iter = 0; iter < 250; iter++) {
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          let dx = nodes[j].x - nodes[i].x, dy = nodes[j].y - nodes[i].y;
+          let d = Math.sqrt(dx*dx + dy*dy) || 1;
+          if (d > 300) continue;
+          let f = 600 / (d * d), fx = (dx/d)*f, fy = (dy/d)*f;
+          nodes[i].vx -= fx; nodes[i].vy -= fy;
+          nodes[j].vx += fx; nodes[j].vy += fy;
+        }
+      }
+      for (const e of edges) {
+        const s = nodeMap[e.source], t = nodeMap[e.target]; if (!s || !t) continue;
+        let dx = t.x-s.x, dy = t.y-s.y, d = Math.sqrt(dx*dx+dy*dy)||1;
+        let f = (d-70)*0.004, fx=(dx/d)*f, fy=(dy/d)*f;
+        s.vx+=fx; s.vy+=fy; t.vx-=fx; t.vy-=fy;
+      }
+      for (const n of nodes) {
+        n.vx += (cx-n.x)*0.001; n.vy += (cy-n.y)*0.001;
+        n.vx *= 0.85; n.vy *= 0.85; n.x += n.vx; n.y += n.vy;
+      }
+    }
+
+    // Pan/zoom
+    let panX = 0, panY = 0, zoom = 1;
+    let isDragging = false, dragMoved = false, lastMouse = {x:0,y:0};
+
+    canvas.addEventListener('mousedown', e => { isDragging = true; dragMoved = false; lastMouse = {x:e.clientX, y:e.clientY}; });
+    canvas.addEventListener('mousemove', e => {
+      if (isDragging) {
+        panX += e.clientX - lastMouse.x; panY += e.clientY - lastMouse.y;
+        lastMouse = {x:e.clientX, y:e.clientY}; dragMoved = true; draw();
+      }
+      const mx = (e.clientX-panX)/zoom, my = (e.clientY-panY)/zoom;
+      let hovered = null;
+      for (const n of nodes) {
+        const dx = n.x-mx, dy = n.y-my;
+        if (dx*dx+dy*dy < (n.radius+6)*(n.radius+6)) { hovered = n; break; }
+      }
+      if (hovered) {
+        ttName.textContent = hovered.name;
+        ttExpansion.textContent = hovered.expansion;
+        ttOneliner.textContent = hovered.oneliner;
+        tooltip.style.left = (e.clientX+16)+'px'; tooltip.style.top = (e.clientY+16)+'px';
+        tooltip.classList.add('visible');
+        canvas.style.cursor = 'pointer';
+      } else {
+        tooltip.classList.remove('visible');
+        canvas.style.cursor = isDragging ? 'grabbing' : 'grab';
+      }
+    });
+    canvas.addEventListener('mouseup', () => { isDragging = false; });
+    canvas.addEventListener('wheel', e => {
+      e.preventDefault();
+      zoom *= e.deltaY > 0 ? 0.92 : 1.08;
+      zoom = Math.max(0.2, Math.min(5, zoom)); draw();
+    }, { passive: false });
+
+    // Click → overlay (not redirect)
+    canvas.addEventListener('click', e => {
+      if (dragMoved) return;
+      const mx = (e.clientX-panX)/zoom, my = (e.clientY-panY)/zoom;
+      for (const n of nodes) {
+        const dx = n.x-mx, dy = n.y-my;
+        if (dx*dx+dy*dy < (n.radius+6)*(n.radius+6)) {
+          const entry = entries[n.id];
+          if (entry) openGraphOverlay(entry);
+          return;
+        }
+      }
+    });
+
+    // Graph overlay
+    function openGraphOverlay(entry) {
+      graphOverlayContent.innerHTML = Cards.renderOverlayContent(entry, entries);
+      graphOverlay.classList.add('active');
+    }
+    function closeGraphOverlay() {
+      graphOverlay.classList.remove('active');
+    }
+    graphOverlayClose.addEventListener('click', closeGraphOverlay);
+    graphOverlay.addEventListener('click', e => { if (e.target === graphOverlay) closeGraphOverlay(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeGraphOverlay(); });
+
+    // Click related tags inside graph overlay → open that entry's overlay
+    graphOverlayCard.addEventListener('click', e => {
+      const tag = e.target.closest('[data-target]');
+      if (tag) {
+        const entry = entries[tag.dataset.target];
+        if (entry) { closeGraphOverlay(); setTimeout(() => openGraphOverlay(entry), 200); }
+      }
+    });
+
+    function draw() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.save(); ctx.translate(panX,panY); ctx.scale(zoom,zoom);
+
+      ctx.strokeStyle = 'rgba(255,255,255,0.04)'; ctx.lineWidth = 0.5;
+      for (const e of edges) {
+        const s = nodeMap[e.source], t = nodeMap[e.target]; if(!s||!t) continue;
+        ctx.beginPath(); ctx.moveTo(s.x,s.y); ctx.lineTo(t.x,t.y); ctx.stroke();
+      }
+
+      for (const n of nodes) {
+        ctx.beginPath(); ctx.arc(n.x,n.y,n.radius,0,Math.PI*2);
+        ctx.fillStyle = '#fff'; ctx.globalAlpha = 0.5; ctx.fill(); ctx.globalAlpha = 1;
+      }
+
+      ctx.restore();
+    }
+    draw();
+  })();
+  </script>
+</body>
+</html>

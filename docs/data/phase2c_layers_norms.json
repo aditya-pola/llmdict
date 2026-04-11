@@ -1,0 +1,259 @@
+[
+  {
+    "id": "ffn",
+    "name": "FFN / MLP",
+    "expansion": "Feed-Forward Network / Multi-Layer Perceptron",
+    "category": "layer-types",
+    "oneliner": "The position-wise fully connected sub-block in each transformer layer — up-project, activate, down-project. Stores ~67% of each layer's parameters.",
+    "explanation": "Operates independently per token (no cross-token interaction). Serves as the 'memory/knowledge storage' component — factual knowledge and patterns predominantly stored in FFN weights. Standard design: project up to larger intermediate dim, apply activation, project back down. In original Transformer, d_ff = 4 × d_model with ReLU. Modern models use SwiGLU with 3 matrices and d_ff ≈ 2.67 × d_model to keep total params constant. FFN is the dominant parameter consumer: ~67% of layer params in gated variants.",
+    "fundamentals": "Standard: FFN(x) = W₂·activation(W₁·x). Gated (SwiGLU): FFN(x) = (Swish(xW_gate) ⊙ xW_up)W_down. LLaMA 7B: d_model=4096, d_ff=11008. FFN params: 3×4096×11008 = 135M vs Attention: 4×4096² = 67M. The '2/3 of 4x' rule: d_ff ≈ (8/3)×d_model, rounded to multiple of 256 for hardware efficiency.",
+    "seen_in": [
+      "model-config",
+      "code"
+    ],
+    "related": [
+      "swiglu",
+      "geglu",
+      "moe",
+      "residual-connection"
+    ],
+    "sources": [
+      "Vaswani et al., 'Attention Is All You Need,' NeurIPS 2017, arXiv:1706.03762"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "resources": [
+      {
+        "label": "Attention Is All You Need (original Transformer)",
+        "url": "https://arxiv.org/abs/1706.03762"
+      }
+    ]
+  },
+  {
+    "id": "swiglu",
+    "name": "SwiGLU",
+    "expansion": "Swish-activated Gated Linear Unit",
+    "category": "layer-types",
+    "oneliner": "Element-wise product of a Swish-activated gate projection and a value projection — the de facto standard FFN activation in modern LLMs.",
+    "explanation": "From Shazeer (2020). Replaces simple ReLU FFN with gated mechanism: one projection produces gates (via Swish), another produces values, element-wise multiply, then down-project. Swish(x) = x·σ(x) is smooth, non-monotonic, allows small negatives through. ~0.02-0.05 lower perplexity than ReLU at same compute. Three matrices instead of two, but d_ff reduced to compensate. Used by LLaMA 1/2/3, Mistral, Mixtral, Qwen, Gemma, Yi, DeepSeek, Command-R — essentially every major open-weight model since 2023.",
+    "fundamentals": "SwiGLU(x) = (Swish(xW_gate) ⊙ xW_up)W_down. Swish(z) = z·σ(z). For LLaMA 7B: W_gate [4096, 11008], W_up [4096, 11008], W_down [11008, 4096]. Params: 3×4096×11008 ≈ 135M ≈ 8d². In HuggingFace config: hidden_act='silu' (SiLU is the activation within the GLU structure). Code pattern: act_fn(gate_proj(x)) * up_proj(x) then down_proj(...).",
+    "seen_in": [
+      "model-config",
+      "code"
+    ],
+    "related": [
+      "ffn",
+      "geglu",
+      "gelu",
+      "relu"
+    ],
+    "sources": [
+      "Shazeer, 'GLU Variants Improve Transformer,' 2020, arXiv:2002.05202"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "foundational_papers": [
+      {
+        "title": "GLU Variants Improve Transformer",
+        "authors": "Shazeer",
+        "venue": "2020",
+        "arxiv": "2002.05202"
+      }
+    ]
+  },
+  {
+    "id": "geglu",
+    "name": "GeGLU",
+    "expansion": "GELU-activated Gated Linear Unit",
+    "category": "layer-types",
+    "oneliner": "GLU variant using GELU activation instead of Swish — performs nearly identically to SwiGLU, used in T5 v1.1 and Flan-T5.",
+    "explanation": "From the same Shazeer (2020) paper. GELU(x) = x·Φ(x) where Φ is Gaussian CDF. Practically indistinguishable from SwiGLU in quality (both ~21.3 perplexity vs ReLU's ~22.5 in Shazeer's T5 experiments). The ecosystem split: LLaMA-inspired models standardized on SwiGLU, T5/Flan-T5 family uses GeGLU. GELU was already standard in BERT/GPT-2, so GeGLU was a natural extension. Less common in decoder-only LLMs post-2023.",
+    "fundamentals": "GeGLU(x) = (GELU(xW_gate) ⊙ xW_up)W_down. GELU(z) ≈ z·0.5·(1 + tanh(√(2/π)·(z + 0.044715z³))). Same parameter count as SwiGLU: 3 × d_model × d_ff. Swish vs GELU: Φ(x) has slightly steeper transition than σ(x), negligible practical difference.",
+    "seen_in": [
+      "model-config",
+      "code"
+    ],
+    "related": [
+      "swiglu",
+      "ffn",
+      "gelu"
+    ],
+    "sources": [
+      "Shazeer, 'GLU Variants Improve Transformer,' 2020, arXiv:2002.05202",
+      "Hendrycks & Gimpel, 'GELUs,' 2016, arXiv:1606.08415"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "foundational_papers": [
+      {
+        "title": "GLU Variants Improve Transformer",
+        "authors": "Shazeer",
+        "venue": "2020",
+        "arxiv": "2002.05202"
+      },
+      {
+        "title": "Gaussian Error Linear Units (GELUs)",
+        "authors": "Hendrycks & Gimpel",
+        "venue": "2016",
+        "arxiv": "1606.08415"
+      }
+    ]
+  },
+  {
+    "id": "rmsnorm",
+    "name": "RMSNorm",
+    "expansion": "Root Mean Square Layer Normalization",
+    "category": "normalization",
+    "oneliner": "Simplified LayerNorm — normalizes by root mean square only, dropping mean subtraction. Same quality, fewer ops. Standard in all modern LLMs.",
+    "explanation": "Zhang & Sennrich (2019). Removes mean-centering from LayerNorm — the re-scaling by RMS alone is sufficient for stable training. Saves one full reduction operation over hidden_dim and the associated subtraction. 7-64% faster than LayerNorm depending on implementation. Only learnable scale γ (no bias β): d_model params vs LayerNorm's 2×d_model. Adopted by LLaMA 1/2/3, Mistral, Mixtral, Qwen, Gemma, Yi, DeepSeek, Command-R. Almost always paired with Pre-Norm placement.",
+    "fundamentals": "RMSNorm(x) = γ · x / RMS(x). RMS(x) = √((1/d)Σxᵢ² + ε). vs LayerNorm: no μ computation, no (x-μ) subtraction, no β bias. Params: d_model (vs 2×d_model for LayerNorm). For LLaMA 7B: 65 RMSNorm instances × 4096 = 266K params (<0.004% of model). Computational savings: 1 reduction op vs 2, ~2× fewer reductions (the GPU synchronization bottleneck).",
+    "seen_in": [
+      "model-config",
+      "code"
+    ],
+    "related": [
+      "layernorm",
+      "pre-norm",
+      "post-norm"
+    ],
+    "sources": [
+      "Zhang & Sennrich, 'Root Mean Square Layer Normalization,' NeurIPS 2019, arXiv:1910.07467"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "foundational_papers": [
+      {
+        "title": "Root Mean Square Layer Normalization",
+        "authors": "Zhang & Sennrich",
+        "venue": "NeurIPS 2019",
+        "arxiv": "1910.07467"
+      }
+    ]
+  },
+  {
+    "id": "layernorm",
+    "name": "LayerNorm",
+    "expansion": "Layer Normalization",
+    "category": "normalization",
+    "oneliner": "Standardizes activations across the hidden dimension per token — zero mean, unit variance, then learnable scale and shift. The original transformer normalization.",
+    "explanation": "Ba, Kiefer & Hinton (2016). Normalizes across feature/hidden dimension (not batch), making it batch-size-independent and suited for sequence models. Computes mean μ and variance σ² over d_model dimensions, normalizes to zero mean / unit variance, then applies learnable γ (scale) and β (shift). Default in original Transformer, GPT-2/3, BERT, T5, BART. Replaced by RMSNorm in post-2022 decoder LLMs (which drops mean subtraction and bias). Still used in encoder models, legacy architectures, some cross-attention/adapter layers.",
+    "fundamentals": "LayerNorm(x) = γ·(x-μ)/√(σ²+ε) + β. μ = (1/d)Σxᵢ. σ² = (1/d)Σ(xᵢ-μ)². γ, β ∈ ℝ^d learnable (init: γ=1, β=0). Params: 2×d_model. Requires 2 reductions (mean, variance) vs RMSNorm's 1 (sum of squares). Batch-independent (unlike BatchNorm), no running stats at inference.",
+    "seen_in": [
+      "model-config",
+      "code"
+    ],
+    "related": [
+      "rmsnorm",
+      "pre-norm",
+      "post-norm",
+      "batchnorm"
+    ],
+    "sources": [
+      "Ba et al., 'Layer Normalization,' 2016, arXiv:1607.06450"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "foundational_papers": [
+      {
+        "title": "Layer Normalization",
+        "authors": "Ba et al.",
+        "venue": "2016",
+        "arxiv": "1607.06450"
+      }
+    ]
+  },
+  {
+    "id": "pre-norm",
+    "name": "Pre-Norm vs Post-Norm",
+    "expansion": "Pre-Layer Normalization vs Post-Layer Normalization",
+    "category": "normalization",
+    "oneliner": "Where normalization sits: before the sub-layer (Pre-Norm, modern standard — stable training) or after the residual add (Post-Norm, original Transformer — fragile at depth).",
+    "explanation": "Original Transformer (2017): Post-Norm — LayerNorm(x + Sublayer(x)). GPT-2 (2019): Pre-Norm — x + Sublayer(Norm(x)). This seemingly minor change was transformative for training stability. Post-Norm forces gradients through normalization (magnitude depends on output scale, varies by layer). Pre-Norm keeps residual path 'clean' — un-normalized x passes directly through skip connection, gradients have unimpeded path regardless of depth. All modern LLMs use Pre-Norm + RMSNorm. Tradeoff: Pre-Norm may converge to slightly worse final loss than well-tuned Post-Norm, addressed by final RMSNorm before output head.",
+    "fundamentals": "Post-Norm: output = Norm(x + Sublayer(x)). Gradient path goes through Norm Jacobian at every layer. Pre-Norm: output = x + Sublayer(Norm(x)). Gradient: ∂L/∂xₗ = ∂L/∂x_L·(I + Σ∂F_k/∂x). The I (identity) ensures gradient magnitude ≥ |∂L/∂x_L| — prevents vanishing regardless of depth. Timeline: Post-Norm (2017 Transformer, BERT) → Pre-Norm+LayerNorm (GPT-2/3, 2019-20) → Pre-Norm+RMSNorm (LLaMA+, 2023+).",
+    "seen_in": [
+      "code",
+      "architecture-papers"
+    ],
+    "related": [
+      "rmsnorm",
+      "layernorm",
+      "residual-connection"
+    ],
+    "sources": [
+      "Xiong et al., 'On Layer Normalization in the Transformer Architecture,' ICML 2020, arXiv:2002.04745"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "foundational_papers": [
+      {
+        "title": "On Layer Normalization in the Transformer Architecture",
+        "authors": "Xiong et al.",
+        "venue": "ICML 2020",
+        "arxiv": "2002.04745"
+      }
+    ]
+  },
+  {
+    "id": "ple",
+    "name": "PLE",
+    "expansion": "Per-Layer Embeddings",
+    "category": "layer-types",
+    "oneliner": "Gemma 3/4 technique: each decoder layer has its own token embedding table, adding a per-layer per-token signal to the residual stream. Inflates total param count above 'effective' count.",
+    "explanation": "Introduced in Google DeepMind's Gemma 3 (2025). Standard transformers inject token identity only at input embedding. PLE gives each of N layers its own embedding lookup table — each layer gets a fresh, learnable signal about token identity. Motivation: in deep models, token identity signal dilutes through many layers of transformation; PLE provides a 'refresh.' Explains the large gap between Gemma's 'total' and 'effective' parameters (e.g., E2B: 5.1B total vs 2.3B effective). Relatively unique to Gemma family as of 2025. Conceptually related to soft prompting per layer and layer-wise adapters.",
+    "fundamentals": "Standard: h₀ = Embed(token) + PE. PLE: each layer l adds PLE_l(token_id) to residual stream. PLE_l is a lookup table [V, d_ple]. If d_ple small (e.g., 128): overhead per layer = V×128. For V=256K, L=46 layers: 46×256K×128 ≈ 1.5B params — substantial but not computed per-token in the same way as attention/FFN. Solves: token identity dilution in deep models, rare token handling, per-layer specialization based on token type.",
+    "seen_in": [
+      "model-config",
+      "model-cards"
+    ],
+    "related": [
+      "token-embedding",
+      "residual-connection"
+    ],
+    "sources": [
+      "Google DeepMind, 'Gemma 3 Technical Report,' 2025, arXiv:2503.19786"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "foundational_papers": [
+      {
+        "title": "Gemma 3 Technical Report",
+        "authors": "Google DeepMind",
+        "venue": "2025",
+        "arxiv": "2503.19786"
+      }
+    ]
+  },
+  {
+    "id": "residual-connection",
+    "name": "Residual Connection",
+    "expansion": "Residual (Skip) Connection",
+    "category": "layer-types",
+    "oneliner": "The output = x + F(x) pattern — adds sub-layer input directly to output, enabling gradient flow through arbitrarily deep networks. Zero additional parameters.",
+    "explanation": "He et al. (2015, ResNet). Each layer learns a residual correction F(x) rather than full transformation H(x). If optimal is close to identity, network just pushes F(x)→0 (easier than H(x)→x). In transformers: every attention and FFN block wrapped in residual. Creates a 'residual stream' — d_model-dimensional communication channel all layers read from and write to additively. Without residuals, training transformers deeper than a few layers is impossible (gradients vanish/explode as product of L Jacobians). Zero parameters — purely structural. Interaction with normalization critical: Pre-Norm keeps residual path 'clean.'",
+    "fundamentals": "x_L = x_0 + Σ F_l(x_{l-1}). Gradient: ∂L/∂x_l = ∂L/∂x_L·(I + Σ∂F_k/∂x) — the I term prevents vanishing. Without residuals: ∂L/∂x_0 = Π∂F_l/∂x_{l-1} — product of L Jacobians, exponentially vanishes/explodes. Pre-Norm: output = x + Sublayer(Norm(x)) — raw x flows through skip. Some models scale residuals at init: GPT-2 scales by 1/√(2n_layers). DeepNorm: x·α + Sublayer(Norm(x)) with α>1 for very deep Post-Norm training.",
+    "seen_in": [
+      "code",
+      "architecture-diagrams"
+    ],
+    "related": [
+      "pre-norm",
+      "post-norm",
+      "rmsnorm",
+      "layernorm"
+    ],
+    "sources": [
+      "He et al., 'Deep Residual Learning for Image Recognition,' CVPR 2016, arXiv:1512.03385",
+      "Elhage et al., 'A Mathematical Framework for Transformer Circuits,' Anthropic 2021"
+    ],
+    "confidence": "high",
+    "verified_date": "2026-04-10",
+    "foundational_papers": [
+      {
+        "title": "Deep Residual Learning for Image Recognition",
+        "authors": "He et al.",
+        "venue": "CVPR 2016",
+        "arxiv": "1512.03385"
+      }
+    ]
+  }
+]
