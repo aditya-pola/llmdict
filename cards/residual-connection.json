@@ -11,10 +11,9 @@
     "architecture-diagrams"
   ],
   "related": [
+    "layernorm",
     "pre-norm",
-    "post-norm",
-    "rmsnorm",
-    "layernorm"
+    "rmsnorm"
   ],
   "sources": [
     "He et al., 'Deep Residual Learning for Image Recognition,' CVPR 2016, arXiv:1512.03385",

@@ -1,0 +1,53 @@
+{
+  "id": "chain-of-thought",
+  "name": "Chain-of-Thought",
+  "expansion": "Chain-of-Thought (CoT)",
+  "category": "scaling-patterns",
+  "oneliner": "Prompting or training a model to show intermediate reasoning steps before the final answer — converts System-2 problems into sequences of easier System-1 steps.",
+  "explanation": "Chain-of-thought is a technique where a language model generates intermediate reasoning steps before producing a final answer. Originally introduced as a prompting method by Wei et al. in 2022, adding phrases like 'let's think step by step' dramatically improved accuracy on math and logic tasks. In the reasoning model era, chain-of-thought shifted from a prompting trick to a trained behavior: models like o1 and R1 are reinforcement-learned to produce thousands of reasoning tokens internally. CoT is now the core mechanism that enables test-time compute scaling.",
+  "fundamentals": "Prompting form: $(x, z_1, z_2, \\ldots, z_n, y)$ where $z_i$ are reasoning steps. Few-shot CoT provides exemplar traces; zero-shot CoT uses a trigger phrase. Trained CoT (reasoning models): RL optimizes $\\pi_\\theta(z_{1:T}, y | x)$ end-to-end, rewarding only final-answer correctness. Self-consistency: sample $k$ CoT paths, majority-vote on $y$, boosts accuracy at $O(k)$ inference cost. Process Reward Models (PRMs) score individual steps $r(z_i)$ to guide search over reasoning traces.",
+  "related": [
+    "reasoning-models",
+    "test-time-compute",
+    "thinking-tokens"
+  ],
+  "seen_in": [
+    "model-cards",
+    "API-docs",
+    "prompting-guides"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models",
+      "authors": "Wei et al.",
+      "venue": "NeurIPS 2022",
+      "arxiv": "2201.11903"
+    },
+    {
+      "title": "Large Language Models are Zero-Shot Reasoners",
+      "authors": "Kojima et al.",
+      "venue": "NeurIPS 2022",
+      "arxiv": "2205.11916"
+    },
+    {
+      "title": "Self-Consistency Improves Chain of Thought Reasoning in Language Models",
+      "authors": "Wang et al.",
+      "venue": "ICLR 2023",
+      "arxiv": "2203.11171"
+    },
+    {
+      "title": "Let's Verify Step by Step (PRM800K)",
+      "authors": "Lightman et al.",
+      "venue": "ICLR 2024",
+      "arxiv": "2305.20050"
+    }
+  ],
+  "resources": [
+    {
+      "label": "Wei et al. CoT paper",
+      "url": "https://arxiv.org/abs/2201.11903"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

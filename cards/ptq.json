@@ -19,8 +19,7 @@
     "gptq",
     "inference",
     "qat",
-    "quantization",
-    "zero"
+    "quantization"
   ],
   "sources": [
     "Nagel et al., arXiv:2106.08295"

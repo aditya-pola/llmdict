@@ -11,9 +11,8 @@
     "documentation"
   ],
   "related": [
-    "sft",
     "dpo",
-    "ppo"
+    "sft"
   ],
   "foundational_papers": [
     {

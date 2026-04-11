@@ -12,9 +12,7 @@
   ],
   "related": [
     "calibration-data",
-    "hessian",
     "iq-quants",
-    "llama-cpp",
     "quantization",
     "tool-llamacpp"
   ],

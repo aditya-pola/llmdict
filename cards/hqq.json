@@ -15,8 +15,7 @@
     "calibration-data",
     "gptq",
     "ptq",
-    "quantization",
-    "zero-shot-quantization"
+    "quantization"
   ],
   "sources": [
     "Badri & Shaji, 'HQQ: Half-Quadratic Quantization,' 2023, github.com/mobiusml/hqq"

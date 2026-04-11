@@ -12,13 +12,11 @@
   ],
   "related": [
     "awq",
-    "cuda-kernels",
     "fp16",
     "gptq",
     "inference",
     "int4",
     "tool-vllm",
-    "vllm",
     "w4a16"
   ],
   "sources": [

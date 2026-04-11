@@ -10,10 +10,7 @@
     "filename"
   ],
   "related": [
-    "gguf",
-    "pickle",
-    "pytorch-bin",
-    "zero"
+    "gguf"
   ],
   "sources": [
     "github.com/huggingface/safetensors"

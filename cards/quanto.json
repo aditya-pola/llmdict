@@ -14,8 +14,7 @@
     "awq",
     "bitsandbytes",
     "gptq",
-    "quantization",
-    "zero"
+    "quantization"
   ],
   "sources": [
     "github.com/huggingface/optimum-quanto"

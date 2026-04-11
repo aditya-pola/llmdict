@@ -11,9 +11,7 @@
     "repo-names"
   ],
   "related": [
-    "lora",
-    "fine-tuning",
-    "task-vectors"
+    "lora"
   ],
   "sources": [
     "Wortsman et al., 'Model Soups,' ICML 2022",

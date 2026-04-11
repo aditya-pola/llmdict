@@ -125,6 +125,7 @@
       "label": "Scaling & Serving",
       "order": 7,
       "entries": [
+        "chain-of-thought",
         "continuous-batching",
         "dense-models",
         "expert-routing",
@@ -133,7 +134,10 @@
         "knowledge-distillation",
         "model-merging",
         "moe",
+        "reasoning-models",
         "speculative-decoding",
+        "test-time-compute",
+        "thinking-tokens",
         "tp-pp",
         "zero"
       ]
@@ -146,10 +150,12 @@
         "causal-lm",
         "cpt",
         "dpo",
+        "grpo",
         "kto",
         "orpo",
         "pre-training",
         "rlhf",
+        "rlvr",
         "sft",
         "simpo",
         "transfer-learning"
@@ -312,8 +318,7 @@
         "ia3",
         "inference",
         "lora",
-        "peft",
-        "zero"
+        "peft"
       ],
       "foundational_papers": [
         {
@@ -384,11 +389,9 @@
         "repo-name"
       ],
       "related": [
-        "codebook",
         "inference",
         "quantization",
-        "quip-sharp",
-        "vector-quantization"
+        "quip-sharp"
       ],
       "sources": [
         "Egiazarian et al., 'AQLM,' arXiv:2401.06118"
@@ -450,13 +453,10 @@
         "filename"
       ],
       "related": [
-        "autoawq",
         "gptq",
         "inference",
         "layernorm",
-        "per-channel-scaling",
-        "quantization",
-        "smoothquant"
+        "quantization"
       ],
       "sources": [
         "Lin et al., 'AWQ,' MLSys 2024, arXiv:2306.00978"
@@ -523,8 +523,7 @@
       ],
       "related": [
         "fp16",
-        "fp32",
-        "mixed-precision-training"
+        "fp32"
       ],
       "sources": [
         "Kalamkar et al., 'A Study of BFLOAT16 for Deep Learning Training,' arXiv:1905.12322"
@@ -558,8 +557,6 @@
         "fp32",
         "fp8",
         "int8",
-        "llm-int8",
-        "load-in-4bit",
         "lora",
         "nf4",
         "qlora",
@@ -602,8 +599,7 @@
         "awq",
         "gptq",
         "imatrix",
-        "quantization",
-        "static-quantization"
+        "quantization"
       ],
       "sources": [
         "Frantar et al., 'GPTQ,' arXiv:2210.17323",
@@ -653,6 +649,59 @@
         {
           "label": "HuggingFace CLM training guide",
           "url": "https://huggingface.co/docs/transformers/tasks/language_modeling"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
+    "chain-of-thought": {
+      "id": "chain-of-thought",
+      "name": "Chain-of-Thought",
+      "expansion": "Chain-of-Thought (CoT)",
+      "category": "scaling-patterns",
+      "oneliner": "Prompting or training a model to show intermediate reasoning steps before the final answer — converts System-2 problems into sequences of easier System-1 steps.",
+      "explanation": "Chain-of-thought is a technique where a language model generates intermediate reasoning steps before producing a final answer. Originally introduced as a prompting method by Wei et al. in 2022, adding phrases like 'let's think step by step' dramatically improved accuracy on math and logic tasks. In the reasoning model era, chain-of-thought shifted from a prompting trick to a trained behavior: models like o1 and R1 are reinforcement-learned to produce thousands of reasoning tokens internally. CoT is now the core mechanism that enables test-time compute scaling.",
+      "fundamentals": "Prompting form: $(x, z_1, z_2, \\ldots, z_n, y)$ where $z_i$ are reasoning steps. Few-shot CoT provides exemplar traces; zero-shot CoT uses a trigger phrase. Trained CoT (reasoning models): RL optimizes $\\pi_\\theta(z_{1:T}, y | x)$ end-to-end, rewarding only final-answer correctness. Self-consistency: sample $k$ CoT paths, majority-vote on $y$, boosts accuracy at $O(k)$ inference cost. Process Reward Models (PRMs) score individual steps $r(z_i)$ to guide search over reasoning traces.",
+      "related": [
+        "reasoning-models",
+        "test-time-compute",
+        "thinking-tokens"
+      ],
+      "seen_in": [
+        "model-cards",
+        "API-docs",
+        "prompting-guides"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models",
+          "authors": "Wei et al.",
+          "venue": "NeurIPS 2022",
+          "arxiv": "2201.11903"
+        },
+        {
+          "title": "Large Language Models are Zero-Shot Reasoners",
+          "authors": "Kojima et al.",
+          "venue": "NeurIPS 2022",
+          "arxiv": "2205.11916"
+        },
+        {
+          "title": "Self-Consistency Improves Chain of Thought Reasoning in Language Models",
+          "authors": "Wang et al.",
+          "venue": "ICLR 2023",
+          "arxiv": "2203.11171"
+        },
+        {
+          "title": "Let's Verify Step by Step (PRM800K)",
+          "authors": "Lightman et al.",
+          "venue": "ICLR 2024",
+          "arxiv": "2305.20050"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Wei et al. CoT paper",
+          "url": "https://arxiv.org/abs/2201.11903"
         }
       ],
       "confidence": "high",
@@ -889,7 +938,6 @@
       ],
       "related": [
         "moe",
-        "scaling-laws",
         "token"
       ],
       "sources": [
@@ -1074,9 +1122,7 @@
         "fp16",
         "inference",
         "int8",
-        "per-channel-quantization",
-        "quantization",
-        "weight-only-quantization"
+        "quantization"
       ],
       "sources": [
         "github.com/NetEase-FuXi/EETQ"
@@ -1097,13 +1143,11 @@
         "repo-name"
       ],
       "related": [
-        "exllamav2",
         "gptq",
         "inference",
         "inference-engine",
         "quantization",
-        "tool-exllamav2",
-        "variable-bitrate"
+        "tool-exllamav2"
       ],
       "sources": [
         "github.com/turboderp-org/exllamav2 (no paper; documented in repo wiki)"
@@ -1124,8 +1168,6 @@
         "code"
       ],
       "related": [
-        "capacity-factor",
-        "load-balancing-loss",
         "moe",
         "token"
       ],
@@ -1341,8 +1383,7 @@
       "related": [
         "bf16",
         "fp32",
-        "inference",
-        "mixed-precision-training"
+        "inference"
       ],
       "sources": [
         "IEEE 754-2008 Section 3.6",
@@ -1403,8 +1444,7 @@
       "related": [
         "bf16",
         "fp16",
-        "w8a8",
-        "transformer-engine"
+        "w8a8"
       ],
       "sources": [
         "Micikevicius et al., 'FP8 Formats for Deep Learning,' arXiv:2209.05433"
@@ -1432,7 +1472,6 @@
         "model-name"
       ],
       "related": [
-        "deepspeed",
         "lora",
         "sft",
         "zero"
@@ -1470,9 +1509,8 @@
         "code"
       ],
       "related": [
-        "swiglu",
         "ffn",
-        "gelu"
+        "swiglu"
       ],
       "sources": [
         "Shazeer, 'GLU Variants Improve Transformer,' 2020, arXiv:2002.05202",
@@ -1510,7 +1548,6 @@
       "related": [
         "gguf",
         "inference",
-        "llama-cpp",
         "tool-llamacpp"
       ],
       "sources": [
@@ -1536,11 +1573,10 @@
         "inference",
         "iq-quants",
         "k-quants",
-        "llama-cpp",
-        "lm-studio",
-        "ollama",
         "quantization",
-        "tool-llamacpp"
+        "tool-llamacpp",
+        "tool-lmstudio",
+        "tool-ollama"
       ],
       "sources": [
         "github.com/ggml-org/ggml/blob/master/docs/gguf.md",
@@ -1562,9 +1598,7 @@
         "filename"
       ],
       "related": [
-        "autogptq",
         "awq",
-        "hessian",
         "marlin",
         "ptq",
         "quantization"
@@ -1615,6 +1649,52 @@
         }
       ]
     },
+    "grpo": {
+      "id": "grpo",
+      "name": "GRPO",
+      "expansion": "Group Relative Policy Optimization",
+      "category": "training-pipeline",
+      "oneliner": "PPO variant that drops the critic model — estimates advantages by normalizing rewards across a group of sampled outputs for the same prompt. Powers DeepSeek R1.",
+      "explanation": "Group Relative Policy Optimization is a reinforcement learning algorithm that simplifies PPO by removing the value function (critic) model entirely. For each prompt, GRPO samples a group of outputs, scores them with a reward function, then normalizes the rewards within the group to estimate advantages. This group-relative baseline replaces the learned critic, cutting memory by 40 to 60 percent while remaining stable. GRPO was introduced in DeepSeekMath and became the core training algorithm for DeepSeek R1, where it trained reasoning capabilities from scratch using only correctness rewards.",
+      "fundamentals": "Sample group $\\{o_1, \\ldots, o_G\\}$ from $\\pi_{\\theta_{\\text{old}}}(\\cdot|q)$. Compute rewards $r_i$. Normalize: $\\hat{A}_i = \\frac{r_i - \\mathrm{mean}(\\mathbf{r})}{\\mathrm{std}(\\mathbf{r})}$. Clipped objective per token $t$: $\\mathcal{L} = -\\frac{1}{G}\\sum_i \\frac{1}{|o_i|}\\sum_t \\min\\!\\bigl(\\rho_t \\hat{A}_i,\\; \\mathrm{clip}(\\rho_t, 1\\pm\\varepsilon)\\hat{A}_i\\bigr) + \\beta\\,\\mathrm{KL}(\\pi_\\theta \\| \\pi_{\\mathrm{ref}})$ where $\\rho_t = \\pi_\\theta(o_t|q,o_{<t})/\\pi_{\\theta_{\\text{old}}}(o_t|q,o_{<t})$. R1 settings: $G$=16, $\\varepsilon$=10, $\\beta$=0.001, lr=3e-6, max length 32K tokens, batch 512.",
+      "related": [
+        "rlhf",
+        "dpo",
+        "reasoning-models",
+        "rlvr"
+      ],
+      "seen_in": [
+        "research-papers",
+        "model-cards",
+        "training-recipes"
+      ],
+      "foundational_papers": [
+        {
+          "title": "DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models",
+          "authors": "Shao, Wang, Zhu, Xu et al.",
+          "venue": "2024",
+          "arxiv": "2402.03300"
+        },
+        {
+          "title": "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning",
+          "authors": "DeepSeek-AI",
+          "venue": "2025",
+          "arxiv": "2501.12948"
+        }
+      ],
+      "resources": [
+        {
+          "label": "GRPO deep dive (Cameron Wolfe)",
+          "url": "https://cameronrwolfe.substack.com/p/grpo"
+        },
+        {
+          "label": "HuggingFace LLM Course: GRPO",
+          "url": "https://huggingface.co/learn/llm-course/en/chapter12/3b"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "hqq": {
       "id": "hqq",
       "name": "HQQ",
@@ -1632,8 +1712,7 @@
         "calibration-data",
         "gptq",
         "ptq",
-        "quantization",
-        "zero-shot-quantization"
+        "quantization"
       ],
       "sources": [
         "Badri & Shaji, 'HQQ: Half-Quadratic Quantization,' 2023, github.com/mobiusml/hqq"
@@ -1694,9 +1773,7 @@
       ],
       "related": [
         "calibration-data",
-        "hessian",
         "iq-quants",
-        "llama-cpp",
         "quantization",
         "tool-llamacpp"
       ],
@@ -1835,8 +1912,7 @@
         "nf4",
         "per-group-quantization",
         "quantization",
-        "w4a16",
-        "zero"
+        "w4a16"
       ],
       "sources": [
         "Frantar et al., 'GPTQ,' ICLR 2023, arXiv:2210.17323",
@@ -1866,9 +1942,7 @@
       ],
       "related": [
         "int4",
-        "w8a8",
-        "smoothquant",
-        "llm-int8"
+        "w8a8"
       ],
       "sources": [
         "Dettmers et al., 'LLM.int8(),' NeurIPS 2022, arXiv:2208.07339",
@@ -1903,14 +1977,12 @@
         "gguf-filename"
       ],
       "related": [
-        "codebook",
         "gguf",
         "imatrix",
         "inference",
         "k-quants",
         "quantization",
-        "tool-llamacpp",
-        "vector-quantization"
+        "tool-llamacpp"
       ],
       "sources": [
         "llama.cpp source code and documentation"
@@ -1944,7 +2016,6 @@
         "gguf",
         "inference",
         "iq-quants",
-        "llama-cpp",
         "quantization",
         "tool-llamacpp",
         "unsloth-dynamic"
@@ -1975,8 +2046,7 @@
       ],
       "related": [
         "dense-models",
-        "quantization",
-        "pruning"
+        "quantization"
       ],
       "sources": [
         "Hinton et al., 'Distilling the Knowledge in a Neural Network,' 2015, arXiv:1503.02531",
@@ -2078,13 +2148,10 @@
         "code"
       ],
       "related": [
-        "batchnorm",
         "inference",
-        "post-norm",
         "pre-norm",
         "rmsnorm",
-        "token",
-        "zero"
+        "token"
       ],
       "sources": [
         "Ba et al., 'Layer Normalization,' 2016, arXiv:1607.06450"
@@ -2198,13 +2265,11 @@
       ],
       "related": [
         "awq",
-        "cuda-kernels",
         "fp16",
         "gptq",
         "inference",
         "int4",
         "tool-vllm",
-        "vllm",
         "w4a16"
       ],
       "sources": [
@@ -2330,9 +2395,7 @@
         "repo-names"
       ],
       "related": [
-        "lora",
-        "fine-tuning",
-        "task-vectors"
+        "lora"
       ],
       "sources": [
         "Wortsman et al., 'Model Soups,' ICML 2022",
@@ -2519,11 +2582,9 @@
       ],
       "related": [
         "bitsandbytes",
-        "double-quantization",
         "int4",
         "qlora",
-        "quantization",
-        "zero"
+        "quantization"
       ],
       "sources": [
         "Dettmers et al., 'QLoRA,' NeurIPS 2023, arXiv:2305.14314"
@@ -2905,7 +2966,7 @@
         "flash-attention",
         "kv-cache",
         "token",
-        "vllm"
+        "tool-vllm"
       ],
       "sources": [
         "Kwon et al., 'Efficient Memory Management for LLM Serving with PagedAttention,' SOSP 2023, arXiv:2309.06180"
@@ -3017,8 +3078,7 @@
       "related": [
         "ffn",
         "residual-connection",
-        "token",
-        "token-embedding"
+        "token"
       ],
       "sources": [
         "Google DeepMind, 'Gemma 3 Technical Report,' 2025, arXiv:2503.19786"
@@ -3112,7 +3172,6 @@
         "bf16",
         "cpt",
         "inference",
-        "scaling-laws",
         "sft",
         "token",
         "tokenizer-bpe"
@@ -3172,8 +3231,7 @@
         "gptq",
         "inference",
         "qat",
-        "quantization",
-        "zero"
+        "quantization"
       ],
       "sources": [
         "Nagel et al., arXiv:2106.08295"
@@ -3200,11 +3258,9 @@
         "documentation"
       ],
       "related": [
-        "fake-quantization",
         "ptq",
         "quantization",
-        "spinquant",
-        "ste"
+        "spinquant"
       ],
       "sources": [
         "Jacob et al., CVPR 2018, arXiv:1712.05877",
@@ -3310,8 +3366,7 @@
         "awq",
         "bitsandbytes",
         "gptq",
-        "quantization",
-        "zero"
+        "quantization"
       ],
       "sources": [
         "github.com/huggingface/optimum-quanto"
@@ -3333,11 +3388,8 @@
       ],
       "related": [
         "aqlm",
-        "incoherence",
         "inference",
-        "lattice-codebook",
-        "quantization",
-        "vector-quantization"
+        "quantization"
       ],
       "sources": [
         "Chee et al., 'QuIP#,' arXiv:2402.04396"
@@ -3353,6 +3405,55 @@
         }
       ]
     },
+    "reasoning-models": {
+      "id": "reasoning-models",
+      "name": "Reasoning Models",
+      "expansion": "Reasoning Models (o1/R1 paradigm)",
+      "category": "scaling-patterns",
+      "oneliner": "LLMs trained via RL to produce extended chain-of-thought before answering — trading inference compute for dramatically better accuracy on hard problems.",
+      "explanation": "Reasoning models are LLMs trained via reinforcement learning to produce extended chains of thought before answering. They decompose problems into steps, verify intermediate results, and backtrack when stuck. This paradigm emerged in late 2024 with OpenAI o1, followed by DeepSeek R1 and Qwen QwQ. On AIME 2024, reasoning models jumped from 15 to over 70 percent accuracy, rivaling competitive math students.",
+      "fundamentals": "Core loop: given prompt $x$, generate reasoning trace $z_1, z_2, \\ldots, z_T$ then answer $y$. Trained via RL (PPO or GRPO) with reward $r$ based on answer correctness: $\\max_{\\theta} \\mathbb{E}_{x}\\left[r(x, y) - \\beta\\,\\mathrm{KL}(\\pi_\\theta \\| \\pi_{\\mathrm{ref}})\\right]$. No SFT on reasoning traces needed — R1-Zero showed reasoning emerges purely from RL on a pretrained base. Inference cost scales with problem difficulty: easy questions use hundreds of reasoning tokens, hard ones use tens of thousands.",
+      "related": [
+        "chain-of-thought",
+        "test-time-compute",
+        "grpo",
+        "rlvr",
+        "thinking-tokens",
+        "rlhf",
+        "knowledge-distillation"
+      ],
+      "seen_in": [
+        "model-cards",
+        "API-docs",
+        "benchmarks"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Learning to reason with LLMs (OpenAI o1 system card)",
+          "authors": "OpenAI",
+          "venue": "2024",
+          "arxiv": ""
+        },
+        {
+          "title": "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning",
+          "authors": "DeepSeek-AI",
+          "venue": "2025",
+          "arxiv": "2501.12948"
+        }
+      ],
+      "resources": [
+        {
+          "label": "OpenAI reasoning models guide",
+          "url": "https://platform.openai.com/docs/guides/reasoning"
+        },
+        {
+          "label": "HuggingFace LLM Course: DeepSeek R1",
+          "url": "https://huggingface.co/learn/llm-course/en/chapter12/3"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "residual-connection": {
       "id": "residual-connection",
       "name": "Residual Connection",
@@ -3366,10 +3467,9 @@
         "architecture-diagrams"
       ],
       "related": [
+        "layernorm",
         "pre-norm",
-        "post-norm",
-        "rmsnorm",
-        "layernorm"
+        "rmsnorm"
       ],
       "sources": [
         "He et al., 'Deep Residual Learning for Image Recognition,' CVPR 2016, arXiv:1512.03385",
@@ -3399,9 +3499,8 @@
         "documentation"
       ],
       "related": [
-        "sft",
         "dpo",
-        "ppo"
+        "sft"
       ],
       "foundational_papers": [
         {
@@ -3447,6 +3546,51 @@
       "confidence": "high",
       "verified_date": "2026-04-10"
     },
+    "rlvr": {
+      "id": "rlvr",
+      "name": "RLVR",
+      "expansion": "Reinforcement Learning with Verifiable Rewards",
+      "category": "training-pipeline",
+      "oneliner": "RL training where rewards come from automated verification (math checker, code tests, format rules) rather than human labels or learned reward models.",
+      "explanation": "Reinforcement Learning with Verifiable Rewards is a training paradigm where the reward signal comes from automatic, objectively checkable criteria rather than human preferences or a learned reward model. For math, the verifier checks whether the final numerical answer matches ground truth. For code, it runs test cases. This eliminates reward hacking and removes the cost of human annotation entirely. RLVR is the reward scheme behind DeepSeek R1-Zero and R1, where only accuracy and format rewards were used, yet complex reasoning behaviors like self-verification and backtracking emerged spontaneously.",
+      "fundamentals": "Reward function: $r(x, y) = r_{\\text{accuracy}}(x, y) + r_{\\text{format}}(x, y)$. Accuracy reward is binary (1 if answer matches ground truth, 0 otherwise) or graded. Format reward enforces structural constraints (e.g., answer within \\texttt{\\textbackslash boxed\\{\\}}). No learned reward model — verification is deterministic and unhackable. Training data: question-answer pairs where answers are machine-checkable (math, code, logic puzzles). Scales to millions of problems via synthetic generation. Limitation: only works for domains with verifiable answers; open-ended generation still needs RLHF/DPO.",
+      "related": [
+        "rlhf",
+        "grpo",
+        "reasoning-models",
+        "dpo"
+      ],
+      "seen_in": [
+        "research-papers",
+        "training-recipes"
+      ],
+      "foundational_papers": [
+        {
+          "title": "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning",
+          "authors": "DeepSeek-AI",
+          "venue": "2025",
+          "arxiv": "2501.12948"
+        },
+        {
+          "title": "Reinforcement Learning with Verifiable Rewards Implicitly Incentivizes Correct Reasoning in Base LLMs",
+          "authors": "Various",
+          "venue": "2025",
+          "arxiv": "2506.14245"
+        }
+      ],
+      "resources": [
+        {
+          "label": "RLVR explained (Promptfoo)",
+          "url": "https://www.promptfoo.dev/blog/rlvr-explained/"
+        },
+        {
+          "label": "Reasoning Gym for RLVR (NeurIPS 2025)",
+          "url": "https://neurips.cc/virtual/2025/poster/121745"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "rmsnorm": {
       "id": "rmsnorm",
       "name": "RMSNorm",
@@ -3461,8 +3605,7 @@
       ],
       "related": [
         "layernorm",
-        "pre-norm",
-        "post-norm"
+        "pre-norm"
       ],
       "sources": [
         "Zhang & Sennrich, 'Root Mean Square Layer Normalization,' NeurIPS 2019, arXiv:1910.07467"
@@ -3524,10 +3667,7 @@
         "filename"
       ],
       "related": [
-        "gguf",
-        "pickle",
-        "pytorch-bin",
-        "zero"
+        "gguf"
       ],
       "sources": [
         "github.com/huggingface/safetensors"
@@ -3549,8 +3689,7 @@
       ],
       "related": [
         "flash-attention",
-        "mha",
-        "xformers"
+        "mha"
       ],
       "sources": [
         "PyTorch 2.0 docs: torch.nn.functional.scaled_dot_product_attention",
@@ -3912,7 +4051,6 @@
         "documentation"
       ],
       "related": [
-        "autoregressive-decoding",
         "continuous-batching",
         "kv-cache",
         "token"
@@ -3951,11 +4089,9 @@
         "model-cards"
       ],
       "related": [
-        "incoherence",
         "qat",
         "quantization",
-        "quip-sharp",
-        "rotation"
+        "quip-sharp"
       ],
       "sources": [
         "Liu et al., 'SpinQuant,' arXiv:2405.16406"
@@ -4025,9 +4161,7 @@
       ],
       "related": [
         "ffn",
-        "geglu",
-        "gelu",
-        "relu"
+        "geglu"
       ],
       "sources": [
         "Shazeer, 'GLU Variants Improve Transformer,' 2020, arXiv:2002.05202"
@@ -4445,6 +4579,94 @@
         }
       ]
     },
+    "test-time-compute": {
+      "id": "test-time-compute",
+      "name": "Test-Time Compute Scaling",
+      "expansion": "Test-Time Compute Scaling",
+      "category": "scaling-patterns",
+      "oneliner": "Spending more compute at inference rather than training — letting the model 'think longer' on hard problems to improve accuracy without retraining.",
+      "explanation": "Test-time compute scaling is the principle that allocating additional computation during inference can improve model accuracy, sometimes more effectively than scaling model parameters. Rather than building a bigger model, you let a smaller model generate more reasoning tokens, sample multiple solutions, or search over candidate answers. Snell et al. showed a compute-optimal inference strategy can match a 14x larger model. This idea underpins reasoning models: o1 and R1 adaptively spend more tokens on harder problems, making inference cost proportional to difficulty.",
+      "fundamentals": "Two main mechanisms: (1) search against verifiers — generate $k$ candidates, score with a Process Reward Model $r(z_i)$, select best; (2) sequential revision — model iteratively refines its own answer. Compute-optimal allocation: for easy prompts, revision dominates; for hard prompts, parallel search dominates. FLOPs budget: $C_{\\text{inference}} = k \\cdot T \\cdot c_{\\text{fwd}}$ where $k$ = samples, $T$ = tokens per sample, $c_{\\text{fwd}}$ = cost per forward token. Diminishing returns above ~64 samples for most tasks. Configurable effort levels (o3: low/medium/high) expose this tradeoff to users.",
+      "related": [
+        "reasoning-models",
+        "chain-of-thought",
+        "thinking-tokens",
+        "inference"
+      ],
+      "seen_in": [
+        "API-docs",
+        "benchmarks",
+        "research-papers"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Scaling LLM Test-Time Compute Optimally can be More Effective than Scaling Model Parameters",
+          "authors": "Snell, Lee, Xu, Kumar",
+          "venue": "ICLR 2025 (Oral)",
+          "arxiv": "2408.03314"
+        },
+        {
+          "title": "The Art of Scaling Test-Time Compute for Large Language Models",
+          "authors": "Zhang et al.",
+          "venue": "2024",
+          "arxiv": "2512.02008"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Snell et al. test-time compute paper",
+          "url": "https://arxiv.org/abs/2408.03314"
+        },
+        {
+          "label": "Awesome Inference-Time Scaling (paper list)",
+          "url": "https://github.com/ThreeSR/Awesome-Inference-Time-Scaling"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
+    "thinking-tokens": {
+      "id": "thinking-tokens",
+      "name": "Thinking Tokens",
+      "expansion": "Thinking Tokens / Extended Thinking",
+      "category": "scaling-patterns",
+      "oneliner": "Hidden reasoning tokens generated before the visible answer — they consume context window and billing but are discarded from the final output shown to users.",
+      "explanation": "Thinking tokens are the intermediate reasoning tokens that reasoning models generate internally before producing a visible answer. In OpenAI's o1 and o3, these tokens are hidden from the user and only a summary is shown. In open models like DeepSeek R1, the full chain of thought is visible between special tags. Thinking tokens occupy context window space and are billed as output tokens, ranging from a few hundred for simple queries to tens of thousands for hard problems. This variable-length generation is what makes reasoning models adaptive: they automatically allocate more compute to harder problems.",
+      "fundamentals": "Generation pattern: $[\\texttt{<think>}\\; z_1, z_2, \\ldots, z_T\\; \\texttt{</think>}\\; y]$. Context budget: $C_{\\text{ctx}} = |\\text{input}| + |\\text{thinking}| + |\\text{output}|$ must fit model window (e.g., 128K for o1, 128K for R1). API billing: thinking tokens count as output tokens. OpenAI hides raw thinking tokens, shows model-generated summary. Anthropic's Claude extended thinking exposes the full trace. Configurable thinking budgets: o3 low/medium/high, Claude \\texttt{budget\\_tokens} parameter. R1 uses \\texttt{<think>}...\\texttt{</think>} delimiters in the actual generation.",
+      "related": [
+        "reasoning-models",
+        "chain-of-thought",
+        "test-time-compute",
+        "kv-cache"
+      ],
+      "seen_in": [
+        "API-docs",
+        "model-cards",
+        "billing-docs"
+      ],
+      "foundational_papers": [
+        {
+          "title": "Learning to reason with LLMs (OpenAI o1 system card)",
+          "authors": "OpenAI",
+          "venue": "2024",
+          "arxiv": ""
+        },
+        {
+          "title": "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning",
+          "authors": "DeepSeek-AI",
+          "venue": "2025",
+          "arxiv": "2501.12948"
+        }
+      ],
+      "resources": [
+        {
+          "label": "OpenAI reasoning tokens documentation",
+          "url": "https://platform.openai.com/docs/guides/reasoning"
+        }
+      ],
+      "confidence": "high",
+      "verified_date": "2026-04-11"
+    },
     "token": {
       "id": "token",
       "name": "Token",
@@ -4798,11 +5020,7 @@
         "training-config"
       ],
       "related": [
-        "data-parallelism",
-        "expert-parallelism",
-        "fsdp",
         "inference",
-        "nvlink",
         "token"
       ],
       "sources": [
@@ -4840,8 +5058,7 @@
         "peft",
         "pre-training",
         "qlora",
-        "sft",
-        "zero"
+        "sft"
       ],
       "seen_in": [
         "documentation"
@@ -4878,8 +5095,6 @@
       "related": [
         "exl2",
         "gguf",
-        "kl-divergence",
-        "mlx",
         "quantization"
       ],
       "sources": [
@@ -4918,8 +5133,7 @@
         "int4",
         "quantization",
         "tool-llamacpp",
-        "w8a8",
-        "weight-only-quantization"
+        "w8a8"
       ],
       "sources": [
         "Lin et al., 'AWQ,' arXiv:2306.00978"
@@ -4949,8 +5163,7 @@
         "inference",
         "int8",
         "quantization",
-        "smoothquant",
-        "tensorrt-llm",
+        "tool-tensorrt-llm",
         "w4a16"
       ],
       "sources": [

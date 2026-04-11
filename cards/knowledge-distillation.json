@@ -12,8 +12,7 @@
   ],
   "related": [
     "dense-models",
-    "quantization",
-    "pruning"
+    "quantization"
   ],
   "sources": [
     "Hinton et al., 'Distilling the Knowledge in a Neural Network,' 2015, arXiv:1503.02531",

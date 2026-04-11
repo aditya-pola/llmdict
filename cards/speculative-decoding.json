@@ -11,7 +11,6 @@
     "documentation"
   ],
   "related": [
-    "autoregressive-decoding",
     "continuous-batching",
     "kv-cache",
     "token"

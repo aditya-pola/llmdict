@@ -12,9 +12,7 @@
   ],
   "related": [
     "ffn",
-    "geglu",
-    "gelu",
-    "relu"
+    "geglu"
   ],
   "sources": [
     "Shazeer, 'GLU Variants Improve Transformer,' 2020, arXiv:2002.05202"

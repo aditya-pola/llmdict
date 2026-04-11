@@ -11,9 +11,8 @@
     "code"
   ],
   "related": [
-    "swiglu",
     "ffn",
-    "gelu"
+    "swiglu"
   ],
   "sources": [
     "Shazeer, 'GLU Variants Improve Transformer,' 2020, arXiv:2002.05202",

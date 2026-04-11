@@ -13,7 +13,6 @@
   "related": [
     "gguf",
     "inference",
-    "llama-cpp",
     "tool-llamacpp"
   ],
   "sources": [

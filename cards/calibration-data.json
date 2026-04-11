@@ -14,8 +14,7 @@
     "awq",
     "gptq",
     "imatrix",
-    "quantization",
-    "static-quantization"
+    "quantization"
   ],
   "sources": [
     "Frantar et al., 'GPTQ,' arXiv:2210.17323",

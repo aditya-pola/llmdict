@@ -11,11 +11,9 @@
     "model-cards"
   ],
   "related": [
-    "incoherence",
     "qat",
     "quantization",
-    "quip-sharp",
-    "rotation"
+    "quip-sharp"
   ],
   "sources": [
     "Liu et al., 'SpinQuant,' arXiv:2405.16406"

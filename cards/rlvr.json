@@ -1,0 +1,45 @@
+{
+  "id": "rlvr",
+  "name": "RLVR",
+  "expansion": "Reinforcement Learning with Verifiable Rewards",
+  "category": "training-pipeline",
+  "oneliner": "RL training where rewards come from automated verification (math checker, code tests, format rules) rather than human labels or learned reward models.",
+  "explanation": "Reinforcement Learning with Verifiable Rewards is a training paradigm where the reward signal comes from automatic, objectively checkable criteria rather than human preferences or a learned reward model. For math, the verifier checks whether the final numerical answer matches ground truth. For code, it runs test cases. This eliminates reward hacking and removes the cost of human annotation entirely. RLVR is the reward scheme behind DeepSeek R1-Zero and R1, where only accuracy and format rewards were used, yet complex reasoning behaviors like self-verification and backtracking emerged spontaneously.",
+  "fundamentals": "Reward function: $r(x, y) = r_{\\text{accuracy}}(x, y) + r_{\\text{format}}(x, y)$. Accuracy reward is binary (1 if answer matches ground truth, 0 otherwise) or graded. Format reward enforces structural constraints (e.g., answer within \\texttt{\\textbackslash boxed\\{\\}}). No learned reward model — verification is deterministic and unhackable. Training data: question-answer pairs where answers are machine-checkable (math, code, logic puzzles). Scales to millions of problems via synthetic generation. Limitation: only works for domains with verifiable answers; open-ended generation still needs RLHF/DPO.",
+  "related": [
+    "rlhf",
+    "grpo",
+    "reasoning-models",
+    "dpo"
+  ],
+  "seen_in": [
+    "research-papers",
+    "training-recipes"
+  ],
+  "foundational_papers": [
+    {
+      "title": "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning",
+      "authors": "DeepSeek-AI",
+      "venue": "2025",
+      "arxiv": "2501.12948"
+    },
+    {
+      "title": "Reinforcement Learning with Verifiable Rewards Implicitly Incentivizes Correct Reasoning in Base LLMs",
+      "authors": "Various",
+      "venue": "2025",
+      "arxiv": "2506.14245"
+    }
+  ],
+  "resources": [
+    {
+      "label": "RLVR explained (Promptfoo)",
+      "url": "https://www.promptfoo.dev/blog/rlvr-explained/"
+    },
+    {
+      "label": "Reasoning Gym for RLVR (NeurIPS 2025)",
+      "url": "https://neurips.cc/virtual/2025/poster/121745"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

@@ -12,11 +12,8 @@
   ],
   "related": [
     "aqlm",
-    "incoherence",
     "inference",
-    "lattice-codebook",
-    "quantization",
-    "vector-quantization"
+    "quantization"
   ],
   "sources": [
     "Chee et al., 'QuIP#,' arXiv:2402.04396"

@@ -1,0 +1,46 @@
+{
+  "id": "grpo",
+  "name": "GRPO",
+  "expansion": "Group Relative Policy Optimization",
+  "category": "training-pipeline",
+  "oneliner": "PPO variant that drops the critic model — estimates advantages by normalizing rewards across a group of sampled outputs for the same prompt. Powers DeepSeek R1.",
+  "explanation": "Group Relative Policy Optimization is a reinforcement learning algorithm that simplifies PPO by removing the value function (critic) model entirely. For each prompt, GRPO samples a group of outputs, scores them with a reward function, then normalizes the rewards within the group to estimate advantages. This group-relative baseline replaces the learned critic, cutting memory by 40 to 60 percent while remaining stable. GRPO was introduced in DeepSeekMath and became the core training algorithm for DeepSeek R1, where it trained reasoning capabilities from scratch using only correctness rewards.",
+  "fundamentals": "Sample group $\\{o_1, \\ldots, o_G\\}$ from $\\pi_{\\theta_{\\text{old}}}(\\cdot|q)$. Compute rewards $r_i$. Normalize: $\\hat{A}_i = \\frac{r_i - \\mathrm{mean}(\\mathbf{r})}{\\mathrm{std}(\\mathbf{r})}$. Clipped objective per token $t$: $\\mathcal{L} = -\\frac{1}{G}\\sum_i \\frac{1}{|o_i|}\\sum_t \\min\\!\\bigl(\\rho_t \\hat{A}_i,\\; \\mathrm{clip}(\\rho_t, 1\\pm\\varepsilon)\\hat{A}_i\\bigr) + \\beta\\,\\mathrm{KL}(\\pi_\\theta \\| \\pi_{\\mathrm{ref}})$ where $\\rho_t = \\pi_\\theta(o_t|q,o_{<t})/\\pi_{\\theta_{\\text{old}}}(o_t|q,o_{<t})$. R1 settings: $G$=16, $\\varepsilon$=10, $\\beta$=0.001, lr=3e-6, max length 32K tokens, batch 512.",
+  "related": [
+    "rlhf",
+    "dpo",
+    "reasoning-models",
+    "rlvr"
+  ],
+  "seen_in": [
+    "research-papers",
+    "model-cards",
+    "training-recipes"
+  ],
+  "foundational_papers": [
+    {
+      "title": "DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models",
+      "authors": "Shao, Wang, Zhu, Xu et al.",
+      "venue": "2024",
+      "arxiv": "2402.03300"
+    },
+    {
+      "title": "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning",
+      "authors": "DeepSeek-AI",
+      "venue": "2025",
+      "arxiv": "2501.12948"
+    }
+  ],
+  "resources": [
+    {
+      "label": "GRPO deep dive (Cameron Wolfe)",
+      "url": "https://cameronrwolfe.substack.com/p/grpo"
+    },
+    {
+      "label": "HuggingFace LLM Course: GRPO",
+      "url": "https://huggingface.co/learn/llm-course/en/chapter12/3b"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

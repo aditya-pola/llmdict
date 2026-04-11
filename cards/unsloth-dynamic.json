@@ -13,8 +13,6 @@
   "related": [
     "exl2",
     "gguf",
-    "kl-divergence",
-    "mlx",
     "quantization"
   ],
   "sources": [

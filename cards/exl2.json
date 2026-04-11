@@ -11,13 +11,11 @@
     "repo-name"
   ],
   "related": [
-    "exllamav2",
     "gptq",
     "inference",
     "inference-engine",
     "quantization",
-    "tool-exllamav2",
-    "variable-bitrate"
+    "tool-exllamav2"
   ],
   "sources": [
     "github.com/turboderp-org/exllamav2 (no paper; documented in repo wiki)"

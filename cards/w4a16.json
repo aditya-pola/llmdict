@@ -18,8 +18,7 @@
     "int4",
     "quantization",
     "tool-llamacpp",
-    "w8a8",
-    "weight-only-quantization"
+    "w8a8"
   ],
   "sources": [
     "Lin et al., 'AWQ,' arXiv:2306.00978"

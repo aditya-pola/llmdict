@@ -13,8 +13,7 @@
   "related": [
     "bf16",
     "fp32",
-    "inference",
-    "mixed-precision-training"
+    "inference"
   ],
   "sources": [
     "IEEE 754-2008 Section 3.6",

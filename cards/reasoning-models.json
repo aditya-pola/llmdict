@@ -1,0 +1,49 @@
+{
+  "id": "reasoning-models",
+  "name": "Reasoning Models",
+  "expansion": "Reasoning Models (o1/R1 paradigm)",
+  "category": "scaling-patterns",
+  "oneliner": "LLMs trained via RL to produce extended chain-of-thought before answering — trading inference compute for dramatically better accuracy on hard problems.",
+  "explanation": "Reasoning models are LLMs trained via reinforcement learning to produce extended chains of thought before answering. They decompose problems into steps, verify intermediate results, and backtrack when stuck. This paradigm emerged in late 2024 with OpenAI o1, followed by DeepSeek R1 and Qwen QwQ. On AIME 2024, reasoning models jumped from 15 to over 70 percent accuracy, rivaling competitive math students.",
+  "fundamentals": "Core loop: given prompt $x$, generate reasoning trace $z_1, z_2, \\ldots, z_T$ then answer $y$. Trained via RL (PPO or GRPO) with reward $r$ based on answer correctness: $\\max_{\\theta} \\mathbb{E}_{x}\\left[r(x, y) - \\beta\\,\\mathrm{KL}(\\pi_\\theta \\| \\pi_{\\mathrm{ref}})\\right]$. No SFT on reasoning traces needed — R1-Zero showed reasoning emerges purely from RL on a pretrained base. Inference cost scales with problem difficulty: easy questions use hundreds of reasoning tokens, hard ones use tens of thousands.",
+  "related": [
+    "chain-of-thought",
+    "test-time-compute",
+    "grpo",
+    "rlvr",
+    "thinking-tokens",
+    "rlhf",
+    "knowledge-distillation"
+  ],
+  "seen_in": [
+    "model-cards",
+    "API-docs",
+    "benchmarks"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Learning to reason with LLMs (OpenAI o1 system card)",
+      "authors": "OpenAI",
+      "venue": "2024",
+      "arxiv": ""
+    },
+    {
+      "title": "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning",
+      "authors": "DeepSeek-AI",
+      "venue": "2025",
+      "arxiv": "2501.12948"
+    }
+  ],
+  "resources": [
+    {
+      "label": "OpenAI reasoning models guide",
+      "url": "https://platform.openai.com/docs/guides/reasoning"
+    },
+    {
+      "label": "HuggingFace LLM Course: DeepSeek R1",
+      "url": "https://huggingface.co/learn/llm-course/en/chapter12/3"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

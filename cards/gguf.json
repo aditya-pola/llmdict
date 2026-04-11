@@ -15,11 +15,10 @@
     "inference",
     "iq-quants",
     "k-quants",
-    "llama-cpp",
-    "lm-studio",
-    "ollama",
     "quantization",
-    "tool-llamacpp"
+    "tool-llamacpp",
+    "tool-lmstudio",
+    "tool-ollama"
   ],
   "sources": [
     "github.com/ggml-org/ggml/blob/master/docs/gguf.md",

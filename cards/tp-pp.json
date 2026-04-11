@@ -11,11 +11,7 @@
     "training-config"
   ],
   "related": [
-    "data-parallelism",
-    "expert-parallelism",
-    "fsdp",
     "inference",
-    "nvlink",
     "token"
   ],
   "sources": [

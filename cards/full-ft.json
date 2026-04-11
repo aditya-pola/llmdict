@@ -10,7 +10,6 @@
     "model-name"
   ],
   "related": [
-    "deepspeed",
     "lora",
     "sft",
     "zero"

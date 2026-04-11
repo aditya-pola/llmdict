@@ -11,9 +11,7 @@
     "filename"
   ],
   "related": [
-    "autogptq",
     "awq",
-    "hessian",
     "marlin",
     "ptq",
     "quantization"

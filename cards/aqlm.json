@@ -11,11 +11,9 @@
     "repo-name"
   ],
   "related": [
-    "codebook",
     "inference",
     "quantization",
-    "quip-sharp",
-    "vector-quantization"
+    "quip-sharp"
   ],
   "sources": [
     "Egiazarian et al., 'AQLM,' arXiv:2401.06118"

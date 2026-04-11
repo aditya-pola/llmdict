@@ -14,8 +14,7 @@
     "inference",
     "int8",
     "quantization",
-    "smoothquant",
-    "tensorrt-llm",
+    "tool-tensorrt-llm",
     "w4a16"
   ],
   "sources": [

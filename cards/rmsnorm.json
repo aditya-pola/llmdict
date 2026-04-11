@@ -12,8 +12,7 @@
   ],
   "related": [
     "layernorm",
-    "pre-norm",
-    "post-norm"
+    "pre-norm"
   ],
   "sources": [
     "Zhang & Sennrich, 'Root Mean Square Layer Normalization,' NeurIPS 2019, arXiv:1910.07467"

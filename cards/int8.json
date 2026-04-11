@@ -13,9 +13,7 @@
   ],
   "related": [
     "int4",
-    "w8a8",
-    "smoothquant",
-    "llm-int8"
+    "w8a8"
   ],
   "sources": [
     "Dettmers et al., 'LLM.int8(),' NeurIPS 2022, arXiv:2208.07339",

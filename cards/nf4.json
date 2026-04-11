@@ -12,11 +12,9 @@
   ],
   "related": [
     "bitsandbytes",
-    "double-quantization",
     "int4",
     "qlora",
-    "quantization",
-    "zero"
+    "quantization"
   ],
   "sources": [
     "Dettmers et al., 'QLoRA,' NeurIPS 2023, arXiv:2305.14314"

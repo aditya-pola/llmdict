@@ -14,9 +14,7 @@
     "fp16",
     "inference",
     "int8",
-    "per-channel-quantization",
-    "quantization",
-    "weight-only-quantization"
+    "quantization"
   ],
   "sources": [
     "github.com/NetEase-FuXi/EETQ"

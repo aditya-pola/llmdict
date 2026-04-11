@@ -11,13 +11,10 @@
     "filename"
   ],
   "related": [
-    "autoawq",
     "gptq",
     "inference",
     "layernorm",
-    "per-channel-scaling",
-    "quantization",
-    "smoothquant"
+    "quantization"
   ],
   "sources": [
     "Lin et al., 'AWQ,' MLSys 2024, arXiv:2306.00978"

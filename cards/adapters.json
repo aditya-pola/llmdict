@@ -14,8 +14,7 @@
     "ia3",
     "inference",
     "lora",
-    "peft",
-    "zero"
+    "peft"
   ],
   "foundational_papers": [
     {

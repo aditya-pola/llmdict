@@ -13,8 +13,7 @@
   "related": [
     "bf16",
     "fp16",
-    "w8a8",
-    "transformer-engine"
+    "w8a8"
   ],
   "sources": [
     "Micikevicius et al., 'FP8 Formats for Deep Learning,' arXiv:2209.05433"

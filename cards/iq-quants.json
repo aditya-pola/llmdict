@@ -10,14 +10,12 @@
     "gguf-filename"
   ],
   "related": [
-    "codebook",
     "gguf",
     "imatrix",
     "inference",
     "k-quants",
     "quantization",
-    "tool-llamacpp",
-    "vector-quantization"
+    "tool-llamacpp"
   ],
   "sources": [
     "llama.cpp source code and documentation"

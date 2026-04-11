@@ -16,8 +16,6 @@
     "fp32",
     "fp8",
     "int8",
-    "llm-int8",
-    "load-in-4bit",
     "lora",
     "nf4",
     "qlora",

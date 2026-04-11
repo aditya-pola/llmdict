@@ -13,8 +13,7 @@
   "related": [
     "ffn",
     "residual-connection",
-    "token",
-    "token-embedding"
+    "token"
   ],
   "sources": [
     "Google DeepMind, 'Gemma 3 Technical Report,' 2025, arXiv:2503.19786"

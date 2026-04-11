@@ -13,8 +13,7 @@
   ],
   "related": [
     "fp16",
-    "fp32",
-    "mixed-precision-training"
+    "fp32"
   ],
   "sources": [
     "Kalamkar et al., 'A Study of BFLOAT16 for Deep Learning Training,' arXiv:1905.12322"

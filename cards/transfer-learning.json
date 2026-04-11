@@ -12,8 +12,7 @@
     "peft",
     "pre-training",
     "qlora",
-    "sft",
-    "zero"
+    "sft"
   ],
   "seen_in": [
     "documentation"
