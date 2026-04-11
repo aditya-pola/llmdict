@@ -1,6 +1,7 @@
 /* ============================================
-   LLM Glossary — Design System
-   Based on minimalist-reference source analysis
+   LLM Glossary — Stacked Card View
+   One card visible, others peek from sides with
+   vertical titles. Click to bring to center.
    ============================================ */
 
 *, *::before, *::after {
@@ -16,16 +17,18 @@
   --surface: #000;
   --cp: 30px;
   --card-width: 476px;
-  --card-min-h: 390px;
-  --card-max-h: min(560px, 74vh);
+  --card-height: min(560px, 74vh);
   --card-radius: 16px;
   --card-shadow:
     0px 4px 16px 0px rgba(0, 0, 0, 0.35),
     0px 34px 44px 0px rgba(0, 0, 0, 0.17);
   --font: 'Inter', -apple-system, 'Segoe UI', system-ui, sans-serif;
-  --font-display: 'Inter', -apple-system, 'Segoe UI', system-ui, sans-serif;
   --transition: 0.15s ease;
-  --transition-slow: 0.4s ease;
+  --transition-slow: 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  --peek-width: 48px;       /* how much of a stacked card peeks out */
+  --peek-gap: 4px;           /* gap between peeking cards */
+  --max-peek: 5;             /* max cards visible on each side */
 }
 
 html {
@@ -44,6 +47,7 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  user-select: none;
 }
 
 /* --- Header --- */
@@ -56,16 +60,13 @@ body {
   z-index: 100;
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   flex-shrink: 0;
-  background: var(--bg);
 }
 
 .site-title {
-  font-family: var(--font-display);
   font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.36px;
+  font-weight: 500;
+  letter-spacing: -0.72px;
   white-space: nowrap;
-  color: #000;
 }
 
 .search-wrapper {
@@ -89,16 +90,12 @@ body {
   transition: border-color 0.3s ease, background 0.3s ease;
 }
 #search-input::placeholder { color: rgba(0, 0, 0, 0.3); }
-#search-input:focus {
-  border-color: rgba(0, 0, 0, 0.15);
-  background: #fff;
-}
+#search-input:focus { border-color: rgba(0, 0, 0, 0.15); background: #fff; }
 
 .search-results {
   position: absolute;
   top: calc(100% + 6px);
-  left: 0;
-  right: 0;
+  left: 0; right: 0;
   background: var(--surface);
   border-radius: 12px;
   max-height: 320px;
@@ -107,7 +104,6 @@ body {
   z-index: 200;
 }
 .search-results.hidden { display: none; }
-
 .search-result-item {
   padding: 10px 16px;
   cursor: pointer;
@@ -117,17 +113,10 @@ body {
 }
 .search-result-item:last-child { border-bottom: none; }
 .search-result-item:hover { background: #1a1a1a; }
-.search-result-item .result-name {
-  font-size: 13px;
-  letter-spacing: -0.26px;
-}
+.search-result-item .result-name { font-size: 14px; letter-spacing: -0.28px; }
 .search-result-item .result-oneliner {
-  font-size: 11px;
-  color: #adadad;
-  margin-top: 2px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  font-size: 12px; color: #adadad; margin-top: 2px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 
 .header-right {
@@ -136,7 +125,6 @@ body {
   gap: 8px;
   margin-left: auto;
 }
-
 .header-btn {
   font-family: var(--font);
   font-weight: 500;
@@ -153,14 +141,11 @@ body {
   transition: transform var(--transition), background 0.3s ease, color 0.3s ease;
 }
 @media (hover: hover) {
-  .header-btn:hover {
-    background: #f5f5f5;
-    color: #000;
-  }
+  .header-btn:hover { background: #f5f5f5; color: #000; }
 }
 .header-btn:active { transform: scale(0.97); }
 
-/* --- Carousel --- */
+/* --- Stack Container --- */
 main {
   flex: 1;
   display: flex;
@@ -168,102 +153,155 @@ main {
   justify-content: center;
   position: relative;
   overflow: hidden;
+  perspective: 1200px;
 }
 
 .scroll-zone {
   position: absolute;
-  top: 0;
-  bottom: 0;
+  top: 0; bottom: 0;
   width: 100px;
-  z-index: 20;
+  z-index: 60;
 }
 .scroll-zone--left { left: 0; cursor: w-resize; }
 .scroll-zone--right { right: 0; cursor: e-resize; }
 
-.carousel-track {
-  display: flex;
-  gap: 28px;
-  padding: 20px 60px;
-  overflow-x: scroll;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+.stack-container {
+  position: relative;
   width: 100%;
-  align-items: center;
-  height: 100%;
-  perspective: 1200px;
+  max-width: 900px;
+  height: var(--card-height);
 }
-.carousel-track::-webkit-scrollbar { display: none; }
 
-/* --- Cards --- */
+/* --- Cards in the stack --- */
 .card {
-  flex: 0 0 var(--card-width);
-  min-height: var(--card-min-h);
-  max-height: var(--card-max-h);
+  position: absolute;
+  left: 50%;
+  margin-left: calc(var(--card-width) / -2);
+  width: var(--card-width);
+  height: 100%;
   background: var(--surface);
   border-radius: var(--card-radius);
   padding: var(--cp);
-  cursor: pointer;
   box-shadow: var(--card-shadow);
   display: flex;
   flex-direction: column;
   color: #fff;
-  position: relative;
   overflow: hidden;
-  will-change: transform;
+  will-change: transform, opacity;
   transform-style: preserve-3d;
+  cursor: pointer;
+  transition: transform var(--transition-slow), opacity var(--transition-slow);
+}
 
-  /* Pop-in: start hidden */
+/* Active card: front and center */
+.card.card--active {
+  transform: translateX(0) scale(1) rotateY(0deg);
+  opacity: 1;
+  z-index: 50;
+  cursor: default;
+}
+
+/* Cards stacked to the left */
+.card.card--left {
+  opacity: 0.6;
+  z-index: 10;
+}
+
+/* Cards stacked to the right */
+.card.card--right {
+  opacity: 0.6;
+  z-index: 10;
+}
+
+/* Hidden cards (beyond max-peek) */
+.card.card--hidden {
+  transform: translateX(0) scale(0.8);
   opacity: 0;
-  transform: scale(0.7) rotate(-4deg);
-  transition: box-shadow var(--transition);
+  pointer-events: none;
+  z-index: 0;
 }
 
-/* Spring pop-in animation */
-@keyframes cardPopIn {
-  0%   { opacity: 0; transform: scale(0.7) rotate(-4deg); }
-  60%  { opacity: 1; transform: scale(1.04) rotate(1deg); }
-  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+/* Vertical peek label on stacked cards */
+.card .peek-label {
+  display: none;
+  position: absolute;
+  top: 50%;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.26px;
+  color: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 70%;
+  pointer-events: none;
+  transform: translateY(-50%);
 }
 
-.card.visible {
-  animation: cardPopIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+.card:not(.card--active) .peek-label {
+  display: block;
 }
 
-/* After animation clears (JS sets animation:none), hover works via transition */
-@media (hover: hover) {
-  .card:hover {
-    box-shadow:
-      0px 6px 20px 0px rgba(0, 0, 0, 0.4),
-      0px 40px 50px 0px rgba(0, 0, 0, 0.2) !important;
-  }
+.card.card--left .peek-label {
+  right: 12px;
+}
+
+.card.card--right .peek-label {
+  left: 12px;
+}
+
+/* Card content (hidden when not active) */
+.card .card-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.card:not(.card--active) .card-content {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* --- Category card invert --- */
+.card.card--category {
+  background: #fff;
+  color: #000;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0px 2px 8px 0px rgba(0, 0, 0, 0.06),
+    0px 16px 32px 0px rgba(0, 0, 0, 0.04);
+}
+.card.card--category:not(.card--active) .peek-label {
+  color: rgba(0, 0, 0, 0.4);
 }
 
 /* --- Home card --- */
-.card.card--home {
-  justify-content: center;
-}
-.card--home .home-title {
-  font-family: var(--font-display);
+.home-title {
   font-size: 36px;
   font-weight: 500;
   letter-spacing: -1.8px;
   margin-bottom: 8px;
 }
-.card--home .home-subtitle {
+.home-subtitle {
   font-size: 14px;
   color: #adadad;
   margin-bottom: 24px;
   letter-spacing: -0.28px;
 }
-.card--home .category-list {
+.category-list {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
   overflow-y: auto;
   flex: 1;
 }
-.card--home .category-link {
+.category-link {
   font-size: 14px;
   letter-spacing: -0.28px;
   padding: 5px 0;
@@ -273,51 +311,31 @@ main {
   text-decoration: none;
   border: none;
 }
-@media (hover: hover) {
-  .card--home .category-link:hover { color: #fff; }
-}
+@media (hover: hover) { .category-link:hover { color: #fff; } }
 
-/* --- Category card (INVERTED: white card, dark text) --- */
-.card.card--category {
-  justify-content: flex-start;
-  background: #fff;
-  color: #000;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow:
-    0px 2px 8px 0px rgba(0, 0, 0, 0.06),
-    0px 16px 32px 0px rgba(0, 0, 0, 0.04);
-}
-@media (hover: hover) {
-  .card.card--category:hover {
-    box-shadow:
-      0px 4px 12px 0px rgba(0, 0, 0, 0.1),
-      0px 24px 40px 0px rgba(0, 0, 0, 0.08) !important;
-  }
-}
-.card--category .cat-label {
+/* --- Category card --- */
+.cat-label {
   font-size: 11px;
   letter-spacing: 1.6px;
   text-transform: uppercase;
   color: rgba(0, 0, 0, 0.3);
   margin-bottom: 6px;
 }
-.card--category .cat-title {
-  font-family: var(--font-display);
+.cat-title {
   font-size: 26px;
   font-weight: 500;
   letter-spacing: -1.2px;
   margin-bottom: 18px;
-  color: #000;
 }
-.card--category .term-list {
+.term-list {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
   overflow-y: auto;
   flex: 1;
 }
-.card--category .term-link {
+.term-link {
   font-size: 14px;
   letter-spacing: -0.28px;
   padding: 5px 0;
@@ -327,25 +345,17 @@ main {
   text-decoration: none;
   border: none;
 }
-@media (hover: hover) {
-  .card--category .term-link:hover { color: #000; }
-}
+@media (hover: hover) { .term-link:hover { color: #000; } }
 
-/* Category card scrollbar (dark track for light card) */
-.card--category ::-webkit-scrollbar { width: 2px; }
-.card--category ::-webkit-scrollbar-track { background: transparent; }
-.card--category ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.1); border-radius: 2px; }
-
-/* --- Term card (dictionary style) --- */
-.card.card--term .term-name {
-  font-family: var(--font-display);
+/* --- Term card --- */
+.term-name {
   font-size: 32px;
   font-weight: 500;
   letter-spacing: -1.6px;
   line-height: 1.1;
   margin-bottom: 4px;
 }
-.card--term .term-expansion {
+.term-expansion {
   font-size: 13px;
   font-style: italic;
   font-weight: 400;
@@ -353,7 +363,7 @@ main {
   margin-bottom: 16px;
   letter-spacing: -0.1px;
 }
-.card--term .term-explanation {
+.term-explanation {
   font-size: 14px;
   line-height: 1.6;
   letter-spacing: -0.28px;
@@ -361,7 +371,7 @@ main {
   overflow-y: auto;
   flex: 1;
 }
-.card--term .term-explanation .inline-link {
+.term-explanation .inline-link {
   color: #fff;
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
   cursor: pointer;
@@ -369,11 +379,9 @@ main {
   text-decoration: none;
 }
 @media (hover: hover) {
-  .card--term .term-explanation .inline-link:hover {
-    border-color: rgba(255, 255, 255, 0.5);
-  }
+  .term-explanation .inline-link:hover { border-color: rgba(255, 255, 255, 0.5); }
 }
-.card--term .card-expand-hint {
+.card-expand-hint {
   font-size: 10px;
   color: rgba(255, 255, 255, 0.35);
   margin-top: 12px;
@@ -396,10 +404,7 @@ main {
   transition: opacity 0.2s ease;
   pointer-events: none;
 }
-.overlay.active {
-  opacity: 1;
-  pointer-events: all;
-}
+.overlay.active { opacity: 1; pointer-events: all; }
 .overlay.hidden { display: none; }
 
 .overlay-card {
@@ -414,23 +419,18 @@ main {
   color: #fff;
   transform: translateY(10px);
   opacity: 0;
-  transition: transform var(--transition-slow), opacity var(--transition-slow);
+  transition: transform 0.4s ease, opacity 0.4s ease;
   box-shadow: var(--card-shadow);
 }
-.overlay.active .overlay-card {
-  transform: translateY(0);
-  opacity: 1;
-}
+.overlay.active .overlay-card { transform: translateY(0); opacity: 1; }
 
 .overlay-close {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 16px; right: 16px;
   background: rgba(255, 255, 255, 0.15);
   border: none;
   border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  width: 36px; height: 36px;
   color: #fff;
   font-size: 16px;
   cursor: pointer;
@@ -440,16 +440,11 @@ main {
   transition: transform var(--transition), background var(--transition);
 }
 @media (hover: hover) {
-  .overlay-close:hover {
-    transform: scale(1.08);
-    background: rgba(255, 255, 255, 0.25);
-  }
+  .overlay-close:hover { transform: scale(1.08); background: rgba(255, 255, 255, 0.25); }
 }
 .overlay-close:active { transform: scale(0.94); }
 
-/* Overlay content */
 .overlay-name {
-  font-family: var(--font-display);
   font-size: 34px;
   font-weight: 500;
   letter-spacing: -1.7px;
@@ -461,11 +456,8 @@ main {
   font-weight: 400;
   color: rgba(255, 255, 255, 0.35);
   margin-bottom: 22px;
-  letter-spacing: -0.1px;
 }
-.overlay-section {
-  margin-bottom: 20px;
-}
+.overlay-section { margin-bottom: 20px; }
 .overlay-section-title {
   font-size: 10px;
   letter-spacing: 1.6px;
@@ -487,124 +479,71 @@ main {
   text-decoration: none;
 }
 @media (hover: hover) {
-  .overlay-section-body .inline-link:hover {
-    border-color: rgba(255, 255, 255, 0.5);
-  }
+  .overlay-section-body .inline-link:hover { border-color: rgba(255, 255, 255, 0.5); }
 }
 
-/* Papers & resources */
 .paper-item, .resource-item {
-  font-size: 12px;
-  color: #adadad;
-  padding: 6px 0;
+  font-size: 13px; color: #adadad; padding: 6px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  letter-spacing: -0.24px;
+  letter-spacing: -0.26px;
 }
 .paper-item:last-child, .resource-item:last-child { border-bottom: none; }
 .paper-item a, .resource-item a {
-  color: #fff;
-  text-decoration: none;
+  color: #fff; text-decoration: none;
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
   transition: border-color 0.3s ease;
 }
 @media (hover: hover) {
-  .paper-item a:hover, .resource-item a:hover {
-    border-color: rgba(255, 255, 255, 0.5);
-  }
+  .paper-item a:hover, .resource-item a:hover { border-color: rgba(255, 255, 255, 0.5); }
 }
-.paper-authors {
-  color: rgba(255, 255, 255, 0.35);
-  font-size: 11px;
-  letter-spacing: -0.22px;
-}
+.paper-authors { color: rgba(255, 255, 255, 0.35); font-size: 12px; }
 
-/* Related tags */
-.related-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
+.related-tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .related-tag {
-  font-size: 11px;
-  letter-spacing: -0.22px;
-  padding: 4px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 58px;
-  color: rgba(255, 255, 255, 0.5);
-  cursor: pointer;
-  transition: color 0.3s ease, border-color 0.3s ease, background 0.15s ease;
-  background: none;
+  font-size: 12px; letter-spacing: -0.24px; padding: 4px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 58px;
+  color: rgba(255, 255, 255, 0.5); cursor: pointer; background: none;
+  transition: color 0.3s ease, border-color 0.3s ease;
 }
 @media (hover: hover) {
-  .related-tag:hover {
-    color: #fff;
-    border-color: rgba(255, 255, 255, 0.3);
-    background: rgba(255, 255, 255, 0.05);
-  }
+  .related-tag:hover { color: #fff; border-color: rgba(255, 255, 255, 0.3); }
 }
-.related-tag:active { transform: scale(0.97); }
 
 /* --- History Bar --- */
 .history-bar {
-  display: flex;
-  gap: 6px;
-  padding: 10px 30px;
-  overflow-x: auto;
-  scrollbar-width: none;
+  display: flex; gap: 6px; padding: 10px 30px;
+  overflow-x: auto; scrollbar-width: none;
   border-top: 1px solid rgba(0, 0, 0, 0.06);
-  min-height: 40px;
-  align-items: center;
-  flex-shrink: 0;
+  min-height: 40px; align-items: center; flex-shrink: 0;
 }
 .history-bar::-webkit-scrollbar { display: none; }
 
 .history-chip {
-  flex: 0 0 auto;
-  font-size: 11px;
-  letter-spacing: -0.22px;
-  padding: 3px 10px;
-  background: none;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 58px;
-  color: #808080;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: color 0.3s ease, border-color 0.3s ease, background 0.15s ease;
+  flex: 0 0 auto; font-size: 11px; letter-spacing: -0.22px;
+  padding: 3px 10px; background: none;
+  border: 1px solid rgba(0, 0, 0, 0.08); border-radius: 58px;
+  color: #808080; cursor: pointer; white-space: nowrap;
+  transition: color 0.3s ease, border-color 0.3s ease;
 }
 @media (hover: hover) {
-  .history-chip:hover {
-    color: #000;
-    border-color: rgba(0, 0, 0, 0.15);
-    background: #f5f5f5;
-  }
+  .history-chip:hover { color: #000; border-color: rgba(0, 0, 0, 0.15); background: #f5f5f5; }
 }
-.history-chip:active { transform: scale(0.97); }
 
 /* --- Scrollbars --- */
 .overlay-card::-webkit-scrollbar,
 .card ::-webkit-scrollbar { width: 2px; }
-.overlay-card::-webkit-scrollbar-track,
-.card ::-webkit-scrollbar-track { background: transparent; }
 .overlay-card::-webkit-scrollbar-thumb,
 .card ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 2px; }
+.card--category ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.1); }
 
-/* --- KaTeX math overrides --- */
-.card .katex { color: #adadad; font-size: 0.95em; }
-.overlay-card .katex { color: #adadad; font-size: 0.95em; }
-.katex .katex-mathml { display: none; } /* hide accessible mathml, keep rendered */
+/* KaTeX */
+.card .katex, .overlay-card .katex { color: #adadad; font-size: 0.95em; }
+.katex .katex-mathml { display: none; }
 
 /* --- Responsive --- */
 @media (max-width: 768px) {
-  :root {
-    --card-width: 340px;
-    --card-min-h: 360px;
-    --cp: 24px;
-  }
-  html { font-size: 15px; line-height: 19px; letter-spacing: -0.3px; }
+  :root { --card-width: 340px; --cp: 24px; --peek-width: 36px; }
   .site-header { padding: 12px 20px; gap: 10px; }
-  .carousel-track { padding: 16px 24px; gap: 18px; }
   .history-bar { padding: 8px 20px; }
-  .scroll-zone { width: 40px; }
-  .card--term .term-name { font-size: 22px; letter-spacing: -0.44px; }
-  .overlay-card { padding: 24px; }
+  .term-name { font-size: 26px; letter-spacing: -1.2px; }
 }

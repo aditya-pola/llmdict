@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LLM Glossary</title>
   <link rel="stylesheet" href="css/style.css">
-  <!-- KaTeX for inline math rendering -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -25,17 +24,14 @@
 
   <main>
     <div class="scroll-zone scroll-zone--left" id="scroll-zone-left"></div>
-    <div class="carousel-track" id="carousel-track">
+    <div class="stack-container" id="stack-container">
       <!-- Cards rendered by JS -->
     </div>
     <div class="scroll-zone scroll-zone--right" id="scroll-zone-right"></div>
   </main>
 
-  <footer class="history-bar" id="history-bar">
-    <!-- History reel rendered by JS -->
-  </footer>
+  <footer class="history-bar" id="history-bar"></footer>
 
-  <!-- Overlay for expanded card -->
   <div class="overlay hidden" id="overlay">
     <div class="overlay-card" id="overlay-card">
       <button class="overlay-close" id="overlay-close">&times;</button>
@@ -45,7 +41,7 @@
 
   <script src="js/data.js"></script>
   <script src="js/cards.js"></script>
-  <script src="js/carousel.js"></script>
+  <script src="js/stack.js"></script>
   <script src="js/history.js"></script>
   <script src="js/search.js"></script>
   <script src="js/app.js"></script>

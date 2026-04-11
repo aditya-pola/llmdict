@@ -1,0 +1,210 @@
+/**
+ * stack.js — Stacked card navigation with inertia scroll + card tilt
+ * One card visible at center, others peek from sides with vertical titles
+ * Mousewheel / edge hover / touch swipe to navigate between cards
+ */
+const Stack = (() => {
+  let _container = null;
+  let _cards = [];           // ordered array of card DOM elements
+  let _currentIndex = 0;
+  let _velocity = 0;
+  let _accumulator = 0;      // sub-card scroll accumulation
+  let _isEdgeScrolling = false;
+  let _edgeDir = 0;
+  let _currentTilt = 0;
+  let _navId = 0;
+
+  const PEEK_WIDTH = 48;
+  const PEEK_GAP = 4;
+  const MAX_PEEK = 5;
+  const WHEEL_IMPULSE = 0.008;    // wheel delta → accumulator (lower = slower)
+  const EDGE_ACCEL = 0.003;       // edge hover accumulation rate per frame
+  const FRICTION = 0.88;
+  const SNAP_THRESHOLD = 0.35;    // accumulator > this → navigate
+  const MAX_TILT = 5;
+  const TILT_SMOOTHING = 0.12;
+
+  function init(containerEl) {
+    _container = containerEl;
+    _setupWheelScroll();
+    _setupEdgeScroll();
+    _setupTouchSwipe();
+    _startPhysicsLoop();
+  }
+
+  function addCard(cardEl) {
+    _cards.push(cardEl);
+    _container.appendChild(cardEl);
+  }
+
+  function getCardCount() {
+    return _cards.length;
+  }
+
+  /**
+   * Position all cards relative to the active index
+   */
+  function _layout(tiltDeg) {
+    const cardWidth = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--card-width')) || 476;
+
+    for (let i = 0; i < _cards.length; i++) {
+      const card = _cards[i];
+      const offset = i - _currentIndex;
+      const absOff = Math.abs(offset);
+
+      // Remove all state classes
+      card.classList.remove('card--active', 'card--left', 'card--right', 'card--hidden');
+
+      if (offset === 0) {
+        // Active card
+        card.classList.add('card--active');
+        card.style.transform = `translateX(0) scale(1) rotateY(${tiltDeg}deg)`;
+        card.style.opacity = '1';
+        card.style.zIndex = 50;
+        card.style.pointerEvents = 'auto';
+      } else if (absOff <= MAX_PEEK) {
+        // Peeking card
+        const dir = offset < 0 ? 'left' : 'right';
+        card.classList.add(`card--${dir}`);
+
+        // Stack position: each card peeks a bit further out
+        const peekOffset = (PEEK_WIDTH + PEEK_GAP) * absOff;
+        const tx = offset < 0
+          ? -(cardWidth / 2 + peekOffset)
+          : (cardWidth / 2 + peekOffset);
+
+        const scale = 1 - absOff * 0.03;
+        const opacity = Math.max(0.15, 0.7 - absOff * 0.12);
+        const z = MAX_PEEK - absOff + 1;
+
+        card.style.transform = `translateX(${tx}px) scale(${scale}) rotateY(${tiltDeg * 0.3}deg)`;
+        card.style.opacity = String(opacity);
+        card.style.zIndex = String(z);
+        card.style.pointerEvents = 'auto';
+        card.style.cursor = 'pointer';
+      } else {
+        // Hidden
+        card.classList.add('card--hidden');
+        const tx = offset < 0 ? -800 : 800;
+        card.style.transform = `translateX(${tx}px) scale(0.8)`;
+        card.style.opacity = '0';
+        card.style.zIndex = '0';
+        card.style.pointerEvents = 'none';
+      }
+    }
+  }
+
+  /**
+   * Navigate to a specific card index
+   */
+  function goTo(index) {
+    if (index < 0) index = 0;
+    if (index >= _cards.length) index = _cards.length - 1;
+    _currentIndex = index;
+    _accumulator = 0;
+    _layout(_currentTilt);
+  }
+
+  /**
+   * Navigate to a card by its DOM id
+   */
+  function goToCard(cardId) {
+    const el = document.getElementById(`card-${cardId}`);
+    if (!el) return;
+    const idx = _cards.indexOf(el);
+    if (idx >= 0) {
+      _navId++;
+      goTo(idx);
+    }
+  }
+
+  function getCurrentCard() {
+    return _cards[_currentIndex] || null;
+  }
+
+  // --- Scroll inputs ---
+
+  function _setupWheelScroll() {
+    document.addEventListener('wheel', (e) => {
+      const overlay = document.getElementById('overlay');
+      if (overlay && overlay.classList.contains('active')) return;
+
+      e.preventDefault();
+      const delta = e.deltaY !== 0 ? e.deltaY : e.deltaX;
+      _accumulator += delta * WHEEL_IMPULSE;
+      _velocity = delta * WHEEL_IMPULSE;
+    }, { passive: false });
+  }
+
+  function _setupEdgeScroll() {
+    const left = document.getElementById('scroll-zone-left');
+    const right = document.getElementById('scroll-zone-right');
+    if (left) {
+      left.addEventListener('mouseenter', () => { _isEdgeScrolling = true; _edgeDir = -1; });
+      left.addEventListener('mouseleave', () => { if (_edgeDir === -1) _isEdgeScrolling = false; });
+    }
+    if (right) {
+      right.addEventListener('mouseenter', () => { _isEdgeScrolling = true; _edgeDir = 1; });
+      right.addEventListener('mouseleave', () => { if (_edgeDir === 1) _isEdgeScrolling = false; });
+    }
+  }
+
+  function _setupTouchSwipe() {
+    let startX = 0, startY = 0;
+    _container.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      _velocity = 0;
+      _accumulator = 0;
+    }, { passive: true });
+
+    _container.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - startX;
+      const dy = e.changedTouches[0].clientY - startY;
+      if (Math.abs(dx) >= 50 && Math.abs(dx) > Math.abs(dy)) {
+        if (dx < 0) goTo(_currentIndex + 1);
+        else goTo(_currentIndex - 1);
+      }
+    }, { passive: true });
+  }
+
+  // --- Physics loop ---
+
+  function _startPhysicsLoop() {
+    function tick() {
+      // Edge hover: accumulate
+      if (_isEdgeScrolling) {
+        _accumulator += _edgeDir * EDGE_ACCEL;
+        _velocity = _edgeDir * EDGE_ACCEL;
+      }
+
+      // Check if accumulated enough to navigate
+      if (_accumulator >= SNAP_THRESHOLD) {
+        goTo(_currentIndex + 1);
+      } else if (_accumulator <= -SNAP_THRESHOLD) {
+        goTo(_currentIndex - 1);
+      }
+
+      // Friction on accumulator (decays back toward 0 if no input)
+      if (!_isEdgeScrolling) {
+        _accumulator *= FRICTION;
+        if (Math.abs(_accumulator) < 0.01) _accumulator = 0;
+      }
+
+      // Velocity decay
+      _velocity *= FRICTION;
+      if (Math.abs(_velocity) < 0.001) _velocity = 0;
+
+      // Tilt based on velocity
+      const targetTilt = Math.max(-MAX_TILT, Math.min(MAX_TILT, _velocity * 300));
+      _currentTilt += (targetTilt - _currentTilt) * TILT_SMOOTHING;
+      if (Math.abs(_currentTilt) < 0.05) _currentTilt = 0;
+
+      _layout(_currentTilt);
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  return { init, addCard, getCardCount, goTo, goToCard, getCurrentCard };
+})();

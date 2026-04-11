@@ -1,12 +1,10 @@
 /**
- * app.js — Main application, wires everything together
+ * app.js — Main application (stacked card view)
  */
 (async function () {
-  // Load data
   const { categories, entries } = await Data.load();
 
-  // DOM refs
-  const track = document.getElementById('carousel-track');
+  const container = document.getElementById('stack-container');
   const historyBar = document.getElementById('history-bar');
   const overlay = document.getElementById('overlay');
   const overlayCard = document.getElementById('overlay-card');
@@ -15,91 +13,84 @@
   const searchInput = document.getElementById('search-input');
   const searchResults = document.getElementById('search-results');
 
-  // Init modules
-  Carousel.init(track);
+  Stack.init(container);
   History.init(historyBar);
 
-  // --- Build cards in order: Home → [Category → Terms]... ---
+  // --- Build cards: Home → [Category → Terms]... ---
 
   // Home card
   const homeCard = Cards.createHomeCard(categories);
-  track.appendChild(homeCard);
-  Carousel.observeCard(homeCard);
+  homeCard.innerHTML = `<span class="peek-label">Home</span><div class="card-content">${homeCard.innerHTML}</div>`;
+  Stack.addCard(homeCard);
 
-  // Category + term cards
   for (const cat of categories) {
     // Category card
     const catCard = Cards.createCategoryCard(cat, entries);
-    track.appendChild(catCard);
-    Carousel.observeCard(catCard);
+    catCard.innerHTML = `<span class="peek-label">${cat.label}</span><div class="card-content">${catCard.innerHTML}</div>`;
+    Stack.addCard(catCard);
 
-    // Term cards for this category
     for (const eid of cat.entries) {
       const entry = entries[eid];
       if (!entry) continue;
       const termCard = Cards.createTermCard(entry, entries);
-      track.appendChild(termCard);
-      Carousel.observeCard(termCard);
+      termCard.innerHTML = `<span class="peek-label">${entry.name}</span><div class="card-content">${termCard.innerHTML}</div>`;
+      Stack.addCard(termCard);
     }
   }
 
-  // --- Render math in all cards once KaTeX loads ---
-  function renderAllMath() {
-    if (typeof renderMathInElement === 'function') {
-      track.querySelectorAll('.card--term').forEach(c => Cards.renderMath(c));
-    }
-  }
-  // KaTeX loads deferred — wait for it
-  if (typeof renderMathInElement === 'function') {
-    renderAllMath();
-  } else {
-    window.addEventListener('load', () => setTimeout(renderAllMath, 100));
-  }
+  // Initial layout
+  Stack.goTo(0);
 
-  // --- Navigation handler ---
+  // --- Navigation ---
 
   function navigateTo(id) {
-    // Determine card ID prefix
     let cardId = id;
-    // If it's a category link (starts with cat-)
-    if (id.startsWith('cat-')) {
-      cardId = id; // card-cat-xxx
-    }
+    Stack.goToCard(cardId);
 
-    Carousel.scrollToCard(cardId);
-
-    // Push to history
     const entry = Data.getEntry(id.replace('cat-', ''));
     if (entry) {
       History.push(id, entry.name);
     } else {
-      // It's a category
       const catId = id.replace('cat-', '');
       const cat = categories.find(c => c.id === catId);
       if (cat) History.push(id, cat.label);
     }
   }
 
-  // --- Event delegation for all clickable links ---
+  // --- Event delegation ---
 
   document.addEventListener('click', (e) => {
-    // Inline links and term links
+    // Inline links and data-target links
     const link = e.target.closest('[data-target]');
     if (link) {
       e.preventDefault();
       e.stopPropagation();
-      const target = link.dataset.target;
-
-      // Close overlay if open
       closeOverlay();
-
-      navigateTo(target);
+      navigateTo(link.dataset.target);
       return;
     }
 
-    // Term card click → open overlay
-    const termCard = e.target.closest('.card--term');
-    if (termCard && !e.target.closest('.inline-link')) {
+    // Click a peeking (non-active) card → navigate to it
+    const card = e.target.closest('.card');
+    if (card && !card.classList.contains('card--active') && !card.classList.contains('card--hidden')) {
+      e.preventDefault();
+      const allCards = container.querySelectorAll('.card');
+      const idx = Array.from(allCards).indexOf(card);
+      if (idx >= 0) {
+        Stack.goTo(idx);
+        // Push to history
+        const entryId = card.dataset.entryId;
+        if (entryId) {
+          const entry = Data.getEntry(entryId);
+          if (entry) History.push(entryId, entry.name);
+        }
+      }
+      return;
+    }
+
+    // Click active term card → open overlay
+    const termCard = e.target.closest('.card--term.card--active');
+    if (termCard && !e.target.closest('.inline-link') && !e.target.closest('[data-target]')) {
       const entryId = termCard.dataset.entryId;
       const entry = Data.getEntry(entryId);
       if (entry) openOverlay(entry);
@@ -123,26 +114,16 @@
   }
 
   overlayClose.addEventListener('click', closeOverlay);
-  overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) closeOverlay();
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeOverlay();
-  });
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeOverlay(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeOverlay(); });
 
   // --- Home button ---
   const homeBtn = document.getElementById('home-btn');
-  if (homeBtn) {
-    homeBtn.addEventListener('click', () => {
-      Carousel.scrollToCard('home');
-    });
-  }
+  if (homeBtn) homeBtn.addEventListener('click', () => Stack.goTo(0));
 
   // --- Search ---
-
   Search.init(searchInput, searchResults, navigateTo);
 
-  // --- Keyboard shortcut: Cmd/Ctrl+K to focus search ---
   document.addEventListener('keydown', (e) => {
     if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
       e.preventDefault();
@@ -150,14 +131,41 @@
     }
   });
 
-  // --- Handle hash navigation (from graph view or direct links) ---
+  // --- Arrow keys ---
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT') return;
+    const overlay = document.getElementById('overlay');
+    if (overlay && overlay.classList.contains('active')) return;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      Stack.goTo(Stack.getCardCount() > 0 ? Math.min(
+        Array.from(container.querySelectorAll('.card')).findIndex(c => c.classList.contains('card--active')) + 1,
+        Stack.getCardCount() - 1
+      ) : 0);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      Stack.goTo(Math.max(
+        Array.from(container.querySelectorAll('.card')).findIndex(c => c.classList.contains('card--active')) - 1,
+        0
+      ));
+    }
+  });
+
+  // --- Hash navigation ---
   function handleHash() {
     const hash = window.location.hash.replace('#', '');
-    if (hash) {
-      setTimeout(() => navigateTo(hash), 300);
-    }
+    if (hash) setTimeout(() => navigateTo(hash), 300);
   }
   handleHash();
   window.addEventListener('hashchange', handleHash);
+
+  // --- Math render ---
+  function renderAllMath() {
+    if (typeof renderMathInElement === 'function') {
+      container.querySelectorAll('.card--term').forEach(c => Cards.renderMath(c));
+    }
+  }
+  if (typeof renderMathInElement === 'function') renderAllMath();
+  else window.addEventListener('load', () => setTimeout(renderAllMath, 100));
 
 })();
