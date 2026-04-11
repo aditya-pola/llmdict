@@ -1,0 +1,22 @@
+{
+  "id": "dataset-hermes",
+  "name": "Hermes / OpenHermes",
+  "expansion": "NousResearch instruction-tuning dataset + fine-tunes",
+  "category": "datasets-recipes",
+  "oneliner": "~1M diverse instruction examples (OpenHermes-2.5). ChatML format. Strong instruction-following + function calling. By Teknium/NousResearch.",
+  "seen_in": [
+    "model-name",
+    "dataset-name"
+  ],
+  "related": [
+    "org-nousresearch"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "OpenHermes-2.5 dataset",
+      "url": "https://huggingface.co/datasets/teknium/OpenHermes-2.5"
+    }
+  ]
+}

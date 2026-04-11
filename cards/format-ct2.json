@@ -1,0 +1,19 @@
+{
+  "id": "format-ct2",
+  "name": "CTranslate2 (ct2)",
+  "expansion": "Efficient inference engine/format by OpenNMT",
+  "category": "export-formats",
+  "oneliner": "Fast CPU inference, INT8/INT16/FP16. Originally built for translation (encoder-decoder). Less common for large decoder-only LLMs. Reduced activity since late 2024.",
+  "seen_in": [
+    "filename"
+  ],
+  "related": [],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "CTranslate2 GitHub",
+      "url": "https://github.com/OpenNMT/CTranslate2"
+    }
+  ]
+}

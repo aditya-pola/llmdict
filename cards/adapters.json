@@ -1,0 +1,43 @@
+{
+  "id": "adapters",
+  "name": "Adapters (General Concept)",
+  "expansion": "Adapter Modules — the broad category of injected trainable modules",
+  "category": "fine-tuning-methods",
+  "oneliner": "Small trainable modules inserted into frozen models. Houlsby (serial bottleneck), Pfeiffer (efficient), parallel, LoRA are all adapter variants.",
+  "explanation": "Houlsby (2019): bottleneck d→r→d + residual, after each sub-layer. Pfeiffer: one per layer (post-FFN). Parallel (He 2022): alongside sub-layer. LoRA: parallel without nonlinearity, zero-init B. Tags: -adapter (bottleneck), -lora, -merged (folded in), -unmerged (separate).",
+  "fundamentals": "Houlsby: adapter(x) = x + W_up·$\\sigma$(W_down·x). 4dr params/layer. Pfeiffer: 2dr/layer. LoRA: 2dr per target module. Inference: Houlsby 5-10% latency. LoRA merged: zero.",
+  "seen_in": [
+    "model-name",
+    "filename"
+  ],
+  "related": [
+    "lora",
+    "peft",
+    "ia3"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Parameter-Efficient Transfer Learning for NLP",
+      "authors": "Houlsby et al.",
+      "venue": "ICML 2019",
+      "arxiv": "1902.00751"
+    },
+    {
+      "title": "Towards a Unified View of Parameter-Efficient Transfer Learning",
+      "authors": "He et al.",
+      "venue": "ICLR 2022",
+      "arxiv": "2110.04366"
+    },
+    {
+      "title": "AdapterFusion: Non-Destructive Task Composition for Transfer Learning",
+      "authors": "Pfeiffer et al.",
+      "venue": "EACL 2021",
+      "arxiv": "2005.00247"
+    }
+  ],
+  "sources": [
+    "Houlsby et al., arXiv:1902.00751"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

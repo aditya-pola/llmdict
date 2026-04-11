@@ -1,0 +1,26 @@
+{
+  "id": "tool-ollama",
+  "name": "Ollama",
+  "expansion": "User-friendly llama.cpp wrapper",
+  "category": "serving-tools",
+  "oneliner": "'ollama run llama3' downloads and runs in one command. Local REST API, Modelfiles, background service. Simplest local LLM setup.",
+  "seen_in": [
+    "documentation"
+  ],
+  "related": [
+    "tool-llamacpp",
+    "gguf"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "Ollama GitHub",
+      "url": "https://github.com/ollama/ollama"
+    },
+    {
+      "label": "Ollama website",
+      "url": "https://ollama.com"
+    }
+  ]
+}

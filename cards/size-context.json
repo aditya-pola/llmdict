@@ -1,0 +1,25 @@
+{
+  "id": "size-context",
+  "name": "K / M (Context length)",
+  "expansion": "Thousands / Millions of tokens context",
+  "category": "size-conventions",
+  "oneliner": "128K = 128,000 token context. 1M = 1 million. Distinguishes long-context variants from defaults.",
+  "explanation": "Not always in the name — sometimes only in the model card. When present, distinguishes extended-context variant. Qwen2.5-7B-Instruct-1M, Llama 3.1 (128K).",
+  "seen_in": [
+    "model-name",
+    "model-cards"
+  ],
+  "related": [
+    "rope",
+    "yarn",
+    "abf"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "Llama 3.1 paper (128K context)",
+      "url": "https://arxiv.org/abs/2407.21783"
+    }
+  ]
+}

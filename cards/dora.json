@@ -1,0 +1,35 @@
+{
+  "id": "dora",
+  "name": "DoRA",
+  "expansion": "Weight-Decomposed Low-Rank Adaptation",
+  "category": "fine-tuning-methods",
+  "oneliner": "Decompose weights into magnitude + direction, apply LoRA to direction only. More like full FT behavior, negligible extra params.",
+  "explanation": "LoRA couples magnitude and direction changes; full FT changes direction more. DoRA: $W_0$ = m·(V/$\\|\\|V\\|\\|$), freeze V, add LoRA to V, train m separately. Forward: W' = m·(V+($\\alpha$/r)·BA)/$\\|\\|V+($\\alpha$/r)·BA\\|\\|$. Extra: just m $\\in\\mathbb{R}$^(d_out) per layer. Consistently outperforms LoRA. PEFT: use_dora=True.",
+  "fundamentals": "W' = m·(V+($\\alpha$/r)·BA)/$\\|\\|V+($\\alpha$/r)·BA\\|\\|$_c. Extra params: d_out per layer. LLaMA 7B: 0.004% overhead. Based on weight normalization.",
+  "seen_in": [
+    "model-config"
+  ],
+  "related": [
+    "lora",
+    "peft"
+  ],
+  "foundational_papers": [
+    {
+      "title": "DoRA: Weight-Decomposed Low-Rank Adaptation",
+      "authors": "Liu et al.",
+      "venue": "ICML 2024",
+      "arxiv": "2402.09353"
+    },
+    {
+      "title": "Weight Normalization: A Simple Reparameterization to Accelerate Training",
+      "authors": "Salimans & Kingma",
+      "venue": "NeurIPS 2016",
+      "arxiv": "1602.07868"
+    }
+  ],
+  "sources": [
+    "Liu et al., arXiv:2402.09353"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

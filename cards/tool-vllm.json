@@ -1,0 +1,25 @@
+{
+  "id": "tool-vllm",
+  "name": "vLLM",
+  "expansion": "vLLM — high-throughput LLM serving",
+  "category": "serving-tools",
+  "oneliner": "PagedAttention + continuous batching. The default open-source production serving engine. Supports TP, GPTQ/AWQ/FP8, speculative decoding.",
+  "seen_in": [
+    "serving-config",
+    "documentation"
+  ],
+  "related": [
+    "paged-attention",
+    "continuous-batching"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Efficient Memory Management for LLM Serving with PagedAttention",
+      "authors": "Kwon et al.",
+      "venue": "SOSP 2023",
+      "arxiv": "2309.06180"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "org-thebloke",
+  "name": "TheBloke/",
+  "expansion": "Tom Jobbins — legacy quantizer",
+  "category": "hf-organizations",
+  "oneliner": "The original prolific HF quantizer (GPTQ, GGUF). Quantized hundreds of models mid-2023 through early 2024. Now largely inactive; replaced by bartowski.",
+  "seen_in": [
+    "repo-name"
+  ],
+  "related": [
+    "org-bartowski"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "TheBloke HuggingFace profile",
+      "url": "https://huggingface.co/TheBloke"
+    }
+  ]
+}

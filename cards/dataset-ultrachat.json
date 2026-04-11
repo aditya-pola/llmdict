@@ -1,0 +1,27 @@
+{
+  "id": "dataset-ultrachat",
+  "name": "UltraChat / UltraFeedback",
+  "expansion": "Large-scale instruction + preference datasets (Tsinghua)",
+  "category": "datasets-recipes",
+  "oneliner": "UltraChat: ~1.5M multi-turn dialogues for SFT. UltraFeedback: ~64K instructions with 4 responses scored by GPT-4 for DPO. Used to train Zephyr.",
+  "seen_in": [
+    "dataset-name",
+    "model-cards"
+  ],
+  "related": [
+    "sft",
+    "dpo"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "UltraChat dataset",
+      "url": "https://huggingface.co/datasets/stingning/ultrachat"
+    },
+    {
+      "label": "UltraFeedback dataset",
+      "url": "https://huggingface.co/datasets/openbmb/UltraFeedback"
+    }
+  ]
+}

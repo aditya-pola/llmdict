@@ -1,0 +1,35 @@
+{
+  "id": "kto",
+  "name": "KTO",
+  "expansion": "Kahneman-Tversky Optimization",
+  "category": "training-pipeline",
+  "oneliner": "Only needs thumbs-up/down per response (not paired preferences) — grounded in prospect theory's loss aversion.",
+  "explanation": "DPO/RLHF need PAIRED preferences. KTO works with UNPAIRED binary labels (prompt, response, good/bad). Based on prospect theory: losses loom larger than gains (~2:1). Desirable responses rewarded; undesirable penalized more heavily. Reference point = expected KL divergence. Requires reference model.",
+  "fundamentals": "Desirable: v = $\\sigma$($\\beta$·log($\\pi_\\theta$/$\\pi_{\\text{ref}}$) - z_ref). Undesirable: v = $\\sigma$(z_ref - $\\beta$·log($\\pi_\\theta$/$\\pi_{\\text{ref}}$)). Loss: -E_w[$\\lambda$_w·v(y_w)] - E_l[$\\lambda$_l·v(y_l)], $\\lambda$_l > $\\lambda$_w. Data: {prompt, response, label: bool}.",
+  "seen_in": [
+    "model-cards"
+  ],
+  "related": [
+    "dpo",
+    "rlhf"
+  ],
+  "foundational_papers": [
+    {
+      "title": "KTO: Model Alignment as Prospect Theoretic Optimization",
+      "authors": "Ethayarajh et al.",
+      "venue": "ICML 2024",
+      "arxiv": "2402.01306"
+    },
+    {
+      "title": "Prospect Theory: An Analysis of Decision under Risk",
+      "authors": "Kahneman & Tversky",
+      "venue": "Econometrica 1979",
+      "arxiv": null
+    }
+  ],
+  "sources": [
+    "Ethayarajh et al., arXiv:2402.01306"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

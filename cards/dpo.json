@@ -1,0 +1,45 @@
+{
+  "id": "dpo",
+  "name": "DPO",
+  "expansion": "Direct Preference Optimization",
+  "category": "training-pipeline",
+  "oneliner": "Reparameterizes RLHF into a classification loss on preference pairs — no reward model, no PPO, 2 models in memory. The default open-source alignment method.",
+  "explanation": "Optimal RLHF policy satisfies r(x,y) = $\\beta$·log[$\\pi_\\theta$/$\\pi_{\\text{ref}}$] + Z(x). Substituting into Bradley-Terry cancels reward model — reduces to supervised loss. 2-5$\\times$ cheaper than RLHF. Failure modes: distribution shift, overfitting to chosen, reference sensitivity. Default for open-source: Zephyr, Tulu 2, Llama 3.1, many community models.",
+  "fundamentals": "Loss: $\\mathcal{L} = -\\mathbb{E}\\left[\\log \\sigma\\left(\\beta \\log \\frac{\\pi_\\theta(y_w|x)}{\\pi_{\\text{ref}}(y_w|x)} - \\beta \\log \\frac{\\pi_\\theta(y_l|x)}{\\pi_{\\text{ref}}(y_l|x)}\\right)\\right]$. $\\beta$ typically 0.1-0.5. lr 1e-6 to 5e-7. Same preference data as RLHF RM.",
+  "seen_in": [
+    "model-name",
+    "model-cards"
+  ],
+  "related": [
+    "rlhf",
+    "sft",
+    "simpo",
+    "orpo",
+    "kto"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Direct Preference Optimization: Your Language Model is Secretly a Reward Model",
+      "authors": "Rafailov et al.",
+      "venue": "NeurIPS 2023",
+      "arxiv": "2305.18290"
+    },
+    {
+      "title": "Zephyr: Direct Distillation of LM Alignment",
+      "authors": "Tunstall et al.",
+      "venue": "2023",
+      "arxiv": "2310.16944"
+    },
+    {
+      "title": "A General Theoretical Paradigm to Understand Learning from Human Feedback (IPO)",
+      "authors": "Azar et al.",
+      "venue": "AISTATS 2024",
+      "arxiv": "2310.12036"
+    }
+  ],
+  "sources": [
+    "Rafailov et al., arXiv:2305.18290"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

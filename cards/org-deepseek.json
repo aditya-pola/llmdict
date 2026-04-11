@@ -1,0 +1,23 @@
+{
+  "id": "org-deepseek",
+  "name": "deepseek-ai/",
+  "expansion": "DeepSeek — V2/V3, R1, Coder",
+  "category": "hf-organizations",
+  "oneliner": "Pioneered MLA (KV-cache compression) and DeepSeekMoE. DeepSeek-R1 brought open chain-of-thought reasoning rivaling o1. Chinese quant fund backed.",
+  "seen_in": [
+    "repo-name"
+  ],
+  "related": [
+    "mla"
+  ],
+  "foundational_papers": [
+    {
+      "title": "DeepSeek-V2: A Strong, Economical, and Efficient MoE LM",
+      "authors": "DeepSeek-AI",
+      "venue": "2024",
+      "arxiv": "2405.04434"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

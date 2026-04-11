@@ -1,0 +1,30 @@
+{
+  "id": "orpo",
+  "name": "ORPO",
+  "expansion": "Odds Ratio Preference Optimization",
+  "category": "training-pipeline",
+  "oneliner": "Combines SFT + preference alignment in one stage via odds-ratio penalty — no separate SFT, no reference model. Single-stage, single-model.",
+  "explanation": "SFT+DPO first increases prob of both chosen AND rejected (SFT), then separates (DPO) — inefficient. ORPO adds odds-ratio penalty to SFT loss directly. Single stage on preference data applied to base model. No reference model. ~50% cheaper than SFT+DPO.",
+  "fundamentals": "L = L_SFT + $\\lambda$·L_OR. L_OR = -log $\\sigma$(log(odds(y_w|x)/odds(y_l|x))). odds(y|x) = p(y|x)/(1-p(y|x)). $\\lambda$ 0.1-1.0. No reference model.",
+  "seen_in": [
+    "model-cards"
+  ],
+  "related": [
+    "dpo",
+    "sft",
+    "simpo"
+  ],
+  "foundational_papers": [
+    {
+      "title": "ORPO: Monolithic Preference Optimization without Reference Model",
+      "authors": "Hong et al.",
+      "venue": "EMNLP 2024",
+      "arxiv": "2403.07691"
+    }
+  ],
+  "sources": [
+    "Hong et al., arXiv:2403.07691"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

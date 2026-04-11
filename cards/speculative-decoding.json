@@ -1,0 +1,38 @@
+{
+  "id": "speculative-decoding",
+  "name": "Speculative Decoding",
+  "expansion": "Speculative Decoding / Speculative Sampling",
+  "category": "scaling-patterns",
+  "oneliner": "Small draft model proposes K candidate tokens, large model verifies all K in one forward pass. 2-3$\\times$ speedup with provably identical output distribution.",
+  "explanation": "Exploits the asymmetry: LLM inference is memory-bandwidth-bound, so processing 1 token or 5 tokens costs nearly the same. Draft model (10-50$\\times$ fewer params) generates K candidates autoregressively. Target model verifies all K in single forward pass via modified rejection sampling. If draft token matches target distribution: accept. If not: reject and sample correction from adjusted distribution. Output is mathematically identical to standard sampling — not approximate. Acceptance rates 70-85% → 2-3$\\times$ speedup. Supported by vLLM, TGI, llama.cpp, TensorRT-LLM.",
+  "fundamentals": "Verification per position i: accept draft token x with prob min(1, p(x)/q(x)) where p=target, q=draft. If rejected: sample from p'(x) = max(0, p(x)-q(x)) / Z. Expected tokens per step: (1-$\\alpha$^(K+1))/(1-$\\alpha$) where $\\alpha$=acceptance rate. For K=5, $\\alpha$=0.8: ~3.36 tokens/step → ~2.7$\\times$ speedup. Draft model can be: smaller same-family model, separate small model, or even n-gram model. Self-speculative: use target model with early exit for drafting.",
+  "seen_in": [
+    "serving-config",
+    "documentation"
+  ],
+  "related": [
+    "kv-cache",
+    "continuous-batching",
+    "autoregressive-decoding"
+  ],
+  "sources": [
+    "Leviathan et al., 'Fast Inference from Transformers via Speculative Decoding,' ICML 2023, arXiv:2211.17192",
+    "Chen et al., 'Accelerating LLM Decoding with Speculative Sampling,' arXiv:2302.01318"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "Fast Inference from Transformers via Speculative Decoding",
+      "authors": "Leviathan et al.",
+      "venue": "ICML 2023",
+      "arxiv": "2211.17192"
+    },
+    {
+      "title": "Accelerating Large Language Model Decoding with Speculative Sampling",
+      "authors": "Chen et al.",
+      "venue": "2023",
+      "arxiv": "2302.01318"
+    }
+  ]
+}

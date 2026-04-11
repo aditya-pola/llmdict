@@ -1,0 +1,31 @@
+{
+  "id": "pre-norm",
+  "name": "Pre-Norm vs Post-Norm",
+  "expansion": "Pre-Layer Normalization vs Post-Layer Normalization",
+  "category": "normalization",
+  "oneliner": "Where normalization sits: before the sub-layer (Pre-Norm, modern standard — stable training) or after the residual add (Post-Norm, original Transformer — fragile at depth).",
+  "explanation": "Original Transformer (2017): Post-Norm — LayerNorm(x + Sublayer(x)). GPT-2 (2019): Pre-Norm — x + Sublayer(Norm(x)). This seemingly minor change was transformative for training stability. Post-Norm forces gradients through normalization (magnitude depends on output scale, varies by layer). Pre-Norm keeps residual path 'clean' — un-normalized x passes directly through skip connection, gradients have unimpeded path regardless of depth. All modern LLMs use Pre-Norm + RMSNorm. Tradeoff: Pre-Norm may converge to slightly worse final loss than well-tuned Post-Norm, addressed by final RMSNorm before output head.",
+  "fundamentals": "Post-Norm: output = Norm(x + Sublayer(x)). Gradient path goes through Norm Jacobian at every layer. Pre-Norm: output = x + Sublayer(Norm(x)). Gradient: ∂L/∂xₗ = ∂L/∂x_L·(I + $\\Sigma$∂F_k/∂x). The I (identity) ensures gradient magnitude ≥ |∂L/∂x_L| — prevents vanishing regardless of depth. Timeline: Post-Norm (2017 Transformer, BERT) → Pre-Norm+LayerNorm (GPT-2/3, 2019-20) → Pre-Norm+RMSNorm (LLaMA+, 2023+).",
+  "seen_in": [
+    "code",
+    "architecture-papers"
+  ],
+  "related": [
+    "rmsnorm",
+    "layernorm",
+    "residual-connection"
+  ],
+  "sources": [
+    "Xiong et al., 'On Layer Normalization in the Transformer Architecture,' ICML 2020, arXiv:2002.04745"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "On Layer Normalization in the Transformer Architecture",
+      "authors": "Xiong et al.",
+      "venue": "ICML 2020",
+      "arxiv": "2002.04745"
+    }
+  ]
+}

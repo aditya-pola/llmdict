@@ -1,0 +1,22 @@
+{
+  "id": "tag-guard",
+  "name": "-Guard / -Shield",
+  "expansion": "Safety classifier model",
+  "category": "capability-tags",
+  "oneliner": "Detects harmful content, prompt injections, policy violations. Outputs safe/unsafe classification, not generative text. Llama-Guard-3.",
+  "explanation": "Llama Guard (Inan et al., 2023) pioneered the pattern. Used as a filter alongside generative models.",
+  "seen_in": [
+    "model-name"
+  ],
+  "related": [],
+  "foundational_papers": [
+    {
+      "title": "Llama Guard: LLM-based Input-Output Safeguard for Human-AI Conversations",
+      "authors": "Inan et al.",
+      "venue": "2023",
+      "arxiv": "2312.06674"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

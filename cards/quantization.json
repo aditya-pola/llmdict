@@ -1,0 +1,32 @@
+{
+  "id": "quantization",
+  "name": "Quantization",
+  "expansion": "Model Quantization / Neural Network Quantization",
+  "category": "core-concepts",
+  "oneliner": "Converting a model's high-precision floats to lower-precision representations — the single most impactful optimization for LLM serving.",
+  "explanation": "Maps weights (and optionally activations/KV-cache) from fp32/bf16/fp16 to int8/int4/fp8/etc. Core operation: find the nearest representable value in the target format. Why it matters: LLM inference is memory-bandwidth-bound. Generating one token reads ALL weights from memory. A 70B fp16 model (140 GB) on an H100 (3.35 TB/s) = ~42ms/token minimum. At int4 (35 GB) = ~10ms/token. Quality impact: fp8 $\\approx$ lossless; int8 $\\approx$ lossless; int4 = +0.1-1.0 perplexity; below 4-bit = requires specialized methods.",
+  "fundamentals": "Uniform affine quantization: $x_q = \\text{clamp}(\\text{round}(x/s + z),\\, q_{\\min},\\, q_{\\max})$. Dequantize: $\\hat{x} = s \\cdot (x_q - z)$. Scale $s = (x_{\\max} - x_{\\min})/(q_{\\max} - q_{\\min})$. Symmetric: $z=0$, $s = \\max(|x|)/q_{\\max}$. Error per value bounded by $s/2$. Not all weights contribute equally — attention layers and first/last layers are typically more sensitive.",
+  "seen_in": [
+    "documentation",
+    "model-cards"
+  ],
+  "related": [
+    "ptq",
+    "qat",
+    "dequantization",
+    "calibration-data"
+  ],
+  "sources": [
+    "Gholami et al., 'A Survey of Quantization Methods,' arXiv:2103.13630"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "A Survey of Quantization Methods for Efficient Neural Network Inference",
+      "authors": "Gholami et al.",
+      "venue": "2021",
+      "arxiv": "2103.13630"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "org-mradermacher",
+  "name": "Mradermacher/",
+  "expansion": "High-volume automated GGUF quantizer",
+  "category": "hf-organizations",
+  "oneliner": "Quantizes a massive breadth of models including obscure fine-tunes. GGUF specialist. Useful when bartowski hasn't covered a model.",
+  "seen_in": [
+    "repo-name"
+  ],
+  "related": [
+    "gguf",
+    "org-bartowski"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "Mradermacher HuggingFace profile",
+      "url": "https://huggingface.co/mradermacher"
+    }
+  ]
+}

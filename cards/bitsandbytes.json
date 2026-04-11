@@ -1,0 +1,39 @@
+{
+  "id": "bitsandbytes",
+  "name": "BitsAndBytes (bnb)",
+  "expansion": "bitsandbytes — Tim Dettmers' quantization library",
+  "category": "quantization-methods",
+  "oneliner": "The library behind LLM.int8() and QLoRA. Offers 8-bit (absmax) and 4-bit (nf4/fp4) quantization with deep HuggingFace integration.",
+  "explanation": "Two main modes. 8-bit (LLM.int8()): vector-wise absmax quantization with mixed-precision decomposition — outlier features (>~6$\\sigma$) kept in fp16, rest in int8. Solved the activation outlier problem. 4-bit (QLoRA): loads base model in nf4/fp4, trains LoRA adapters in fp16. Double quantization compresses scale factors. Tightly integrated with HuggingFace Transformers (load_in_8bit/load_in_4bit). Primary use: memory-efficient fine-tuning, not production serving.",
+  "fundamentals": "8-bit: per-vector absmax scaling. Outlier decomposition: X = X_normal + X_outlier, compute separately in int8 and fp16, sum results. 4-bit: per-group (g=64 default) with nf4 or fp4 dtype. Double quant: group the fp32 absmax values into blocks of 256, quantize to fp8 with their own absmax.",
+  "seen_in": [
+    "model-name",
+    "repo-name"
+  ],
+  "related": [
+    "nf4",
+    "qlora",
+    "llm-int8",
+    "load-in-4bit"
+  ],
+  "sources": [
+    "Dettmers et al., 'LLM.int8(),' arXiv:2208.07339",
+    "Dettmers et al., 'QLoRA,' arXiv:2305.14314"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale",
+      "authors": "Dettmers et al.",
+      "venue": "NeurIPS 2022",
+      "arxiv": "2208.07339"
+    },
+    {
+      "title": "QLoRA: Efficient Finetuning of Quantized Language Models",
+      "authors": "Dettmers et al.",
+      "venue": "NeurIPS 2023",
+      "arxiv": "2305.14314"
+    }
+  ]
+}

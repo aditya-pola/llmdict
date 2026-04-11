@@ -1,0 +1,24 @@
+{
+  "id": "tag-long",
+  "name": "-Long",
+  "expansion": "Extended context window variant",
+  "category": "family-tags",
+  "oneliner": "Trained or fine-tuned for longer sequences. Some use -Long suffix, others embed context length in name (128K, 1M).",
+  "explanation": "Methods: RoPE scaling (YaRN, NTK, ABF), continued training on long documents. gradientai/Llama-3-8B-Instruct-Gradient-1048k.",
+  "seen_in": [
+    "model-name"
+  ],
+  "related": [
+    "yarn",
+    "abf",
+    "rope"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "YaRN paper (context extension)",
+      "url": "https://arxiv.org/abs/2309.00071"
+    }
+  ]
+}

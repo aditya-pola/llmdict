@@ -1,0 +1,24 @@
+{
+  "id": "imatrix",
+  "name": "imatrix / Importance Matrix",
+  "expansion": "Importance Matrix for Quantization",
+  "category": "quantization-methods",
+  "oneliner": "Per-weight importance scores computed from calibration data — used by llama.cpp to weight quantization decisions. Powers IQ-quant methods.",
+  "explanation": "An importance matrix records how much each weight contributes to the model's output. Computed by running calibration data through the model and accumulating squared activation magnitudes per weight position. Weights with high importance scores get quantized more carefully (in IQ methods, they get mapped to closer codebook entries). Importance matrices are what distinguish IQ-quants from Q-quants in llama.cpp — same bitwidth, but IQ uses importance data to make smarter rounding decisions.",
+  "fundamentals": "For each layer with input X: importance[i,j] $\\propto\\Sigma$_samples (X[:,j])^2. This approximates the diagonal of the Hessian — weights multiplied by large activations matter more. The imatrix is stored as a file and loaded during quantization. IQ-quant codebook assignment is weighted by these scores.",
+  "seen_in": [
+    "gguf-filename",
+    "quantization-scripts"
+  ],
+  "related": [
+    "iq-quants",
+    "calibration-data",
+    "llama-cpp",
+    "hessian"
+  ],
+  "sources": [
+    "llama.cpp documentation and source code, github.com/ggerganov/llama.cpp"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

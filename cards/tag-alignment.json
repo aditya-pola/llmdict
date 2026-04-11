@@ -1,0 +1,27 @@
+{
+  "id": "tag-alignment",
+  "name": "-sft / -dpo / -rlhf / -orpo / -kto",
+  "expansion": "Specific alignment method used",
+  "category": "training-tags",
+  "oneliner": "Signals which training stage/method produced the model. -sft = supervised only. -dpo = DPO-aligned. Often released in pairs for comparison.",
+  "explanation": "Useful for researchers comparing alignment methods. Example: zephyr-7b-sft-full (SFT only) vs zephyr-7b-beta (SFT+DPO).",
+  "seen_in": [
+    "model-name",
+    "model-cards"
+  ],
+  "related": [
+    "sft",
+    "dpo",
+    "rlhf",
+    "orpo",
+    "kto"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "DPO paper (most common alignment tag)",
+      "url": "https://arxiv.org/abs/2305.18290"
+    }
+  ]
+}

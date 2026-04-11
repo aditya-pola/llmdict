@@ -1,0 +1,23 @@
+{
+  "id": "tag-math",
+  "name": "-Math",
+  "expansion": "Math-optimized model",
+  "category": "capability-tags",
+  "oneliner": "Specialized for mathematical reasoning via training data and reward signals. Qwen2.5-Math, DeepSeek-Math.",
+  "explanation": "Evaluated on GSM8K, MATH, competition benchmarks. Some use tool-augmented reasoning (code interpreter for computation).",
+  "seen_in": [
+    "model-name"
+  ],
+  "related": [
+    "cpt",
+    "sft"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "Qwen2.5-Math model card",
+      "url": "https://huggingface.co/Qwen/Qwen2.5-Math-7B-Instruct"
+    }
+  ]
+}

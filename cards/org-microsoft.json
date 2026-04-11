@@ -1,0 +1,21 @@
+{
+  "id": "org-microsoft",
+  "name": "microsoft/",
+  "expansion": "Microsoft — Phi models",
+  "category": "hf-organizations",
+  "oneliner": "Phi-1/2/3/4. Demonstrated 'textbook-quality' training data produces small models that punch far above size. MIT licensed.",
+  "seen_in": [
+    "repo-name"
+  ],
+  "related": [],
+  "foundational_papers": [
+    {
+      "title": "Textbooks Are All You Need",
+      "authors": "Gunasekar et al.",
+      "venue": "2023",
+      "arxiv": "2306.11644"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

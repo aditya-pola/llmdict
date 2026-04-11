@@ -1,0 +1,45 @@
+{
+  "id": "lora",
+  "name": "LoRA",
+  "expansion": "Low-Rank Adaptation of Large Language Models",
+  "category": "fine-tuning-methods",
+  "oneliner": "Freeze base weights, add trainable low-rank bypass $W_0$ + ($\\alpha$/r)·B·A. Typically 0.1-0.6% of params. Zero inference overhead after merging.",
+  "explanation": "Fine-tuning updates have low intrinsic rank. Freeze $W_0$, add $\\Delta$W = BA where B$\\in\\mathbb{R}$^(d$\\times$r), A$\\in\\mathbb{R}$^(r$\\times$d), r<<d. B init to 0 (starts from pretrained). Scaling $\\alpha$/r. Apply to Q,K,V,O + FFN for best results. r typically 8-16. Merge: W = $W_0$ + ($\\alpha$/r)·BA. The default PEFT method.",
+  "fundamentals": "Forward: $h = W_0 x + (\\alpha/r) \\cdot B \\cdot A \\cdot x$. LLaMA 7B $r$=16 all linear: ~40M params (0.6%). Memory: ~14.8GB (vs ~84GB full FT). Merge: one-time matrix add $W = W_0 + (\\alpha/r) \\cdot BA$. Files: adapter_model.safetensors (~80MB) + adapter_config.json.",
+  "seen_in": [
+    "model-name",
+    "model-config",
+    "filename"
+  ],
+  "related": [
+    "qlora",
+    "dora",
+    "ia3",
+    "peft"
+  ],
+  "foundational_papers": [
+    {
+      "title": "LoRA: Low-Rank Adaptation of Large Language Models",
+      "authors": "Hu et al.",
+      "venue": "ICLR 2022",
+      "arxiv": "2106.09685"
+    },
+    {
+      "title": "Intrinsic Dimensionality Explains the Effectiveness of Language Model Fine-Tuning",
+      "authors": "Aghajanyan et al.",
+      "venue": "ACL 2021",
+      "arxiv": "2012.13255"
+    },
+    {
+      "title": "LoRA+: Efficient Low Rank Adaptation of Large Models",
+      "authors": "Hayou et al.",
+      "venue": "ICML 2024",
+      "arxiv": "2402.12354"
+    }
+  ],
+  "sources": [
+    "Hu et al., arXiv:2106.09685"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

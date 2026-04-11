@@ -1,0 +1,36 @@
+{
+  "id": "full-ft",
+  "name": "Full Fine-Tuning",
+  "expansion": "Full Fine-Tuning (all parameters updated)",
+  "category": "fine-tuning-methods",
+  "oneliner": "Update every parameter — ~12N bytes memory, maximum expressiveness, risks catastrophic forgetting, produces full model copies.",
+  "explanation": "Train all params. Memory: ~12N bytes (weights + gradients + Adam states + master weights). LLaMA 7B: ~84GB. Requires DeepSpeed ZeRO or FSDP. Preferred for large datasets, domain shift, max quality. Risks: catastrophic forgetting. All -instruct/-chat from major labs use full SFT+RLHF.",
+  "fundamentals": "Memory: 7B→84GB, 13B→156GB, 70B→840GB. ZeRO-1: shard optimizer. ZeRO-2: +gradients. ZeRO-3: +parameters. lr 1e-5 to 5e-5, 1-3 epochs.",
+  "seen_in": [
+    "model-name"
+  ],
+  "related": [
+    "sft",
+    "lora",
+    "deepspeed"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Training language models to follow instructions with human feedback (InstructGPT)",
+      "authors": "Ouyang et al.",
+      "venue": "NeurIPS 2022",
+      "arxiv": "2203.02155"
+    },
+    {
+      "title": "ZeRO: Memory Optimizations Toward Training Trillion Parameter Models",
+      "authors": "Rajbhandari et al.",
+      "venue": "SC 2020",
+      "arxiv": "1910.02054"
+    }
+  ],
+  "sources": [
+    "Ouyang et al., arXiv:2203.02155"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

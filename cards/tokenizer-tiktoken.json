@@ -1,0 +1,22 @@
+{
+  "id": "tokenizer-tiktoken",
+  "name": "tiktoken",
+  "expansion": "OpenAI's fast BPE tokenizer (Rust + Python)",
+  "category": "tokenizers",
+  "oneliner": "Significantly faster than HuggingFace tokenizers. Pre-compiled merge tables (cl100k_base for GPT-3.5/4, o200k_base for GPT-4o). Also used by Qwen.",
+  "seen_in": [
+    "code",
+    "tokenizer-config"
+  ],
+  "related": [
+    "tokenizer-bpe"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "tiktoken GitHub",
+      "url": "https://github.com/openai/tiktoken"
+    }
+  ]
+}

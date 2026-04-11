@@ -1,0 +1,37 @@
+{
+  "id": "qlora",
+  "name": "QLoRA",
+  "expansion": "Quantized Low-Rank Adaptation",
+  "category": "fine-tuning-methods",
+  "oneliner": "Base model in 4-bit NF4 + LoRA in fp16. Fine-tune 65B on a single 48GB GPU. Three innovations: NF4, double quantization, paged optimizers.",
+  "explanation": "Frozen base weights quantized to NF4 (4-bit). LoRA adapters in bf16 compensate for quant error. NF4 optimal for Gaussian weights. Double quant: quantize the quantization constants. Paged optimizers: CPU↔GPU memory paging. 65B: ~130GB fp16 → ~41GB NF4. Quality matches 16-bit full FT.",
+  "fundamentals": "Forward: h = Dequant_NF4($W_0$_q)·x + ($\\alpha$/r)·B·A·x. Memory 65B: ~33.5GB base + ~1.6GB adapters/optimizer + ~4-8GB activations $\\approx$ 40-44GB. NF4: 16 levels at N(0,1) quantile positions. Double quant: block-64 absmax → quantize to 8-bit in blocks of 256.",
+  "seen_in": [
+    "model-name",
+    "model-config"
+  ],
+  "related": [
+    "lora",
+    "nf4",
+    "bitsandbytes"
+  ],
+  "foundational_papers": [
+    {
+      "title": "QLoRA: Efficient Finetuning of Quantized Language Models",
+      "authors": "Dettmers et al.",
+      "venue": "NeurIPS 2023",
+      "arxiv": "2305.14314"
+    },
+    {
+      "title": "The case for 4-bit precision: k-bit Inference Scaling Laws",
+      "authors": "Dettmers & Zettlemoyer",
+      "venue": "ICML 2023",
+      "arxiv": "2212.09720"
+    }
+  ],
+  "sources": [
+    "Dettmers et al., arXiv:2305.14314"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

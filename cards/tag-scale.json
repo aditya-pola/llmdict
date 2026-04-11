@@ -1,0 +1,22 @@
+{
+  "id": "tag-scale",
+  "name": "-Nano/-Micro/-Mini/-Small/-Tiny/-Lite/-Pro/-Turbo/-Large/-Max/-Ultra",
+  "expansion": "Relative scale/quality tiers within a model family",
+  "category": "scale-tags",
+  "oneliner": "NOT standardized across families. Mistral 'Small' = 24B. Phi 'Mini' = 3.8B. Always check actual param count. -Turbo = speed-optimized (OpenAI convention).",
+  "explanation": "These are relative to each family's range, not absolute sizes. -Lite usually implies deliberate distillation. -Turbo implies speed optimization (distillation or arch changes). -Pro/-Max/-Ultra more common in API naming than HuggingFace repos.",
+  "seen_in": [
+    "model-name"
+  ],
+  "related": [
+    "knowledge-distillation"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "Mistral model family page",
+      "url": "https://huggingface.co/mistralai"
+    }
+  ]
+}

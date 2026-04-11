@@ -1,0 +1,22 @@
+{
+  "id": "tag-reward",
+  "name": "-Reward / -RM",
+  "expansion": "Reward model",
+  "category": "capability-tags",
+  "oneliner": "Outputs scalar preference scores for (prompt, response) pairs. Used in RLHF pipelines or best-of-N reranking. Not generative.",
+  "explanation": "Starling-RM-34B, tulu-v3.1-8b-rl-rm. Critical RLHF component. Takes (prompt, response) → scalar score.",
+  "seen_in": [
+    "model-name"
+  ],
+  "related": [
+    "rlhf"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "InstructGPT paper (reward model training)",
+      "url": "https://arxiv.org/abs/2203.02155"
+    }
+  ]
+}

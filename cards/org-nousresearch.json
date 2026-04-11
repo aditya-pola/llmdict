@@ -1,0 +1,21 @@
+{
+  "id": "org-nousresearch",
+  "name": "NousResearch/",
+  "expansion": "Community collective — Hermes, Capybara",
+  "category": "hf-organizations",
+  "oneliner": "Hermes fine-tune series (strong instruction-following + function calling). One of the most respected community fine-tune recipes. ChatML format.",
+  "seen_in": [
+    "repo-name"
+  ],
+  "related": [
+    "dataset-hermes"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "NousResearch HuggingFace profile",
+      "url": "https://huggingface.co/NousResearch"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "org-meta",
+  "name": "meta-llama/",
+  "expansion": "Meta AI — Llama model family",
+  "category": "hf-organizations",
+  "oneliner": "Llama 1/2/3/4. The backbone of the open-weight ecosystem. Most fine-tuned, quantized, and experimented-with model family.",
+  "seen_in": [
+    "repo-name"
+  ],
+  "related": [],
+  "foundational_papers": [
+    {
+      "title": "LLaMA: Open and Efficient Foundation Language Models",
+      "authors": "Touvron et al.",
+      "venue": "2023",
+      "arxiv": "2302.13971"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

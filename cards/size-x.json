@@ -1,0 +1,23 @@
+{
+  "id": "size-x",
+  "name": "x (MoE expert notation)",
+  "expansion": "Experts × expert size (e.g., 8x7B)",
+  "category": "size-conventions",
+  "oneliner": "Mixtral-style: 8x7B = 8 experts of ~7B each. Total ≠ 8$\\times$7B due to shared attention layers. Active = top-k experts worth.",
+  "explanation": "Popularized by Mixtral. 8x7B total $\\approx$ 46.7B (not 56B) because attention params are shared. Active per token $\\approx$ 12.9B (top-2 of 8).",
+  "seen_in": [
+    "model-name"
+  ],
+  "related": [
+    "moe",
+    "expert-routing"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "Mixtral of Experts paper (8x7B notation)",
+      "url": "https://arxiv.org/abs/2401.04088"
+    }
+  ]
+}

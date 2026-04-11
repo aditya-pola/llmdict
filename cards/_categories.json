@@ -1,0 +1,94 @@
+{
+  "precision-formats": {
+    "label": "Precision Formats",
+    "order": 0
+  },
+  "core-concepts": {
+    "label": "Core Concepts",
+    "order": 1
+  },
+  "quantization-methods": {
+    "label": "Quantization Methods",
+    "order": 2
+  },
+  "file-formats": {
+    "label": "File Formats",
+    "order": 3
+  },
+  "gguf-quantization": {
+    "label": "GGUF Quantization",
+    "order": 4
+  },
+  "attention-variants": {
+    "label": "Attention & Memory",
+    "order": 5
+  },
+  "position-encodings": {
+    "label": "Position Encodings",
+    "order": 6
+  },
+  "layer-types": {
+    "label": "Layer Types",
+    "order": 7
+  },
+  "normalization": {
+    "label": "Normalization",
+    "order": 8
+  },
+  "scaling-patterns": {
+    "label": "Scaling & Serving",
+    "order": 9
+  },
+  "training-pipeline": {
+    "label": "Training Pipeline",
+    "order": 10
+  },
+  "fine-tuning-methods": {
+    "label": "Fine-Tuning Methods",
+    "order": 11
+  },
+  "size-conventions": {
+    "label": "Size Conventions",
+    "order": 12
+  },
+  "training-tags": {
+    "label": "Training Tags",
+    "order": 13
+  },
+  "capability-tags": {
+    "label": "Capability Tags",
+    "order": 14
+  },
+  "scale-tags": {
+    "label": "Scale Variants",
+    "order": 15
+  },
+  "family-tags": {
+    "label": "Family-Specific Tags",
+    "order": 16
+  },
+  "adapter-tags": {
+    "label": "Adapter Tags",
+    "order": 17
+  },
+  "hf-organizations": {
+    "label": "HF Organizations",
+    "order": 19
+  },
+  "serving-tools": {
+    "label": "Serving Tools",
+    "order": 20
+  },
+  "export-formats": {
+    "label": "Export Formats",
+    "order": 21
+  },
+  "tokenizers": {
+    "label": "Tokenizers",
+    "order": 22
+  },
+  "datasets-recipes": {
+    "label": "Datasets & Recipes",
+    "order": 23
+  }
+}

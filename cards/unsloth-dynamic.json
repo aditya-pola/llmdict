@@ -1,0 +1,34 @@
+{
+  "id": "unsloth-dynamic",
+  "name": "Unsloth Dynamic (UD)",
+  "expansion": "Unsloth Dynamic Quantization v2.0",
+  "category": "quantization-methods",
+  "oneliner": "Proprietary layer-selective quantization that varies precision per layer based on sensitivity analysis. 10-30% KL divergence reduction vs uniform.",
+  "explanation": "Not all layers are equally sensitive to quantization. UD profiles each layer's sensitivity using 300K-1.5M calibration tokens (varies by model size), then assigns higher precision to sensitive layers (typically attention layers near start/end of network) and lower precision to robust ones. Available for GGUF (UD- prefix on quant files) and MLX (UD-MLX in repo name). Claims 10-30% KL divergence reduction across quantization types vs uniform approaches.",
+  "fundamentals": "1) Profile: quantize each layer at multiple precisions, measure KL divergence from full-precision output. 2) Allocate: assign precision per layer to minimize total KL divergence within a size budget. 3) Quantize: apply chosen precision per layer. Similar in spirit to EXL2's approach but with different optimization objective (KL divergence vs reconstruction error).",
+  "seen_in": [
+    "gguf-filename",
+    "repo-name"
+  ],
+  "related": [
+    "exl2",
+    "gguf",
+    "mlx",
+    "kl-divergence"
+  ],
+  "sources": [
+    "unsloth.ai/blog/dynamic-v2"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "Unsloth Dynamic v2.0 blog post",
+      "url": "https://unsloth.ai/blog/dynamic-v2"
+    },
+    {
+      "label": "Unsloth GitHub",
+      "url": "https://github.com/unslothai/unsloth"
+    }
+  ]
+}

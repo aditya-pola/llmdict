@@ -1,0 +1,23 @@
+{
+  "id": "tool-llamacpp",
+  "name": "llama.cpp",
+  "expansion": "C/C++ inference engine by Georgi Gerganov",
+  "category": "serving-tools",
+  "oneliner": "Runs LLMs on CPU (+ GPU offload). Defines GGUF format. Broad hardware support (x86, ARM, CUDA, Metal, Vulkan). Foundation of local LLM ecosystem.",
+  "seen_in": [
+    "documentation"
+  ],
+  "related": [
+    "gguf",
+    "k-quants",
+    "iq-quants"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "llama.cpp GitHub",
+      "url": "https://github.com/ggerganov/llama.cpp"
+    }
+  ]
+}

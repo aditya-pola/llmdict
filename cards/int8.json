@@ -1,0 +1,40 @@
+{
+  "id": "int8",
+  "name": "int8 / i8",
+  "expansion": "8-bit Integer Quantization",
+  "category": "precision-formats",
+  "oneliner": "Fixed-point 8-bit: maps floats to 256 discrete levels via scale+zero-point. 4$\\times$ compression from fp32, runs on all modern hardware.",
+  "explanation": "Most mature quantization format. 256 levels (signed: -128 to 127). Integer MAC units are simpler and more efficient than float, available on CPUs (VNNI), GPUs (INT8 Tensor Cores since Turing), mobile NPUs. Challenge: LLM activations can have extreme outliers in certain channels (documented in LLM.int8() paper). Solutions: per-channel quantization, mixed-precision decomposition, SmoothQuant. Standard for production W8A8 serving via TensorRT-LLM.",
+  "fundamentals": "Quantize: x_q = round(x / scale) + zero_point, clamped to [-128, 127]. Dequantize: x $\\approx$ (x_q - zero_point) $\\times$ scale. Symmetric (common for weights): zero_point=0, scale = max(|x|)/127. Step size = scale. For weights in [-1, 1]: step $\\approx$ 0.0078 — values closer than ~0.008 become identical.",
+  "seen_in": [
+    "model-name",
+    "filename",
+    "serving-config"
+  ],
+  "related": [
+    "int4",
+    "w8a8",
+    "smoothquant",
+    "llm-int8"
+  ],
+  "sources": [
+    "Dettmers et al., 'LLM.int8(),' NeurIPS 2022, arXiv:2208.07339",
+    "Xiao et al., 'SmoothQuant,' ICML 2023, arXiv:2211.10438"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale",
+      "authors": "Dettmers et al.",
+      "venue": "NeurIPS 2022",
+      "arxiv": "2208.07339"
+    },
+    {
+      "title": "SmoothQuant: Accurate and Efficient Post-Training Quantization for LLMs",
+      "authors": "Xiao et al.",
+      "venue": "ICML 2023",
+      "arxiv": "2211.10438"
+    }
+  ]
+}

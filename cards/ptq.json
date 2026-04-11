@@ -1,0 +1,30 @@
+{
+  "id": "ptq",
+  "name": "PTQ",
+  "expansion": "Post-Training Quantization",
+  "category": "core-concepts",
+  "oneliner": "Quantize an already-trained model without further training — fast (minutes to hours), practical, dominates LLM quantization.",
+  "explanation": "Takes a fully trained model and converts to lower precision in one pass. No training infrastructure needed. Methods: GPTQ, AWQ, RTN, EXL2. Fast even for 70B models. Downside: model never adapted to quantization noise, so quality degrades more than QAT, especially below 4-bit. At int8: essentially lossless. At int4: measurable but acceptable. At int2: usually unacceptable without QAT.",
+  "fundamentals": "Workflow: 1) Load fp16/bf16 model. 2) Optional calibration pass. 3) Compute scale/zero-point per layer/channel/group. 4) Quantize: W_q = round(W/scale) + zp. 5) Save. At inference: dequantize and compute.",
+  "seen_in": [
+    "documentation",
+    "model-cards"
+  ],
+  "related": [
+    "qat",
+    "gptq",
+    "awq",
+    "calibration-data"
+  ],
+  "sources": [
+    "Nagel et al., arXiv:2106.08295"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "White Paper on Neural Network Quantization",
+      "url": "https://arxiv.org/abs/2106.08295"
+    }
+  ]
+}

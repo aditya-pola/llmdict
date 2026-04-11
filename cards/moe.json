@@ -1,0 +1,47 @@
+{
+  "id": "moe",
+  "name": "MoE",
+  "expansion": "Mixture-of-Experts",
+  "category": "scaling-patterns",
+  "oneliner": "Replace each FFN with N parallel expert FFNs, activate only top-k per token via learned routing. Decouples total params from per-token compute.",
+  "explanation": "Each FFN layer becomes N expert FFNs + a router. Router selects top-k experts per token (typically k=1 or k=2). You get massive model capacity at fraction of compute cost. Key tradeoff: ALL params must be in memory even though only k/N are active. Mixtral 8x7B: 46.7B total, 12.9B active (8 experts, top-2). DeepSeek-V3: 671B total, 37B active (1 shared + 256 routed, top-8). Load balancing loss prevents expert collapse. Shared experts (DeepSeek) always fire as safety net alongside routed experts.",
+  "fundamentals": "Router: $g(x) = \\text{softmax}(W_g \\cdot x)$, select $\\text{TopK}(g(x), k)$. Output: $y = \\sum_{i \\in S} g(x)_i \\cdot \\text{Expert}_i(x)$. Load balance loss: $L = \\alpha \\cdot N \\cdot \\sum_i (f_i \\cdot p_i)$ where $f_i$=token fraction, $p_i$=mean prob. Capacity factor CF: buffer = $CF \\times (T/N)$ tokens per expert, excess dropped. Mixtral math: 32 layers $\\times$ 8 experts $\\times$ ~134M params/expert = 34.4B FFN + 12.3B attention = 46.7B total. Per token: 2/8 experts $\\to$ 12.9B active. Memory: 46.7B (all loaded). FLOPS: ~13B equivalent.",
+  "seen_in": [
+    "model-name",
+    "model-config"
+  ],
+  "related": [
+    "expert-routing",
+    "dense-models",
+    "ffn",
+    "mxfp4-moe"
+  ],
+  "sources": [
+    "Shazeer et al., 'Outrageously Large Neural Networks,' ICLR 2017",
+    "Fedus et al., 'Switch Transformers,' JMLR 2022",
+    "Jiang et al., 'Mixtral of Experts,' arXiv:2401.04088",
+    "DeepSeek-AI, 'DeepSeek-V3,' arXiv:2412.19437"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer",
+      "authors": "Shazeer et al.",
+      "venue": "ICLR 2017",
+      "arxiv": "1701.06538"
+    },
+    {
+      "title": "Switch Transformers: Scaling to Trillion Parameter Models",
+      "authors": "Fedus et al.",
+      "venue": "JMLR 2022",
+      "arxiv": "2101.03961"
+    },
+    {
+      "title": "Mixtral of Experts",
+      "authors": "Jiang et al.",
+      "venue": "2024",
+      "arxiv": "2401.04088"
+    }
+  ]
+}

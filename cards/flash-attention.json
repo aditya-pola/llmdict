@@ -1,0 +1,40 @@
+{
+  "id": "flash-attention",
+  "name": "Flash Attention (FA / FA2 / FA3)",
+  "expansion": "Flash Attention — IO-aware tiling algorithm for exact attention",
+  "category": "attention-variants",
+  "oneliner": "Computes exact attention without materializing the N$\\times$N matrix in GPU HBM — uses tiling and online softmax to reduce memory from $O($N^2$)$ to $O(N)$, achieving 2-4$\\times$ speedups.",
+  "explanation": "By Tri Dao et al. (2022). The insight: standard attention is bottlenecked by memory bandwidth (reads/writes to HBM), not compute. The N$\\times$N attention matrix written to HBM is the culprit. Flash Attention tiles Q, K, V into blocks that fit in SRAM, iterates over K/V blocks per Q block, accumulates output using online softmax (streaming, numerically stable, no full-row knowledge needed). Result is mathematically exact — not approximate. FA1 (2022): tiling + IO analysis. FA2 (2023): 2$\\times$ faster via better parallelism (over seq_len), better occupancy, 50-73% peak FLOPs on A100. FA3 (2024): targets H100 Hopper, exploits async WGMMA, TMA, FP8 support, up to 740 TFLOPS.",
+  "fundamentals": "Standard IO: Θ(N·d + $N^2$) HBM accesses. Flash Attention IO: Θ($N^2$·$d^2$/M) where M=SRAM size. For typical M>>$d^2$, significant reduction. Tiling: for each Q block, iterate K/V blocks. Maintain running max m and sum l for online softmax. Rescale output O as new blocks processed. Memory: $O(N)$ — only Q,K,V,O in HBM, no N$\\times$N matrix. Backward pass: recomputes attention from Q,K,V (gradient checkpointing). Versions: FA1 ~120 TFLOPS A100, FA2 ~230 TFLOPS A100, FA3 ~740 TFLOPS H100.",
+  "seen_in": [
+    "code",
+    "model-config",
+    "serving-config"
+  ],
+  "related": [
+    "sdpa",
+    "kv-cache",
+    "paged-attention"
+  ],
+  "sources": [
+    "Dao et al., 'FlashAttention,' NeurIPS 2022, arXiv:2205.14135",
+    "Dao, 'FlashAttention-2,' 2023, arXiv:2307.08691",
+    "Shah & Dao et al., 'FlashAttention-3,' 2024, arXiv:2407.08691"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness",
+      "authors": "Dao et al.",
+      "venue": "NeurIPS 2022",
+      "arxiv": "2205.14135"
+    },
+    {
+      "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning",
+      "authors": "Dao",
+      "venue": "2023",
+      "arxiv": "2307.08691"
+    }
+  ]
+}

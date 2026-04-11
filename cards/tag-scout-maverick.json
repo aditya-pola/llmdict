@@ -1,0 +1,23 @@
+{
+  "id": "tag-scout-maverick",
+  "name": "Scout / Maverick (Llama 4)",
+  "expansion": "Llama 4 MoE scale variants",
+  "category": "family-tags",
+  "oneliner": "Scout: 17B active, 16 experts (109B total), 10M context. Maverick: 17B active, 128 experts (400B+ total), higher quality.",
+  "explanation": "Released April 2025. Same active param count but different expert counts. 16E/128E in the name = number of experts.",
+  "seen_in": [
+    "model-name"
+  ],
+  "related": [
+    "moe",
+    "expert-routing"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "Llama 4 Scout model card",
+      "url": "https://huggingface.co/meta-llama/Llama-4-Scout-17B-16E-Instruct"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "id": "hqq",
+  "name": "HQQ",
+  "expansion": "Half-Quadratic Quantization",
+  "category": "quantization-methods",
+  "oneliner": "Zero-calibration quantization — no forward passes through the model needed. Uses optimization on weight statistics alone. Supports 1-8 bit.",
+  "explanation": "Most quantization methods (GPTQ, AWQ) need calibration data run through the model. HQQ reformulates quantization as a half-quadratic optimization problem that operates directly on weight tensors without any data. This makes it extremely fast and eliminates calibration-related failure modes. Quality is competitive with GPTQ/AWQ at 4-bit and somewhat worse at lower bitwidths. Main appeal: speed and simplicity.",
+  "fundamentals": "Treats quantization as proximal optimization: split the problem into a rounding step and a scale-fitting step, alternate. No activations or Hessian needed — operates purely on weight statistics. Supports arbitrary group sizes and asymmetric quantization.",
+  "seen_in": [
+    "model-name",
+    "quantization-config"
+  ],
+  "related": [
+    "gptq",
+    "awq",
+    "ptq",
+    "zero-shot-quantization"
+  ],
+  "sources": [
+    "Badri & Shaji, 'HQQ: Half-Quadratic Quantization,' 2023, github.com/mobiusml/hqq"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "Half-Quadratic Quantization of Large Language Models",
+      "authors": "Badri & Shaji",
+      "venue": "2023",
+      "arxiv": "2309.15531"
+    }
+  ]
+}

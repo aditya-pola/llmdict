@@ -1,0 +1,34 @@
+{
+  "id": "learned-pe",
+  "name": "Learned Position Embeddings",
+  "expansion": "Learned (Absolute) Position Embeddings",
+  "category": "position-encodings",
+  "oneliner": "A trainable lookup table of position vectors (like a vocabulary for positions) — simple but has a hard max length limit. Used by GPT-2, BERT, GPT-3.",
+  "explanation": "Maintain learnable matrix W_pos $\\in\\mathbb{R}$^(L_max $\\times$ d). Position m → lookup W_pos[m], add to token embedding. Model learns whatever representation is useful — often converges to sinusoidal-like patterns. Hard limitation: cannot process sequences > L_max (no embedding exists). Parameter cost: L_max $\\times$ d (128K $\\times$ 4096 = 537M params). No inherent relative position awareness. Replaced by RoPE in modern LLMs (2022-23 shift). Still used in: BERT variants, Vision Transformers (ViT), some encoder-only models.",
+  "fundamentals": "x'_m = x_m + W_pos[m]. W_pos trained via backpropagation. GPT-2: L_max=1024, d=768 → 786K params. For 128K context: would be 537M params — impractical. Learned embeddings often show: low-freq sinusoidal patterns in principal components, nearby positions more similar, boundary effects at first/last positions. Cannot extrapolate — position L_max+1 has no representation.",
+  "seen_in": [
+    "model-config",
+    "model-weights"
+  ],
+  "related": [
+    "sinusoidal-pe",
+    "rope",
+    "alibi"
+  ],
+  "sources": [
+    "Radford et al., 'Language Models are Unsupervised Multitask Learners,' 2019 (GPT-2)",
+    "Devlin et al., 'BERT,' NAACL 2019, arXiv:1810.04805"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "GPT-2 paper (Radford et al., 2019)",
+      "url": "https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf"
+    },
+    {
+      "label": "BERT paper",
+      "url": "https://arxiv.org/abs/1810.04805"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "safetensors",
+  "name": "safetensors",
+  "expansion": "Safe Tensors serialization format",
+  "category": "file-formats",
+  "oneliner": "HuggingFace's secure, fast tensor serialization — replaces pickle-based .bin files. Immune to arbitrary code execution.",
+  "explanation": "Created because PyTorch's default serialization uses Python pickle, which can execute arbitrary code when loading. A malicious .bin file could run any code on your machine. safetensors stores tensors as raw bytes with a JSON header — no code execution possible. Also faster: supports memory mapping and lazy loading (load only the tensors you need). Now the default format on HuggingFace Hub. Used by GPTQ, AWQ, EXL2, and full-precision model uploads.",
+  "fundamentals": "File structure: 8-byte header length, JSON header (tensor names, shapes, dtypes, offsets), raw tensor data. No nested structures, no code, no pickle. Can be memory-mapped for zero-copy loading. Validation: can verify file integrity without loading all data.",
+  "seen_in": [
+    "filename"
+  ],
+  "related": [
+    "gguf",
+    "pickle",
+    "pytorch-bin"
+  ],
+  "sources": [
+    "github.com/huggingface/safetensors"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

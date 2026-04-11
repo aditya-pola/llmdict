@@ -1,0 +1,33 @@
+{
+  "id": "residual-connection",
+  "name": "Residual Connection",
+  "expansion": "Residual (Skip) Connection",
+  "category": "layer-types",
+  "oneliner": "The output = x + F(x) pattern — adds sub-layer input directly to output, enabling gradient flow through arbitrarily deep networks. Zero additional parameters.",
+  "explanation": "He et al. (2015, ResNet). Each layer learns a residual correction F(x) rather than full transformation H(x). If optimal is close to identity, network just pushes F(x)→0 (easier than H(x)→x). In transformers: every attention and FFN block wrapped in residual. Creates a 'residual stream' — d_model-dimensional communication channel all layers read from and write to additively. Without residuals, training transformers deeper than a few layers is impossible (gradients vanish/explode as product of L Jacobians). Zero parameters — purely structural. Interaction with normalization critical: Pre-Norm keeps residual path 'clean.'",
+  "fundamentals": "x_L = x_0 + $\\Sigma$ F_l(x_{l-1}). Gradient: ∂L/∂x_l = ∂L/∂x_L·(I + $\\Sigma$∂F_k/∂x) — the I term prevents vanishing. Without residuals: ∂L/∂x_0 = Π∂F_l/∂x_{l-1} — product of L Jacobians, exponentially vanishes/explodes. Pre-Norm: output = x + Sublayer(Norm(x)) — raw x flows through skip. Some models scale residuals at init: GPT-2 scales by 1/$\\sqrt{2n_layers}$. DeepNorm: x·$\\alpha$ + Sublayer(Norm(x)) with $\\alpha$>1 for very deep Post-Norm training.",
+  "seen_in": [
+    "code",
+    "architecture-diagrams"
+  ],
+  "related": [
+    "pre-norm",
+    "post-norm",
+    "rmsnorm",
+    "layernorm"
+  ],
+  "sources": [
+    "He et al., 'Deep Residual Learning for Image Recognition,' CVPR 2016, arXiv:1512.03385",
+    "Elhage et al., 'A Mathematical Framework for Transformer Circuits,' Anthropic 2021"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "Deep Residual Learning for Image Recognition",
+      "authors": "He et al.",
+      "venue": "CVPR 2016",
+      "arxiv": "1512.03385"
+    }
+  ]
+}

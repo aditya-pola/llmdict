@@ -1,0 +1,23 @@
+name: Build Glossary
+
+on:
+  push:
+    branches: [main]
+    paths: ['cards/**', 'build.py']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build glossary.json from cards/
+        run: python3 build.py
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add site/data/glossary.json
+          git diff --staged --quiet || git commit -m "Auto-build glossary.json from cards/"
+          git push

@@ -1,0 +1,22 @@
+{
+  "id": "tool-tensorrt-llm",
+  "name": "TensorRT-LLM",
+  "expansion": "NVIDIA's optimized LLM inference",
+  "category": "serving-tools",
+  "oneliner": "Compiles models into optimized TensorRT engines. FP8, INT4 AWQ/GPTQ, SmoothQuant, paged KV cache, multi-GPU. Maximum performance on NVIDIA datacenter GPUs.",
+  "seen_in": [
+    "serving-config"
+  ],
+  "related": [
+    "fp8",
+    "w8a8"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "TensorRT-LLM GitHub",
+      "url": "https://github.com/NVIDIA/TensorRT-LLM"
+    }
+  ]
+}

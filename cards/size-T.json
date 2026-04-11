@@ -1,0 +1,23 @@
+{
+  "id": "size-T",
+  "name": "T (Trillion)",
+  "expansion": "Trillion parameters or tokens",
+  "category": "size-conventions",
+  "oneliner": "Trillions. Rare for params (Switch Transformer 1.6T). More common for training data ('trained on 15T tokens'). Context matters.",
+  "explanation": "Ambiguous: '1T' in model size = trillion params. '1T tokens' = training data volume. Few public models exceed 1T params. Switch Transformer (1.6T) is the canonical example.",
+  "seen_in": [
+    "model-cards",
+    "documentation"
+  ],
+  "related": [
+    "size-B"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "Switch Transformer paper (1.6T params)",
+      "url": "https://arxiv.org/abs/2101.03961"
+    }
+  ]
+}

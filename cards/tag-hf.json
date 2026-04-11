@@ -1,0 +1,22 @@
+{
+  "id": "tag-hf",
+  "name": "-hf",
+  "expansion": "HuggingFace-compatible format",
+  "category": "training-tags",
+  "oneliner": "Weights converted to HuggingFace transformers format (safetensors + config.json). Does NOT mean 'hosted on HF'. Without -hf may need custom loading.",
+  "explanation": "Critical for usability. Llama-2-7b-hf (converted) vs Llama-2-7b (original Megatron format). Modern releases (Llama 3+) are HF-native, making suffix less necessary.",
+  "seen_in": [
+    "model-name"
+  ],
+  "related": [
+    "safetensors"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "HuggingFace Transformers docs (model loading)",
+      "url": "https://huggingface.co/docs/transformers/main/en/model_doc/auto"
+    }
+  ]
+}

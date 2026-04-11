@@ -1,0 +1,39 @@
+{
+  "id": "tp-pp",
+  "name": "Tensor Parallelism (TP) vs Pipeline Parallelism (PP)",
+  "expansion": "TP = Tensor (Intra-Layer) Parallelism; PP = Pipeline (Inter-Layer) Parallelism",
+  "category": "scaling-patterns",
+  "oneliner": "TP splits each layer across GPUs (every GPU computes a slice of every layer). PP assigns different layers to different GPUs (sequential pipeline). TP within nodes, PP across nodes.",
+  "explanation": "TP (Megatron-LM, 2019): split weight matrices across GPUs. Column-parallel up-projection, row-parallel down-projection. Requires 2 AllReduce ops per layer — needs NVLink-class bandwidth (~900 GB/s). Best within a single node (TP=8 on DGX H100). PP: layers 0-15 on GPU 0, layers 16-31 on GPU 1. Point-to-point communication (lower bandwidth OK). Suffers pipeline bubbles: bubble fraction = (P-1)/(M+P-1) with M micro-batches. Best across nodes. Large-scale uses 3D parallelism: TP within node + PP across nodes + DP across replicas. Expert Parallelism (EP) is a third dimension for MoE.",
+  "fundamentals": "TP: W split column-wise into [$W_1$|...|$W_p$]. GPU_i computes Y_i = X·W_i. AllGather to reconstruct or AllReduce to sum. 2 AllReduces per layer, each ~2M bytes for hidden_dim M. PP: micro-batch pipeline. Bubble = (P-1)/(M+P-1). For P=8, M=32: 18% bubble. Interleaved schedules: non-contiguous layer assignment reduces bubbles by factor v. Inference: prefer TP (minimizes latency — all GPUs work on every token). Training: 3D parallelism.",
+  "seen_in": [
+    "serving-config",
+    "training-config"
+  ],
+  "related": [
+    "data-parallelism",
+    "fsdp",
+    "expert-parallelism",
+    "nvlink"
+  ],
+  "sources": [
+    "Narayanan et al., 'Megatron-LM,' arXiv:1909.08053, arXiv:2104.04473",
+    "Huang et al., 'GPipe,' NeurIPS 2019, arXiv:1811.06965"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "Efficient Large-Scale Language Model Training on GPU Clusters Using Megatron-LM",
+      "authors": "Narayanan et al.",
+      "venue": "2021",
+      "arxiv": "2104.04473"
+    },
+    {
+      "title": "GPipe: Efficient Training of Giant Neural Networks using Pipeline Parallelism",
+      "authors": "Huang et al.",
+      "venue": "NeurIPS 2019",
+      "arxiv": "1811.06965"
+    }
+  ]
+}

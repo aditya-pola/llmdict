@@ -1,0 +1,31 @@
+{
+  "id": "rmsnorm",
+  "name": "RMSNorm",
+  "expansion": "Root Mean Square Layer Normalization",
+  "category": "normalization",
+  "oneliner": "Simplified LayerNorm — normalizes by root mean square only, dropping mean subtraction. Same quality, fewer ops. Standard in all modern LLMs.",
+  "explanation": "Zhang & Sennrich (2019). Removes mean-centering from LayerNorm — the re-scaling by RMS alone is sufficient for stable training. Saves one full reduction operation over hidden_dim and the associated subtraction. 7-64% faster than LayerNorm depending on implementation. Only learnable scale $\\gamma$ (no bias $\\beta$): $d_{\\text{model}}$ params vs LayerNorm's $2 \\times d_{\\text{model}}$. Adopted by LLaMA 1/2/3, Mistral, Mixtral, Qwen, Gemma, Yi, DeepSeek, Command-R. Almost always paired with Pre-Norm placement.",
+  "fundamentals": "$\\text{RMSNorm}(x) = \\gamma \\cdot \\frac{x}{\\text{RMS}(x)}$ where $\\text{RMS}(x) = \\sqrt{\\frac{1}{d}\\sum_i x_i^2 + \\varepsilon}$. vs LayerNorm: no $\\mu$ computation, no $(x-\\mu)$ subtraction, no $\\beta$ bias. Params: $d_{\\text{model}}$ (vs $2 \\times d_{\\text{model}}$ for LayerNorm). For LLaMA 7B: 65 RMSNorm instances $\\times$ 4096 = 266K params (<0.004% of model). Computational savings: 1 reduction op vs 2, ~2x fewer reductions (the GPU synchronization bottleneck).",
+  "seen_in": [
+    "model-config",
+    "code"
+  ],
+  "related": [
+    "layernorm",
+    "pre-norm",
+    "post-norm"
+  ],
+  "sources": [
+    "Zhang & Sennrich, 'Root Mean Square Layer Normalization,' NeurIPS 2019, arXiv:1910.07467"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "Root Mean Square Layer Normalization",
+      "authors": "Zhang & Sennrich",
+      "venue": "NeurIPS 2019",
+      "arxiv": "1910.07467"
+    }
+  ]
+}

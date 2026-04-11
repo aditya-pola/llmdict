@@ -1,0 +1,34 @@
+{
+  "id": "mha",
+  "name": "MHA",
+  "expansion": "Multi-Head Attention",
+  "category": "attention-variants",
+  "oneliner": "The original transformer attention — each head independently computes Q, K, V over the full sequence, then results are concatenated.",
+  "explanation": "Introduced in 'Attention Is All You Need' (Vaswani 2017). Input embeddings are projected into queries (Q), keys (K), values (V) separately per head. Each head operates on a lower-dimensional slice (head_dim = hidden_dim / n_heads), computes scaled dot-product attention independently, results are concatenated and projected. Different heads can specialize — syntactic, semantic, positional patterns. Used in virtually every transformer: GPT-2/3, BERT, T5, original LLaMA. The baseline against which all variants are compared.",
+  "fundamentals": "For hidden_dim=4096, n_heads=32, head_dim=128: W_Q, W_K, W_V each [4096, 4096], W_O [4096, 4096]. Q·K^T / $\\sqrt{128}$ → [batch, 32, seq_len, seq_len] attention matrix → softmax → multiply by V → [batch, 32, seq_len, 128] → concat → [batch, seq_len, 4096]. Param count: 4 $\\times$ 409$6^2$ = ~67M per layer. KV cache per token per layer: 2 $\\times$ 32 $\\times$ 128 $\\times$ 2 bytes = 16 KB. For 32 layers at 4096 tokens: ~2 GB. Compute: $O(seq_le$n^2 \\times$ d_model)$ per layer — the quadratic cost.",
+  "seen_in": [
+    "model-config",
+    "architecture-papers"
+  ],
+  "related": [
+    "mqa",
+    "gqa",
+    "mla",
+    "sdpa",
+    "flash-attention",
+    "kv-cache"
+  ],
+  "sources": [
+    "Vaswani et al., 'Attention Is All You Need,' NeurIPS 2017, arXiv:1706.03762"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "Attention Is All You Need",
+      "authors": "Vaswani et al.",
+      "venue": "NeurIPS 2017",
+      "arxiv": "1706.03762"
+    }
+  ]
+}

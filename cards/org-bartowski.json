@@ -1,0 +1,22 @@
+{
+  "id": "org-bartowski",
+  "name": "bartowski/",
+  "expansion": "Currently most active broad quantizer",
+  "category": "hf-organizations",
+  "oneliner": "Produces GGUF (and sometimes EXL2/AWQ) quants within hours of new model releases. Consistent naming, comprehensive quant levels. Inherited TheBloke's role.",
+  "seen_in": [
+    "repo-name"
+  ],
+  "related": [
+    "org-thebloke",
+    "gguf"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "bartowski HuggingFace profile",
+      "url": "https://huggingface.co/bartowski"
+    }
+  ]
+}

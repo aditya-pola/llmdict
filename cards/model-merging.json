@@ -1,0 +1,45 @@
+{
+  "id": "model-merging",
+  "name": "Model Merging",
+  "expansion": "Model Merging / Weight Merging / Model Fusion",
+  "category": "scaling-patterns",
+  "oneliner": "Combine weights from multiple fine-tuned models (same base) by arithmetic interpolation — no training needed. Popular methods: SLERP, TIES, DARE.",
+  "explanation": "Fine-tuned models from the same base occupy nearby loss landscape regions → interpolating weights lands on a point combining both capabilities. Simplest: linear averaging (Model Soups). SLERP: spherical interpolation respecting high-dim geometry. TIES: trim small changes, resolve sign conflicts via majority vote, then merge. DARE: randomly drop 90% of changes, rescale survivors, then merge — exploits redundancy in task vectors. Works for complementary specializations (code + creative writing). Fails when: no shared base, conflicting capabilities, too much fine-tuning. Tool: mergekit (arcee-ai). Many Open LLM Leaderboard top models are merges.",
+  "fundamentals": "Task vector: τ_A = W_A - W_base. Linear: W = W_base + $\\alpha$·τ_A + $\\beta$·τ_B. SLERP: interpolate along great circle on unit hypersphere, per-tensor. TIES: 1) Trim entries below magnitude percentile (e.g., 80th). 2) Elect sign by majority vote across models. 3) Average agreed entries. DARE: 1) Drop entries with probability p (e.g., 0.9). 2) Rescale survivors by 1/(1-p). 3) Merge. Why it works: 'linear mode connectivity' — same-base fine-tunes stay in same loss basin. Breaks with high LR, many epochs, or very different tasks.",
+  "seen_in": [
+    "model-cards",
+    "repo-names"
+  ],
+  "related": [
+    "lora",
+    "fine-tuning",
+    "task-vectors"
+  ],
+  "sources": [
+    "Wortsman et al., 'Model Soups,' ICML 2022",
+    "Yadav et al., 'TIES-Merging,' NeurIPS 2023, arXiv:2306.01708",
+    "Yu et al., 'DARE,' ICML 2024, arXiv:2311.03099"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "Model Soups: Averaging Weights of Multiple Fine-tuned Models",
+      "authors": "Wortsman et al.",
+      "venue": "ICML 2022",
+      "arxiv": "2203.05482"
+    },
+    {
+      "title": "TIES-Merging: Resolving Interference When Merging Models",
+      "authors": "Yadav et al.",
+      "venue": "NeurIPS 2023",
+      "arxiv": "2306.01708"
+    },
+    {
+      "title": "Language Models are Super Mario: Absorbing Abilities from Homologous Models as a Free Lunch (DARE)",
+      "authors": "Yu et al.",
+      "venue": "ICML 2024",
+      "arxiv": "2311.03099"
+    }
+  ]
+}

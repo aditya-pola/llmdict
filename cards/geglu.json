@@ -1,0 +1,38 @@
+{
+  "id": "geglu",
+  "name": "GeGLU",
+  "expansion": "GELU-activated Gated Linear Unit",
+  "category": "layer-types",
+  "oneliner": "GLU variant using GELU activation instead of Swish — performs nearly identically to SwiGLU, used in T5 v1.1 and Flan-T5.",
+  "explanation": "From the same Shazeer (2020) paper. GELU(x) = x·$\\Phi$(x) where $\\Phi$ is Gaussian CDF. Practically indistinguishable from SwiGLU in quality (both ~21.3 perplexity vs ReLU's ~22.5 in Shazeer's T5 experiments). The ecosystem split: LLaMA-inspired models standardized on SwiGLU, T5/Flan-T5 family uses GeGLU. GELU was already standard in BERT/GPT-2, so GeGLU was a natural extension. Less common in decoder-only LLMs post-2023.",
+  "fundamentals": "GeGLU(x) = (GELU(xW_gate) ⊙ xW_up)W_down. GELU(z) $\\approx$ z·0.5·(1 + tanh($\\sqrt{2/π}$·(z + 0.044715$z^3$))). Same parameter count as SwiGLU: 3 $\\times$ d_model $\\times$ d_ff. Swish vs GELU: $\\Phi$(x) has slightly steeper transition than $\\sigma$(x), negligible practical difference.",
+  "seen_in": [
+    "model-config",
+    "code"
+  ],
+  "related": [
+    "swiglu",
+    "ffn",
+    "gelu"
+  ],
+  "sources": [
+    "Shazeer, 'GLU Variants Improve Transformer,' 2020, arXiv:2002.05202",
+    "Hendrycks & Gimpel, 'GELUs,' 2016, arXiv:1606.08415"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "GLU Variants Improve Transformer",
+      "authors": "Shazeer",
+      "venue": "2020",
+      "arxiv": "2002.05202"
+    },
+    {
+      "title": "Gaussian Error Linear Units (GELUs)",
+      "authors": "Hendrycks & Gimpel",
+      "venue": "2016",
+      "arxiv": "1606.08415"
+    }
+  ]
+}

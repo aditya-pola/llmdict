@@ -1,0 +1,32 @@
+{
+  "id": "knowledge-distillation",
+  "name": "Knowledge Distillation",
+  "expansion": "Knowledge Distillation (KD)",
+  "category": "scaling-patterns",
+  "oneliner": "Train a small 'student' to mimic a large 'teacher's output distributions — transfers 'dark knowledge' from soft probabilities that hard labels miss.",
+  "explanation": "Hinton et al. (2015). Teacher's soft probability distribution over vocabulary contains far more information than one-hot labels — inter-class relationships, relative similarities. Student trained on combined loss: cross-entropy vs ground truth + KL divergence vs teacher's softened outputs (temperature T=2-20 amplifies dark knowledge). Modern LLM distillation often uses synthetic data generation instead of logit matching. Typical retention: 85-95% of teacher quality at 1/10th size. Examples: LLaMA 3.2 1B/3B from 8B/70B, Phi models from GPT-4-class, Gemma distilled variants.",
+  "fundamentals": "L = $\\alpha$·CE(y_true, $\\sigma$(z_s)) + (1-$\\alpha$)·$T^2$·KL($\\sigma$(z_t/T) || $\\sigma$(z_s/T)). Temperature T softens distributions. $T^2$ compensates gradient magnitude. Hard labels: ~15 bits/example (lo$g_2$(32K)). Soft labels: 32K continuous values — orders of magnitude more info. Distillation vs pruning: pruning removes params from existing model (architecture shrinks); distillation trains new smaller model from scratch using teacher signal. Can combine: prune then distill to recover (LLaMA 3.2 approach).",
+  "seen_in": [
+    "model-cards",
+    "documentation"
+  ],
+  "related": [
+    "dense-models",
+    "quantization",
+    "pruning"
+  ],
+  "sources": [
+    "Hinton et al., 'Distilling the Knowledge in a Neural Network,' 2015, arXiv:1503.02531",
+    "Meta, 'The Llama 3 Herd of Models,' arXiv:2407.21783"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "Distilling the Knowledge in a Neural Network",
+      "authors": "Hinton et al.",
+      "venue": "NeurIPS Workshop 2015",
+      "arxiv": "1503.02531"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "id": "abf",
+  "name": "ABF",
+  "expansion": "Adjusted Base Frequency",
+  "category": "position-encodings",
+  "oneliner": "Simplest long-context approach: increase RoPE base from 10,000 to 500K-1M during training. No post-hoc scaling needed.",
+  "explanation": "Just change the base constant in $\\theta_i = \\text{base}^{-2i/d}$ to a much larger value and train with it. Larger base = longer wavelengths = model can represent longer-range positions. High-freq band (i=0) always has $\\theta_0$=1 regardless of base, so local discrimination is preserved. Requires training/continued pre-training (can't just change at inference). Used by: LLaMA 3 (base=500K, 8K context), LLaMA 3.1 (500K, 128K), Code Llama (1M, 16K→100K+), Qwen2/2.5 (1M, 32K-128K). Preferred by orgs training from scratch due to simplicity.",
+  "fundamentals": "$\\theta_i$ = B^(-2i/d). Max wavelength = 2$\\pi$·B. base=10K → ~63K positions; base=500K → ~3.1M positions; base=1M → ~6.3M positions. High-freq (i=0): $\\theta_0$=1 always (base^0=1) — local info preserved for any base. Mathematically equivalent to NTK-aware with specific $\\alpha$, but applied during training not post-hoc. The model learns to use the extended position range natively — no distributional mismatch.",
+  "seen_in": [
+    "model-config"
+  ],
+  "related": [
+    "rope",
+    "ntk-rope",
+    "yarn",
+    "position-interpolation"
+  ],
+  "sources": [
+    "Meta, 'The Llama 3 Herd of Models,' 2024, arXiv:2407.21783",
+    "Qwen Team, 'Qwen2 Technical Report,' 2024, arXiv:2407.10671",
+    "Xiong et al., 'Effective Long-Context Scaling,' 2023, arXiv:2309.16039"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "Llama 3 paper (rope_theta=500K)",
+      "url": "https://arxiv.org/abs/2407.21783"
+    },
+    {
+      "label": "Qwen2 Technical Report (rope_theta=1M)",
+      "url": "https://arxiv.org/abs/2407.10671"
+    }
+  ]
+}

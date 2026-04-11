@@ -1,0 +1,24 @@
+{
+  "id": "format-onnx",
+  "name": "ONNX",
+  "expansion": "Open Neural Network Exchange",
+  "category": "export-formats",
+  "oneliner": "Open format for ML computation graphs. Train in PyTorch, export to ONNX, run anywhere via ONNX Runtime (CPU, CUDA, DirectML, TensorRT). Key for edge/Windows.",
+  "seen_in": [
+    "filename",
+    "model-name"
+  ],
+  "related": [],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "ONNX GitHub",
+      "url": "https://github.com/onnx/onnx"
+    },
+    {
+      "label": "ONNX Runtime",
+      "url": "https://github.com/microsoft/onnxruntime"
+    }
+  ]
+}

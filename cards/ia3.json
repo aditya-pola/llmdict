@@ -1,0 +1,29 @@
+{
+  "id": "ia3",
+  "name": "IA3",
+  "expansion": "Infused Adapter by Inhibiting and Amplifying Inner Activations",
+  "category": "fine-tuning-methods",
+  "oneliner": "Learns rescaling vectors (not matrices) for K, V, FFN activations — 10-100$\\times$ fewer params than LoRA. Best for few-shot and massive multi-task serving.",
+  "explanation": "Element-wise scaling: l_k for keys, l_v for values, l_ff for FFN intermediate. K'=l_k⊙K, V'=l_v⊙V, FFN'=l_ff⊙FFN_mid. LLaMA 7B: 614K params (0.009%). Initialized to ones. Quality ceiling lower than LoRA for large FT, but excellent for few-shot and serving thousands of adapters.",
+  "fundamentals": "K' = l_k ⊙ (W_K·x). V' = l_v ⊙ (W_V·x). FFN: h = W_down·(l_ff ⊙ act(W_up·x)). Params: d_k+d_v+d_ff per layer. LLaMA 7B: 19,200/layer $\\times$ 32 = 614K. Optimizer: ~5MB.",
+  "seen_in": [
+    "model-config"
+  ],
+  "related": [
+    "lora",
+    "peft"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Few-Shot Parameter-Efficient Fine-Tuning is Better and Cheaper than In-Context Learning",
+      "authors": "Liu et al.",
+      "venue": "NeurIPS 2022",
+      "arxiv": "2205.05638"
+    }
+  ],
+  "sources": [
+    "Liu et al., arXiv:2205.05638"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

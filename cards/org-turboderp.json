@@ -1,0 +1,21 @@
+{
+  "id": "org-turboderp",
+  "name": "turboderp/",
+  "expansion": "ExLlamaV2 creator, EXL2 quantizer",
+  "category": "hf-organizations",
+  "oneliner": "Developer of ExLlamaV2 inference engine. Publishes EXL2-format quants with variable per-layer bitwidth. Best quality-per-bit on NVIDIA GPUs.",
+  "seen_in": [
+    "repo-name"
+  ],
+  "related": [
+    "exl2"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "ExLlamaV2 GitHub",
+      "url": "https://github.com/turboderp/exllamav2"
+    }
+  ]
+}

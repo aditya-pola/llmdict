@@ -1,0 +1,24 @@
+{
+  "id": "tag-mrl",
+  "name": "-MRL",
+  "expansion": "Matryoshka Representation Learning",
+  "category": "capability-tags",
+  "oneliner": "Embedding model supporting variable-dimensionality outputs — truncate to smaller sizes with minimal quality loss. Named after Russian nesting dolls.",
+  "explanation": "nomic-embed-text-v1.5 (MRL-capable). Allows storage/compute trade-offs at inference. Train once, serve at any dimension.",
+  "seen_in": [
+    "model-name"
+  ],
+  "related": [
+    "tag-embed"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Matryoshka Representation Learning",
+      "authors": "Kusupati et al.",
+      "venue": "NeurIPS 2022",
+      "arxiv": "2205.13147"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

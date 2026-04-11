@@ -1,0 +1,32 @@
+{
+  "id": "fp8",
+  "name": "fp8 (E4M3 / E5M2)",
+  "expansion": "8-bit Floating Point — two variants for forward and backward passes",
+  "category": "precision-formats",
+  "oneliner": "Two 8-bit float formats: E4M3 for weights/activations (more precision) and E5M2 for gradients (more range). 2$\\times$ throughput vs fp16.",
+  "explanation": "Joint proposal by NVIDIA, ARM, Intel (2022). E4M3 (4 exp, 3 mantissa): max value 448, ~1.2 decimal digits — for forward pass. E5M2 (5 exp, 2 mantissa): max value 57,344, ~0.9 digits — for backward pass gradients. Native on H100/H200 Tensor Cores at 2$\\times$ fp16 throughput. NVIDIA Transformer Engine auto-manages per-tensor scaling. For inference, E4M3 only (no gradients). Typically <0.1% accuracy loss vs fp16.",
+  "fundamentals": "E4M3: 1 sign | 4 exp (bias 7) | 3 mantissa. No infinity — all exp=1111 patterns are finite (deliberate departure from IEEE 754). Only 16 values per sign per binade. E5M2: 1 sign | 5 exp (bias 15) | 2 mantissa. Follows IEEE 754 conventions (has inf/NaN). Per-tensor scaling factors are essential — without them, clipping destroys quality.",
+  "seen_in": [
+    "model-name",
+    "serving-config"
+  ],
+  "related": [
+    "bf16",
+    "fp16",
+    "w8a8",
+    "transformer-engine"
+  ],
+  "sources": [
+    "Micikevicius et al., 'FP8 Formats for Deep Learning,' arXiv:2209.05433"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "FP8 Formats for Deep Learning",
+      "authors": "Micikevicius et al.",
+      "venue": "2022",
+      "arxiv": "2209.05433"
+    }
+  ]
+}

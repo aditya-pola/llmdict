@@ -1,0 +1,38 @@
+{
+  "id": "e2m1",
+  "name": "E2M1 (MXFP4)",
+  "expansion": "2-bit Exponent, 1-bit Mantissa — Microscaling FP4",
+  "category": "precision-formats",
+  "oneliner": "4-bit micro-float: only 15 distinct values, made viable by sharing an 8-bit block scale across 32 elements. Next-gen format for Blackwell GPUs.",
+  "explanation": "Part of the OCP Microscaling (MX) spec (AMD, ARM, Intel, Meta, Microsoft, NVIDIA, Qualcomm, 2023). Standalone E2M1 is nearly useless — 15 values. The MX trick: 32 E2M1 elements share one E8M0 scale (8-bit exponent, no mantissa). Scale handles magnitude, E2M1 handles relative differences within the block. 2$\\times$ compute density vs fp8. NVIDIA Blackwell has native MXFP4 Tensor Cores. Also defines MXFP6 (E3M2/E2M3) and MXFP8.",
+  "fundamentals": "E2M1: 1 sign | 2 exp (bias 1) | 1 mantissa. No inf/NaN. Positive values: 0, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0. With sign: 15 distinct values. E8M0 block scale: pure power of 2 (2^(exp-127)), range 2^-127 to $2^{127}$. Effective value = E2M1_value $\\times$ 2^(shared_exp - 127). Effective bpw: 4 + 8/32 = 4.25 bits.",
+  "seen_in": [
+    "gguf-filename",
+    "hardware-spec"
+  ],
+  "related": [
+    "fp8",
+    "mxfp4-moe",
+    "quantization"
+  ],
+  "sources": [
+    "OCP Microscaling (MX) Spec v1.0, September 2023",
+    "Rouhani et al., arXiv:2310.10537"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "OCP Microscaling Formats (MX) Specification v1.0",
+      "authors": "OCP (AMD, ARM, Intel, Meta, Microsoft, NVIDIA, Qualcomm)",
+      "venue": "September 2023",
+      "arxiv": null
+    },
+    {
+      "title": "Microscaling Data Formats for Deep Learning",
+      "authors": "Rouhani et al.",
+      "venue": "2023",
+      "arxiv": "2310.10537"
+    }
+  ]
+}

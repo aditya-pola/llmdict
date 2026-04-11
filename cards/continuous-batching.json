@@ -1,0 +1,32 @@
+{
+  "id": "continuous-batching",
+  "name": "Continuous Batching",
+  "expansion": "Continuous Batching / Iteration-Level Batching",
+  "category": "scaling-patterns",
+  "oneliner": "Dynamically insert/remove requests from a running batch at each generation step — eliminates wasted slots from variable-length outputs. 2-4$\\times$ throughput gain.",
+  "explanation": "Static batching: collect N requests, process until ALL finish, then accept new batch. Short requests waste their slots while waiting for long ones. Continuous batching (Orca, Yu et al. 2022): after each token step, remove finished requests and fill slots with waiting ones. Synergistic with PagedAttention: dynamic KV cache allocation/freeing enables efficient slot reuse. Together: 2-4$\\times$ throughput vs static batching, up to 23$\\times$ under high load (vLLM paper). Default in vLLM, TGI, TensorRT-LLM.",
+  "fundamentals": "Per-iteration scheduler: 1) Generate one token for all active requests. 2) Remove finished (EOS/max_len), free KV cache. 3) Fill freed slots with new requests (run prefill). 4) Repeat. Prefill vs decode asymmetry: prefill is compute-bound (many tokens), decode is memory-bound (one token). Advanced: chunked prefill interleaves prefill chunks with decode steps. Concrete: static batching wastes 60-80% KV memory on fragmentation; PagedAttention reduces to <4%.",
+  "seen_in": [
+    "serving-config",
+    "documentation"
+  ],
+  "related": [
+    "paged-attention",
+    "kv-cache",
+    "speculative-decoding"
+  ],
+  "sources": [
+    "Yu et al., 'Orca: A Distributed Serving System,' OSDI 2022",
+    "Kwon et al., 'PagedAttention,' SOSP 2023, arXiv:2309.06180"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "Orca: A Distributed Serving System for Transformer-Based Generative Models",
+      "authors": "Yu et al.",
+      "venue": "OSDI 2022",
+      "arxiv": null
+    }
+  ]
+}

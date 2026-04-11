@@ -1,0 +1,26 @@
+{
+  "id": "tag-ft",
+  "name": "-ft / -full-ft / -fft / -lora / -qlora / -adapter",
+  "expansion": "Fine-tuning method tags",
+  "category": "adapter-tags",
+  "oneliner": "-ft: generic fine-tuned. -full-ft/-fft: all params updated. -lora/-qlora: adapter type. -adapter: generic (usually bottleneck). Check model card for details.",
+  "explanation": "-ft is ambiguous (could be any method). -lora adapter files are typically 10-100MB. -full-ft produces full model copies.",
+  "seen_in": [
+    "model-name",
+    "filename"
+  ],
+  "related": [
+    "lora",
+    "qlora",
+    "full-ft",
+    "adapters"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "HuggingFace PEFT docs",
+      "url": "https://huggingface.co/docs/peft"
+    }
+  ]
+}

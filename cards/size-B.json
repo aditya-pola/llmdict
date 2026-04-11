@@ -1,0 +1,24 @@
+{
+  "id": "size-B",
+  "name": "B (Billion)",
+  "expansion": "Billion parameters",
+  "category": "size-conventions",
+  "oneliner": "The universal size marker. 7B = 7 billion parameters. Refers to total params unless combined with A (active).",
+  "explanation": "Nearly universal. Some older models use lowercase (7b). When a model card lists a single number without total/active distinction, it's the total (and the model is dense).",
+  "seen_in": [
+    "model-name"
+  ],
+  "related": [
+    "size-A",
+    "size-E",
+    "dense-models"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "Llama 3.1 model card (size convention example)",
+      "url": "https://huggingface.co/meta-llama/Llama-3.1-8B"
+    }
+  ]
+}

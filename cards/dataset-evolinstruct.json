@@ -1,0 +1,22 @@
+{
+  "id": "dataset-evolinstruct",
+  "name": "EvolInstruct",
+  "expansion": "WizardLM synthetic data augmentation",
+  "category": "datasets-recipes",
+  "oneliner": "Iteratively 'evolves' simple instructions into complex ones using an LLM. Creates WizardLM/WizardCoder/WizardMath training sets. By Microsoft Research.",
+  "seen_in": [
+    "model-name",
+    "documentation"
+  ],
+  "related": [],
+  "foundational_papers": [
+    {
+      "title": "WizardLM: Empowering Large Language Models to Follow Complex Instructions",
+      "authors": "Xu et al.",
+      "venue": "2023",
+      "arxiv": "2304.12244"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

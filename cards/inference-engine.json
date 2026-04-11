@@ -1,0 +1,67 @@
+{
+  "id": "inference-engine",
+  "name": "Inference Engine",
+  "expansion": "Specialized runtime for executing trained LLM weights",
+  "category": "scaling-patterns",
+  "oneliner": "Purpose-built software for running LLM forward passes at maximum efficiency — 5-20x faster than naive PyTorch via KV cache management, continuous batching, kernel fusion, and quantization support.",
+  "explanation": "While you can serve an LLM with vanilla PyTorch model.generate(), inference engines exist because serving (many concurrent users, variable-length sequences, autoregressive decoding) is fundamentally different from training. Engines optimize the narrow path of repeated forward passes: KV cache management avoids recomputing past context, continuous batching dynamically groups requests so GPUs never idle, kernel fusion merges operations to reduce memory round-trips, quantization support runs INT4/INT8/FP8 with purpose-built kernels. Key engines: vLLM (PagedAttention, most adopted), TGI (HuggingFace), llama.cpp (CPU/consumer, GGUF format), TensorRT-LLM (NVIDIA, highest throughput), ExLlamaV2 (extreme quantization), SGLang (structured generation), Ollama (user-friendly local), LM Studio (desktop GUI).",
+  "fundamentals": "Core bottleneck: memory bandwidth, not compute. Each decode step reads ALL weights from GPU memory for ONE token. 70B in fp16 = 140 GB streaming through memory bus per token. A100 at 2 TB/s = ~70ms minimum. Engines attack this: quantization shrinks bytes read, KV caching avoids re-reading past context, batching amortizes the weight-read across many sequences. Two phases: prefill (processing prompt, compute-bound, parallel) vs decode (generating tokens, memory-bound, sequential). Good engines treat them differently — chunked prefill avoids blocking decode for other requests. Throughput vs latency tradeoff: larger batches improve throughput but increase per-request latency. Speculative decoding improves latency without sacrificing throughput.",
+  "seen_in": [
+    "serving-config",
+    "deployment-docs",
+    "model-cards"
+  ],
+  "related": [
+    "kv-cache",
+    "paged-attention",
+    "continuous-batching",
+    "speculative-decoding",
+    "tp-pp",
+    "gguf",
+    "quantization"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Efficient Memory Management for Large Language Model Serving with PagedAttention",
+      "authors": "Kwon et al.",
+      "venue": "SOSP 2023",
+      "arxiv": "2309.06180"
+    },
+    {
+      "title": "Orca: A Distributed Serving System for Transformer-Based Generative Models",
+      "authors": "Yu et al.",
+      "venue": "OSDI 2022",
+      "arxiv": null
+    },
+    {
+      "title": "FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness",
+      "authors": "Dao et al.",
+      "venue": "NeurIPS 2022",
+      "arxiv": "2205.14135"
+    }
+  ],
+  "resources": [
+    {
+      "label": "vLLM GitHub",
+      "url": "https://github.com/vllm-project/vllm"
+    },
+    {
+      "label": "llama.cpp GitHub",
+      "url": "https://github.com/ggerganov/llama.cpp"
+    },
+    {
+      "label": "TGI GitHub",
+      "url": "https://github.com/huggingface/text-generation-inference"
+    },
+    {
+      "label": "TensorRT-LLM GitHub",
+      "url": "https://github.com/NVIDIA/TensorRT-LLM"
+    }
+  ],
+  "sources": [
+    "Kwon et al., arXiv:2309.06180",
+    "Yu et al., OSDI 2022"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-11"
+}

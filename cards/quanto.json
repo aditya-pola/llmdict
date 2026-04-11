@@ -1,0 +1,23 @@
+{
+  "id": "quanto",
+  "name": "Quanto (optimum-quanto)",
+  "expansion": "HuggingFace's quantization library",
+  "category": "quantization-methods",
+  "oneliner": "HuggingFace's own quantization library — supports int2/int4/int8/float8 with a clean Pythonic API. Device-agnostic.",
+  "explanation": "Quanto is designed as a simple, composable quantization toolkit. Supports both weight-only and weight+activation quantization. Key feature: device-agnostic — can quantize on CPU and run on GPU, supports CUDA, MPS (Apple), and XPU (Intel). Integrates directly with HuggingFace Transformers and diffusers. Less optimized for raw throughput than GPTQ/AWQ but easier to use and more flexible.",
+  "fundamentals": "Provides quantized tensor types that wrap standard PyTorch tensors with scale/zero-point metadata. Quantization is eager (happens at model load time). Supports symmetric and affine quantization, per-tensor and per-axis granularity.",
+  "seen_in": [
+    "quantization-config",
+    "documentation"
+  ],
+  "related": [
+    "bitsandbytes",
+    "gptq",
+    "awq"
+  ],
+  "sources": [
+    "github.com/huggingface/optimum-quanto"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

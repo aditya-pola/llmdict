@@ -1,0 +1,21 @@
+{
+  "id": "tool-tgi",
+  "name": "TGI",
+  "expansion": "Text Generation Inference (HuggingFace)",
+  "category": "serving-tools",
+  "oneliner": "HuggingFace's production server. Rust router + Python model serving. Continuous batching, Flash Attention, grammar-constrained generation. Docker-first.",
+  "seen_in": [
+    "serving-config"
+  ],
+  "related": [
+    "tool-vllm"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "TGI GitHub",
+      "url": "https://github.com/huggingface/text-generation-inference"
+    }
+  ]
+}

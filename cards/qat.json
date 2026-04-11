@@ -1,0 +1,33 @@
+{
+  "id": "qat",
+  "name": "QAT",
+  "expansion": "Quantization-Aware Training",
+  "category": "core-concepts",
+  "oneliner": "Simulate quantization during training so the model learns to be robust to quantization noise — better quality than PTQ but requires full training infrastructure.",
+  "explanation": "Forward pass uses 'fake quantization' (quantize then immediately dequantize, introducing realistic noise). Gradients flow through rounding via Straight-Through Estimator (STE). Over many steps, weights adapt to quantize well. Quality gap vs PTQ widens at lower bits: at int8 no benefit, at int4 meaningful, at int2 essential. Cost: requires training/fine-tuning infrastructure (hundreds of GPUs for 70B). Meta and Google have published LLM QAT results. Google's Gemma uses QAT for official quantized variants.",
+  "fundamentals": "Forward: W_fake_q = dequantize(quantize(W)), Y = X @ W_fake_q. Backward: STE approximates d(round(x))/dx $\\approx$ 1 — gradients pass through as if rounding wasn't there. Optimizer updates full-precision master weights. The model learns weights that happen to quantize well.",
+  "seen_in": [
+    "model-cards",
+    "documentation"
+  ],
+  "related": [
+    "ptq",
+    "spinquant",
+    "fake-quantization",
+    "ste"
+  ],
+  "sources": [
+    "Jacob et al., CVPR 2018, arXiv:1712.05877",
+    "Liu et al., 'LLM-QAT,' arXiv:2305.17888"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "Quantization and Training of Neural Networks for Efficient Integer-Arithmetic-Only Inference",
+      "authors": "Jacob et al.",
+      "venue": "CVPR 2018",
+      "arxiv": "1712.05877"
+    }
+  ]
+}

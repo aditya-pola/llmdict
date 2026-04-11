@@ -1,0 +1,51 @@
+{
+  "id": "pre-training",
+  "name": "Pre-training",
+  "expansion": "Pre-training (autoregressive language modeling)",
+  "category": "training-pipeline",
+  "oneliner": "Training a model from scratch on massive text via next-token prediction — the most expensive stage, producing a base model with no instruction-following ability.",
+  "explanation": "Self-supervised: predict x_t from x_1..x_{t-1} on hundreds of billions to trillions of tokens. No human labels needed. Produces a 'base model' that can complete text but doesn't follow instructions. Autoregressive (GPT-style, left-to-right) is dominant for generative models. Chinchilla scaling: N params should train on ~20N tokens, but modern models 'over-train' (smaller model + more tokens = cheaper inference). Cost: LLaMA 2 70B used 1.7M A100 GPU-hours. GPT-4 estimated $50-100M+.",
+  "fundamentals": "Loss: $\\mathcal{L} = -\\frac{1}{T}\\sum_{t=1}^{T} \\log p_\\theta(x_t | x_1 \\ldots x_{t-1})$. Standard cross-entropy over vocabulary at each position. Data: raw text, tokenized (BPE/SPM), packed into fixed-length sequences (2K-128K tokens). Hyperparams: lr 1e-4 to 3e-4 (cosine decay), batch 4M-16M tokens/step, AdamW ($\\beta_1$=0.9, $\\beta_2$=0.95, wd=0.1), bf16 mixed precision. Compute: $\\approx 6ND$ FLOPs (N=params, D=tokens). 70B on 2T tokens $\\approx 8.4 \\times 10^{23}$ FLOPs.",
+  "seen_in": [
+    "model-cards",
+    "documentation"
+  ],
+  "related": [
+    "cpt",
+    "sft",
+    "scaling-laws"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Attention Is All You Need",
+      "authors": "Vaswani et al.",
+      "venue": "NeurIPS 2017",
+      "arxiv": "1706.03762"
+    },
+    {
+      "title": "Language Models are Few-Shot Learners (GPT-3)",
+      "authors": "Brown et al.",
+      "venue": "NeurIPS 2020",
+      "arxiv": "2005.14165"
+    },
+    {
+      "title": "Training Compute-Optimal Large Language Models (Chinchilla)",
+      "authors": "Hoffmann et al.",
+      "venue": "NeurIPS 2022",
+      "arxiv": "2203.15556"
+    },
+    {
+      "title": "LLaMA: Open and Efficient Foundation Language Models",
+      "authors": "Touvron et al.",
+      "venue": "2023",
+      "arxiv": "2302.13971"
+    }
+  ],
+  "sources": [
+    "Vaswani et al., arXiv:1706.03762",
+    "Brown et al., arXiv:2005.14165",
+    "Hoffmann et al., arXiv:2203.15556"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "dataset-platypus",
+  "name": "Platypus",
+  "expansion": "STEM/logic fine-tuning dataset (Boston University)",
+  "category": "datasets-recipes",
+  "oneliner": "~25K curated STEM reasoning questions. Platypus2-70B briefly topped Open LLM Leaderboard (Aug 2023). Small data, big results.",
+  "seen_in": [
+    "model-name"
+  ],
+  "related": [],
+  "foundational_papers": [
+    {
+      "title": "Platypus: Quick, Cheap, and Powerful Refinement of LLMs",
+      "authors": "Lee et al.",
+      "venue": "2023",
+      "arxiv": "2308.07317"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

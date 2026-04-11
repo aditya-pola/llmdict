@@ -1,0 +1,32 @@
+{
+  "id": "quip-sharp",
+  "name": "QuIP#",
+  "expansion": "Quantization with Incoherence Processing (sharp)",
+  "category": "quantization-methods",
+  "oneliner": "2-bit quantization using random rotations to spread information evenly across weights, then vector quantization with E8 lattice codebooks.",
+  "explanation": "Key insight: quantization works best when weight matrices are 'incoherent' — no single weight is disproportionately important. QuIP# applies random orthogonal rotations (Hadamard transforms) to make weights incoherent, then uses lattice-based vector quantization (E8 lattice, a mathematically optimal packing) for extreme compression. Achieves viable 2-bit quantization for 70B+ models. Research-oriented; less ecosystem support than GPTQ/AWQ.",
+  "fundamentals": "1) Rotate weights: W' = UWV^T (random orthogonal U, V from Hadamard matrices). 2) Vector quantize rotated weights using E8 lattice codebook. 3) At inference: decode codebook entries and apply inverse rotations. The rotation is the key — it makes all weights roughly equally important, so uniform quantization works better.",
+  "seen_in": [
+    "model-name",
+    "research-repos"
+  ],
+  "related": [
+    "aqlm",
+    "vector-quantization",
+    "incoherence",
+    "lattice-codebook"
+  ],
+  "sources": [
+    "Chee et al., 'QuIP#,' arXiv:2402.04396"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "QuIP#: Even Better LLM Quantization with Hadamard Incoherence and Lattice Codebooks",
+      "authors": "Chee et al.",
+      "venue": "ICML 2024",
+      "arxiv": "2402.04396"
+    }
+  ]
+}

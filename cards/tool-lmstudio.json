@@ -1,0 +1,21 @@
+{
+  "id": "tool-lmstudio",
+  "name": "LM Studio",
+  "expansion": "Desktop GUI for local LLMs",
+  "category": "serving-tools",
+  "oneliner": "GUI app (Win/Mac/Linux) for discovering, downloading, running local models. Built on llama.cpp + MLX. Model search, chat UI, local server.",
+  "seen_in": [
+    "documentation"
+  ],
+  "related": [
+    "tool-llamacpp"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "LM Studio website",
+      "url": "https://lmstudio.ai"
+    }
+  ]
+}

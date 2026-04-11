@@ -1,0 +1,30 @@
+{
+  "id": "ffn",
+  "name": "FFN / MLP",
+  "expansion": "Feed-Forward Network / Multi-Layer Perceptron",
+  "category": "layer-types",
+  "oneliner": "The position-wise fully connected sub-block in each transformer layer — up-project, activate, down-project. Stores ~67% of each layer's parameters.",
+  "explanation": "Operates independently per token (no cross-token interaction). Serves as the 'memory/knowledge storage' component — factual knowledge and patterns predominantly stored in FFN weights. Standard design: project up to larger intermediate dim, apply activation, project back down. In original Transformer, d_ff = 4 $\\times$ d_model with ReLU. Modern models use SwiGLU with 3 matrices and d_ff $\\approx$ 2.67 $\\times$ d_model to keep total params constant. FFN is the dominant parameter consumer: ~67% of layer params in gated variants.",
+  "fundamentals": "Standard: FFN(x) = $W_2$·activation($W_1$·x). Gated (SwiGLU): FFN(x) = (Swish(xW_gate) ⊙ xW_up)W_down. LLaMA 7B: d_model=4096, d_ff=11008. FFN params: 3$\\times$4096$\\times$11008 = 135M vs Attention: 4$\\times$409$6^2$ = 67M. The '2/3 of 4x' rule: d_ff $\\approx$ (8/3)$\\times$d_model, rounded to multiple of 256 for hardware efficiency.",
+  "seen_in": [
+    "model-config",
+    "code"
+  ],
+  "related": [
+    "swiglu",
+    "geglu",
+    "moe",
+    "residual-connection"
+  ],
+  "sources": [
+    "Vaswani et al., 'Attention Is All You Need,' NeurIPS 2017, arXiv:1706.03762"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "Attention Is All You Need (original Transformer)",
+      "url": "https://arxiv.org/abs/1706.03762"
+    }
+  ]
+}

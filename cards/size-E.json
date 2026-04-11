@@ -1,0 +1,24 @@
+{
+  "id": "size-E",
+  "name": "E (Effective params)",
+  "expansion": "Effective parameters (Gemma-specific)",
+  "category": "size-conventions",
+  "oneliner": "Google Gemma notation: effective capacity accounting for architectural efficiency (PLE, parameter sharing). E4B $\\approx$ performs like 4B dense.",
+  "explanation": "Specific to Gemma 3n/4 series. E4B has 8B total params but 4.5B 'effective' due to Per-Layer Embeddings inflating count. Distinguishes from raw param count.",
+  "seen_in": [
+    "model-name"
+  ],
+  "related": [
+    "ple",
+    "size-A",
+    "size-B"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "Gemma 3 Technical Report (E2B/E4B notation)",
+      "url": "https://arxiv.org/abs/2503.19786"
+    }
+  ]
+}

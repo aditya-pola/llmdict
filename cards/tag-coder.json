@@ -1,0 +1,22 @@
+{
+  "id": "tag-coder",
+  "name": "-Coder / -Code",
+  "expansion": "Code-optimized model",
+  "category": "capability-tags",
+  "oneliner": "CPT or fine-tuned on code corpora. Distinct models, not just prompting. Qwen2.5-Coder, DeepSeek-Coder, CodeLlama.",
+  "explanation": "Some prefix (CodeLlama), some suffix (Qwen2.5-Coder). Usually via continued pre-training on hundreds of billions of code tokens.",
+  "seen_in": [
+    "model-name"
+  ],
+  "related": [
+    "cpt"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "Code Llama paper",
+      "url": "https://arxiv.org/abs/2308.12950"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "mqa",
+  "name": "MQA",
+  "expansion": "Multi-Query Attention",
+  "category": "attention-variants",
+  "oneliner": "All query heads share a single K and V head — reduces KV cache by n_heads$\\times$ (e.g., 32$\\times$) with small quality tradeoff.",
+  "explanation": "Introduced by Shazeer (2019) to address the KV cache bottleneck in autoregressive decoding. Each decoding step must read all cached K/V from memory — this bandwidth is the bottleneck, not compute. MQA uses one K head and one V head shared across all query heads. KV cache shrinks by a factor of n_heads (e.g., 32$\\times$ for 32-head model). Quality degradation is small but measurable (0.1-0.5%). Used in PaLM, PaLM-2, Falcon-40B/180B, StarCoder. Led to GQA as a compromise.",
+  "fundamentals": "For hidden_dim=4096, n_query_heads=32, n_kv_heads=1, head_dim=128: W_Q [4096, 4096], W_K [4096, 128] (32$\\times$ smaller), W_V [4096, 128] (32$\\times$ smaller), W_O [4096, 4096]. K and V broadcast to match query heads during attention. KV cache per token per layer: 2 $\\times$ 1 $\\times$ 128 $\\times$ 2 = 512 bytes (vs 16 KB in MHA). For 32 layers at 4096 tokens: ~64 MB (vs ~2 GB). Bandwidth per decode step at seq_len=2048: ~32 MB (vs ~1 GB in MHA).",
+  "seen_in": [
+    "model-config"
+  ],
+  "related": [
+    "mha",
+    "gqa",
+    "kv-cache"
+  ],
+  "sources": [
+    "Shazeer, 'Fast Transformer Decoding: One Write-Head is All You Need,' 2019, arXiv:1911.02150"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "Fast Transformer Decoding: One Write-Head is All You Need",
+      "authors": "Shazeer",
+      "venue": "2019",
+      "arxiv": "1911.02150"
+    }
+  ]
+}

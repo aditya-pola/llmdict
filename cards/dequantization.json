@@ -1,0 +1,28 @@
+{
+  "id": "dequantization",
+  "name": "Dequantization",
+  "expansion": "Inverse Quantization",
+  "category": "core-concepts",
+  "oneliner": "Reverse mapping from low-precision quantized values back to approximate floats — happens on-the-fly during inference.",
+  "explanation": "In W4A16: int4 weights read from memory, multiplied by group scale in registers/shared memory, fed directly into fp16 GEMM. Fused with computation to avoid materializing full fp16 weight matrix — only 4 bits traverse the memory bus. In W8A8: dequantization happens AFTER the integer GEMM (output $\\times$ scale product), which is cheaper since it operates on the smaller output tensor. Dequantization is cheap: $O(KN)$ vs $O(MKN)$ for the GEMM itself.",
+  "fundamentals": "Integer: W_approx = scale $\\times$ (W_q - zero_point). Error: |W_original - W_approx| ≤ scale/2. nf4: W_approx = nf4_codebook[index] $\\times$ absmax. W8A8 output: Y_fp16 = Y_int32 $\\times$ (s_x $\\times$ s_w).",
+  "seen_in": [
+    "documentation"
+  ],
+  "related": [
+    "quantization",
+    "w4a16",
+    "w8a8"
+  ],
+  "sources": [
+    "Frantar et al., 'Marlin,' arXiv:2408.11743"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "Marlin kernel paper (fused dequantization)",
+      "url": "https://arxiv.org/abs/2408.11743"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "tag-embed",
+  "name": "-Embed / -Embedding",
+  "expansion": "Embedding model",
+  "category": "capability-tags",
+  "oneliner": "Produces fixed-size vectors for retrieval/similarity, not generative text. Often encoder-only or uses mean pooling over decoder.",
+  "explanation": "bge-large, gte-Qwen2-7B, nomic-embed-text. Output: single vector per input. Used for RAG, search, similarity.",
+  "seen_in": [
+    "model-name"
+  ],
+  "related": [
+    "tag-mrl"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "MTEB Leaderboard (embedding model benchmarks)",
+      "url": "https://huggingface.co/spaces/mteb/leaderboard"
+    }
+  ]
+}

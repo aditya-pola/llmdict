@@ -1,0 +1,32 @@
+{
+  "id": "layernorm",
+  "name": "LayerNorm",
+  "expansion": "Layer Normalization",
+  "category": "normalization",
+  "oneliner": "Standardizes activations across the hidden dimension per token — zero mean, unit variance, then learnable scale and shift. The original transformer normalization.",
+  "explanation": "Ba, Kiefer & Hinton (2016). Normalizes across feature/hidden dimension (not batch), making it batch-size-independent and suited for sequence models. Computes mean $\\mu$ and variance $\\sigma^2$ over d_model dimensions, normalizes to zero mean / unit variance, then applies learnable $\\gamma$ (scale) and $\\beta$ (shift). Default in original Transformer, GPT-2/3, BERT, T5, BART. Replaced by RMSNorm in post-2022 decoder LLMs (which drops mean subtraction and bias). Still used in encoder models, legacy architectures, some cross-attention/adapter layers.",
+  "fundamentals": "$\\text{LayerNorm}(x) = \\gamma \\cdot \\frac{x - \\mu}{\\sqrt{\\sigma^2 + \\varepsilon}} + \\beta$. Where $\\mu = \\frac{1}{d}\\sum_i x_i$ and $\\sigma^2 = \\frac{1}{d}\\sum_i (x_i - \\mu)^2$. $\\gamma, \\beta \\in \\mathbb{R}^d$ are learnable (init: $\\gamma=1, \\beta=0$). Params: $2 \\times d_{\\text{model}}$. Requires 2 reductions (mean, variance) vs RMSNorm's 1 (sum of squares). Batch-independent (unlike BatchNorm), no running stats at inference.",
+  "seen_in": [
+    "model-config",
+    "code"
+  ],
+  "related": [
+    "rmsnorm",
+    "pre-norm",
+    "post-norm",
+    "batchnorm"
+  ],
+  "sources": [
+    "Ba et al., 'Layer Normalization,' 2016, arXiv:1607.06450"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "Layer Normalization",
+      "authors": "Ba et al.",
+      "venue": "2016",
+      "arxiv": "1607.06450"
+    }
+  ]
+}

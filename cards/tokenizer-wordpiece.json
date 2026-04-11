@@ -1,0 +1,23 @@
+{
+  "id": "tokenizer-wordpiece",
+  "name": "WordPiece",
+  "expansion": "BERT's subword tokenizer",
+  "category": "tokenizers",
+  "oneliner": "Like BPE but merges by maximum likelihood (mutual information) not frequency. Continuation tokens prefixed with ##. Used by BERT, DistilBERT, Electra.",
+  "seen_in": [
+    "tokenizer-config"
+  ],
+  "related": [
+    "tokenizer-bpe"
+  ],
+  "foundational_papers": [
+    {
+      "title": "BERT: Pre-training of Deep Bidirectional Transformers",
+      "authors": "Devlin et al.",
+      "venue": "NAACL 2019",
+      "arxiv": "1810.04805"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

@@ -1,0 +1,42 @@
+{
+  "id": "cpt",
+  "name": "CPT",
+  "expansion": "Continued Pre-Training (Domain-Adaptive Pre-Training)",
+  "category": "training-pipeline",
+  "oneliner": "Additional pre-training on domain-specific data (code, medical, legal) to inject specialized knowledge — same loss as pre-training, 2-10% of the cost.",
+  "explanation": "Takes a general base model and runs more pre-training on domain corpus. Same next-token prediction objective but shifted data distribution. Key challenge: catastrophic forgetting — mitigated by mixing 10-30% general data, lower lr (2-10$\\times$ lower). Examples: Code Llama (500B code tokens), Meditron (medical), SaulLM (legal), Minerva (math/science). Cost: 2-10% of original pre-training.",
+  "fundamentals": "Loss: identical to pre-training (autoregressive CE). Only data distribution changes. Hyperparams: lr 1e-5 to 5e-5, cosine or constant schedule. Data mixing: ~70-90% domain + 10-30% general replay.",
+  "seen_in": [
+    "model-name",
+    "model-cards"
+  ],
+  "related": [
+    "pre-training",
+    "sft"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Don't Stop Pretraining: Adapt Pretrained Language Models to Diverse Text Domains",
+      "authors": "Gururangan et al.",
+      "venue": "ACL 2020",
+      "arxiv": "2004.10964"
+    },
+    {
+      "title": "Code Llama: Open Foundation Models for Code",
+      "authors": "Rozière et al.",
+      "venue": "2023",
+      "arxiv": "2308.12950"
+    },
+    {
+      "title": "Minerva: Solving Quantitative Reasoning Problems with Language Models",
+      "authors": "Lewkowycz et al.",
+      "venue": "NeurIPS 2022",
+      "arxiv": "2206.14858"
+    }
+  ],
+  "sources": [
+    "Gururangan et al., arXiv:2004.10964"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

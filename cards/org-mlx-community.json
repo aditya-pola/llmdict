@@ -1,0 +1,23 @@
+{
+  "id": "org-mlx-community",
+  "name": "mlx-community/",
+  "expansion": "Apple MLX format models",
+  "category": "hf-organizations",
+  "oneliner": "Community org publishing models in Apple MLX format for Apple Silicon Macs (M1-M4). Typically 4-bit or 8-bit MLX quants.",
+  "seen_in": [
+    "repo-name"
+  ],
+  "related": [],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "mlx-community HuggingFace profile",
+      "url": "https://huggingface.co/mlx-community"
+    },
+    {
+      "label": "Apple MLX GitHub",
+      "url": "https://github.com/ml-explore/mlx"
+    }
+  ]
+}

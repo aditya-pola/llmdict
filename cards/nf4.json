@@ -1,0 +1,32 @@
+{
+  "id": "nf4",
+  "name": "nf4 / NormalFloat4",
+  "expansion": "4-bit NormalFloat — normal-distribution-optimal 4-bit data type",
+  "category": "precision-formats",
+  "oneliner": "Non-uniform 4-bit format with levels spaced at quantiles of a Gaussian — optimal for neural network weights, used by QLoRA/bitsandbytes.",
+  "explanation": "Introduced in the QLoRA paper (Dettmers 2023). Neural network weights $\\approx$ Gaussian when normalized. Uniform int4 wastes levels in sparse tails and under-resolves the dense center. nf4 places 16 levels at N(0,1) quantiles so each level covers equal probability mass (1/16). Reduces quantization error vs uniform int4 for the same 4-bit budget. With 'double quantization' (quantizing scale factors to fp8), effective ~4.127 bpw. Default in bitsandbytes load_in_4bit.",
+  "fundamentals": "Lookup table: $\\{-1.0, -0.6962, -0.5251, -0.3949, -0.2844, -0.1848, -0.0911, 0.0, 0.0796, 0.1609, 0.2461, 0.3379, 0.4407, 0.5626, 0.7230, 1.0\\}$. Levels are denser near zero (spacing 0.08) and sparser in tails (spacing 0.28). Quantize: normalize per group $w_{\\text{norm}} = w/\\text{absmax}$, map to nearest level. Dequantize: $\\text{nf4\\_lookup}[\\text{index}] \\times \\text{absmax}$.",
+  "seen_in": [
+    "model-config",
+    "bitsandbytes-config"
+  ],
+  "related": [
+    "int4",
+    "qlora",
+    "bitsandbytes",
+    "double-quantization"
+  ],
+  "sources": [
+    "Dettmers et al., 'QLoRA,' NeurIPS 2023, arXiv:2305.14314"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "QLoRA: Efficient Finetuning of Quantized Language Models",
+      "authors": "Dettmers et al.",
+      "venue": "NeurIPS 2023",
+      "arxiv": "2305.14314"
+    }
+  ]
+}

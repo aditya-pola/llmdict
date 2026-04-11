@@ -1,0 +1,30 @@
+{
+  "id": "simpo",
+  "name": "SimPO",
+  "expansion": "Simple Preference Optimization",
+  "category": "training-pipeline",
+  "oneliner": "Reference-free DPO: length-normalized log-prob as implicit reward + target margin $\\gamma$. Halves memory vs DPO.",
+  "explanation": "Removes reference model entirely. Implicit reward = average log-prob per token (length-normalized). Adds margin $\\gamma$: chosen must exceed rejected by at least $\\gamma$. No reference = halves memory. $\\beta$ 2.0-2.5 (higher than DPO). Competitive or better than DPO on AlpacaEval 2 / MT-Bench.",
+  "fundamentals": "L = -E[log $\\sigma$($\\beta$·avg_logp(y_w|x) - $\\beta$·avg_logp(y_l|x) - $\\gamma$)]. avg_logp = (1/|y|)$\\Sigma$ log $\\pi_\\theta(y_t|x,y_<t)$. No $\\pi_{\\text{ref}}$. $\\beta$ 2.0-2.5, $\\gamma$ 0.5-1.5.",
+  "seen_in": [
+    "model-name",
+    "model-cards"
+  ],
+  "related": [
+    "dpo",
+    "orpo"
+  ],
+  "foundational_papers": [
+    {
+      "title": "SimPO: Simple Preference Optimization with a Reference-Free Reward",
+      "authors": "Meng et al.",
+      "venue": "NeurIPS 2024",
+      "arxiv": "2405.14734"
+    }
+  ],
+  "sources": [
+    "Meng et al., arXiv:2405.14734"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

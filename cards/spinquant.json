@@ -1,0 +1,32 @@
+{
+  "id": "spinquant",
+  "name": "SpinQuant",
+  "expansion": "Rotation-based Quantization-Aware Training",
+  "category": "quantization-methods",
+  "oneliner": "Learns optimal rotation matrices during training so that rotated weights are easier to quantize — a QAT approach using geometric transformations.",
+  "explanation": "Similar insight to QuIP# (rotations make weights more quantization-friendly), but instead of random rotations, SpinQuant LEARNS the optimal rotations during a fine-tuning phase. This means the model actively optimizes its internal representations to be amenable to low-bit quantization. Combines the geometric insight of incoherence processing with the training-time adaptation of QAT. Published by Meta researchers.",
+  "fundamentals": "During fine-tuning: insert learnable rotation matrices R before quantization in each layer. Forward pass: W' = R @ W, then quantize W'. Gradients flow through to both W and R via STE. The rotations R converge to transformations that spread weight information evenly, minimizing quantization error.",
+  "seen_in": [
+    "research-papers",
+    "model-cards"
+  ],
+  "related": [
+    "qat",
+    "quip-sharp",
+    "rotation",
+    "incoherence"
+  ],
+  "sources": [
+    "Liu et al., 'SpinQuant,' arXiv:2405.16406"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "SpinQuant: LLM Quantization with Learned Rotations",
+      "authors": "Liu et al.",
+      "venue": "2024",
+      "arxiv": "2405.16406"
+    }
+  ]
+}

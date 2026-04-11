@@ -1,0 +1,50 @@
+{
+  "id": "sft",
+  "name": "SFT",
+  "expansion": "Supervised Fine-Tuning (Instruction Tuning)",
+  "category": "training-pipeline",
+  "oneliner": "Training on (instruction, response) pairs — loss computed only on response tokens, not the prompt. Quality >> quantity (LIMA: 1K examples can suffice).",
+  "explanation": "Transforms base model into instruction-following assistant. Loss masking on prompts (CE only on response tokens). Dataset sizes: 10K-1M. Key datasets: FLAN (1800+ tasks), OpenAssistant (161K messages), Alpaca (52K GPT-3.5-generated), ShareGPT, UltraChat (1.5M). Cost: ~0.1-1% of pre-training. Sits after pre-training/CPT, before preference alignment.",
+  "fundamentals": "Loss: $\\mathcal{L} = -\\frac{1}{|y|}\\sum_t \\log p_\\theta(y_t | x, y_1 \\ldots y_{t-1})$. Prompt $x$ tokens masked. Data: {messages: [{role:user, content:...}, {role:assistant, content:...}]}. Hyperparams: lr 1e-5 to 2e-5, 1-5 epochs. Often uses LoRA/QLoRA.",
+  "seen_in": [
+    "model-name",
+    "model-cards"
+  ],
+  "related": [
+    "pre-training",
+    "rlhf",
+    "dpo",
+    "lora"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Training language models to follow instructions with human feedback (InstructGPT)",
+      "authors": "Ouyang et al.",
+      "venue": "NeurIPS 2022",
+      "arxiv": "2203.02155"
+    },
+    {
+      "title": "Scaling Instruction-Finetuned Language Models (FLAN v2)",
+      "authors": "Chung et al.",
+      "venue": "2022",
+      "arxiv": "2210.11416"
+    },
+    {
+      "title": "LIMA: Less Is More for Alignment",
+      "authors": "Zhou et al.",
+      "venue": "NeurIPS 2023",
+      "arxiv": "2305.11206"
+    },
+    {
+      "title": "Self-Instruct: Aligning Language Models with Self-Generated Instructions",
+      "authors": "Wang et al.",
+      "venue": "ACL 2023",
+      "arxiv": "2212.10560"
+    }
+  ],
+  "sources": [
+    "Ouyang et al., arXiv:2203.02155"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

@@ -1,0 +1,35 @@
+{
+  "id": "calibration-data",
+  "name": "Calibration Data",
+  "expansion": "Quantization Calibration Dataset",
+  "category": "core-concepts",
+  "oneliner": "A small dataset (~128 samples) run through the model to collect activation statistics needed by quantization methods to set scale factors.",
+  "explanation": "Some methods need to observe actual activation ranges (which depend on input data) to set quantization parameters. Standard: 128 samples $\\times$ 2048 tokens from C4 or WikiText-2 (established by GPTQ paper). Required by: GPTQ (Hessian computation), AWQ (activation importance), SmoothQuant (smoothing factors), static quantization. NOT required by: simple RTN, dynamic quantization, HQQ. Domain-matched calibration (e.g., code for code models) yields slightly better results.",
+  "fundamentals": "For layer Y=XW+b: calibration records per-layer activation stats. Approaches: min/max (simple but outlier-sensitive), percentile (clips outliers), MSE-optimal (minimizes reconstruction error), entropy/KL-based (TensorRT). For GPTQ: calibration computes Hessian H = 2XX^T, used to solve layer-wise optimization min_Q $\\|\\|WX - QX\\|\\|^2$.",
+  "seen_in": [
+    "documentation",
+    "quantization-scripts"
+  ],
+  "related": [
+    "gptq",
+    "awq",
+    "static-quantization",
+    "imatrix"
+  ],
+  "sources": [
+    "Frantar et al., 'GPTQ,' arXiv:2210.17323",
+    "Nagel et al., arXiv:2106.08295"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "GPTQ paper (established 128-sample C4 calibration standard)",
+      "url": "https://arxiv.org/abs/2210.17323"
+    },
+    {
+      "label": "White Paper on Neural Network Quantization",
+      "url": "https://arxiv.org/abs/2106.08295"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "id": "tool-sglang",
+  "name": "SGLang",
+  "expansion": "Structured Generation Language",
+  "category": "serving-tools",
+  "oneliner": "Serving backend + frontend DSL. RadixAttention (KV cache reuse via radix tree), fast constrained decoding (JSON/regex). Competitive with vLLM throughput.",
+  "seen_in": [
+    "serving-config"
+  ],
+  "related": [
+    "tool-vllm"
+  ],
+  "foundational_papers": [
+    {
+      "title": "SGLang: Efficient Execution of Structured Language Model Programs",
+      "authors": "Zheng et al.",
+      "venue": "2024",
+      "arxiv": "2312.07104"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

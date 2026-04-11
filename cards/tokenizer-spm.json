@@ -1,0 +1,24 @@
+{
+  "id": "tokenizer-spm",
+  "name": "SentencePiece (SPM)",
+  "expansion": "Google's language-independent tokenizer",
+  "category": "tokenizers",
+  "oneliner": "Treats text as raw Unicode stream (no pre-tokenization). Two modes: BPE and Unigram. Outputs .model/.vocab files. Used by Llama 1/2 (BPE), T5 (Unigram).",
+  "seen_in": [
+    "filename",
+    "tokenizer-config"
+  ],
+  "related": [
+    "tokenizer-bpe"
+  ],
+  "foundational_papers": [
+    {
+      "title": "SentencePiece: A simple and language independent subword tokenizer",
+      "authors": "Kudo & Richardson",
+      "venue": "EMNLP 2018",
+      "arxiv": "1808.06226"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

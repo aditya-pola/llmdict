@@ -1,0 +1,31 @@
+{
+  "id": "aqlm",
+  "name": "AQLM",
+  "expansion": "Additive Quantization of Language Models",
+  "category": "quantization-methods",
+  "oneliner": "Extreme compression (2-bit) using learned additive codebooks — highest quality at very low bitwidths.",
+  "explanation": "Represents each weight group as a sum of entries from multiple small codebooks (additive vector quantization). A group of weights is encoded as a sum of M codewords from M codebooks of size 2^B each. For M=2, B=8: 2 bytes per group encodes a lookup into 256-entry codebooks that are jointly learned to minimize reconstruction error. Dominates at 2-bit quantization where simpler methods fail. Slow to quantize (hours) but inference is efficient with custom CUDA kernels.",
+  "fundamentals": "For a group of K weights: w $\\approx$ c1[i1] + c2[i2] + ... + cM[iM] where c_m are learned codebooks and i_m are indices stored as compact integers. Training alternates: fix codebooks, find best indices; fix indices, optimize codebooks. Effective bpw depends on M, B, K parameters.",
+  "seen_in": [
+    "model-name",
+    "repo-name"
+  ],
+  "related": [
+    "quip-sharp",
+    "vector-quantization",
+    "codebook"
+  ],
+  "sources": [
+    "Egiazarian et al., 'AQLM,' arXiv:2401.06118"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "AQLM: Extreme Compression of Language Models via Additive Quantization",
+      "authors": "Egiazarian et al.",
+      "venue": "ICML 2024",
+      "arxiv": "2401.06118"
+    }
+  ]
+}

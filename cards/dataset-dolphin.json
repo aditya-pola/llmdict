@@ -1,0 +1,19 @@
+{
+  "id": "dataset-dolphin",
+  "name": "Dolphin",
+  "expansion": "Eric Hartford's uncensored fine-tunes",
+  "category": "datasets-recipes",
+  "oneliner": "High-quality instruction data with alignment refusals systematically removed. Philosophy: censorship should be user's choice. Applied across Llama, Mistral, Phi.",
+  "seen_in": [
+    "model-name"
+  ],
+  "related": [],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "Eric Hartford's 'Uncensored Models' blog post",
+      "url": "https://erichartford.com/uncensored-models"
+    }
+  ]
+}

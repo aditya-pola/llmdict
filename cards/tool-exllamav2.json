@@ -1,0 +1,22 @@
+{
+  "id": "tool-exllamav2",
+  "name": "ExLlamaV2",
+  "expansion": "High-performance CUDA inference engine",
+  "category": "serving-tools",
+  "oneliner": "By turboderp. EXL2 format with variable per-layer bitwidth. Very fast on NVIDIA consumer GPUs. No CPU support.",
+  "seen_in": [
+    "serving-config"
+  ],
+  "related": [
+    "exl2",
+    "org-turboderp"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "ExLlamaV2 GitHub",
+      "url": "https://github.com/turboderp/exllamav2"
+    }
+  ]
+}

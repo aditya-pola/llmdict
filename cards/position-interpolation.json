@@ -1,0 +1,31 @@
+{
+  "id": "position-interpolation",
+  "name": "Position Interpolation (PI)",
+  "expansion": "Position Interpolation",
+  "category": "position-encodings",
+  "oneliner": "Extends context by linearly downscaling position indices so longer sequences map into the original training range — simple but damages high-frequency resolution.",
+  "explanation": "Meta (Chen et al., June 2023). For context extension from L to L'=s·L: divide all position indices by s. Position L'-1 maps to ~L-1, staying within training range. Requires ~1000 fine-tuning steps (model adjusts to fractional position spacing 1/s instead of 1). Extended LLaMA 2K→32K (16$\\times$). Key finding: interpolation >> extrapolation (extrapolation explodes even for modest extensions). Superseded by NTK/YaRN because PI compresses ALL frequency bands equally — high-freq local resolution damaged by factor s.",
+  "fundamentals": "Modified angle: (m/s)·$\\theta_i$ instead of m·$\\theta_i$. Effective position m'=m/s. For L'=s·L: positions [0, L'-1] → effective [0, L-1/s] ⊂ [0, L). All within training range. Fine-tuning needed: adjacent tokens now separated by 1/s in position space (was 1). Comparison: PI uniformly compresses all frequencies by s. NTK preserves high-freq, stretches low-freq. YaRN: per-band treatment. In HuggingFace: called 'linear' scaling, not 'pi'.",
+  "seen_in": [
+    "model-config"
+  ],
+  "related": [
+    "rope",
+    "ntk-rope",
+    "yarn",
+    "abf"
+  ],
+  "sources": [
+    "Chen et al., 'Extending Context Window of Large Language Models via Positional Interpolation,' 2023, arXiv:2306.15595"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "Extending Context Window of Large Language Models via Positional Interpolation",
+      "authors": "Chen et al.",
+      "venue": "2023",
+      "arxiv": "2306.15595"
+    }
+  ]
+}

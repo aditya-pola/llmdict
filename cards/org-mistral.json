@@ -1,0 +1,21 @@
+{
+  "id": "org-mistral",
+  "name": "mistralai/",
+  "expansion": "Mistral AI — Mistral, Mixtral",
+  "category": "hf-organizations",
+  "oneliner": "Mistral 7B, Mixtral 8x7B/8x22B, Codestral. Pioneered SWA and open MoE. Apache 2.0 base models. Paris-based startup.",
+  "seen_in": [
+    "repo-name"
+  ],
+  "related": [],
+  "foundational_papers": [
+    {
+      "title": "Mistral 7B",
+      "authors": "Jiang et al.",
+      "venue": "2023",
+      "arxiv": "2310.06825"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

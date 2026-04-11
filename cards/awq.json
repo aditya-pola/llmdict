@@ -1,0 +1,32 @@
+{
+  "id": "awq",
+  "name": "AWQ",
+  "expansion": "Activation-Aware Weight Quantization",
+  "category": "quantization-methods",
+  "oneliner": "Identifies the most important ~1% of weight channels via activation magnitudes, then protects them with per-channel scaling.",
+  "explanation": "Not all weights matter equally. AWQ measures importance by activation statistics: channels with consistently large activations amplify weight errors. Instead of mixed-precision (which kills hardware efficiency), AWQ multiplies important weight channels by scale s before quantization, divides corresponding activations by s. Mathematically equivalent but reduces relative quantization error for salient channels. Only needs forward-pass stats — fast (minutes for 70B), no gradients or Hessian.",
+  "fundamentals": "1) Calibrate: s_x(j) = mean(|X[:,j]|) per channel j. 2) Compute scaling: s(j) = s_x(j)^$\\alpha$, $\\alpha$ found by grid search minimizing $\\|\\|Q(W·diag(s))·(X/diag(s)) - WX\\|\\|$. 3) Store W' = W·diag(s), quantize W'. 4) At runtime: activations divided by s (fused into preceding LayerNorm).",
+  "seen_in": [
+    "model-name",
+    "filename"
+  ],
+  "related": [
+    "gptq",
+    "smoothquant",
+    "autoawq",
+    "per-channel-scaling"
+  ],
+  "sources": [
+    "Lin et al., 'AWQ,' MLSys 2024, arXiv:2306.00978"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration",
+      "authors": "Lin et al.",
+      "venue": "MLSys 2024",
+      "arxiv": "2306.00978"
+    }
+  ]
+}

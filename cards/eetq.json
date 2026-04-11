@@ -1,0 +1,22 @@
+{
+  "id": "eetq",
+  "name": "EETQ",
+  "expansion": "Easy and Efficient Quantization for Transformers",
+  "category": "quantization-methods",
+  "oneliner": "Simple 8-bit weight-only quantization — drop-in replacement with minimal setup. No calibration needed.",
+  "explanation": "A straightforward per-channel int8 weight quantization library. No calibration data, no complex algorithms — just absmax scaling per output channel. Trades off accuracy optimization (no Hessian, no activation-awareness) for simplicity and speed. Works well for int8 where the quality gap between methods is small. Integrates with HuggingFace Transformers.",
+  "fundamentals": "Per-channel symmetric quantization: scale_j = max(|W[j,:]|) / 127. W_int8[j,:] = round(W[j,:] / scale_j). At inference: dequantize to fp16 and compute. That's it.",
+  "seen_in": [
+    "quantization-config"
+  ],
+  "related": [
+    "int8",
+    "weight-only-quantization",
+    "per-channel-quantization"
+  ],
+  "sources": [
+    "github.com/NetEase-FuXi/EETQ"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

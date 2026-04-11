@@ -1,0 +1,46 @@
+{
+  "id": "peft",
+  "name": "PEFT",
+  "expansion": "Parameter-Efficient Fine-Tuning (concept + HuggingFace library)",
+  "category": "fine-tuning-methods",
+  "oneliner": "Umbrella term for all methods adapting LLMs by training a tiny fraction of params — AND the HuggingFace library (LoRA, QLoRA, DoRA, IA3, prefix tuning, etc.).",
+  "explanation": "Concept: any technique updating far fewer than all parameters. Families: additive (LoRA, adapters), soft prompt (prefix/prompt tuning), selective (BitFit), reparameterization (LoRA). Library: get_peft_model(base, config), saves adapter files (MBs not GBs). Supports merging, multi-adapter, quantized bases. De facto standard.",
+  "fundamentals": "API: LoraConfig(r=16, lora_alpha=32, target_modules=[...]). Save: adapter_model.safetensors + adapter_config.json. Load: PeftModel.from_pretrained(). Merge: model.merge_and_unload(). Methods: LoRA, QLoRA, DoRA, AdaLoRA, LoRA+, rsLoRA, IA3, prefix tuning, prompt tuning, OFT, BOFT.",
+  "seen_in": [
+    "model-config",
+    "filename",
+    "code"
+  ],
+  "related": [
+    "lora",
+    "qlora",
+    "dora",
+    "ia3",
+    "adapters"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Scaling Down to Scale Up: A Guide to Parameter-Efficient Fine-Tuning",
+      "authors": "Lialin et al.",
+      "venue": "2023",
+      "arxiv": "2303.15647"
+    },
+    {
+      "title": "Parameter-Efficient Transfer Learning for NLP",
+      "authors": "Houlsby et al.",
+      "venue": "ICML 2019",
+      "arxiv": "1902.00751"
+    },
+    {
+      "title": "LoRA: Low-Rank Adaptation of Large Language Models",
+      "authors": "Hu et al.",
+      "venue": "ICLR 2022",
+      "arxiv": "2106.09685"
+    }
+  ],
+  "sources": [
+    "github.com/huggingface/peft"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

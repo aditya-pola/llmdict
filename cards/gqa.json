@@ -1,0 +1,31 @@
+{
+  "id": "gqa",
+  "name": "GQA",
+  "expansion": "Grouped Query Attention",
+  "category": "attention-variants",
+  "oneliner": "Query heads grouped into G groups, each sharing one K/V head — the dominant middle-ground between MHA quality and MQA efficiency.",
+  "explanation": "Introduced by Ainslie et al. (2023) at Google. Middle ground: multiple KV heads (but fewer than query heads), so each group of query heads shares one KV head. Can 'uptrain' MHA models to GQA for 5-10% of training compute and recover nearly all quality. GQA with n_kv_heads = n_query_heads → MHA. With n_kv_heads = 1 → MQA. The dominant variant in modern LLMs: Llama 2 70B (64Q/8KV), Llama 3, Mistral 7B (32Q/8KV), Mixtral, Gemma, CodeLlama, Yi. Typical ratio: 4:1 or 8:1.",
+  "fundamentals": "For Mistral 7B: hidden_dim=4096, n_query_heads=32, n_kv_heads=8, head_dim=128, G=4. W_Q [4096, 4096], W_K [4096, 1024], W_V [4096, 1024]. Query heads 0-3 attend to KV head 0, heads 4-7 to KV head 1, etc. Implementation: K/V repeated via repeat_interleave or grouped computation. KV cache per token per layer: 2 $\\times$ 8 $\\times$ 128 $\\times$ 2 = 4 KB (4$\\times$ reduction vs MHA, 8$\\times$ larger than MQA). General formula: cache = 2 $\\times$ n_kv_heads $\\times$ head_dim $\\times$ seq_len $\\times$ n_layers $\\times$ bytes_per_param.",
+  "seen_in": [
+    "model-config"
+  ],
+  "related": [
+    "mha",
+    "mqa",
+    "mla",
+    "kv-cache"
+  ],
+  "sources": [
+    "Ainslie et al., 'GQA: Training Generalized Multi-Query Transformer Models,' EMNLP 2023, arXiv:2305.13245"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints",
+      "authors": "Ainslie et al.",
+      "venue": "EMNLP 2023",
+      "arxiv": "2305.13245"
+    }
+  ]
+}

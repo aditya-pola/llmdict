@@ -1,0 +1,25 @@
+{
+  "id": "tag-merged",
+  "name": "-merged / -unmerged",
+  "expansion": "Adapter merge state",
+  "category": "adapter-tags",
+  "oneliner": "-merged: LoRA folded into base weights (standalone, no overhead, irreversible). -unmerged: adapter separate (can hot-swap, needs PEFT loading).",
+  "explanation": "Merged = larger files (full model) but simpler deployment. Unmerged = small adapter files + base model, flexible but needs PEFT-aware code.",
+  "seen_in": [
+    "model-name",
+    "filename"
+  ],
+  "related": [
+    "lora",
+    "peft",
+    "adapters"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "HuggingFace PEFT docs (merging adapters)",
+      "url": "https://huggingface.co/docs/peft/main/en/developer_guides/lora#merge-lora-weights-into-the-base-model"
+    }
+  ]
+}

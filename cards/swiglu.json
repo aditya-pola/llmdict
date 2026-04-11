@@ -1,0 +1,32 @@
+{
+  "id": "swiglu",
+  "name": "SwiGLU",
+  "expansion": "Swish-activated Gated Linear Unit",
+  "category": "layer-types",
+  "oneliner": "Element-wise product of a Swish-activated gate projection and a value projection — the de facto standard FFN activation in modern LLMs.",
+  "explanation": "From Shazeer (2020). Replaces simple ReLU FFN with gated mechanism: one projection produces gates (via Swish), another produces values, element-wise multiply, then down-project. Swish(x) = x·$\\sigma$(x) is smooth, non-monotonic, allows small negatives through. ~0.02-0.05 lower perplexity than ReLU at same compute. Three matrices instead of two, but d_ff reduced to compensate. Used by LLaMA 1/2/3, Mistral, Mixtral, Qwen, Gemma, Yi, DeepSeek, Command-R — essentially every major open-weight model since 2023.",
+  "fundamentals": "SwiGLU(x) = (Swish(xW_gate) ⊙ xW_up)W_down. Swish(z) = z·$\\sigma$(z). For LLaMA 7B: W_gate [4096, 11008], W_up [4096, 11008], W_down [11008, 4096]. Params: 3$\\times$4096$\\times$11008 $\\approx$ 135M $\\approx$ 8$d^2$. In HuggingFace config: hidden_act='silu' (SiLU is the activation within the GLU structure). Code pattern: act_fn(gate_proj(x)) * up_proj(x) then down_proj(...).",
+  "seen_in": [
+    "model-config",
+    "code"
+  ],
+  "related": [
+    "ffn",
+    "geglu",
+    "gelu",
+    "relu"
+  ],
+  "sources": [
+    "Shazeer, 'GLU Variants Improve Transformer,' 2020, arXiv:2002.05202"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "GLU Variants Improve Transformer",
+      "authors": "Shazeer",
+      "venue": "2020",
+      "arxiv": "2002.05202"
+    }
+  ]
+}

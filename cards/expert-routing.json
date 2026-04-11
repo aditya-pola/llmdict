@@ -1,0 +1,33 @@
+{
+  "id": "expert-routing",
+  "name": "Expert Routing / Gating",
+  "expansion": "Expert Routing (Gating Network)",
+  "category": "scaling-patterns",
+  "oneliner": "The learned mechanism assigning tokens to experts — linear projection → softmax → top-k selection. Load balancing is the central challenge.",
+  "explanation": "Router must: (a) send tokens to relevant experts, (b) balance load across experts, (c) be differentiable for end-to-end training. Standard: linear gate W_g·x → softmax → top-k. Without regularization, router collapses to few popular experts. Fixes: auxiliary load-balancing loss (penalizes uneven utilization), noisy gating (Gaussian noise for exploration), expert choice routing (experts choose tokens, guarantees balance). DeepSeek innovation: shared experts (always fire) + routed experts (selected) + bias-based load balancing (avoids aux loss entirely).",
+  "fundamentals": "Top-k: $\\text{scores} = W_g \\cdot x$, $\\text{probs} = \\text{softmax}(\\text{scores})$, select top-k, output = $\\sum w_i \\cdot \\text{Expert}_i(x)$. Noisy gating: scores += $\\text{softplus}(W_{\\text{noise}} \\cdot x) \\cdot \\varepsilon$. Load balance loss: $L = \\alpha \\cdot N \\cdot \\sum_i (f_i \\cdot p_i)$. Expert choice (Zhou 2022): each expert picks top-c tokens from batch — perfect balance by construction. DeepSeek shared+routed: $y = \\text{Expert}_{\\text{shared}}(x) + \\sum_{i \\in \\text{TopK}} g_i \\cdot \\text{Expert}_{\\text{routed},i}(x)$. DeepSeek-V3 bias-based balance: $\\text{routing\\_score}_i = (W_g \\cdot x)_i + b_i$, biases updated from running load stats.",
+  "seen_in": [
+    "model-config",
+    "code"
+  ],
+  "related": [
+    "moe",
+    "load-balancing-loss",
+    "capacity-factor"
+  ],
+  "sources": [
+    "Shazeer et al., 'Outrageously Large Neural Networks,' ICLR 2017",
+    "Zhou et al., 'Mixture-of-Experts with Expert Choice Routing,' NeurIPS 2022",
+    "DeepSeek-AI, 'DeepSeek-V2,' arXiv:2405.04434"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "Mixture-of-Experts with Expert Choice Routing",
+      "authors": "Zhou et al.",
+      "venue": "NeurIPS 2022",
+      "arxiv": "2202.09368"
+    }
+  ]
+}

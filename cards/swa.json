@@ -1,0 +1,38 @@
+{
+  "id": "swa",
+  "name": "SWA",
+  "expansion": "Sliding Window Attention",
+  "category": "attention-variants",
+  "oneliner": "Each token attends only to a fixed-size local window of W preceding tokens — reduces quadratic cost to linear, with global reach through layer stacking.",
+  "explanation": "Each token attends to at most W preceding tokens instead of all. After L layers, effective receptive field = L $\\times$ W (information propagates through depth). Mistral 7B: W=4096, L=32 → 131K theoretical receptive field. Key benefit: KV cache is bounded at W tokens (rolling buffer) regardless of generated sequence length. Roots in Longformer (2020) and Sparse Transformers (2019). Modern architectures often use hybrids: Gemma 2 and later Mistral models alternate SWA layers with full-attention layers for direct long-range access plus cheap local patterns.",
+  "fundamentals": "Token at position i attends to [max(0, i-W+1), ..., i] instead of [0, ..., i]. Attention mask: band matrix, not lower-triangular. Memory for attention scores: $O(n$\\times$W)$ vs $O($n^2$)$. Rolling KV cache: fixed buffer of W entries, oldest overwritten. For Mistral 7B (8 KV heads, head_dim=128, W=4096): cache per layer = 2 $\\times$ 8 $\\times$ 128 $\\times$ 4096 $\\times$ 2 = 16 MB; 32 layers = 512 MB constant regardless of generation length. Hybrid approach: even layers = SWA (W=4096), odd layers = full attention.",
+  "seen_in": [
+    "model-config"
+  ],
+  "related": [
+    "mha",
+    "gqa",
+    "flash-attention",
+    "kv-cache"
+  ],
+  "sources": [
+    "Jiang et al., 'Mistral 7B,' 2023, arXiv:2310.06825",
+    "Beltagy et al., 'Longformer,' 2020, arXiv:2004.05150"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "Mistral 7B",
+      "authors": "Jiang et al.",
+      "venue": "2023",
+      "arxiv": "2310.06825"
+    },
+    {
+      "title": "Longformer: The Long-Document Transformer",
+      "authors": "Beltagy et al.",
+      "venue": "2020",
+      "arxiv": "2004.05150"
+    }
+  ]
+}

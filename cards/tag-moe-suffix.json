@@ -1,0 +1,23 @@
+{
+  "id": "tag-moe-suffix",
+  "name": "-MOE / -MoE",
+  "expansion": "Mixture-of-Experts architecture",
+  "category": "family-tags",
+  "oneliner": "Explicit MoE tag. Qwen2.5-MoE-A14B, DBRX (MoE). Mixtral uses 8x7B notation instead.",
+  "explanation": "Some families use -MoE suffix, others encode it in the expert notation (8x7B). Check for num_local_experts in config.",
+  "seen_in": [
+    "model-name",
+    "model-config"
+  ],
+  "related": [
+    "moe"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "Mixtral paper",
+      "url": "https://arxiv.org/abs/2401.04088"
+    }
+  ]
+}

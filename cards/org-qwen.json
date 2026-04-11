@@ -1,0 +1,23 @@
+{
+  "id": "org-qwen",
+  "name": "Qwen/",
+  "expansion": "Alibaba Cloud — Qwen (Tongyi Qianwen)",
+  "category": "hf-organizations",
+  "oneliner": "Qwen 1.5/2/2.5 + QwQ reasoning model. Strong multilingual (CJK), competitive at every size class. Apache 2.0. Among strongest open-weight families.",
+  "seen_in": [
+    "repo-name"
+  ],
+  "related": [],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "Qwen HuggingFace profile",
+      "url": "https://huggingface.co/Qwen"
+    },
+    {
+      "label": "Qwen2 Technical Report",
+      "url": "https://arxiv.org/abs/2407.10671"
+    }
+  ]
+}

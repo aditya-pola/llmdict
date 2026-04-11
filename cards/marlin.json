@@ -1,0 +1,33 @@
+{
+  "id": "marlin",
+  "name": "Marlin",
+  "expansion": "Mixed-Precision Auto-Regressive Parallel Inference on GPUs",
+  "category": "quantization-methods",
+  "oneliner": "Not a quantization method — a GPU kernel that makes GPTQ/AWQ inference fast. Fuses dequantization with matrix multiply.",
+  "explanation": "Marlin is a CUDA kernel designed specifically for W4A16 inference. It reads int4 weights from memory, dequantizes in shared memory, and performs the fp16 GEMM in a single fused operation. This avoids materializing the full fp16 weight matrix and maximizes memory bandwidth utilization. Used internally by vLLM for GPTQ and AWQ models. Achieves near-theoretical-maximum memory bandwidth utilization (>90% on A100/H100).",
+  "fundamentals": "Key optimizations: 1) Async global→shared memory copy of packed int4 weights. 2) Dequantize in shared memory using scale factors. 3) Feed into Tensor Core WMMA operations. 4) Asynchronous pipelining of load and compute stages. Achieves 4$\\times$ throughput of naive fp16 GEMM for batch size 1.",
+  "seen_in": [
+    "serving-config",
+    "vllm-internals"
+  ],
+  "related": [
+    "gptq",
+    "awq",
+    "w4a16",
+    "vllm",
+    "cuda-kernels"
+  ],
+  "sources": [
+    "Frantar et al., 'Marlin,' arXiv:2408.11743"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "Marlin: Mixed-Precision Auto-Regressive Parallel INference on GPUs",
+      "authors": "Frantar et al.",
+      "venue": "2024",
+      "arxiv": "2408.11743"
+    }
+  ]
+}

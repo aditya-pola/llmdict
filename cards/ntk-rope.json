@@ -1,0 +1,34 @@
+{
+  "id": "ntk-rope",
+  "name": "NTK-aware RoPE Scaling",
+  "expansion": "Neural Tangent Kernel-aware Rotary Position Embedding Scaling",
+  "category": "position-encodings",
+  "oneliner": "Extends RoPE context by increasing base frequency — preserves high-frequency local resolution while stretching low-frequency global capacity. Works zero-shot.",
+  "explanation": "Proposed by Reddit user /u/bloc97 (June 2023). Problem: extending context (e.g., 4K→16K) without fine-tuning. PI (Position Interpolation) compresses all frequencies equally, damaging local resolution. NTK insight: different frequency bands encode different scales. High-freq dimensions (local position) should stay untouched; low-freq dimensions (global) should stretch. Increasing base achieves this automatically because $\\theta_i = \\text{base}^{-2i/d}$ — larger base reduces all frequencies, but proportionally more for already-slow bands. Works surprisingly well zero-shot; better with light fine-tuning.",
+  "fundamentals": "New base: base' = base · $\\alpha$^(d/(d-2)) where $\\alpha$ = context extension factor. For $\\alpha$=4, d=128: base' $\\approx$ 40,440. Effect on wavelengths: highest-freq band (i=0) unchanged ($\\lambda_0$=2$\\pi$ always), lowest-freq band scales by ~$\\alpha$. Intermediate bands interpolate smoothly. Compare PI: all frequencies compressed uniformly by $\\alpha$ — damages high-freq resolution. NTK preserves local while extending global.",
+  "seen_in": [
+    "model-config"
+  ],
+  "related": [
+    "rope",
+    "yarn",
+    "position-interpolation",
+    "abf"
+  ],
+  "sources": [
+    "/u/bloc97, 'NTK-Aware Scaled RoPE,' Reddit r/LocalLLaMA, June 2023",
+    "Formalized in Peng et al., 'YaRN,' arXiv:2309.00071"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "Original Reddit post by /u/bloc97 (NTK-aware scaled RoPE)",
+      "url": "https://www.reddit.com/r/LocalLLaMA/comments/14lz7j5/ntkaware_scaled_rope_allows_llama_models_to_have/"
+    },
+    {
+      "label": "Formalized in YaRN paper",
+      "url": "https://arxiv.org/abs/2309.00071"
+    }
+  ]
+}

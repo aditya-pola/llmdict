@@ -1,0 +1,26 @@
+{
+  "id": "tokenizer-bpe",
+  "name": "BPE",
+  "expansion": "Byte-Pair Encoding",
+  "category": "tokenizers",
+  "oneliner": "Dominant subword tokenization. Iteratively merge most frequent adjacent pairs. Byte-level BPE (GPT-2+) handles any text with no unknown tokens.",
+  "explanation": "Start with byte/char vocabulary, count adjacent pairs, merge most frequent, repeat. Used by GPT-2/3/4, Llama, Mistral, Falcon.",
+  "seen_in": [
+    "documentation",
+    "tokenizer-config"
+  ],
+  "related": [
+    "tokenizer-spm",
+    "tokenizer-tiktoken"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Neural Machine Translation of Rare Words with Subword Units",
+      "authors": "Sennrich et al.",
+      "venue": "ACL 2016",
+      "arxiv": "1508.07909"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

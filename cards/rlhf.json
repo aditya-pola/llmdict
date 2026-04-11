@@ -1,0 +1,61 @@
+{
+  "id": "rlhf",
+  "name": "RLHF",
+  "expansion": "Reinforcement Learning from Human Feedback",
+  "category": "training-pipeline",
+  "oneliner": "Train reward model from preferences, optimize LLM via PPO + KL penalty. Complex (4 models in memory) but the original alignment breakthrough.",
+  "explanation": "Three stages: (1) SFT, (2) reward model on preference pairs (Bradley-Terry), (3) PPO against reward with KL penalty. 4 models simultaneously: policy, reference, reward, value. Used by InstructGPT, ChatGPT, Claude (with Constitutional AI), Llama 2-Chat, Gemini. Cost: 5-20% of pre-training. Complex and unstable — motivated DPO/ORPO/KTO.",
+  "fundamentals": "RM loss: $\\mathcal{L} = -\\mathbb{E}[\\log \\sigma(r(x,y_w) - r(x,y_l))]$. PPO: $\\max \\mathbb{E}[r(x,y) - \\beta \\cdot \\text{KL}(\\pi_\\theta \\| \\pi_{\\text{ref}})]$. PPO clips: $\\mathcal{L} = -\\min(\\text{ratio} \\cdot \\hat{A},\\, \\text{clip}(\\text{ratio}, 1 \\pm \\varepsilon) \\cdot \\hat{A})$. $\\beta$ 0.01-0.2, $\\varepsilon$=0.2. Preference data: 50K-500K comparisons.",
+  "seen_in": [
+    "model-cards",
+    "documentation"
+  ],
+  "related": [
+    "sft",
+    "dpo",
+    "ppo"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Training language models to follow instructions with human feedback (InstructGPT)",
+      "authors": "Ouyang et al.",
+      "venue": "NeurIPS 2022",
+      "arxiv": "2203.02155"
+    },
+    {
+      "title": "Deep reinforcement learning from human preferences",
+      "authors": "Christiano et al.",
+      "venue": "NeurIPS 2017",
+      "arxiv": "1706.03741"
+    },
+    {
+      "title": "Proximal Policy Optimization Algorithms",
+      "authors": "Schulman et al.",
+      "venue": "2017",
+      "arxiv": "1707.06347"
+    },
+    {
+      "title": "Learning to summarize from human feedback",
+      "authors": "Stiennon et al.",
+      "venue": "NeurIPS 2020",
+      "arxiv": "2009.01325"
+    },
+    {
+      "title": "Constitutional AI: Harmlessness from AI Feedback",
+      "authors": "Bai et al.",
+      "venue": "2022",
+      "arxiv": "2212.08073"
+    },
+    {
+      "title": "Llama 2: Open Foundation and Fine-Tuned Chat Models",
+      "authors": "Touvron et al.",
+      "venue": "2023",
+      "arxiv": "2307.09288"
+    }
+  ],
+  "sources": [
+    "Ouyang et al., arXiv:2203.02155"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

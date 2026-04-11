@@ -1,0 +1,25 @@
+{
+  "id": "format-coreml",
+  "name": "CoreML",
+  "expansion": "Apple's ML format for on-device inference",
+  "category": "export-formats",
+  "oneliner": ".mlmodel/.mlpackage files. Runs on Apple Neural Engine, GPU, CPU transparently. For iOS/macOS apps. Converter: coremltools.",
+  "seen_in": [
+    "filename"
+  ],
+  "related": [
+    "org-mlx-community"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "Apple Core ML docs",
+      "url": "https://developer.apple.com/documentation/coreml"
+    },
+    {
+      "label": "coremltools",
+      "url": "https://github.com/apple/coremltools"
+    }
+  ]
+}

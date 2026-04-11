@@ -1,0 +1,23 @@
+{
+  "id": "dataset-orca",
+  "name": "Orca",
+  "expansion": "Microsoft's explanation-tuned models",
+  "category": "datasets-recipes",
+  "oneliner": "Smaller models learn from GPT-4's step-by-step reasoning traces, not just input-output pairs. 'Explanation tuning.' Orca 2 teaches different strategies per task.",
+  "seen_in": [
+    "model-name"
+  ],
+  "related": [
+    "knowledge-distillation"
+  ],
+  "foundational_papers": [
+    {
+      "title": "Orca: Progressive Learning from Complex Explanation Traces of GPT-4",
+      "authors": "Mukherjee et al.",
+      "venue": "2023",
+      "arxiv": "2306.02707"
+    }
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10"
+}

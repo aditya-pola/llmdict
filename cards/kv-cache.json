@@ -1,0 +1,35 @@
+{
+  "id": "kv-cache",
+  "name": "KV Cache",
+  "expansion": "Key-Value Cache",
+  "category": "attention-variants",
+  "oneliner": "Stores computed K and V tensors from all previous tokens during autoregressive generation — avoids recomputation but is THE memory bottleneck for LLM serving.",
+  "explanation": "Without caching, generating token t recomputes K/V for all t-1 tokens — $O($n^2$)$ total compute. KV cache stores K/V from all previous steps; each new step only computes for the new token, appends to cache. Grows linearly with seq_len $\\times$ layers $\\times$ kv_heads. For large models at long contexts, KV cache dwarfs model weights. This is why MQA/GQA/MLA exist (shrink cache), why PagedAttention was invented (reduce waste), and why SWA bounds cache. KV cache quantization (to int8/int4) is increasingly common in production.",
+  "fundamentals": "Formula: KV_cache_bytes = 2 $\\times$ n_layers $\\times$ n_kv_heads $\\times$ head_dim $\\times$ seq_len $\\times$ batch_size $\\times$ bytes_per_param. Examples (fp16): Llama 2 7B (32 layers, 32 KV heads): 16 KB/token/layer, 2 GB at 4K context. Llama 2 70B (80 layers, 8 KV heads): 4 KB/token/layer, 1.25 GB at 4K. At batch=32, seq=4096: Llama 70B = 40 GB cache (28% of weight memory). At batch=128, seq=8192: 320 GB — exceeds model weights. Each decode step reads entire cache from HBM — this bandwidth is the bottleneck.",
+  "seen_in": [
+    "code",
+    "serving-config",
+    "documentation"
+  ],
+  "related": [
+    "mha",
+    "mqa",
+    "gqa",
+    "mla",
+    "paged-attention",
+    "swa"
+  ],
+  "sources": [
+    "Pope et al., 'Efficiently Scaling Transformer Inference,' MLSys 2023, arXiv:2211.05102"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "foundational_papers": [
+    {
+      "title": "Efficiently Scaling Transformer Inference",
+      "authors": "Pope et al.",
+      "venue": "MLSys 2023",
+      "arxiv": "2211.05102"
+    }
+  ]
+}

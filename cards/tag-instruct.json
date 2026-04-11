@@ -1,0 +1,24 @@
+{
+  "id": "tag-instruct",
+  "name": "-it / -instruct / -chat",
+  "expansion": "Instruction-tuned / chat-tuned",
+  "category": "training-tags",
+  "oneliner": "-it (Google Gemma), -Instruct (Meta Llama, Mistral), -Chat (Qwen 1/2). Same concept, different branding. Designed for instruction-following.",
+  "explanation": "All mean: SFT + alignment applied. Qwen shifted from -Chat to -Instruct in Qwen2.5. The distinction between -instruct and -chat is branding, not technical.",
+  "seen_in": [
+    "model-name"
+  ],
+  "related": [
+    "sft",
+    "dpo",
+    "rlhf"
+  ],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "Llama 3.1 Instruct model card",
+      "url": "https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct"
+    }
+  ]
+}

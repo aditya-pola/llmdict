@@ -1,0 +1,23 @@
+{
+  "id": "org-google",
+  "name": "google/",
+  "expansion": "Google DeepMind — Gemma, T5",
+  "category": "hf-organizations",
+  "oneliner": "Gemma 1/2/3/4, T5, FLAN-T5, PaLiGemma. Open-weight models from Gemini research. Strong performance relative to size.",
+  "seen_in": [
+    "repo-name"
+  ],
+  "related": [],
+  "confidence": "high",
+  "verified_date": "2026-04-10",
+  "resources": [
+    {
+      "label": "Google HuggingFace profile",
+      "url": "https://huggingface.co/google"
+    },
+    {
+      "label": "Gemma Technical Report",
+      "url": "https://arxiv.org/abs/2403.08295"
+    }
+  ]
+}
