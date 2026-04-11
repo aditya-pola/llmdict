@@ -185,18 +185,28 @@
   overlay.addEventListener('click', (e) => { if (e.target === overlay) closeOverlay(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeOverlay(); });
 
-  // --- Position graph button beside the header bar, vertically centered ---
-  function positionGraphPill() {
+  // --- Position graph + globe buttons beside the header bar ---
+  function positionHeaderButtons() {
     const header = document.querySelector('.site-header');
-    const pill = document.querySelector('.graph-pill');
-    if (!header || !pill) return;
+    const graphBtn = document.querySelector('.graph-pill');
+    const globeBtn = document.getElementById('globe-toggle');
+    if (!header) return;
     const rect = header.getBoundingClientRect();
-    const pillH = pill.offsetHeight;
-    pill.style.left = (rect.right + 10) + 'px';
-    pill.style.top = (rect.top + (rect.height - pillH) / 2) + 'px';
+    const btnSize = 36;
+    const gap = 8;
+    const topCenter = rect.top + (rect.height - btnSize) / 2;
+
+    if (graphBtn) {
+      graphBtn.style.left = (rect.right + 10) + 'px';
+      graphBtn.style.top = topCenter + 'px';
+    }
+    if (globeBtn) {
+      globeBtn.style.left = (rect.right + 10 + btnSize + gap) + 'px';
+      globeBtn.style.top = topCenter + 'px';
+    }
   }
-  positionGraphPill();
-  window.addEventListener('resize', positionGraphPill);
+  positionHeaderButtons();
+  window.addEventListener('resize', positionHeaderButtons);
 
   // --- Home button ---
   const homeBtn = document.getElementById('home-btn');
@@ -225,6 +235,25 @@
     return shortcutOverlay && shortcutOverlay.classList.contains('active');
   }
 
+  // --- Globe toggle ---
+  const globeToggle = document.getElementById('globe-toggle');
+  const globeOverlay = document.getElementById('globe-overlay');
+  const globeClose = document.getElementById('globe-close');
+
+  function openGlobe() {
+    globeOverlay.classList.remove('hidden');
+    requestAnimationFrame(() => globeOverlay.classList.add('active'));
+  }
+  function closeGlobe() {
+    globeOverlay.classList.remove('active');
+    setTimeout(() => globeOverlay.classList.add('hidden'), 200);
+  }
+  if (globeToggle) globeToggle.addEventListener('click', openGlobe);
+  if (globeClose) globeClose.addEventListener('click', closeGlobe);
+  if (globeOverlay) globeOverlay.addEventListener('click', (e) => {
+    if (e.target === globeOverlay) closeGlobe();
+  });
+
   // --- Unified keyboard handler ---
   function getActiveIndex() {
     const cards = container.querySelectorAll('.card');
@@ -234,6 +263,7 @@
   document.addEventListener('keydown', (e) => {
     // Always handle: Escape closes whatever is open
     if (e.key === 'Escape') {
+      if (globeOverlay && globeOverlay.classList.contains('active')) { closeGlobe(); return; }
       if (isShortcutsOpen()) { closeShortcuts(); return; }
       closeOverlay();
       return;

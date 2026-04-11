@@ -44,6 +44,41 @@
     </div>
   </div>
 
+  <!-- Visitor globe toggle -->
+  <button class="globe-toggle" id="globe-toggle" title="Visitor Map">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+  </button>
+
+  <!-- Visitor globe overlay -->
+  <div class="globe-overlay hidden" id="globe-overlay">
+    <div class="globe-card">
+      <button class="globe-close" id="globe-close">&times;</button>
+      <div class="globe-title">Visitors</div>
+      <div class="globe-content" id="globe-content">
+        <!--
+          Replace this comment with your ClustrMaps globe widget code.
+          Get your code at: https://clustrmaps.com/add
+
+          Steps:
+          1. Enter your GitHub Pages URL
+          2. Verify account
+          3. Select "Globe Widget" type
+          4. Copy the embed code and paste it here
+
+          Example (replace YOUR-ID with actual ID):
+          <script type="text/javascript" id="clustrmaps" src="//cdn.clustrmaps.com/globe.js?d=YOUR-ID"></script>
+        -->
+        <div class="globe-placeholder">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.15"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <div style="font-size:11px; color:rgba(255,255,255,0.25); margin-top:12px; text-align:center;">
+            Visitor globe will appear here once configured.<br>
+            See index.html for setup instructions.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Keyboard shortcut hint -->
   <div class="shortcut-hint" id="shortcut-hint">Press <kbd>?</kbd> for shortcuts</div>
 
