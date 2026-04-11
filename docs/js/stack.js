@@ -14,9 +14,11 @@ const Stack = (() => {
   let _currentTilt = 0;
   let _navId = 0;
 
-  const PEEK_WIDTH = 48;
-  const PEEK_GAP = 4;
-  const MAX_PEEK = 5;
+  // Responsive peek width: narrower on small screens
+  const isMobile = window.innerWidth < 768;
+  const PEEK_WIDTH = isMobile ? 28 : 48;
+  const PEEK_GAP = isMobile ? 2 : 4;
+  const MAX_PEEK = isMobile ? 3 : 5;
   const WHEEL_IMPULSE = 0.008;    // wheel delta → accumulator (lower = slower)
   const EDGE_ACCEL = 0.003;       // edge hover accumulation rate per frame
   const FRICTION = 0.88;
@@ -164,25 +166,42 @@ const Stack = (() => {
     }, { passive: true });
 
     document.addEventListener('touchend', (e) => {
-      // Don't hijack if overlay open or touching history/search
       const overlay = document.getElementById('overlay');
       if (overlay && overlay.classList.contains('active')) return;
-      if (e.target.closest('.history-bar, .search-results, .search-wrapper')) return;
+      if (e.target.closest('.history-bar, .search-results, .search-wrapper, .globe-overlay, .shortcut-overlay')) return;
 
       const dx = e.changedTouches[0].clientX - startX;
       const dy = e.changedTouches[0].clientY - startY;
       const dt = performance.now() - startTime;
 
-      if (Math.abs(dx) < 30 || Math.abs(dx) < Math.abs(dy)) return;
+      if (Math.abs(dx) < 25 || Math.abs(dx) < Math.abs(dy)) return;
 
-      // Fast flick = jump more cards
-      const speed = Math.abs(dx) / dt;
-      let jump = 1;
-      if (speed > 1.5) jump = 3;
-      else if (speed > 0.8) jump = 2;
+      // Velocity-based jump count with smooth animated stepping
+      const speed = Math.abs(dx) / dt; // px/ms
+      let totalJump;
+      if (speed > 2.0) totalJump = 5;
+      else if (speed > 1.5) totalJump = 4;
+      else if (speed > 1.0) totalJump = 3;
+      else if (speed > 0.6) totalJump = 2;
+      else totalJump = 1;
 
-      if (dx < 0) goTo(_currentIndex + jump);
-      else goTo(_currentIndex - jump);
+      const direction = dx < 0 ? 1 : -1;
+
+      if (totalJump === 1) {
+        goTo(_currentIndex + direction);
+      } else {
+        // Animated multi-step: step through cards with decelerating timing
+        let stepped = 0;
+        function stepNext() {
+          if (stepped >= totalJump) return;
+          stepped++;
+          goTo(_currentIndex + direction);
+          // Decelerate: each step takes longer
+          const delay = 60 + stepped * 40;
+          if (stepped < totalJump) setTimeout(stepNext, delay);
+        }
+        stepNext();
+      }
     }, { passive: true });
   }
 

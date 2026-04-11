@@ -1039,8 +1039,21 @@ main {
 
 /* --- Responsive --- */
 @media (max-width: 768px) {
-  :root { --card-width: 320px; --cp: 22px; --peek-width: 44px; }
-  .site-header { padding: 12px 20px; gap: 10px; }
-  .history-bar { padding: 8px 20px; }
-  .term-name { font-size: 26px; letter-spacing: -1.2px; }
+  :root { --card-width: 260px; --cp: 18px; --peek-width: 28px; }
+  .site-header { padding: 10px 16px; gap: 8px; }
+  .site-title { font-size: 13px; }
+  #search-input { width: 140px; font-size: 12px; padding: 6px 12px; }
+  #search-input:focus { width: 180px; }
+  .history-bar { padding: 8px 16px; }
+  .term-name { font-size: 22px; letter-spacing: -1px; }
+  .card--term .term-expansion { font-size: 11px; margin-bottom: 10px; }
+  .card--term .term-explanation { font-size: 13px; }
+  .card .peek-label { width: 24px; font-size: 12px; }
+  .home-title { font-size: 28px; }
+  .cat-title { font-size: 20px; }
+  .card-hint { font-size: 9px; }
+  .home-fab { width: 40px; height: 40px; bottom: 16px; right: 16px; }
+  .history-toggle { font-size: 10px; padding: 6px 14px; }
+  .shortcut-hint { display: none; }
+  .overlay-card { padding: 22px; max-width: 90vw; }
 }
