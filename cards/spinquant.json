@@ -4,17 +4,18 @@
   "expansion": "Rotation-based Quantization-Aware Training",
   "category": "quantization-methods",
   "oneliner": "Learns optimal rotation matrices during training so that rotated weights are easier to quantize — a QAT approach using geometric transformations.",
-  "explanation": "Similar insight to QuIP# (rotations make weights more quantization-friendly), but instead of random rotations, SpinQuant LEARNS the optimal rotations during a fine-tuning phase. This means the model actively optimizes its internal representations to be amenable to low-bit quantization. Combines the geometric insight of incoherence processing with the training-time adaptation of QAT. Published by Meta researchers.",
+  "explanation": "SpinQuant is a quantization method that learns optimal rotation matrices to transform model weights into a form that is easier to compress with minimal quality loss. It shares the insight that rotated weights are more uniform and thus more quantization-friendly, but instead of using random rotations it optimizes them during a fine-tuning phase. This combines the geometric benefits of incoherence processing with training-time adaptation. Published by Meta researchers.",
   "fundamentals": "During fine-tuning: insert learnable rotation matrices R before quantization in each layer. Forward pass: W' = R @ W, then quantize W'. Gradients flow through to both W and R via STE. The rotations R converge to transformations that spread weight information evenly, minimizing quantization error.",
   "seen_in": [
     "research-papers",
     "model-cards"
   ],
   "related": [
+    "incoherence",
     "qat",
+    "quantization",
     "quip-sharp",
-    "rotation",
-    "incoherence"
+    "rotation"
   ],
   "sources": [
     "Liu et al., 'SpinQuant,' arXiv:2405.16406"

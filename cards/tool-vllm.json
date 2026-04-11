@@ -9,8 +9,10 @@
     "documentation"
   ],
   "related": [
-    "paged-attention",
-    "continuous-batching"
+    "continuous-batching",
+    "inference",
+    "inference-engine",
+    "paged-attention"
   ],
   "foundational_papers": [
     {

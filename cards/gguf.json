@@ -4,7 +4,7 @@
   "expansion": "GGML Universal File",
   "category": "formats",
   "oneliner": "The standard single-file format for llama.cpp/Ollama/LM Studio — contains model weights, metadata, tokenizer, and quantization info in one file.",
-  "explanation": "Replaced GGML format in August 2023. Self-contained: everything needed to load and run a model is in one file. Supports any quantization type (Q2_K through Q8_0, IQ variants, UD variants, BF16). Metadata is key-value pairs (architecture, context length, vocab size, etc.) stored in the header. Designed for CPU + GPU split inference — can mmap weights and offload specific layers to GPU. Each GGUF repo on HuggingFace typically contains multiple files at different quant levels.",
+  "explanation": "GGUF is a self-contained model file format designed for local inference with llama.cpp and compatible tools. Everything needed to load and run a model lives in a single file, including weights, tokenizer data, and architecture metadata stored as key-value pairs. It supports all common quantization types from Q2_K through Q8_0, plus IQ and UD variants. GGUF is the standard format for split CPU and GPU inference on consumer hardware.",
   "fundamentals": "File structure: 1) Magic number ('GGUF'). 2) Version. 3) Tensor count. 4) Metadata KV pairs (architecture, tokenizer, quant type, etc.). 5) Tensor descriptors (name, shape, type, offset). 6) Tensor data (aligned, mmap-friendly). Quantization type is per-tensor — different tensors can use different types. Supports memory mapping for efficient loading.",
   "seen_in": [
     "repo-name",
@@ -12,11 +12,14 @@
   ],
   "related": [
     "ggml",
-    "llama-cpp",
-    "ollama",
-    "lm-studio",
+    "inference",
+    "iq-quants",
     "k-quants",
-    "iq-quants"
+    "llama-cpp",
+    "lm-studio",
+    "ollama",
+    "quantization",
+    "tool-llamacpp"
   ],
   "sources": [
     "github.com/ggml-org/ggml/blob/master/docs/gguf.md",

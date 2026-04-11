@@ -4,12 +4,14 @@
   "expansion": "Infused Adapter by Inhibiting and Amplifying Inner Activations",
   "category": "fine-tuning-methods",
   "oneliner": "Learns rescaling vectors (not matrices) for K, V, FFN activations — 10-100$\\times$ fewer params than LoRA. Best for few-shot and massive multi-task serving.",
-  "explanation": "Element-wise scaling: l_k for keys, l_v for values, l_ff for FFN intermediate. K'=l_k⊙K, V'=l_v⊙V, FFN'=l_ff⊙FFN_mid. LLaMA 7B: 614K params (0.009%). Initialized to ones. Quality ceiling lower than LoRA for large FT, but excellent for few-shot and serving thousands of adapters.",
+  "explanation": "IA3 is a parameter-efficient fine-tuning method that learns element-wise scaling vectors for a model's key, value, and feed-forward layers. Instead of adding new weight matrices, it multiplies existing activations by learned scale factors initialized to one, changing model behavior with a tiny number of new parameters. A 7B model needs only about 614K trainable parameters. It excels at few-shot tasks and serving thousands of task-specific adapters simultaneously.",
   "fundamentals": "K' = l_k ⊙ (W_K·x). V' = l_v ⊙ (W_V·x). FFN: h = W_down·(l_ff ⊙ act(W_up·x)). Params: d_k+d_v+d_ff per layer. LLaMA 7B: 19,200/layer $\\times$ 32 = 614K. Optimizer: ~5MB.",
   "seen_in": [
     "model-config"
   ],
   "related": [
+    "adapters",
+    "ffn",
     "lora",
     "peft"
   ],

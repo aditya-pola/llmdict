@@ -4,17 +4,19 @@
   "expansion": "Group-wise Quantization Granularity",
   "category": "quantization-basics",
   "oneliner": "Divides weights into small groups (32-128 values) with separate scale factors per group — essential for making int4 viable.",
-  "explanation": "Granularity spectrum: per-tensor (1 scale for whole matrix, coarse) → per-channel (1 per output row) → per-group (1 per g values, fine). Per-group is essential for int4 where 16 levels need to fit local distributions. For a [4096, 4096] weight matrix with g=128: 131K scale factors, 256 KB overhead, +0.125 effective bpw. Tradeoff: finer groups = better accuracy but more overhead. Int8: per-channel usually sufficient. Int4: g=128 minimum, g=32 noticeably better.",
+  "explanation": "Per-group quantization is a technique that divides a weight matrix into small groups and assigns each group its own scale factor for more accurate compression. With only 16 levels available in 4-bit format, a single scale factor for an entire matrix cannot capture local variations, so grouping is essential. Typical group sizes are 32 to 128 values, adding roughly 0.125 extra bits per weight in overhead. Finer groups give better quality but increase storage slightly.",
   "fundamentals": "Error depends on range: scale = range/(2^b - 1), max error = scale/2. Smaller groups have smaller local ranges → smaller scales → smaller errors. Overhead for g=128 with fp16 scales: 16/128 = 0.125 bits/weight. For g=32: 16/32 = 0.5 bits/weight.",
   "seen_in": [
     "quantization-config",
     "documentation"
   ],
   "related": [
-    "int4",
-    "gptq",
     "awq",
-    "calibration-data"
+    "calibration-data",
+    "fp16",
+    "gptq",
+    "int4",
+    "quantization"
   ],
   "sources": [
     "Nagel et al., arXiv:2106.08295",

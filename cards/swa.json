@@ -10,10 +10,12 @@
     "model-config"
   ],
   "related": [
-    "mha",
-    "gqa",
+    "attention-mask",
     "flash-attention",
-    "kv-cache"
+    "gqa",
+    "kv-cache",
+    "mha",
+    "token"
   ],
   "sources": [
     "Jiang et al., 'Mistral 7B,' 2023, arXiv:2310.06825",

@@ -7,10 +7,11 @@
   "explanation": "Self-attention lets each token in a sequence look at every other token to decide what context matters most. Each token is projected into a query, key, and value vector. Attention scores are computed as scaled dot products between queries and keys, then softmaxed into weights over the value vectors. This is the core mechanism inside transformers, giving them the ability to capture long-range dependencies in a single layer.",
   "fundamentals": "Given input $X \\in \\mathbb{R}^{n \\times d}$, self-attention computes $Q = XW^Q$, $K = XW^K$, $V = XW^V$ and returns $\\text{Attention}(Q,K,V) = \\text{softmax}\\left(\\frac{QK^\\top}{\\sqrt{d_k}}\\right)V$. Cost is $O(n^2 d)$ in time and $O(n^2)$ in memory.",
   "related": [
+    "gqa",
     "mha",
     "mqa",
-    "gqa",
-    "sdpa"
+    "sdpa",
+    "token"
   ],
   "seen_in": [
     "code",

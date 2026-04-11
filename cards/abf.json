@@ -10,10 +10,12 @@
     "model-config"
   ],
   "related": [
-    "rope",
     "ntk-rope",
-    "yarn",
-    "position-interpolation"
+    "position-interpolation",
+    "pre-training",
+    "rope",
+    "token",
+    "yarn"
   ],
   "sources": [
     "Meta, 'The Llama 3 Herd of Models,' 2024, arXiv:2407.21783",

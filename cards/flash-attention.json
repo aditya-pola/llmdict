@@ -12,9 +12,10 @@
     "serving-config"
   ],
   "related": [
-    "sdpa",
+    "inference",
     "kv-cache",
-    "paged-attention"
+    "paged-attention",
+    "sdpa"
   ],
   "sources": [
     "Dao et al., 'FlashAttention,' NeurIPS 2022, arXiv:2205.14135",

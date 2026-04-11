@@ -11,11 +11,15 @@
     "vllm-internals"
   ],
   "related": [
-    "gptq",
     "awq",
-    "w4a16",
+    "cuda-kernels",
+    "fp16",
+    "gptq",
+    "inference",
+    "int4",
+    "tool-vllm",
     "vllm",
-    "cuda-kernels"
+    "w4a16"
   ],
   "sources": [
     "Frantar et al., 'Marlin,' arXiv:2408.11743"

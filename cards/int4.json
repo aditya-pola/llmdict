@@ -4,19 +4,22 @@
   "expansion": "4-bit Integer Quantization",
   "category": "precision-formats",
   "oneliner": "Just 16 discrete levels per value — 8$\\times$ compression from fp32. Makes 30B+ models runnable on consumer GPUs.",
-  "explanation": "A 70B model goes from 140 GB (fp16) to ~35 GB (int4). Naive int4 destroys quality — per-group quantization is essential: weights divided into groups of 32-128, each with its own scale factor. With group size 128, overhead is only 0.125 bits/weight (effective 4.125 bpw). Standard format for local/consumer inference via llama.cpp, GPTQ, AWQ. Activations kept in fp16 (W4A16). Quality: +0.1-1.0 perplexity points; works better on larger models (more redundancy).",
+  "explanation": "int4 is a 4-bit integer precision format that stores each weight using only four bits, cutting model memory by roughly four times compared to 16-bit formats. Naive 4-bit rounding destroys quality, so per-group quantization is essential: weights are divided into small groups of 32 to 128, each with its own scale factor. The overhead is minimal at about 0.125 extra bits per weight. int4 is the standard precision for running large models on consumer GPUs.",
   "fundamentals": "Signed: -8 to 7 (two's complement in 4 bits). Two values packed per byte. Per-group storage (g=128): 128$\\times$4 bits + 16 bits (fp16 scale) + optional 4 bits (zero-point) = 4.125 effective bpw. Step size for range [-1,1]: 2/15 $\\approx$ 0.133 — 17$\\times$ coarser than int8.",
   "seen_in": [
     "model-name",
     "filename"
   ],
   "related": [
+    "awq",
+    "fp16",
+    "gptq",
     "int8",
     "nf4",
-    "gptq",
-    "awq",
+    "per-group-quantization",
+    "quantization",
     "w4a16",
-    "per-group-quantization"
+    "zero"
   ],
   "sources": [
     "Frantar et al., 'GPTQ,' ICLR 2023, arXiv:2210.17323",

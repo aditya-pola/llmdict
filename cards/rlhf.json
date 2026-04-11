@@ -4,7 +4,7 @@
   "expansion": "Reinforcement Learning from Human Feedback",
   "category": "training-pipeline",
   "oneliner": "Train reward model from preferences, optimize LLM via PPO + KL penalty. Complex (4 models in memory) but the original alignment breakthrough.",
-  "explanation": "Three stages: (1) SFT, (2) reward model on preference pairs (Bradley-Terry), (3) PPO against reward with KL penalty. 4 models simultaneously: policy, reference, reward, value. Used by InstructGPT, ChatGPT, Claude (with Constitutional AI), Llama 2-Chat, Gemini. Cost: 5-20% of pre-training. Complex and unstable — motivated DPO/ORPO/KTO.",
+  "explanation": "RLHF is a training procedure that aligns language models with human preferences using reinforcement learning. It works in three stages: supervised fine-tuning on demonstrations, training a reward model on human preference comparisons, and optimizing the policy against that reward using PPO with a KL penalty. Four models run simultaneously during the final stage. It powers ChatGPT, Claude, and Llama 2-Chat, though its complexity motivated simpler alternatives like DPO.",
   "fundamentals": "RM loss: $\\mathcal{L} = -\\mathbb{E}[\\log \\sigma(r(x,y_w) - r(x,y_l))]$. PPO: $\\max \\mathbb{E}[r(x,y) - \\beta \\cdot \\text{KL}(\\pi_\\theta \\| \\pi_{\\text{ref}})]$. PPO clips: $\\mathcal{L} = -\\min(\\text{ratio} \\cdot \\hat{A},\\, \\text{clip}(\\text{ratio}, 1 \\pm \\varepsilon) \\cdot \\hat{A})$. $\\beta$ 0.01-0.2, $\\varepsilon$=0.2. Preference data: 50K-500K comparisons.",
   "seen_in": [
     "model-cards",

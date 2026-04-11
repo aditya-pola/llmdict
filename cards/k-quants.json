@@ -10,10 +10,14 @@
     "gguf-filename"
   ],
   "related": [
+    "fp16",
     "gguf",
+    "inference",
     "iq-quants",
-    "unsloth-dynamic",
-    "llama-cpp"
+    "llama-cpp",
+    "quantization",
+    "tool-llamacpp",
+    "unsloth-dynamic"
   ],
   "sources": [
     "llama.cpp PR #1684 by Iwan Kawrakow"

@@ -11,9 +11,10 @@
     "model-weights"
   ],
   "related": [
-    "sinusoidal-pe",
+    "alibi",
     "rope",
-    "alibi"
+    "sinusoidal-pe",
+    "token"
   ],
   "sources": [
     "Radford et al., 'Language Models are Unsupervised Multitask Learners,' 2019 (GPT-2)",

@@ -11,10 +11,11 @@
     "hardware-guides"
   ],
   "related": [
-    "quantization",
-    "kv-cache",
+    "fp16",
     "int4",
-    "fp16"
+    "int8",
+    "kv-cache",
+    "quantization"
   ],
   "sources": [
     "Pope et al., 'Efficiently Scaling Transformer Inference,' MLSys 2023, arXiv:2211.05102"

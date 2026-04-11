@@ -9,9 +9,10 @@
     "model-name"
   ],
   "related": [
+    "dense-models",
     "size-A",
     "size-E",
-    "dense-models"
+    "token"
   ],
   "confidence": "high",
   "verified_date": "2026-04-10",

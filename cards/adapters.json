@@ -4,16 +4,18 @@
   "expansion": "Adapter Modules — the broad category of injected trainable modules",
   "category": "fine-tuning-methods",
   "oneliner": "Small trainable modules inserted into frozen models. Houlsby (serial bottleneck), Pfeiffer (efficient), parallel, LoRA are all adapter variants.",
-  "explanation": "Houlsby (2019): bottleneck d→r→d + residual, after each sub-layer. Pfeiffer: one per layer (post-FFN). Parallel (He 2022): alongside sub-layer. LoRA: parallel without nonlinearity, zero-init B. Tags: -adapter (bottleneck), -lora, -merged (folded in), -unmerged (separate).",
+  "explanation": "Adapters are small trainable modules inserted into the layers of a frozen pre-trained model to teach it new tasks without updating all its weights. They dramatically reduce the cost of fine-tuning because only the adapter parameters are trained while the original model stays intact. Variants include Houlsby bottleneck adapters, Pfeiffer single-layer adapters, parallel adapters, and LoRA.",
   "fundamentals": "Houlsby: adapter(x) = x + W_up·$\\sigma$(W_down·x). 4dr params/layer. Pfeiffer: 2dr/layer. LoRA: 2dr per target module. Inference: Houlsby 5-10% latency. LoRA merged: zero.",
   "seen_in": [
     "model-name",
     "filename"
   ],
   "related": [
+    "ia3",
+    "inference",
     "lora",
     "peft",
-    "ia3"
+    "zero"
   ],
   "foundational_papers": [
     {

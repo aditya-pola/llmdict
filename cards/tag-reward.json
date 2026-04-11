@@ -9,6 +9,7 @@
     "model-name"
   ],
   "related": [
+    "inference",
     "rlhf"
   ],
   "confidence": "high",

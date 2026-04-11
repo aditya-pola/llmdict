@@ -11,10 +11,11 @@
     "code"
   ],
   "related": [
-    "swiglu",
     "geglu",
     "moe",
-    "residual-connection"
+    "residual-connection",
+    "swiglu",
+    "token"
   ],
   "sources": [
     "Vaswani et al., 'Attention Is All You Need,' NeurIPS 2017, arXiv:1706.03762"

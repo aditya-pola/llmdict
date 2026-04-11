@@ -8,7 +8,10 @@
     "repo-name"
   ],
   "related": [
-    "org-bartowski"
+    "gguf",
+    "gptq",
+    "org-bartowski",
+    "quantization"
   ],
   "confidence": "high",
   "verified_date": "2026-04-10",

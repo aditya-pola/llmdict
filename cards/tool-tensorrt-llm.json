@@ -9,6 +9,8 @@
   ],
   "related": [
     "fp8",
+    "int4",
+    "quantization",
     "w8a8"
   ],
   "confidence": "high",

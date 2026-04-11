@@ -7,8 +7,11 @@
   "explanation": "Causal language modeling is the training objective where a model predicts the next token using only the tokens to its left, never peeking ahead. A causal attention mask ensures each position can only attend to preceding ones. This left-to-right constraint is the pre-training objective behind GPT, Llama, and Mistral, and it enables autoregressive text generation at inference time.",
   "fundamentals": "The causal LM objective maximises $\\mathcal{L} = \\sum_{t=1}^{T} \\log P(x_t \\mid x_{<t}; \\theta)$. The causal mask is a lower-triangular binary matrix $M$ where $M_{ij} = 1$ iff $j \\leq i$. Perplexity $= \\exp(-\\mathcal{L}/T)$ is the standard evaluation metric.",
   "related": [
+    "attention-mask",
+    "inference",
     "pre-training",
-    "sft"
+    "sft",
+    "token"
   ],
   "seen_in": [
     "model-config",

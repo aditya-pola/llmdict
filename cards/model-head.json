@@ -7,8 +7,9 @@
   "explanation": "A model head is the task-specific projection layer on top of a shared backbone. In a causal language model, the LM head projects hidden states to vocabulary-sized logits for next-token prediction, often sharing weights with the input embedding table. For classification, a head pools the sequence and projects to class logits instead. Swapping heads lets you reuse the same pretrained backbone for entirely different tasks without retraining it.",
   "fundamentals": "For an LM head with weight tying, logits are $z = h W_E^\\top$ where $h \\in \\mathbb{R}^{d}$ is the hidden state and $W_E \\in \\mathbb{R}^{|V| \\times d}$ is the shared embedding matrix. Weight tying reduces parameters by $|V| \\times d$. A classification head applies $\\text{softmax}(W_c h + b_c)$ where $W_c \\in \\mathbb{R}^{C \\times d}$.",
   "related": [
+    "backbone",
     "ffn",
-    "backbone"
+    "token"
   ],
   "seen_in": [
     "code",

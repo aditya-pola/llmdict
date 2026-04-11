@@ -10,6 +10,7 @@
     "tokenizer-config"
   ],
   "related": [
+    "token",
     "tokenizer-spm",
     "tokenizer-tiktoken"
   ],

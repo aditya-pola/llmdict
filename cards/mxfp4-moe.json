@@ -4,15 +4,17 @@
   "expansion": "Microscaling FP4 optimized for Mixture-of-Experts layers",
   "category": "formats",
   "oneliner": "E2M1 micro-float with block scaling, specifically targeting MoE expert weights. Only appears in 26B-A4B GGUF repos.",
-  "explanation": "Applies the OCP Microscaling FP4 format (E2M1 elements with shared E8M0 block scales) specifically to the expert weight matrices in Mixture-of-Experts models. MoE expert weights are a good target because they are numerous (128 experts) but individually small, and the block-scaling approach handles their weight distributions well. Relatively new format in llama.cpp.",
+  "explanation": "MXFP4_MOE is a quantization format that applies the OCP Microscaling FP4 specification to the expert weight matrices inside Mixture-of-Experts models. It uses tiny E2M1 floating-point elements that share a block-level E8M0 scale factor, keeping storage extremely compact. MoE expert weights are a natural target because there are many of them but each is individually small. This is a relatively new format supported in llama.cpp.",
   "fundamentals": "Same as E2M1/MXFP4: 32 elements share one 8-bit scale. Per-element: 1 sign, 2 exp, 1 mantissa = 15 distinct values. Effective 4.25 bpw. The _MOE suffix is an architecture annotation, not a different quantization algorithm.",
   "seen_in": [
     "gguf-filename"
   ],
   "related": [
     "e2m1",
+    "gguf",
     "moe",
-    "gguf"
+    "quantization",
+    "tool-llamacpp"
   ],
   "sources": [
     "OCP MX Spec v1.0",

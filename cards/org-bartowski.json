@@ -8,8 +8,9 @@
     "repo-name"
   ],
   "related": [
-    "org-thebloke",
-    "gguf"
+    "gguf",
+    "imatrix",
+    "org-thebloke"
   ],
   "confidence": "high",
   "verified_date": "2026-04-10",

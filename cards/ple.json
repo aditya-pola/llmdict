@@ -11,8 +11,10 @@
     "model-cards"
   ],
   "related": [
-    "token-embedding",
-    "residual-connection"
+    "ffn",
+    "residual-connection",
+    "token",
+    "token-embedding"
   ],
   "sources": [
     "Google DeepMind, 'Gemma 3 Technical Report,' 2025, arXiv:2503.19786"

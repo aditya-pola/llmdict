@@ -4,7 +4,7 @@
   "expansion": "Kahneman-Tversky Optimization",
   "category": "training-pipeline",
   "oneliner": "Only needs thumbs-up/down per response (not paired preferences) — grounded in prospect theory's loss aversion.",
-  "explanation": "DPO/RLHF need PAIRED preferences. KTO works with UNPAIRED binary labels (prompt, response, good/bad). Based on prospect theory: losses loom larger than gains (~2:1). Desirable responses rewarded; undesirable penalized more heavily. Reference point = expected KL divergence. Requires reference model.",
+  "explanation": "KTO is an alignment training method that learns from simple binary feedback, where each response is independently labeled as good or bad rather than compared in pairs. It draws on prospect theory from behavioral economics, penalizing bad outputs more heavily than it rewards good ones at roughly a two-to-one ratio. This makes it practical when paired preference rankings are expensive to collect. It requires a reference model to anchor the optimization.",
   "fundamentals": "Desirable: v = $\\sigma$($\\beta$·log($\\pi_\\theta$/$\\pi_{\\text{ref}}$) - z_ref). Undesirable: v = $\\sigma$(z_ref - $\\beta$·log($\\pi_\\theta$/$\\pi_{\\text{ref}}$)). Loss: -E_w[$\\lambda$_w·v(y_w)] - E_l[$\\lambda$_l·v(y_l)], $\\lambda$_l > $\\lambda$_w. Data: {prompt, response, label: bool}.",
   "seen_in": [
     "model-cards"

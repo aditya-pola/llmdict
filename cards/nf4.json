@@ -11,10 +11,12 @@
     "bitsandbytes-config"
   ],
   "related": [
+    "bitsandbytes",
+    "double-quantization",
     "int4",
     "qlora",
-    "bitsandbytes",
-    "double-quantization"
+    "quantization",
+    "zero"
   ],
   "sources": [
     "Dettmers et al., 'QLoRA,' NeurIPS 2023, arXiv:2305.14314"

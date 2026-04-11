@@ -8,8 +8,9 @@
     "documentation"
   ],
   "related": [
-    "tool-llamacpp",
-    "gguf"
+    "adapters",
+    "gguf",
+    "tool-llamacpp"
   ],
   "confidence": "high",
   "verified_date": "2026-04-10",

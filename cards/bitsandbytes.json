@@ -11,10 +11,17 @@
     "repo-name"
   ],
   "related": [
+    "adapters",
+    "fp16",
+    "fp32",
+    "fp8",
+    "int8",
+    "llm-int8",
+    "load-in-4bit",
+    "lora",
     "nf4",
     "qlora",
-    "llm-int8",
-    "load-in-4bit"
+    "quantization"
   ],
   "sources": [
     "Dettmers et al., 'LLM.int8(),' arXiv:2208.07339",

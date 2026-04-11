@@ -8,7 +8,8 @@
     "repo-name"
   ],
   "related": [
-    "dataset-hermes"
+    "dataset-hermes",
+    "model-merging"
   ],
   "confidence": "high",
   "verified_date": "2026-04-10",

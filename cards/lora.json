@@ -12,10 +12,14 @@
     "filename"
   ],
   "related": [
-    "qlora",
+    "adapters",
     "dora",
     "ia3",
-    "peft"
+    "inference",
+    "peft",
+    "qlora",
+    "safetensors",
+    "zero"
   ],
   "foundational_papers": [
     {

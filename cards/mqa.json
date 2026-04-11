@@ -10,9 +10,10 @@
     "model-config"
   ],
   "related": [
-    "mha",
     "gqa",
-    "kv-cache"
+    "kv-cache",
+    "mha",
+    "token"
   ],
   "sources": [
     "Shazeer, 'Fast Transformer Decoding: One Write-Head is All You Need,' 2019, arXiv:1911.02150"

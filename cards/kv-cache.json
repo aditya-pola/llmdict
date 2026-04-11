@@ -12,12 +12,14 @@
     "documentation"
   ],
   "related": [
-    "mha",
-    "mqa",
+    "fp16",
     "gqa",
+    "mha",
     "mla",
+    "mqa",
     "paged-attention",
-    "swa"
+    "swa",
+    "token"
   ],
   "sources": [
     "Pope et al., 'Efficiently Scaling Transformer Inference,' MLSys 2023, arXiv:2211.05102"

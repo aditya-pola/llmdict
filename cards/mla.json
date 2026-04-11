@@ -11,11 +11,12 @@
     "research-papers"
   ],
   "related": [
-    "mha",
     "gqa",
-    "mqa",
     "kv-cache",
-    "rope"
+    "mha",
+    "mqa",
+    "rope",
+    "token"
   ],
   "sources": [
     "DeepSeek-AI, 'DeepSeek-V2,' 2024, arXiv:2405.04434"

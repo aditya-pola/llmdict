@@ -11,10 +11,13 @@
     "code"
   ],
   "related": [
-    "rmsnorm",
-    "pre-norm",
+    "batchnorm",
+    "inference",
     "post-norm",
-    "batchnorm"
+    "pre-norm",
+    "rmsnorm",
+    "token",
+    "zero"
   ],
   "sources": [
     "Ba et al., 'Layer Normalization,' 2016, arXiv:1607.06450"

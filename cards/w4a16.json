@@ -4,17 +4,21 @@
   "expansion": "4-bit Weights, 16-bit Activations",
   "category": "quantization-basics",
   "oneliner": "Weight-only quantization: weights stored in 4-bit, dequantized to fp16 on-the-fly for computation. Saves memory, compute stays fp16.",
-  "explanation": "The standard for memory-constrained inference (consumer GPUs, llama.cpp). Weights read from memory in 4-bit (small, fast), dequantized in registers to fp16, then standard fp16 GEMM. Saves memory bandwidth but compute is still fp16 — no compute speedup for large batches. Contrast with W8A8 where both operands are quantized and integer math provides both memory and compute savings.",
+  "explanation": "W4A16 is a quantization configuration where model weights are stored in 4-bit precision but activations remain in 16-bit during computation. The weights are decompressed to fp16 on the fly as each layer runs, saving memory and bandwidth while keeping arithmetic at full precision. This is the standard approach for memory-constrained inference on consumer GPUs using tools like llama.cpp. It does not speed up compute for large batches since the math stays in fp16.",
   "fundamentals": "Inference per layer: 1) Read int4 weights from memory. 2) Dequantize: W_fp16 = scale $\\times$ (W_int4 - zero_point). 3) GEMM: Y = X_fp16 @ W_fp16. Memory bandwidth savings: 4$\\times$ vs fp16. Compute savings: none (still fp16 GEMM). For batch=1 (memory-bound): ~4$\\times$ throughput. For large batches (compute-bound): no speedup.",
   "seen_in": [
     "documentation",
     "benchmark-tables"
   ],
   "related": [
-    "w8a8",
-    "int4",
-    "gptq",
     "awq",
+    "fp16",
+    "gptq",
+    "inference",
+    "int4",
+    "quantization",
+    "tool-llamacpp",
+    "w8a8",
     "weight-only-quantization"
   ],
   "sources": [

@@ -7,8 +7,11 @@
   "explanation": "The backbone is the main body of a transformer model, comprising the embedding table, positional encoding, and the full stack of transformer layers. It converts a sequence of token IDs into rich contextual hidden states that a task-specific head then uses to make predictions. When people reference a model like LLaMA-3 70B, they mostly mean the backbone. The backbone is pretrained once and can be reused across many tasks via different heads or fine-tuning.",
   "fundamentals": "A decoder-only backbone maps tokens $x_1, \\ldots, x_n$ to hidden states through $L$ layers. Each layer: $h' = h + \\text{Attention}(\\text{Norm}(h))$, then $h'' = h' + \\text{FFN}(\\text{Norm}(h'))$. Total params $\\approx L \\cdot 12d^2$ for standard MHA with $4d$ FFN, plus embedding $|V| \\cdot d$.",
   "related": [
+    "ffn",
+    "mha",
     "model-head",
-    "residual-connection"
+    "residual-connection",
+    "token"
   ],
   "seen_in": [
     "model-config",

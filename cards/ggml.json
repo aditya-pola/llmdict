@@ -4,7 +4,7 @@
   "expansion": "Georgi Gerganov Machine Learning (library and legacy format)",
   "category": "formats",
   "oneliner": "Legacy format — predecessor to GGUF. No longer used for new models but you may encounter old repos with .ggml files.",
-  "explanation": "GGML was the original format used by llama.cpp before GGUF. It lacked proper metadata support (no tokenizer info, architecture details, or versioning), making it fragile and hard to extend. GGUF replaced it in August 2023, adding self-describing metadata. The GGML C library itself is still actively used (it's the tensor math backend for llama.cpp), but the file format is obsolete.",
+  "explanation": "GGML is an obsolete model file format that was originally used by llama.cpp for local inference. It stored tensor data but lacked proper metadata support, with no fields for tokenizer configuration, model architecture details, or format versioning. The GGML C library still powers tensor math in llama.cpp, but the file format was replaced by GGUF in August 2023.",
   "fundamentals": "Simple binary layout: tensor data with minimal headers. No standardized metadata — required external configuration files. No versioning — breaking changes required new tooling. GGUF solved all of these by adding a proper header with KV metadata.",
   "seen_in": [
     "legacy-repos",
@@ -12,7 +12,9 @@
   ],
   "related": [
     "gguf",
-    "llama-cpp"
+    "inference",
+    "llama-cpp",
+    "tool-llamacpp"
   ],
   "sources": [
     "github.com/ggerganov/ggml"

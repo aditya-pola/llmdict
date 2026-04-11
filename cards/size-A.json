@@ -9,9 +9,11 @@
     "model-name"
   ],
   "related": [
+    "inference",
     "moe",
     "size-B",
-    "size-E"
+    "size-E",
+    "token"
   ],
   "confidence": "high",
   "verified_date": "2026-04-10",

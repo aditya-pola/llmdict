@@ -10,12 +10,13 @@
     "model-config"
   ],
   "related": [
+    "abf",
     "alibi",
     "ntk-rope",
-    "yarn",
     "position-interpolation",
-    "abf",
-    "sinusoidal-pe"
+    "sinusoidal-pe",
+    "token",
+    "yarn"
   ],
   "sources": [
     "Su et al., 'RoFormer: Enhanced Transformer with Rotary Position Embedding,' 2021, arXiv:2104.09864"

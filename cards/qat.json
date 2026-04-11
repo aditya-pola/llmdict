@@ -11,9 +11,10 @@
     "documentation"
   ],
   "related": [
-    "ptq",
-    "spinquant",
     "fake-quantization",
+    "ptq",
+    "quantization",
+    "spinquant",
     "ste"
   ],
   "sources": [

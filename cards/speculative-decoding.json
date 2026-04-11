@@ -11,9 +11,10 @@
     "documentation"
   ],
   "related": [
-    "kv-cache",
+    "autoregressive-decoding",
     "continuous-batching",
-    "autoregressive-decoding"
+    "kv-cache",
+    "token"
   ],
   "sources": [
     "Leviathan et al., 'Fast Inference from Transformers via Speculative Decoding,' ICML 2023, arXiv:2211.17192",

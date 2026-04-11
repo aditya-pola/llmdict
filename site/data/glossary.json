@@ -271,10 +271,12 @@
         "model-config"
       ],
       "related": [
-        "rope",
         "ntk-rope",
-        "yarn",
-        "position-interpolation"
+        "position-interpolation",
+        "pre-training",
+        "rope",
+        "token",
+        "yarn"
       ],
       "sources": [
         "Meta, 'The Llama 3 Herd of Models,' 2024, arXiv:2407.21783",
@@ -300,16 +302,18 @@
       "expansion": "Adapter Modules — the broad category of injected trainable modules",
       "category": "fine-tuning-methods",
       "oneliner": "Small trainable modules inserted into frozen models. Houlsby (serial bottleneck), Pfeiffer (efficient), parallel, LoRA are all adapter variants.",
-      "explanation": "Houlsby (2019): bottleneck d→r→d + residual, after each sub-layer. Pfeiffer: one per layer (post-FFN). Parallel (He 2022): alongside sub-layer. LoRA: parallel without nonlinearity, zero-init B. Tags: -adapter (bottleneck), -lora, -merged (folded in), -unmerged (separate).",
+      "explanation": "Adapters are small trainable modules inserted into the layers of a frozen pre-trained model to teach it new tasks without updating all its weights. They dramatically reduce the cost of fine-tuning because only the adapter parameters are trained while the original model stays intact. Variants include Houlsby bottleneck adapters, Pfeiffer single-layer adapters, parallel adapters, and LoRA.",
       "fundamentals": "Houlsby: adapter(x) = x + W_up·$\\sigma$(W_down·x). 4dr params/layer. Pfeiffer: 2dr/layer. LoRA: 2dr per target module. Inference: Houlsby 5-10% latency. LoRA merged: zero.",
       "seen_in": [
         "model-name",
         "filename"
       ],
       "related": [
+        "ia3",
+        "inference",
         "lora",
         "peft",
-        "ia3"
+        "zero"
       ],
       "foundational_papers": [
         {
@@ -373,16 +377,18 @@
       "expansion": "Additive Quantization of Language Models",
       "category": "quantization-methods",
       "oneliner": "Extreme compression (2-bit) using learned additive codebooks — highest quality at very low bitwidths.",
-      "explanation": "Represents each weight group as a sum of entries from multiple small codebooks (additive vector quantization). A group of weights is encoded as a sum of M codewords from M codebooks of size 2^B each. For M=2, B=8: 2 bytes per group encodes a lookup into 256-entry codebooks that are jointly learned to minimize reconstruction error. Dominates at 2-bit quantization where simpler methods fail. Slow to quantize (hours) but inference is efficient with custom CUDA kernels.",
+      "explanation": "AQLM is a weight compression method that represents groups of model weights as combinations of entries from multiple small learned codebooks. Each weight group is encoded as a sum of codewords drawn from separate codebooks, a technique called additive vector quantization. This approach dominates at extreme 2-bit compression where simpler rounding methods fall apart. Quantization is slow but inference runs efficiently with custom GPU kernels.",
       "fundamentals": "For a group of K weights: w $\\approx$ c1[i1] + c2[i2] + ... + cM[iM] where c_m are learned codebooks and i_m are indices stored as compact integers. Training alternates: fix codebooks, find best indices; fix indices, optimize codebooks. Effective bpw depends on M, B, K parameters.",
       "seen_in": [
         "model-name",
         "repo-name"
       ],
       "related": [
+        "codebook",
+        "inference",
+        "quantization",
         "quip-sharp",
-        "vector-quantization",
-        "codebook"
+        "vector-quantization"
       ],
       "sources": [
         "Egiazarian et al., 'AQLM,' arXiv:2401.06118"
@@ -437,17 +443,20 @@
       "expansion": "Activation-Aware Weight Quantization",
       "category": "quantization-methods",
       "oneliner": "Identifies the most important ~1% of weight channels via activation magnitudes, then protects them with per-channel scaling.",
-      "explanation": "Not all weights matter equally. AWQ measures importance by activation statistics: channels with consistently large activations amplify weight errors. Instead of mixed-precision (which kills hardware efficiency), AWQ multiplies important weight channels by scale s before quantization, divides corresponding activations by s. Mathematically equivalent but reduces relative quantization error for salient channels. Only needs forward-pass stats — fast (minutes for 70B), no gradients or Hessian.",
+      "explanation": "AWQ is a weight quantization method that identifies which weight channels matter most by looking at activation patterns during inference. Channels that consistently produce large activations amplify any rounding errors, so AWQ scales those channels before quantizing to protect them. It only needs a quick forward pass for calibration with no gradients or Hessian, making it fast even for 70B models.",
       "fundamentals": "1) Calibrate: s_x(j) = mean(|X[:,j]|) per channel j. 2) Compute scaling: s(j) = s_x(j)^$\\alpha$, $\\alpha$ found by grid search minimizing $\\|\\|Q(W·diag(s))·(X/diag(s)) - WX\\|\\|$. 3) Store W' = W·diag(s), quantize W'. 4) At runtime: activations divided by s (fused into preceding LayerNorm).",
       "seen_in": [
         "model-name",
         "filename"
       ],
       "related": [
-        "gptq",
-        "smoothquant",
         "autoawq",
-        "per-channel-scaling"
+        "gptq",
+        "inference",
+        "layernorm",
+        "per-channel-scaling",
+        "quantization",
+        "smoothquant"
       ],
       "sources": [
         "Lin et al., 'AWQ,' MLSys 2024, arXiv:2306.00978"
@@ -472,8 +481,11 @@
       "explanation": "The backbone is the main body of a transformer model, comprising the embedding table, positional encoding, and the full stack of transformer layers. It converts a sequence of token IDs into rich contextual hidden states that a task-specific head then uses to make predictions. When people reference a model like LLaMA-3 70B, they mostly mean the backbone. The backbone is pretrained once and can be reused across many tasks via different heads or fine-tuning.",
       "fundamentals": "A decoder-only backbone maps tokens $x_1, \\ldots, x_n$ to hidden states through $L$ layers. Each layer: $h' = h + \\text{Attention}(\\text{Norm}(h))$, then $h'' = h' + \\text{FFN}(\\text{Norm}(h'))$. Total params $\\approx L \\cdot 12d^2$ for standard MHA with $4d$ FFN, plus embedding $|V| \\cdot d$.",
       "related": [
+        "ffn",
+        "mha",
         "model-head",
-        "residual-connection"
+        "residual-connection",
+        "token"
       ],
       "seen_in": [
         "model-config",
@@ -541,10 +553,17 @@
         "repo-name"
       ],
       "related": [
+        "adapters",
+        "fp16",
+        "fp32",
+        "fp8",
+        "int8",
+        "llm-int8",
+        "load-in-4bit",
+        "lora",
         "nf4",
         "qlora",
-        "llm-int8",
-        "load-in-4bit"
+        "quantization"
       ],
       "sources": [
         "Dettmers et al., 'LLM.int8(),' arXiv:2208.07339",
@@ -580,10 +599,11 @@
         "quantization-scripts"
       ],
       "related": [
-        "gptq",
         "awq",
-        "static-quantization",
-        "imatrix"
+        "gptq",
+        "imatrix",
+        "quantization",
+        "static-quantization"
       ],
       "sources": [
         "Frantar et al., 'GPTQ,' arXiv:2210.17323",
@@ -611,8 +631,11 @@
       "explanation": "Causal language modeling is the training objective where a model predicts the next token using only the tokens to its left, never peeking ahead. A causal attention mask ensures each position can only attend to preceding ones. This left-to-right constraint is the pre-training objective behind GPT, Llama, and Mistral, and it enables autoregressive text generation at inference time.",
       "fundamentals": "The causal LM objective maximises $\\mathcal{L} = \\sum_{t=1}^{T} \\log P(x_t \\mid x_{<t}; \\theta)$. The causal mask is a lower-triangular binary matrix $M$ where $M_{ij} = 1$ iff $j \\leq i$. Perplexity $= \\exp(-\\mathcal{L}/T)$ is the standard evaluation metric.",
       "related": [
+        "attention-mask",
+        "inference",
         "pre-training",
-        "sft"
+        "sft",
+        "token"
       ],
       "seen_in": [
         "model-config",
@@ -648,9 +671,11 @@
         "documentation"
       ],
       "related": [
-        "paged-attention",
+        "inference",
         "kv-cache",
-        "speculative-decoding"
+        "paged-attention",
+        "speculative-decoding",
+        "token"
       ],
       "sources": [
         "Yu et al., 'Orca: A Distributed Serving System,' OSDI 2022",
@@ -681,7 +706,8 @@
       ],
       "related": [
         "pre-training",
-        "sft"
+        "sft",
+        "token"
       ],
       "foundational_papers": [
         {
@@ -863,7 +889,8 @@
       ],
       "related": [
         "moe",
-        "scaling-laws"
+        "scaling-laws",
+        "token"
       ],
       "sources": [
         "Vaswani et al., 'Attention Is All You Need,' 2017",
@@ -894,6 +921,8 @@
         "documentation"
       ],
       "related": [
+        "inference",
+        "nf4",
         "quantization",
         "w4a16",
         "w8a8"
@@ -922,6 +951,7 @@
         "model-config"
       ],
       "related": [
+        "full-ft",
         "lora",
         "peft"
       ],
@@ -1034,15 +1064,19 @@
       "expansion": "Easy and Efficient Quantization for Transformers",
       "category": "quantization-methods",
       "oneliner": "Simple 8-bit weight-only quantization — drop-in replacement with minimal setup. No calibration needed.",
-      "explanation": "A straightforward per-channel int8 weight quantization library. No calibration data, no complex algorithms — just absmax scaling per output channel. Trades off accuracy optimization (no Hessian, no activation-awareness) for simplicity and speed. Works well for int8 where the quality gap between methods is small. Integrates with HuggingFace Transformers.",
+      "explanation": "EETQ is a lightweight quantization library that applies per-channel 8-bit integer compression to model weights with no calibration data required. It uses straightforward absmax scaling on each output channel, keeping the implementation simple and fast. At int8 precision the quality differences between methods are small, so the simplicity is a practical advantage. It plugs directly into HuggingFace Transformers for easy deployment.",
       "fundamentals": "Per-channel symmetric quantization: scale_j = max(|W[j,:]|) / 127. W_int8[j,:] = round(W[j,:] / scale_j). At inference: dequantize to fp16 and compute. That's it.",
       "seen_in": [
         "quantization-config"
       ],
       "related": [
+        "calibration-data",
+        "fp16",
+        "inference",
         "int8",
-        "weight-only-quantization",
-        "per-channel-quantization"
+        "per-channel-quantization",
+        "quantization",
+        "weight-only-quantization"
       ],
       "sources": [
         "github.com/NetEase-FuXi/EETQ"
@@ -1056,15 +1090,19 @@
       "expansion": "ExLlamaV2 Quantization Format",
       "category": "quantization-methods",
       "oneliner": "Variable-bitrate format mixing 2-8 bit precision across layers — target any average bpw (e.g., 3.5, 4.65). Best quality-per-bit on consumer GPUs.",
-      "explanation": "Native to ExLlamaV2 inference library. Unlike uniform-bitwidth methods, EXL2 allocates more bits to sensitive layers and fewer to robust ones. Two-pass: 1) Measurement — quantize every layer at multiple bitwidths, record error. 2) Solve — constrained optimization to minimize max error subject to target size. Can also mix bitwidths within a single layer across column groups. Based on GPTQ-style Hessian-guided rounding.",
+      "explanation": "EXL2 is a mixed-precision quantization format native to the ExLlamaV2 inference engine. It allocates more bits to sensitive layers and fewer bits to robust ones, rather than using the same bitwidth everywhere. A measurement pass records error at multiple precisions per layer, then an optimization step distributes bits to minimize overall quality loss under a target file size.",
       "fundamentals": "Measurement: quantize each layer at 2,3,4,5,6,8 bits, record $\\|\\|WX - Q_b(W)X\\|\\|^2$. Solving: min max_i error_i(b_i) s.t. $\\Sigma$ size_i(b_i) = target. Column-level mixing via Hessian diagonal (proxy for column importance). Validation: post-quant perplexity < 30 = success.",
       "seen_in": [
         "model-name",
         "repo-name"
       ],
       "related": [
-        "gptq",
         "exllamav2",
+        "gptq",
+        "inference",
+        "inference-engine",
+        "quantization",
+        "tool-exllamav2",
         "variable-bitrate"
       ],
       "sources": [
@@ -1086,9 +1124,10 @@
         "code"
       ],
       "related": [
-        "moe",
+        "capacity-factor",
         "load-balancing-loss",
-        "capacity-factor"
+        "moe",
+        "token"
       ],
       "sources": [
         "Shazeer et al., 'Outrageously Large Neural Networks,' ICLR 2017",
@@ -1119,10 +1158,11 @@
         "code"
       ],
       "related": [
-        "swiglu",
         "geglu",
         "moe",
-        "residual-connection"
+        "residual-connection",
+        "swiglu",
+        "token"
       ],
       "sources": [
         "Vaswani et al., 'Attention Is All You Need,' NeurIPS 2017, arXiv:1706.03762"
@@ -1150,9 +1190,10 @@
         "serving-config"
       ],
       "related": [
-        "sdpa",
+        "inference",
         "kv-cache",
-        "paged-attention"
+        "paged-attention",
+        "sdpa"
       ],
       "sources": [
         "Dao et al., 'FlashAttention,' NeurIPS 2022, arXiv:2205.14135",
@@ -1186,6 +1227,7 @@
         "filename"
       ],
       "related": [
+        "inference",
         "org-mlx-community"
       ],
       "confidence": "high",
@@ -1211,7 +1253,15 @@
       "seen_in": [
         "filename"
       ],
-      "related": [],
+      "related": [
+        "fp16",
+        "inference",
+        "inference-engine",
+        "int8",
+        "quantization",
+        "tool-llamacpp",
+        "tool-vllm"
+      ],
       "confidence": "high",
       "verified_date": "2026-04-10",
       "resources": [
@@ -1232,7 +1282,10 @@
         "filename",
         "model-name"
       ],
-      "related": [],
+      "related": [
+        "inference",
+        "quantization"
+      ],
       "confidence": "high",
       "verified_date": "2026-04-10",
       "resources": [
@@ -1257,7 +1310,11 @@
         "filename"
       ],
       "related": [
-        "format-onnx"
+        "format-onnx",
+        "inference",
+        "int4",
+        "int8",
+        "quantization"
       ],
       "confidence": "high",
       "verified_date": "2026-04-10",
@@ -1284,6 +1341,7 @@
       "related": [
         "bf16",
         "fp32",
+        "inference",
         "mixed-precision-training"
       ],
       "sources": [
@@ -1368,15 +1426,16 @@
       "expansion": "Full Fine-Tuning (all parameters updated)",
       "category": "fine-tuning-methods",
       "oneliner": "Update every parameter — ~12N bytes memory, maximum expressiveness, risks catastrophic forgetting, produces full model copies.",
-      "explanation": "Train all params. Memory: ~12N bytes (weights + gradients + Adam states + master weights). LLaMA 7B: ~84GB. Requires DeepSpeed ZeRO or FSDP. Preferred for large datasets, domain shift, max quality. Risks: catastrophic forgetting. All -instruct/-chat from major labs use full SFT+RLHF.",
+      "explanation": "Full fine-tuning is the process of updating every parameter in a model during training, giving maximum flexibility to learn new tasks or domains. It requires roughly twelve times the model size in memory to hold weights, gradients, optimizer states, and master copies. A 7B parameter model needs around 84 GB, so distributed training with DeepSpeed ZeRO or FSDP is essential. All major instruct and chat models from leading labs use full fine-tuning.",
       "fundamentals": "Memory: 7B→84GB, 13B→156GB, 70B→840GB. ZeRO-1: shard optimizer. ZeRO-2: +gradients. ZeRO-3: +parameters. lr 1e-5 to 5e-5, 1-3 epochs.",
       "seen_in": [
         "model-name"
       ],
       "related": [
-        "sft",
+        "deepspeed",
         "lora",
-        "deepspeed"
+        "sft",
+        "zero"
       ],
       "foundational_papers": [
         {
@@ -1442,7 +1501,7 @@
       "expansion": "Georgi Gerganov Machine Learning (library and legacy format)",
       "category": "formats",
       "oneliner": "Legacy format — predecessor to GGUF. No longer used for new models but you may encounter old repos with .ggml files.",
-      "explanation": "GGML was the original format used by llama.cpp before GGUF. It lacked proper metadata support (no tokenizer info, architecture details, or versioning), making it fragile and hard to extend. GGUF replaced it in August 2023, adding self-describing metadata. The GGML C library itself is still actively used (it's the tensor math backend for llama.cpp), but the file format is obsolete.",
+      "explanation": "GGML is an obsolete model file format that was originally used by llama.cpp for local inference. It stored tensor data but lacked proper metadata support, with no fields for tokenizer configuration, model architecture details, or format versioning. The GGML C library still powers tensor math in llama.cpp, but the file format was replaced by GGUF in August 2023.",
       "fundamentals": "Simple binary layout: tensor data with minimal headers. No standardized metadata — required external configuration files. No versioning — breaking changes required new tooling. GGUF solved all of these by adding a proper header with KV metadata.",
       "seen_in": [
         "legacy-repos",
@@ -1450,7 +1509,9 @@
       ],
       "related": [
         "gguf",
-        "llama-cpp"
+        "inference",
+        "llama-cpp",
+        "tool-llamacpp"
       ],
       "sources": [
         "github.com/ggerganov/ggml"
@@ -1464,7 +1525,7 @@
       "expansion": "GGML Universal File",
       "category": "formats",
       "oneliner": "The standard single-file format for llama.cpp/Ollama/LM Studio — contains model weights, metadata, tokenizer, and quantization info in one file.",
-      "explanation": "Replaced GGML format in August 2023. Self-contained: everything needed to load and run a model is in one file. Supports any quantization type (Q2_K through Q8_0, IQ variants, UD variants, BF16). Metadata is key-value pairs (architecture, context length, vocab size, etc.) stored in the header. Designed for CPU + GPU split inference — can mmap weights and offload specific layers to GPU. Each GGUF repo on HuggingFace typically contains multiple files at different quant levels.",
+      "explanation": "GGUF is a self-contained model file format designed for local inference with llama.cpp and compatible tools. Everything needed to load and run a model lives in a single file, including weights, tokenizer data, and architecture metadata stored as key-value pairs. It supports all common quantization types from Q2_K through Q8_0, plus IQ and UD variants. GGUF is the standard format for split CPU and GPU inference on consumer hardware.",
       "fundamentals": "File structure: 1) Magic number ('GGUF'). 2) Version. 3) Tensor count. 4) Metadata KV pairs (architecture, tokenizer, quant type, etc.). 5) Tensor descriptors (name, shape, type, offset). 6) Tensor data (aligned, mmap-friendly). Quantization type is per-tensor — different tensors can use different types. Supports memory mapping for efficient loading.",
       "seen_in": [
         "repo-name",
@@ -1472,11 +1533,14 @@
       ],
       "related": [
         "ggml",
-        "llama-cpp",
-        "ollama",
-        "lm-studio",
+        "inference",
+        "iq-quants",
         "k-quants",
-        "iq-quants"
+        "llama-cpp",
+        "lm-studio",
+        "ollama",
+        "quantization",
+        "tool-llamacpp"
       ],
       "sources": [
         "github.com/ggml-org/ggml/blob/master/docs/gguf.md",
@@ -1491,18 +1555,19 @@
       "expansion": "GPT-Quantization (named after target: Generative Pre-trained Transformers)",
       "category": "quantization-methods",
       "oneliner": "Post-training weight quantization using second-order (Hessian) information to compress weights to 3-4 bits with minimal accuracy loss.",
-      "explanation": "Works layer-by-layer: quantizing one weight badly can be corrected by adjusting remaining weights. The Hessian (H = 2XX^T from calibration data) tells exactly how. Descends from Optimal Brain Surgeon → Optimal Brain Quantization. GPTQ's insight: for large models, greedy ordering is unnecessary — process columns left-to-right in blocks of 128. Uses Cholesky decomposition of inverse Hessian. Quantizes 175B model in ~4 GPU-hours. 128 calibration samples.",
+      "explanation": "GPTQ is a post-training quantization method that compresses model weights layer by layer using mathematical error correction. When one weight is rounded to a lower precision, GPTQ adjusts the remaining weights in that layer to compensate, guided by Hessian information about which errors matter most. Processing columns in blocks of 128 makes it scale to models with hundreds of billions of parameters in just a few GPU-hours.",
       "fundamentals": "Objective: $\\min \\|WX - Q(W)X\\|^2$. OBS update: when $w_q$ is quantized, distribute error via $\\delta w = -\\delta \\cdot (H^{-1}_{:,q} / H^{-1}_{q,q})$. GPTQ processes columns left-to-right with lazy batch updates per 128-column block. Complexity: $O(d_{\\text{row}} \\times d_{\\text{col}}^2)$.",
       "seen_in": [
         "model-name",
         "filename"
       ],
       "related": [
-        "awq",
-        "ptq",
-        "marlin",
         "autogptq",
-        "hessian"
+        "awq",
+        "hessian",
+        "marlin",
+        "ptq",
+        "quantization"
       ],
       "sources": [
         "Frantar et al., 'GPTQ,' ICLR 2023, arXiv:2210.17323"
@@ -1530,10 +1595,11 @@
         "model-config"
       ],
       "related": [
+        "kv-cache",
         "mha",
-        "mqa",
         "mla",
-        "kv-cache"
+        "mqa",
+        "token"
       ],
       "sources": [
         "Ainslie et al., 'GQA: Training Generalized Multi-Query Transformer Models,' EMNLP 2023, arXiv:2305.13245"
@@ -1555,16 +1621,18 @@
       "expansion": "Half-Quadratic Quantization",
       "category": "quantization-methods",
       "oneliner": "Zero-calibration quantization — no forward passes through the model needed. Uses optimization on weight statistics alone. Supports 1-8 bit.",
-      "explanation": "Most quantization methods (GPTQ, AWQ) need calibration data run through the model. HQQ reformulates quantization as a half-quadratic optimization problem that operates directly on weight tensors without any data. This makes it extremely fast and eliminates calibration-related failure modes. Quality is competitive with GPTQ/AWQ at 4-bit and somewhat worse at lower bitwidths. Main appeal: speed and simplicity.",
+      "explanation": "HQQ is a post-training quantization method that compresses model weights without needing any calibration data. It reformulates the quantization problem as a half-quadratic optimization that operates directly on weight tensors, skipping the usual step of running sample data through the model. This makes it extremely fast and eliminates failures caused by unrepresentative calibration sets. Quality is competitive with GPTQ and AWQ at 4-bit precision.",
       "fundamentals": "Treats quantization as proximal optimization: split the problem into a rounding step and a scale-fitting step, alternate. No activations or Hessian needed — operates purely on weight statistics. Supports arbitrary group sizes and asymmetric quantization.",
       "seen_in": [
         "model-name",
         "quantization-config"
       ],
       "related": [
-        "gptq",
         "awq",
+        "calibration-data",
+        "gptq",
         "ptq",
+        "quantization",
         "zero-shot-quantization"
       ],
       "sources": [
@@ -1587,12 +1655,14 @@
       "expansion": "Infused Adapter by Inhibiting and Amplifying Inner Activations",
       "category": "fine-tuning-methods",
       "oneliner": "Learns rescaling vectors (not matrices) for K, V, FFN activations — 10-100$\\times$ fewer params than LoRA. Best for few-shot and massive multi-task serving.",
-      "explanation": "Element-wise scaling: l_k for keys, l_v for values, l_ff for FFN intermediate. K'=l_k⊙K, V'=l_v⊙V, FFN'=l_ff⊙FFN_mid. LLaMA 7B: 614K params (0.009%). Initialized to ones. Quality ceiling lower than LoRA for large FT, but excellent for few-shot and serving thousands of adapters.",
+      "explanation": "IA3 is a parameter-efficient fine-tuning method that learns element-wise scaling vectors for a model's key, value, and feed-forward layers. Instead of adding new weight matrices, it multiplies existing activations by learned scale factors initialized to one, changing model behavior with a tiny number of new parameters. A 7B model needs only about 614K trainable parameters. It excels at few-shot tasks and serving thousands of task-specific adapters simultaneously.",
       "fundamentals": "K' = l_k ⊙ (W_K·x). V' = l_v ⊙ (W_V·x). FFN: h = W_down·(l_ff ⊙ act(W_up·x)). Params: d_k+d_v+d_ff per layer. LLaMA 7B: 19,200/layer $\\times$ 32 = 614K. Optimizer: ~5MB.",
       "seen_in": [
         "model-config"
       ],
       "related": [
+        "adapters",
+        "ffn",
         "lora",
         "peft"
       ],
@@ -1623,10 +1693,12 @@
         "quantization-scripts"
       ],
       "related": [
-        "iq-quants",
         "calibration-data",
+        "hessian",
+        "iq-quants",
         "llama-cpp",
-        "hessian"
+        "quantization",
+        "tool-llamacpp"
       ],
       "sources": [
         "llama.cpp documentation and source code, github.com/ggerganov/llama.cpp"
@@ -1648,13 +1720,20 @@
         "model-cards"
       ],
       "related": [
+        "continuous-batching",
+        "fp16",
+        "gguf",
+        "inference",
         "kv-cache",
         "paged-attention",
-        "continuous-batching",
+        "quantization",
         "speculative-decoding",
-        "tp-pp",
-        "gguf",
-        "quantization"
+        "token",
+        "tool-llamacpp",
+        "tool-tensorrt-llm",
+        "tool-tgi",
+        "tool-vllm",
+        "tp-pp"
       ],
       "foundational_papers": [
         {
@@ -1712,6 +1791,7 @@
       "related": [
         "inference-engine",
         "kv-cache",
+        "quantization",
         "speculative-decoding"
       ],
       "seen_in": [
@@ -1741,19 +1821,22 @@
       "expansion": "4-bit Integer Quantization",
       "category": "precision-formats",
       "oneliner": "Just 16 discrete levels per value — 8$\\times$ compression from fp32. Makes 30B+ models runnable on consumer GPUs.",
-      "explanation": "A 70B model goes from 140 GB (fp16) to ~35 GB (int4). Naive int4 destroys quality — per-group quantization is essential: weights divided into groups of 32-128, each with its own scale factor. With group size 128, overhead is only 0.125 bits/weight (effective 4.125 bpw). Standard format for local/consumer inference via llama.cpp, GPTQ, AWQ. Activations kept in fp16 (W4A16). Quality: +0.1-1.0 perplexity points; works better on larger models (more redundancy).",
+      "explanation": "int4 is a 4-bit integer precision format that stores each weight using only four bits, cutting model memory by roughly four times compared to 16-bit formats. Naive 4-bit rounding destroys quality, so per-group quantization is essential: weights are divided into small groups of 32 to 128, each with its own scale factor. The overhead is minimal at about 0.125 extra bits per weight. int4 is the standard precision for running large models on consumer GPUs.",
       "fundamentals": "Signed: -8 to 7 (two's complement in 4 bits). Two values packed per byte. Per-group storage (g=128): 128$\\times$4 bits + 16 bits (fp16 scale) + optional 4 bits (zero-point) = 4.125 effective bpw. Step size for range [-1,1]: 2/15 $\\approx$ 0.133 — 17$\\times$ coarser than int8.",
       "seen_in": [
         "model-name",
         "filename"
       ],
       "related": [
+        "awq",
+        "fp16",
+        "gptq",
         "int8",
         "nf4",
-        "gptq",
-        "awq",
+        "per-group-quantization",
+        "quantization",
         "w4a16",
-        "per-group-quantization"
+        "zero"
       ],
       "sources": [
         "Frantar et al., 'GPTQ,' ICLR 2023, arXiv:2210.17323",
@@ -1774,7 +1857,7 @@
       "expansion": "8-bit Integer Quantization",
       "category": "precision-formats",
       "oneliner": "Fixed-point 8-bit: maps floats to 256 discrete levels via scale+zero-point. 4$\\times$ compression from fp32, runs on all modern hardware.",
-      "explanation": "Most mature quantization format. 256 levels (signed: -128 to 127). Integer MAC units are simpler and more efficient than float, available on CPUs (VNNI), GPUs (INT8 Tensor Cores since Turing), mobile NPUs. Challenge: LLM activations can have extreme outliers in certain channels (documented in LLM.int8() paper). Solutions: per-channel quantization, mixed-precision decomposition, SmoothQuant. Standard for production W8A8 serving via TensorRT-LLM.",
+      "explanation": "int8 is an 8-bit integer precision format that represents values using 256 discrete levels from negative 128 to positive 127. Integer math units are simpler and more power-efficient than floating-point ones and are available on virtually all modern hardware. The main challenge for language models is that activations can have extreme outlier values in certain channels. Solutions like per-channel scaling, mixed-precision decomposition, and SmoothQuant address this effectively.",
       "fundamentals": "Quantize: x_q = round(x / scale) + zero_point, clamped to [-128, 127]. Dequantize: x $\\approx$ (x_q - zero_point) $\\times$ scale. Symmetric (common for weights): zero_point=0, scale = max(|x|)/127. Step size = scale. For weights in [-1, 1]: step $\\approx$ 0.0078 — values closer than ~0.008 become identical.",
       "seen_in": [
         "model-name",
@@ -1814,16 +1897,19 @@
       "expansion": "Importance-weighted Quantization (codebook-based)",
       "category": "formats",
       "oneliner": "llama.cpp's codebook/lookup-table quantization — uses importance matrices to make smarter rounding decisions. Better than K-quants at same bitwidth.",
-      "explanation": "IQ-quants use vector quantization with codebooks instead of simple scalar rounding. An importance matrix (imatrix) weights which values matter most. The encoder maps groups of weights to the nearest codebook entry, weighted by importance. Higher quality than K-quants at the same bitwidth but slower to generate (needs imatrix computation). Particularly valuable at low bitwidths (IQ2, IQ3) where the quality gap vs K-quants is largest.",
+      "explanation": "IQ-quants are a family of quantization formats in llama.cpp that use vector quantization with learned codebooks instead of simple scalar rounding. An importance matrix guides which weight values receive the most protection during compression. They deliver higher quality than the older K-quant formats at the same file size, with the biggest advantage at very low bitwidths like IQ2 and IQ3. Generation is slower than K-quants but inference speed is comparable.",
       "fundamentals": "Codebook approach: a fixed set of representative vectors (codebook entries). Each group of weights is mapped to the nearest codebook entry. With importance weighting: minimize $\\Sigma$ importance[i] $\\times$ (w[i] - codebook[nearest][i])^2 instead of unweighted MSE. IQ4_XS at ~4.25 bpw outperforms Q4_K_S at ~4.5 bpw.",
       "seen_in": [
         "gguf-filename"
       ],
       "related": [
-        "k-quants",
-        "imatrix",
-        "gguf",
         "codebook",
+        "gguf",
+        "imatrix",
+        "inference",
+        "k-quants",
+        "quantization",
+        "tool-llamacpp",
         "vector-quantization"
       ],
       "sources": [
@@ -1854,10 +1940,14 @@
         "gguf-filename"
       ],
       "related": [
+        "fp16",
         "gguf",
+        "inference",
         "iq-quants",
-        "unsloth-dynamic",
-        "llama-cpp"
+        "llama-cpp",
+        "quantization",
+        "tool-llamacpp",
+        "unsloth-dynamic"
       ],
       "sources": [
         "llama.cpp PR #1684 by Iwan Kawrakow"
@@ -1909,7 +1999,7 @@
       "expansion": "Kahneman-Tversky Optimization",
       "category": "training-pipeline",
       "oneliner": "Only needs thumbs-up/down per response (not paired preferences) — grounded in prospect theory's loss aversion.",
-      "explanation": "DPO/RLHF need PAIRED preferences. KTO works with UNPAIRED binary labels (prompt, response, good/bad). Based on prospect theory: losses loom larger than gains (~2:1). Desirable responses rewarded; undesirable penalized more heavily. Reference point = expected KL divergence. Requires reference model.",
+      "explanation": "KTO is an alignment training method that learns from simple binary feedback, where each response is independently labeled as good or bad rather than compared in pairs. It draws on prospect theory from behavioral economics, penalizing bad outputs more heavily than it rewards good ones at roughly a two-to-one ratio. This makes it practical when paired preference rankings are expensive to collect. It requires a reference model to anchor the optimization.",
       "fundamentals": "Desirable: v = $\\sigma$($\\beta$·log($\\pi_\\theta$/$\\pi_{\\text{ref}}$) - z_ref). Undesirable: v = $\\sigma$(z_ref - $\\beta$·log($\\pi_\\theta$/$\\pi_{\\text{ref}}$)). Loss: -E_w[$\\lambda$_w·v(y_w)] - E_l[$\\lambda$_l·v(y_l)], $\\lambda$_l > $\\lambda$_w. Data: {prompt, response, label: bool}.",
       "seen_in": [
         "model-cards"
@@ -1952,12 +2042,14 @@
         "documentation"
       ],
       "related": [
-        "mha",
-        "mqa",
+        "fp16",
         "gqa",
+        "mha",
         "mla",
+        "mqa",
         "paged-attention",
-        "swa"
+        "swa",
+        "token"
       ],
       "sources": [
         "Pope et al., 'Efficiently Scaling Transformer Inference,' MLSys 2023, arXiv:2211.05102"
@@ -1986,10 +2078,13 @@
         "code"
       ],
       "related": [
-        "rmsnorm",
-        "pre-norm",
+        "batchnorm",
+        "inference",
         "post-norm",
-        "batchnorm"
+        "pre-norm",
+        "rmsnorm",
+        "token",
+        "zero"
       ],
       "sources": [
         "Ba et al., 'Layer Normalization,' 2016, arXiv:1607.06450"
@@ -2018,9 +2113,10 @@
         "model-weights"
       ],
       "related": [
-        "sinusoidal-pe",
+        "alibi",
         "rope",
-        "alibi"
+        "sinusoidal-pe",
+        "token"
       ],
       "sources": [
         "Radford et al., 'Language Models are Unsupervised Multitask Learners,' 2019 (GPT-2)",
@@ -2053,10 +2149,14 @@
         "filename"
       ],
       "related": [
-        "qlora",
+        "adapters",
         "dora",
         "ia3",
-        "peft"
+        "inference",
+        "peft",
+        "qlora",
+        "safetensors",
+        "zero"
       ],
       "foundational_papers": [
         {
@@ -2097,11 +2197,15 @@
         "vllm-internals"
       ],
       "related": [
-        "gptq",
         "awq",
-        "w4a16",
+        "cuda-kernels",
+        "fp16",
+        "gptq",
+        "inference",
+        "int4",
+        "tool-vllm",
         "vllm",
-        "cuda-kernels"
+        "w4a16"
       ],
       "sources": [
         "Frantar et al., 'Marlin,' arXiv:2408.11743"
@@ -2130,12 +2234,13 @@
         "architecture-papers"
       ],
       "related": [
-        "mqa",
-        "gqa",
-        "mla",
-        "sdpa",
         "flash-attention",
-        "kv-cache"
+        "gqa",
+        "kv-cache",
+        "mla",
+        "mqa",
+        "sdpa",
+        "token"
       ],
       "sources": [
         "Vaswani et al., 'Attention Is All You Need,' NeurIPS 2017, arXiv:1706.03762"
@@ -2164,11 +2269,12 @@
         "research-papers"
       ],
       "related": [
-        "mha",
         "gqa",
-        "mqa",
         "kv-cache",
-        "rope"
+        "mha",
+        "mqa",
+        "rope",
+        "token"
       ],
       "sources": [
         "DeepSeek-AI, 'DeepSeek-V2,' 2024, arXiv:2405.04434"
@@ -2193,8 +2299,9 @@
       "explanation": "A model head is the task-specific projection layer on top of a shared backbone. In a causal language model, the LM head projects hidden states to vocabulary-sized logits for next-token prediction, often sharing weights with the input embedding table. For classification, a head pools the sequence and projects to class logits instead. Swapping heads lets you reuse the same pretrained backbone for entirely different tasks without retraining it.",
       "fundamentals": "For an LM head with weight tying, logits are $z = h W_E^\\top$ where $h \\in \\mathbb{R}^{d}$ is the hidden state and $W_E \\in \\mathbb{R}^{|V| \\times d}$ is the shared embedding matrix. Weight tying reduces parameters by $|V| \\times d$. A classification head applies $\\text{softmax}(W_c h + b_c)$ where $W_c \\in \\mathbb{R}^{C \\times d}$.",
       "related": [
+        "backbone",
         "ffn",
-        "backbone"
+        "token"
       ],
       "seen_in": [
         "code",
@@ -2268,10 +2375,11 @@
         "hardware-guides"
       ],
       "related": [
-        "quantization",
-        "kv-cache",
+        "fp16",
         "int4",
-        "fp16"
+        "int8",
+        "kv-cache",
+        "quantization"
       ],
       "sources": [
         "Pope et al., 'Efficiently Scaling Transformer Inference,' MLSys 2023, arXiv:2211.05102"
@@ -2300,10 +2408,11 @@
         "model-config"
       ],
       "related": [
-        "expert-routing",
         "dense-models",
+        "expert-routing",
         "ffn",
-        "mxfp4-moe"
+        "mxfp4-moe",
+        "token"
       ],
       "sources": [
         "Shazeer et al., 'Outrageously Large Neural Networks,' ICLR 2017",
@@ -2346,9 +2455,10 @@
         "model-config"
       ],
       "related": [
-        "mha",
         "gqa",
-        "kv-cache"
+        "kv-cache",
+        "mha",
+        "token"
       ],
       "sources": [
         "Shazeer, 'Fast Transformer Decoding: One Write-Head is All You Need,' 2019, arXiv:1911.02150"
@@ -2370,15 +2480,17 @@
       "expansion": "Microscaling FP4 optimized for Mixture-of-Experts layers",
       "category": "formats",
       "oneliner": "E2M1 micro-float with block scaling, specifically targeting MoE expert weights. Only appears in 26B-A4B GGUF repos.",
-      "explanation": "Applies the OCP Microscaling FP4 format (E2M1 elements with shared E8M0 block scales) specifically to the expert weight matrices in Mixture-of-Experts models. MoE expert weights are a good target because they are numerous (128 experts) but individually small, and the block-scaling approach handles their weight distributions well. Relatively new format in llama.cpp.",
+      "explanation": "MXFP4_MOE is a quantization format that applies the OCP Microscaling FP4 specification to the expert weight matrices inside Mixture-of-Experts models. It uses tiny E2M1 floating-point elements that share a block-level E8M0 scale factor, keeping storage extremely compact. MoE expert weights are a natural target because there are many of them but each is individually small. This is a relatively new format supported in llama.cpp.",
       "fundamentals": "Same as E2M1/MXFP4: 32 elements share one 8-bit scale. Per-element: 1 sign, 2 exp, 1 mantissa = 15 distinct values. Effective 4.25 bpw. The _MOE suffix is an architecture annotation, not a different quantization algorithm.",
       "seen_in": [
         "gguf-filename"
       ],
       "related": [
         "e2m1",
+        "gguf",
         "moe",
-        "gguf"
+        "quantization",
+        "tool-llamacpp"
       ],
       "sources": [
         "OCP MX Spec v1.0",
@@ -2406,10 +2518,12 @@
         "bitsandbytes-config"
       ],
       "related": [
+        "bitsandbytes",
+        "double-quantization",
         "int4",
         "qlora",
-        "bitsandbytes",
-        "double-quantization"
+        "quantization",
+        "zero"
       ],
       "sources": [
         "Dettmers et al., 'QLoRA,' NeurIPS 2023, arXiv:2305.14314"
@@ -2469,8 +2583,9 @@
         "repo-name"
       ],
       "related": [
-        "org-thebloke",
-        "gguf"
+        "gguf",
+        "imatrix",
+        "org-thebloke"
       ],
       "confidence": "high",
       "verified_date": "2026-04-10",
@@ -2605,7 +2720,9 @@
       "seen_in": [
         "repo-name"
       ],
-      "related": [],
+      "related": [
+        "inference"
+      ],
       "confidence": "high",
       "verified_date": "2026-04-10",
       "resources": [
@@ -2631,7 +2748,8 @@
       ],
       "related": [
         "gguf",
-        "org-bartowski"
+        "org-bartowski",
+        "quantization"
       ],
       "confidence": "high",
       "verified_date": "2026-04-10",
@@ -2653,7 +2771,8 @@
         "repo-name"
       ],
       "related": [
-        "dataset-hermes"
+        "dataset-hermes",
+        "model-merging"
       ],
       "confidence": "high",
       "verified_date": "2026-04-10",
@@ -2699,7 +2818,10 @@
         "repo-name"
       ],
       "related": [
-        "org-bartowski"
+        "gguf",
+        "gptq",
+        "org-bartowski",
+        "quantization"
       ],
       "confidence": "high",
       "verified_date": "2026-04-10",
@@ -2721,7 +2843,11 @@
         "repo-name"
       ],
       "related": [
-        "exl2"
+        "exl2",
+        "inference",
+        "inference-engine",
+        "quantization",
+        "tool-exllamav2"
       ],
       "confidence": "high",
       "verified_date": "2026-04-10",
@@ -2739,7 +2865,7 @@
       "expansion": "Odds Ratio Preference Optimization",
       "category": "training-pipeline",
       "oneliner": "Combines SFT + preference alignment in one stage via odds-ratio penalty — no separate SFT, no reference model. Single-stage, single-model.",
-      "explanation": "SFT+DPO first increases prob of both chosen AND rejected (SFT), then separates (DPO) — inefficient. ORPO adds odds-ratio penalty to SFT loss directly. Single stage on preference data applied to base model. No reference model. ~50% cheaper than SFT+DPO.",
+      "explanation": "ORPO is a single-stage alignment training method that teaches a model to prefer good responses over bad ones without needing a separate supervised fine-tuning step first. It adds an odds-ratio penalty directly to the standard language modeling loss, so the model learns both instruction-following and preference alignment at the same time. This avoids the waste of first raising the probability of all responses then separating them. It costs roughly half as much as SFT plus DPO.",
       "fundamentals": "L = L_SFT + $\\lambda$·L_OR. L_OR = -log $\\sigma$(log(odds(y_w|x)/odds(y_l|x))). odds(y|x) = p(y|x)/(1-p(y|x)). $\\lambda$ 0.1-1.0. No reference model.",
       "seen_in": [
         "model-cards"
@@ -2776,8 +2902,9 @@
         "documentation"
       ],
       "related": [
-        "kv-cache",
         "flash-attention",
+        "kv-cache",
+        "token",
         "vllm"
       ],
       "sources": [
@@ -2800,7 +2927,7 @@
       "expansion": "Parameter-Efficient Fine-Tuning (concept + HuggingFace library)",
       "category": "fine-tuning-methods",
       "oneliner": "Umbrella term for all methods adapting LLMs by training a tiny fraction of params — AND the HuggingFace library (LoRA, QLoRA, DoRA, IA3, prefix tuning, etc.).",
-      "explanation": "Concept: any technique updating far fewer than all parameters. Families: additive (LoRA, adapters), soft prompt (prefix/prompt tuning), selective (BitFit), reparameterization (LoRA). Library: get_peft_model(base, config), saves adapter files (MBs not GBs). Supports merging, multi-adapter, quantized bases. De facto standard.",
+      "explanation": "PEFT is a family of techniques for fine-tuning large models by updating only a small fraction of their parameters. Methods in this family include LoRA, bottleneck adapters, prompt tuning, and selective approaches like BitFit. The HuggingFace PEFT library wraps these methods into a standard interface where adapter weights are saved as small files rather than full model copies. It supports merging, multi-adapter inference, and quantized base models.",
       "fundamentals": "API: LoraConfig(r=16, lora_alpha=32, target_modules=[...]). Save: adapter_model.safetensors + adapter_config.json. Load: PeftModel.from_pretrained(). Merge: model.merge_and_unload(). Methods: LoRA, QLoRA, DoRA, AdaLoRA, LoRA+, rsLoRA, IA3, prefix tuning, prompt tuning, OFT, BOFT.",
       "seen_in": [
         "model-config",
@@ -2808,11 +2935,13 @@
         "code"
       ],
       "related": [
-        "lora",
-        "qlora",
+        "adapters",
         "dora",
         "ia3",
-        "adapters"
+        "inference",
+        "lora",
+        "qlora",
+        "safetensors"
       ],
       "foundational_papers": [
         {
@@ -2846,17 +2975,19 @@
       "expansion": "Group-wise Quantization Granularity",
       "category": "quantization-basics",
       "oneliner": "Divides weights into small groups (32-128 values) with separate scale factors per group — essential for making int4 viable.",
-      "explanation": "Granularity spectrum: per-tensor (1 scale for whole matrix, coarse) → per-channel (1 per output row) → per-group (1 per g values, fine). Per-group is essential for int4 where 16 levels need to fit local distributions. For a [4096, 4096] weight matrix with g=128: 131K scale factors, 256 KB overhead, +0.125 effective bpw. Tradeoff: finer groups = better accuracy but more overhead. Int8: per-channel usually sufficient. Int4: g=128 minimum, g=32 noticeably better.",
+      "explanation": "Per-group quantization is a technique that divides a weight matrix into small groups and assigns each group its own scale factor for more accurate compression. With only 16 levels available in 4-bit format, a single scale factor for an entire matrix cannot capture local variations, so grouping is essential. Typical group sizes are 32 to 128 values, adding roughly 0.125 extra bits per weight in overhead. Finer groups give better quality but increase storage slightly.",
       "fundamentals": "Error depends on range: scale = range/(2^b - 1), max error = scale/2. Smaller groups have smaller local ranges → smaller scales → smaller errors. Overhead for g=128 with fp16 scales: 16/128 = 0.125 bits/weight. For g=32: 16/32 = 0.5 bits/weight.",
       "seen_in": [
         "quantization-config",
         "documentation"
       ],
       "related": [
-        "int4",
-        "gptq",
         "awq",
-        "calibration-data"
+        "calibration-data",
+        "fp16",
+        "gptq",
+        "int4",
+        "quantization"
       ],
       "sources": [
         "Nagel et al., arXiv:2106.08295",
@@ -2884,8 +3015,10 @@
         "model-cards"
       ],
       "related": [
-        "token-embedding",
-        "residual-connection"
+        "ffn",
+        "residual-connection",
+        "token",
+        "token-embedding"
       ],
       "sources": [
         "Google DeepMind, 'Gemma 3 Technical Report,' 2025, arXiv:2503.19786"
@@ -2976,9 +3109,13 @@
         "documentation"
       ],
       "related": [
+        "bf16",
         "cpt",
+        "inference",
+        "scaling-laws",
         "sft",
-        "scaling-laws"
+        "token",
+        "tokenizer-bpe"
       ],
       "foundational_papers": [
         {
@@ -3020,17 +3157,23 @@
       "expansion": "Post-Training Quantization",
       "category": "quantization-basics",
       "oneliner": "Quantize an already-trained model without further training — fast (minutes to hours), practical, dominates LLM quantization.",
-      "explanation": "Takes a fully trained model and converts to lower precision in one pass. No training infrastructure needed. Methods: GPTQ, AWQ, RTN, EXL2. Fast even for 70B models. Downside: model never adapted to quantization noise, so quality degrades more than QAT, especially below 4-bit. At int8: essentially lossless. At int4: measurable but acceptable. At int2: usually unacceptable without QAT.",
+      "explanation": "Post-training quantization is a technique that converts a fully trained model to lower numerical precision in a single pass without any additional training. It requires no training infrastructure, just a trained model and optionally a small calibration dataset. Popular PTQ methods include GPTQ, AWQ, RTN, and EXL2. At 8-bit precision the quality loss is essentially zero, at 4-bit it is measurable but acceptable for most uses.",
       "fundamentals": "Workflow: 1) Load fp16/bf16 model. 2) Optional calibration pass. 3) Compute scale/zero-point per layer/channel/group. 4) Quantize: W_q = round(W/scale) + zp. 5) Save. At inference: dequantize and compute.",
       "seen_in": [
         "documentation",
         "model-cards"
       ],
       "related": [
-        "qat",
-        "gptq",
         "awq",
-        "calibration-data"
+        "bf16",
+        "calibration-data",
+        "exl2",
+        "fp16",
+        "gptq",
+        "inference",
+        "qat",
+        "quantization",
+        "zero"
       ],
       "sources": [
         "Nagel et al., arXiv:2106.08295"
@@ -3057,9 +3200,10 @@
         "documentation"
       ],
       "related": [
-        "ptq",
-        "spinquant",
         "fake-quantization",
+        "ptq",
+        "quantization",
+        "spinquant",
         "ste"
       ],
       "sources": [
@@ -3083,16 +3227,18 @@
       "expansion": "Quantized Low-Rank Adaptation",
       "category": "fine-tuning-methods",
       "oneliner": "Base model in 4-bit NF4 + LoRA in fp16. Fine-tune 65B on a single 48GB GPU. Three innovations: NF4, double quantization, paged optimizers.",
-      "explanation": "Frozen base weights quantized to NF4 (4-bit). LoRA adapters in bf16 compensate for quant error. NF4 optimal for Gaussian weights. Double quant: quantize the quantization constants. Paged optimizers: CPU↔GPU memory paging. 65B: ~130GB fp16 → ~41GB NF4. Quality matches 16-bit full FT.",
+      "explanation": "QLoRA is a memory-efficient fine-tuning method that combines 4-bit quantization of the frozen base model with small LoRA adapter layers trained in higher precision. The base weights are stored in NF4 format, which is optimal for normally distributed values, while adapter weights run in bfloat16 to compensate for quantization error. A 65B model shrinks from around 130 GB to about 41 GB, making fine-tuning feasible on consumer GPUs with quality matching full-precision training.",
       "fundamentals": "Forward: h = Dequant_NF4($W_0$_q)·x + ($\\alpha$/r)·B·A·x. Memory 65B: ~33.5GB base + ~1.6GB adapters/optimizer + ~4-8GB activations $\\approx$ 40-44GB. NF4: 16 levels at N(0,1) quantile positions. Double quant: block-64 absmax → quantize to 8-bit in blocks of 256.",
       "seen_in": [
         "model-name",
         "model-config"
       ],
       "related": [
+        "adapters",
+        "bitsandbytes",
         "lora",
         "nf4",
-        "bitsandbytes"
+        "quantization"
       ],
       "foundational_papers": [
         {
@@ -3127,10 +3273,12 @@
         "model-cards"
       ],
       "related": [
+        "calibration-data",
+        "dequantization",
+        "inference",
         "ptq",
         "qat",
-        "dequantization",
-        "calibration-data"
+        "token"
       ],
       "sources": [
         "Gholami et al., 'A Survey of Quantization Methods,' arXiv:2103.13630"
@@ -3152,16 +3300,18 @@
       "expansion": "HuggingFace's quantization library",
       "category": "quantization-methods",
       "oneliner": "HuggingFace's own quantization library — supports int2/int4/int8/float8 with a clean Pythonic API. Device-agnostic.",
-      "explanation": "Quanto is designed as a simple, composable quantization toolkit. Supports both weight-only and weight+activation quantization. Key feature: device-agnostic — can quantize on CPU and run on GPU, supports CUDA, MPS (Apple), and XPU (Intel). Integrates directly with HuggingFace Transformers and diffusers. Less optimized for raw throughput than GPTQ/AWQ but easier to use and more flexible.",
+      "explanation": "Quanto is a quantization toolkit from HuggingFace designed to be simple, composable, and hardware-agnostic. It supports both weight-only and weight-plus-activation quantization and runs on CPU, CUDA, and Apple MPS without code changes. It integrates directly with HuggingFace Transformers and Diffusers for easy experimentation. It trades peak throughput for ease of use compared to more specialized tools like GPTQ and AWQ.",
       "fundamentals": "Provides quantized tensor types that wrap standard PyTorch tensors with scale/zero-point metadata. Quantization is eager (happens at model load time). Supports symmetric and affine quantization, per-tensor and per-axis granularity.",
       "seen_in": [
         "quantization-config",
         "documentation"
       ],
       "related": [
+        "awq",
         "bitsandbytes",
         "gptq",
-        "awq"
+        "quantization",
+        "zero"
       ],
       "sources": [
         "github.com/huggingface/optimum-quanto"
@@ -3175,7 +3325,7 @@
       "expansion": "Quantization with Incoherence Processing (sharp)",
       "category": "quantization-methods",
       "oneliner": "2-bit quantization using random rotations to spread information evenly across weights, then vector quantization with E8 lattice codebooks.",
-      "explanation": "Key insight: quantization works best when weight matrices are 'incoherent' — no single weight is disproportionately important. QuIP# applies random orthogonal rotations (Hadamard transforms) to make weights incoherent, then uses lattice-based vector quantization (E8 lattice, a mathematically optimal packing) for extreme compression. Achieves viable 2-bit quantization for 70B+ models. Research-oriented; less ecosystem support than GPTQ/AWQ.",
+      "explanation": "QuIP# is a weight quantization method that applies random orthogonal rotations to model weights before compressing them, making the values more uniform and easier to quantize accurately. The rotations use fast Hadamard transforms to ensure no single weight is disproportionately important, a property called incoherence. After rotation, lattice-based vector quantization encodes the weights at very low bitwidths. It achieves viable 2-bit compression for 70B-plus models.",
       "fundamentals": "1) Rotate weights: W' = UWV^T (random orthogonal U, V from Hadamard matrices). 2) Vector quantize rotated weights using E8 lattice codebook. 3) At inference: decode codebook entries and apply inverse rotations. The rotation is the key — it makes all weights roughly equally important, so uniform quantization works better.",
       "seen_in": [
         "model-name",
@@ -3183,9 +3333,11 @@
       ],
       "related": [
         "aqlm",
-        "vector-quantization",
         "incoherence",
-        "lattice-codebook"
+        "inference",
+        "lattice-codebook",
+        "quantization",
+        "vector-quantization"
       ],
       "sources": [
         "Chee et al., 'QuIP#,' arXiv:2402.04396"
@@ -3240,7 +3392,7 @@
       "expansion": "Reinforcement Learning from Human Feedback",
       "category": "training-pipeline",
       "oneliner": "Train reward model from preferences, optimize LLM via PPO + KL penalty. Complex (4 models in memory) but the original alignment breakthrough.",
-      "explanation": "Three stages: (1) SFT, (2) reward model on preference pairs (Bradley-Terry), (3) PPO against reward with KL penalty. 4 models simultaneously: policy, reference, reward, value. Used by InstructGPT, ChatGPT, Claude (with Constitutional AI), Llama 2-Chat, Gemini. Cost: 5-20% of pre-training. Complex and unstable — motivated DPO/ORPO/KTO.",
+      "explanation": "RLHF is a training procedure that aligns language models with human preferences using reinforcement learning. It works in three stages: supervised fine-tuning on demonstrations, training a reward model on human preference comparisons, and optimizing the policy against that reward using PPO with a KL penalty. Four models run simultaneously during the final stage. It powers ChatGPT, Claude, and Llama 2-Chat, though its complexity motivated simpler alternatives like DPO.",
       "fundamentals": "RM loss: $\\mathcal{L} = -\\mathbb{E}[\\log \\sigma(r(x,y_w) - r(x,y_l))]$. PPO: $\\max \\mathbb{E}[r(x,y) - \\beta \\cdot \\text{KL}(\\pi_\\theta \\| \\pi_{\\text{ref}})]$. PPO clips: $\\mathcal{L} = -\\min(\\text{ratio} \\cdot \\hat{A},\\, \\text{clip}(\\text{ratio}, 1 \\pm \\varepsilon) \\cdot \\hat{A})$. $\\beta$ 0.01-0.2, $\\varepsilon$=0.2. Preference data: 50K-500K comparisons.",
       "seen_in": [
         "model-cards",
@@ -3338,12 +3490,13 @@
         "model-config"
       ],
       "related": [
+        "abf",
         "alibi",
         "ntk-rope",
-        "yarn",
         "position-interpolation",
-        "abf",
-        "sinusoidal-pe"
+        "sinusoidal-pe",
+        "token",
+        "yarn"
       ],
       "sources": [
         "Su et al., 'RoFormer: Enhanced Transformer with Rotary Position Embedding,' 2021, arXiv:2104.09864"
@@ -3365,7 +3518,7 @@
       "expansion": "Safe Tensors serialization format",
       "category": "formats",
       "oneliner": "HuggingFace's secure, fast tensor serialization — replaces pickle-based .bin files. Immune to arbitrary code execution.",
-      "explanation": "Created because PyTorch's default serialization uses Python pickle, which can execute arbitrary code when loading. A malicious .bin file could run any code on your machine. safetensors stores tensors as raw bytes with a JSON header — no code execution possible. Also faster: supports memory mapping and lazy loading (load only the tensors you need). Now the default format on HuggingFace Hub. Used by GPTQ, AWQ, EXL2, and full-precision model uploads.",
+      "explanation": "safetensors is a secure file format for storing model weights that prevents code execution attacks. The standard PyTorch serialization uses Python pickle, which can run arbitrary code when a file is loaded, creating a serious security risk. safetensors instead stores tensors as raw bytes with a simple JSON header, making it impossible to embed malicious code. It also supports memory mapping for faster loading and is now the default on HuggingFace Hub.",
       "fundamentals": "File structure: 8-byte header length, JSON header (tensor names, shapes, dtypes, offsets), raw tensor data. No nested structures, no code, no pickle. Can be memory-mapped for zero-copy loading. Validation: can verify file integrity without loading all data.",
       "seen_in": [
         "filename"
@@ -3373,7 +3526,8 @@
       "related": [
         "gguf",
         "pickle",
-        "pytorch-bin"
+        "pytorch-bin",
+        "zero"
       ],
       "sources": [
         "github.com/huggingface/safetensors"
@@ -3420,10 +3574,11 @@
       "explanation": "Self-attention lets each token in a sequence look at every other token to decide what context matters most. Each token is projected into a query, key, and value vector. Attention scores are computed as scaled dot products between queries and keys, then softmaxed into weights over the value vectors. This is the core mechanism inside transformers, giving them the ability to capture long-range dependencies in a single layer.",
       "fundamentals": "Given input $X \\in \\mathbb{R}^{n \\times d}$, self-attention computes $Q = XW^Q$, $K = XW^K$, $V = XW^V$ and returns $\\text{Attention}(Q,K,V) = \\text{softmax}\\left(\\frac{QK^\\top}{\\sqrt{d_k}}\\right)V$. Cost is $O(n^2 d)$ in time and $O(n^2)$ in memory.",
       "related": [
+        "gqa",
         "mha",
         "mqa",
-        "gqa",
-        "sdpa"
+        "sdpa",
+        "token"
       ],
       "seen_in": [
         "code",
@@ -3455,8 +3610,11 @@
       "explanation": "A sequence-to-sequence model uses an encoder to read an entire input sequence with bidirectional attention, then a decoder to generate the output one token at a time using the encoder's representations. This design fits tasks where input and output are different sequences, such as translation and summarization. T5 and BART are the best-known seq2seq transformers, though decoder-only models now dominate chat and general generation.",
       "fundamentals": "The encoder produces $H_{\\text{enc}} = \\text{Encoder}(x_1, \\ldots, x_n)$ using bidirectional attention. The decoder at step $t$ computes causal self-attention over $y_{<t}$, then cross-attention: $\\text{softmax}\\left(\\frac{Q_{\\text{dec}} K_{\\text{enc}}^\\top}{\\sqrt{d_k}}\\right) V_{\\text{enc}}$. Encoder KV cache computed once during prefill.",
       "related": [
+        "causal-lm",
+        "kv-cache",
         "mha",
-        "causal-lm"
+        "self-attention",
+        "token"
       ],
       "seen_in": [
         "model-config",
@@ -3485,17 +3643,18 @@
       "expansion": "Supervised Fine-Tuning (Instruction Tuning)",
       "category": "training-pipeline",
       "oneliner": "Training on (instruction, response) pairs — loss computed only on response tokens, not the prompt. Quality >> quantity (LIMA: 1K examples can suffice).",
-      "explanation": "Transforms base model into instruction-following assistant. Loss masking on prompts (CE only on response tokens). Dataset sizes: 10K-1M. Key datasets: FLAN (1800+ tasks), OpenAssistant (161K messages), Alpaca (52K GPT-3.5-generated), ShareGPT, UltraChat (1.5M). Cost: ~0.1-1% of pre-training. Sits after pre-training/CPT, before preference alignment.",
+      "explanation": "SFT is a training stage that transforms a base language model into an instruction-following assistant by training it on prompt-response examples. The model learns to generate helpful responses by computing loss only on the response tokens while masking out the prompt. Typical datasets range from 10K to 1M examples drawn from collections like FLAN, Alpaca, ShareGPT, and UltraChat. SFT sits between pre-training and alignment at a small fraction of the pre-training cost.",
       "fundamentals": "Loss: $\\mathcal{L} = -\\frac{1}{|y|}\\sum_t \\log p_\\theta(y_t | x, y_1 \\ldots y_{t-1})$. Prompt $x$ tokens masked. Data: {messages: [{role:user, content:...}, {role:assistant, content:...}]}. Hyperparams: lr 1e-5 to 2e-5, 1-5 epochs. Often uses LoRA/QLoRA.",
       "seen_in": [
         "model-name",
         "model-cards"
       ],
       "related": [
-        "pre-training",
-        "rlhf",
         "dpo",
-        "lora"
+        "lora",
+        "pre-training",
+        "qlora",
+        "rlhf"
       ],
       "foundational_papers": [
         {
@@ -3543,7 +3702,8 @@
       ],
       "related": [
         "dpo",
-        "orpo"
+        "orpo",
+        "token"
       ],
       "foundational_papers": [
         {
@@ -3572,9 +3732,10 @@
         "documentation"
       ],
       "related": [
+        "alibi",
         "learned-pe",
         "rope",
-        "alibi"
+        "token"
       ],
       "sources": [
         "Vaswani et al., 'Attention Is All You Need,' NeurIPS 2017, arXiv:1706.03762"
@@ -3601,9 +3762,11 @@
         "model-name"
       ],
       "related": [
+        "inference",
         "moe",
         "size-B",
-        "size-E"
+        "size-E",
+        "token"
       ],
       "confidence": "high",
       "verified_date": "2026-04-10",
@@ -3625,9 +3788,10 @@
         "model-name"
       ],
       "related": [
+        "dense-models",
         "size-A",
         "size-E",
-        "dense-models"
+        "token"
       ],
       "confidence": "high",
       "verified_date": "2026-04-10",
@@ -3674,6 +3838,7 @@
         "documentation"
       ],
       "related": [
+        "pre-training",
         "size-B"
       ],
       "confidence": "high",
@@ -3721,8 +3886,9 @@
         "model-name"
       ],
       "related": [
+        "expert-routing",
         "moe",
-        "expert-routing"
+        "token"
       ],
       "confidence": "high",
       "verified_date": "2026-04-10",
@@ -3746,9 +3912,10 @@
         "documentation"
       ],
       "related": [
-        "kv-cache",
+        "autoregressive-decoding",
         "continuous-batching",
-        "autoregressive-decoding"
+        "kv-cache",
+        "token"
       ],
       "sources": [
         "Leviathan et al., 'Fast Inference from Transformers via Speculative Decoding,' ICML 2023, arXiv:2211.17192",
@@ -3777,17 +3944,18 @@
       "expansion": "Rotation-based Quantization-Aware Training",
       "category": "quantization-methods",
       "oneliner": "Learns optimal rotation matrices during training so that rotated weights are easier to quantize — a QAT approach using geometric transformations.",
-      "explanation": "Similar insight to QuIP# (rotations make weights more quantization-friendly), but instead of random rotations, SpinQuant LEARNS the optimal rotations during a fine-tuning phase. This means the model actively optimizes its internal representations to be amenable to low-bit quantization. Combines the geometric insight of incoherence processing with the training-time adaptation of QAT. Published by Meta researchers.",
+      "explanation": "SpinQuant is a quantization method that learns optimal rotation matrices to transform model weights into a form that is easier to compress with minimal quality loss. It shares the insight that rotated weights are more uniform and thus more quantization-friendly, but instead of using random rotations it optimizes them during a fine-tuning phase. This combines the geometric benefits of incoherence processing with training-time adaptation. Published by Meta researchers.",
       "fundamentals": "During fine-tuning: insert learnable rotation matrices R before quantization in each layer. Forward pass: W' = R @ W, then quantize W'. Gradients flow through to both W and R via STE. The rotations R converge to transformations that spread weight information evenly, minimizing quantization error.",
       "seen_in": [
         "research-papers",
         "model-cards"
       ],
       "related": [
+        "incoherence",
         "qat",
+        "quantization",
         "quip-sharp",
-        "rotation",
-        "incoherence"
+        "rotation"
       ],
       "sources": [
         "Liu et al., 'SpinQuant,' arXiv:2405.16406"
@@ -3815,10 +3983,12 @@
         "model-config"
       ],
       "related": [
-        "mha",
-        "gqa",
+        "attention-mask",
         "flash-attention",
-        "kv-cache"
+        "gqa",
+        "kv-cache",
+        "mha",
+        "token"
       ],
       "sources": [
         "Jiang et al., 'Mistral 7B,' 2023, arXiv:2310.06825",
@@ -3912,7 +4082,8 @@
       ],
       "related": [
         "sft",
-        "tag-instruct"
+        "tag-instruct",
+        "token"
       ],
       "confidence": "high",
       "verified_date": "2026-04-10",
@@ -3934,7 +4105,8 @@
         "model-name"
       ],
       "related": [
-        "cpt"
+        "cpt",
+        "pre-training"
       ],
       "confidence": "high",
       "verified_date": "2026-04-10",
@@ -4167,6 +4339,7 @@
         "model-name"
       ],
       "related": [
+        "inference",
         "tag-embed"
       ],
       "foundational_papers": [
@@ -4191,6 +4364,7 @@
         "model-name"
       ],
       "related": [
+        "inference",
         "rlhf"
       ],
       "confidence": "high",
@@ -4235,8 +4409,9 @@
         "model-name"
       ],
       "related": [
+        "expert-routing",
         "moe",
-        "expert-routing"
+        "token"
       ],
       "confidence": "high",
       "verified_date": "2026-04-10",
@@ -4258,7 +4433,8 @@
         "model-name"
       ],
       "related": [
-        "mha"
+        "mha",
+        "token"
       ],
       "confidence": "high",
       "verified_date": "2026-04-10",
@@ -4315,6 +4491,7 @@
         "tokenizer-config"
       ],
       "related": [
+        "token",
         "tokenizer-spm",
         "tokenizer-tiktoken"
       ],
@@ -4412,7 +4589,11 @@
       ],
       "related": [
         "exl2",
-        "org-turboderp"
+        "inference",
+        "inference-engine",
+        "org-turboderp",
+        "quantization",
+        "token"
       ],
       "confidence": "high",
       "verified_date": "2026-04-10",
@@ -4435,8 +4616,10 @@
       ],
       "related": [
         "gguf",
-        "k-quants",
-        "iq-quants"
+        "inference",
+        "inference-engine",
+        "iq-quants",
+        "k-quants"
       ],
       "confidence": "high",
       "verified_date": "2026-04-10",
@@ -4480,8 +4663,9 @@
         "documentation"
       ],
       "related": [
-        "tool-llamacpp",
-        "gguf"
+        "adapters",
+        "gguf",
+        "tool-llamacpp"
       ],
       "confidence": "high",
       "verified_date": "2026-04-10",
@@ -4507,6 +4691,7 @@
         "serving-config"
       ],
       "related": [
+        "kv-cache",
         "tool-vllm"
       ],
       "foundational_papers": [
@@ -4532,6 +4717,8 @@
       ],
       "related": [
         "fp8",
+        "int4",
+        "quantization",
         "w8a8"
       ],
       "confidence": "high",
@@ -4554,6 +4741,10 @@
         "serving-config"
       ],
       "related": [
+        "continuous-batching",
+        "inference",
+        "quantization",
+        "token",
         "tool-vllm"
       ],
       "confidence": "high",
@@ -4577,8 +4768,10 @@
         "documentation"
       ],
       "related": [
-        "paged-attention",
-        "continuous-batching"
+        "continuous-batching",
+        "inference",
+        "inference-engine",
+        "paged-attention"
       ],
       "foundational_papers": [
         {
@@ -4606,9 +4799,11 @@
       ],
       "related": [
         "data-parallelism",
-        "fsdp",
         "expert-parallelism",
-        "nvlink"
+        "fsdp",
+        "inference",
+        "nvlink",
+        "token"
       ],
       "sources": [
         "Narayanan et al., 'Megatron-LM,' arXiv:1909.08053, arXiv:2104.04473",
@@ -4640,9 +4835,13 @@
       "explanation": "Transfer learning is the practice of reusing a model trained on a broad dataset as the starting point for a specific task, rather than training from scratch. The pretrained weights already encode language structure and world knowledge, so the new task needs far less data and compute. This idea underlies all modern fine-tuning methods including full fine-tuning, LoRA, and QLoRA. Even zero-shot prompting is a form of transfer learning.",
       "fundamentals": "Transfer assumes features learned on $P_{\\text{source}}(x)$ are useful for $P_{\\text{target}}(x)$. Fine-tuning updates $\\theta_{\\text{pretrained}} \\to \\theta + \\Delta\\theta$ using a task-specific loss. PEFT methods constrain $\\Delta\\theta$: LoRA uses $\\Delta W = BA$ with $B \\in \\mathbb{R}^{d \\times r}$, $r \\ll d$, reducing trainable params from $O(d^2)$ to $O(rd)$.",
       "related": [
+        "full-ft",
+        "lora",
+        "peft",
         "pre-training",
+        "qlora",
         "sft",
-        "lora"
+        "zero"
       ],
       "seen_in": [
         "documentation"
@@ -4670,7 +4869,7 @@
       "expansion": "Unsloth Dynamic Quantization v2.0",
       "category": "quantization-methods",
       "oneliner": "Proprietary layer-selective quantization that varies precision per layer based on sensitivity analysis. 10-30% KL divergence reduction vs uniform.",
-      "explanation": "Not all layers are equally sensitive to quantization. UD profiles each layer's sensitivity using 300K-1.5M calibration tokens (varies by model size), then assigns higher precision to sensitive layers (typically attention layers near start/end of network) and lower precision to robust ones. Available for GGUF (UD- prefix on quant files) and MLX (UD-MLX in repo name). Claims 10-30% KL divergence reduction across quantization types vs uniform approaches.",
+      "explanation": "Unsloth Dynamic is a variable-precision quantization strategy that assigns different bit precisions to different layers based on measured sensitivity. It profiles each layer using a large calibration set of 300K to 1.5M tokens and gives more bits to sensitive layers while compressing robust layers more aggressively. This claims 10 to 30 percent lower KL divergence compared to uniform quantization at the same average bitwidth. It is available for GGUF and MLX formats.",
       "fundamentals": "1) Profile: quantize each layer at multiple precisions, measure KL divergence from full-precision output. 2) Allocate: assign precision per layer to minimize total KL divergence within a size budget. 3) Quantize: apply chosen precision per layer. Similar in spirit to EXL2's approach but with different optimization objective (KL divergence vs reconstruction error).",
       "seen_in": [
         "gguf-filename",
@@ -4679,8 +4878,9 @@
       "related": [
         "exl2",
         "gguf",
+        "kl-divergence",
         "mlx",
-        "kl-divergence"
+        "quantization"
       ],
       "sources": [
         "unsloth.ai/blog/dynamic-v2"
@@ -4704,17 +4904,21 @@
       "expansion": "4-bit Weights, 16-bit Activations",
       "category": "quantization-basics",
       "oneliner": "Weight-only quantization: weights stored in 4-bit, dequantized to fp16 on-the-fly for computation. Saves memory, compute stays fp16.",
-      "explanation": "The standard for memory-constrained inference (consumer GPUs, llama.cpp). Weights read from memory in 4-bit (small, fast), dequantized in registers to fp16, then standard fp16 GEMM. Saves memory bandwidth but compute is still fp16 — no compute speedup for large batches. Contrast with W8A8 where both operands are quantized and integer math provides both memory and compute savings.",
+      "explanation": "W4A16 is a quantization configuration where model weights are stored in 4-bit precision but activations remain in 16-bit during computation. The weights are decompressed to fp16 on the fly as each layer runs, saving memory and bandwidth while keeping arithmetic at full precision. This is the standard approach for memory-constrained inference on consumer GPUs using tools like llama.cpp. It does not speed up compute for large batches since the math stays in fp16.",
       "fundamentals": "Inference per layer: 1) Read int4 weights from memory. 2) Dequantize: W_fp16 = scale $\\times$ (W_int4 - zero_point). 3) GEMM: Y = X_fp16 @ W_fp16. Memory bandwidth savings: 4$\\times$ vs fp16. Compute savings: none (still fp16 GEMM). For batch=1 (memory-bound): ~4$\\times$ throughput. For large batches (compute-bound): no speedup.",
       "seen_in": [
         "documentation",
         "benchmark-tables"
       ],
       "related": [
-        "w8a8",
-        "int4",
-        "gptq",
         "awq",
+        "fp16",
+        "gptq",
+        "inference",
+        "int4",
+        "quantization",
+        "tool-llamacpp",
+        "w8a8",
         "weight-only-quantization"
       ],
       "sources": [
@@ -4742,10 +4946,12 @@
         "serving-config"
       ],
       "related": [
-        "w4a16",
+        "inference",
         "int8",
+        "quantization",
         "smoothquant",
-        "tensorrt-llm"
+        "tensorrt-llm",
+        "w4a16"
       ],
       "sources": [
         "Xiao et al., 'SmoothQuant,' arXiv:2211.10438"

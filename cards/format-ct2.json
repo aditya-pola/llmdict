@@ -7,7 +7,15 @@
   "seen_in": [
     "filename"
   ],
-  "related": [],
+  "related": [
+    "fp16",
+    "inference",
+    "inference-engine",
+    "int8",
+    "quantization",
+    "tool-llamacpp",
+    "tool-vllm"
+  ],
   "confidence": "high",
   "verified_date": "2026-04-10",
   "resources": [

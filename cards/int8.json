@@ -4,7 +4,7 @@
   "expansion": "8-bit Integer Quantization",
   "category": "precision-formats",
   "oneliner": "Fixed-point 8-bit: maps floats to 256 discrete levels via scale+zero-point. 4$\\times$ compression from fp32, runs on all modern hardware.",
-  "explanation": "Most mature quantization format. 256 levels (signed: -128 to 127). Integer MAC units are simpler and more efficient than float, available on CPUs (VNNI), GPUs (INT8 Tensor Cores since Turing), mobile NPUs. Challenge: LLM activations can have extreme outliers in certain channels (documented in LLM.int8() paper). Solutions: per-channel quantization, mixed-precision decomposition, SmoothQuant. Standard for production W8A8 serving via TensorRT-LLM.",
+  "explanation": "int8 is an 8-bit integer precision format that represents values using 256 discrete levels from negative 128 to positive 127. Integer math units are simpler and more power-efficient than floating-point ones and are available on virtually all modern hardware. The main challenge for language models is that activations can have extreme outlier values in certain channels. Solutions like per-channel scaling, mixed-precision decomposition, and SmoothQuant address this effectively.",
   "fundamentals": "Quantize: x_q = round(x / scale) + zero_point, clamped to [-128, 127]. Dequantize: x $\\approx$ (x_q - zero_point) $\\times$ scale. Symmetric (common for weights): zero_point=0, scale = max(|x|)/127. Step size = scale. For weights in [-1, 1]: step $\\approx$ 0.0078 — values closer than ~0.008 become identical.",
   "seen_in": [
     "model-name",

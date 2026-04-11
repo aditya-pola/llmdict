@@ -11,10 +11,12 @@
     "serving-config"
   ],
   "related": [
-    "w4a16",
+    "inference",
     "int8",
+    "quantization",
     "smoothquant",
-    "tensorrt-llm"
+    "tensorrt-llm",
+    "w4a16"
   ],
   "sources": [
     "Xiao et al., 'SmoothQuant,' arXiv:2211.10438"

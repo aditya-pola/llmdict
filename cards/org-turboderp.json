@@ -8,7 +8,11 @@
     "repo-name"
   ],
   "related": [
-    "exl2"
+    "exl2",
+    "inference",
+    "inference-engine",
+    "quantization",
+    "tool-exllamav2"
   ],
   "confidence": "high",
   "verified_date": "2026-04-10",

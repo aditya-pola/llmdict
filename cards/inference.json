@@ -9,6 +9,7 @@
   "related": [
     "inference-engine",
     "kv-cache",
+    "quantization",
     "speculative-decoding"
   ],
   "seen_in": [

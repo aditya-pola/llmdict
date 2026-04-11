@@ -4,17 +4,18 @@
   "expansion": "Supervised Fine-Tuning (Instruction Tuning)",
   "category": "training-pipeline",
   "oneliner": "Training on (instruction, response) pairs — loss computed only on response tokens, not the prompt. Quality >> quantity (LIMA: 1K examples can suffice).",
-  "explanation": "Transforms base model into instruction-following assistant. Loss masking on prompts (CE only on response tokens). Dataset sizes: 10K-1M. Key datasets: FLAN (1800+ tasks), OpenAssistant (161K messages), Alpaca (52K GPT-3.5-generated), ShareGPT, UltraChat (1.5M). Cost: ~0.1-1% of pre-training. Sits after pre-training/CPT, before preference alignment.",
+  "explanation": "SFT is a training stage that transforms a base language model into an instruction-following assistant by training it on prompt-response examples. The model learns to generate helpful responses by computing loss only on the response tokens while masking out the prompt. Typical datasets range from 10K to 1M examples drawn from collections like FLAN, Alpaca, ShareGPT, and UltraChat. SFT sits between pre-training and alignment at a small fraction of the pre-training cost.",
   "fundamentals": "Loss: $\\mathcal{L} = -\\frac{1}{|y|}\\sum_t \\log p_\\theta(y_t | x, y_1 \\ldots y_{t-1})$. Prompt $x$ tokens masked. Data: {messages: [{role:user, content:...}, {role:assistant, content:...}]}. Hyperparams: lr 1e-5 to 2e-5, 1-5 epochs. Often uses LoRA/QLoRA.",
   "seen_in": [
     "model-name",
     "model-cards"
   ],
   "related": [
-    "pre-training",
-    "rlhf",
     "dpo",
-    "lora"
+    "lora",
+    "pre-training",
+    "qlora",
+    "rlhf"
   ],
   "foundational_papers": [
     {

@@ -12,13 +12,20 @@
     "model-cards"
   ],
   "related": [
+    "continuous-batching",
+    "fp16",
+    "gguf",
+    "inference",
     "kv-cache",
     "paged-attention",
-    "continuous-batching",
+    "quantization",
     "speculative-decoding",
-    "tp-pp",
-    "gguf",
-    "quantization"
+    "token",
+    "tool-llamacpp",
+    "tool-tensorrt-llm",
+    "tool-tgi",
+    "tool-vllm",
+    "tp-pp"
   ],
   "foundational_papers": [
     {

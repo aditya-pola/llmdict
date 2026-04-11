@@ -11,10 +11,12 @@
     "quantization-scripts"
   ],
   "related": [
-    "iq-quants",
     "calibration-data",
+    "hessian",
+    "iq-quants",
     "llama-cpp",
-    "hessian"
+    "quantization",
+    "tool-llamacpp"
   ],
   "sources": [
     "llama.cpp documentation and source code, github.com/ggerganov/llama.cpp"

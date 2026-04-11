@@ -9,7 +9,8 @@
   ],
   "related": [
     "gguf",
-    "org-bartowski"
+    "org-bartowski",
+    "quantization"
   ],
   "confidence": "high",
   "verified_date": "2026-04-10",

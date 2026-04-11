@@ -9,7 +9,11 @@
   ],
   "related": [
     "exl2",
-    "org-turboderp"
+    "inference",
+    "inference-engine",
+    "org-turboderp",
+    "quantization",
+    "token"
   ],
   "confidence": "high",
   "verified_date": "2026-04-10",

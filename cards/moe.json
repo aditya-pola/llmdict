@@ -11,10 +11,11 @@
     "model-config"
   ],
   "related": [
-    "expert-routing",
     "dense-models",
+    "expert-routing",
     "ffn",
-    "mxfp4-moe"
+    "mxfp4-moe",
+    "token"
   ],
   "sources": [
     "Shazeer et al., 'Outrageously Large Neural Networks,' ICLR 2017",

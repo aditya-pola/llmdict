@@ -4,16 +4,19 @@
   "expansion": "Importance-weighted Quantization (codebook-based)",
   "category": "formats",
   "oneliner": "llama.cpp's codebook/lookup-table quantization — uses importance matrices to make smarter rounding decisions. Better than K-quants at same bitwidth.",
-  "explanation": "IQ-quants use vector quantization with codebooks instead of simple scalar rounding. An importance matrix (imatrix) weights which values matter most. The encoder maps groups of weights to the nearest codebook entry, weighted by importance. Higher quality than K-quants at the same bitwidth but slower to generate (needs imatrix computation). Particularly valuable at low bitwidths (IQ2, IQ3) where the quality gap vs K-quants is largest.",
+  "explanation": "IQ-quants are a family of quantization formats in llama.cpp that use vector quantization with learned codebooks instead of simple scalar rounding. An importance matrix guides which weight values receive the most protection during compression. They deliver higher quality than the older K-quant formats at the same file size, with the biggest advantage at very low bitwidths like IQ2 and IQ3. Generation is slower than K-quants but inference speed is comparable.",
   "fundamentals": "Codebook approach: a fixed set of representative vectors (codebook entries). Each group of weights is mapped to the nearest codebook entry. With importance weighting: minimize $\\Sigma$ importance[i] $\\times$ (w[i] - codebook[nearest][i])^2 instead of unweighted MSE. IQ4_XS at ~4.25 bpw outperforms Q4_K_S at ~4.5 bpw.",
   "seen_in": [
     "gguf-filename"
   ],
   "related": [
-    "k-quants",
-    "imatrix",
-    "gguf",
     "codebook",
+    "gguf",
+    "imatrix",
+    "inference",
+    "k-quants",
+    "quantization",
+    "tool-llamacpp",
     "vector-quantization"
   ],
   "sources": [

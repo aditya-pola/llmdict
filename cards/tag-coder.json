@@ -9,7 +9,8 @@
     "model-name"
   ],
   "related": [
-    "cpt"
+    "cpt",
+    "pre-training"
   ],
   "confidence": "high",
   "verified_date": "2026-04-10",

@@ -8,6 +8,10 @@
     "serving-config"
   ],
   "related": [
+    "continuous-batching",
+    "inference",
+    "quantization",
+    "token",
     "tool-vllm"
   ],
   "confidence": "high",

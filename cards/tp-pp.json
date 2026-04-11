@@ -12,9 +12,11 @@
   ],
   "related": [
     "data-parallelism",
-    "fsdp",
     "expert-parallelism",
-    "nvlink"
+    "fsdp",
+    "inference",
+    "nvlink",
+    "token"
   ],
   "sources": [
     "Narayanan et al., 'Megatron-LM,' arXiv:1909.08053, arXiv:2104.04473",

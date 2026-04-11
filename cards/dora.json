@@ -10,6 +10,7 @@
     "model-config"
   ],
   "related": [
+    "full-ft",
     "lora",
     "peft"
   ],

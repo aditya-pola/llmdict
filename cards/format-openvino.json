@@ -8,7 +8,11 @@
     "filename"
   ],
   "related": [
-    "format-onnx"
+    "format-onnx",
+    "inference",
+    "int4",
+    "int8",
+    "quantization"
   ],
   "confidence": "high",
   "verified_date": "2026-04-10",

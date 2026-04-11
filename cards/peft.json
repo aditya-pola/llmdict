@@ -4,7 +4,7 @@
   "expansion": "Parameter-Efficient Fine-Tuning (concept + HuggingFace library)",
   "category": "fine-tuning-methods",
   "oneliner": "Umbrella term for all methods adapting LLMs by training a tiny fraction of params — AND the HuggingFace library (LoRA, QLoRA, DoRA, IA3, prefix tuning, etc.).",
-  "explanation": "Concept: any technique updating far fewer than all parameters. Families: additive (LoRA, adapters), soft prompt (prefix/prompt tuning), selective (BitFit), reparameterization (LoRA). Library: get_peft_model(base, config), saves adapter files (MBs not GBs). Supports merging, multi-adapter, quantized bases. De facto standard.",
+  "explanation": "PEFT is a family of techniques for fine-tuning large models by updating only a small fraction of their parameters. Methods in this family include LoRA, bottleneck adapters, prompt tuning, and selective approaches like BitFit. The HuggingFace PEFT library wraps these methods into a standard interface where adapter weights are saved as small files rather than full model copies. It supports merging, multi-adapter inference, and quantized base models.",
   "fundamentals": "API: LoraConfig(r=16, lora_alpha=32, target_modules=[...]). Save: adapter_model.safetensors + adapter_config.json. Load: PeftModel.from_pretrained(). Merge: model.merge_and_unload(). Methods: LoRA, QLoRA, DoRA, AdaLoRA, LoRA+, rsLoRA, IA3, prefix tuning, prompt tuning, OFT, BOFT.",
   "seen_in": [
     "model-config",
@@ -12,11 +12,13 @@
     "code"
   ],
   "related": [
-    "lora",
-    "qlora",
+    "adapters",
     "dora",
     "ia3",
-    "adapters"
+    "inference",
+    "lora",
+    "qlora",
+    "safetensors"
   ],
   "foundational_papers": [
     {

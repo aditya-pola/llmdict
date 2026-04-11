@@ -4,15 +4,19 @@
   "expansion": "ExLlamaV2 Quantization Format",
   "category": "quantization-methods",
   "oneliner": "Variable-bitrate format mixing 2-8 bit precision across layers — target any average bpw (e.g., 3.5, 4.65). Best quality-per-bit on consumer GPUs.",
-  "explanation": "Native to ExLlamaV2 inference library. Unlike uniform-bitwidth methods, EXL2 allocates more bits to sensitive layers and fewer to robust ones. Two-pass: 1) Measurement — quantize every layer at multiple bitwidths, record error. 2) Solve — constrained optimization to minimize max error subject to target size. Can also mix bitwidths within a single layer across column groups. Based on GPTQ-style Hessian-guided rounding.",
+  "explanation": "EXL2 is a mixed-precision quantization format native to the ExLlamaV2 inference engine. It allocates more bits to sensitive layers and fewer bits to robust ones, rather than using the same bitwidth everywhere. A measurement pass records error at multiple precisions per layer, then an optimization step distributes bits to minimize overall quality loss under a target file size.",
   "fundamentals": "Measurement: quantize each layer at 2,3,4,5,6,8 bits, record $\\|\\|WX - Q_b(W)X\\|\\|^2$. Solving: min max_i error_i(b_i) s.t. $\\Sigma$ size_i(b_i) = target. Column-level mixing via Hessian diagonal (proxy for column importance). Validation: post-quant perplexity < 30 = success.",
   "seen_in": [
     "model-name",
     "repo-name"
   ],
   "related": [
-    "gptq",
     "exllamav2",
+    "gptq",
+    "inference",
+    "inference-engine",
+    "quantization",
+    "tool-exllamav2",
     "variable-bitrate"
   ],
   "sources": [

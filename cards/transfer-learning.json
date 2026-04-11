@@ -7,9 +7,13 @@
   "explanation": "Transfer learning is the practice of reusing a model trained on a broad dataset as the starting point for a specific task, rather than training from scratch. The pretrained weights already encode language structure and world knowledge, so the new task needs far less data and compute. This idea underlies all modern fine-tuning methods including full fine-tuning, LoRA, and QLoRA. Even zero-shot prompting is a form of transfer learning.",
   "fundamentals": "Transfer assumes features learned on $P_{\\text{source}}(x)$ are useful for $P_{\\text{target}}(x)$. Fine-tuning updates $\\theta_{\\text{pretrained}} \\to \\theta + \\Delta\\theta$ using a task-specific loss. PEFT methods constrain $\\Delta\\theta$: LoRA uses $\\Delta W = BA$ with $B \\in \\mathbb{R}^{d \\times r}$, $r \\ll d$, reducing trainable params from $O(d^2)$ to $O(rd)$.",
   "related": [
+    "full-ft",
+    "lora",
+    "peft",
     "pre-training",
+    "qlora",
     "sft",
-    "lora"
+    "zero"
   ],
   "seen_in": [
     "documentation"

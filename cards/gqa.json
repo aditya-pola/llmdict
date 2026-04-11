@@ -10,10 +10,11 @@
     "model-config"
   ],
   "related": [
+    "kv-cache",
     "mha",
-    "mqa",
     "mla",
-    "kv-cache"
+    "mqa",
+    "token"
   ],
   "sources": [
     "Ainslie et al., 'GQA: Training Generalized Multi-Query Transformer Models,' EMNLP 2023, arXiv:2305.13245"

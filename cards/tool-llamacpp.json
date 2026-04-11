@@ -9,8 +9,10 @@
   ],
   "related": [
     "gguf",
-    "k-quants",
-    "iq-quants"
+    "inference",
+    "inference-engine",
+    "iq-quants",
+    "k-quants"
   ],
   "confidence": "high",
   "verified_date": "2026-04-10",

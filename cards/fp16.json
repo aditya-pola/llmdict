@@ -13,6 +13,7 @@
   "related": [
     "bf16",
     "fp32",
+    "inference",
     "mixed-precision-training"
   ],
   "sources": [

@@ -11,10 +11,12 @@
     "model-cards"
   ],
   "related": [
+    "calibration-data",
+    "dequantization",
+    "inference",
     "ptq",
     "qat",
-    "dequantization",
-    "calibration-data"
+    "token"
   ],
   "sources": [
     "Gholami et al., 'A Survey of Quantization Methods,' arXiv:2103.13630"

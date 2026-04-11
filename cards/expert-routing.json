@@ -11,9 +11,10 @@
     "code"
   ],
   "related": [
-    "moe",
+    "capacity-factor",
     "load-balancing-loss",
-    "capacity-factor"
+    "moe",
+    "token"
   ],
   "sources": [
     "Shazeer et al., 'Outrageously Large Neural Networks,' ICLR 2017",

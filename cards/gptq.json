@@ -4,18 +4,19 @@
   "expansion": "GPT-Quantization (named after target: Generative Pre-trained Transformers)",
   "category": "quantization-methods",
   "oneliner": "Post-training weight quantization using second-order (Hessian) information to compress weights to 3-4 bits with minimal accuracy loss.",
-  "explanation": "Works layer-by-layer: quantizing one weight badly can be corrected by adjusting remaining weights. The Hessian (H = 2XX^T from calibration data) tells exactly how. Descends from Optimal Brain Surgeon → Optimal Brain Quantization. GPTQ's insight: for large models, greedy ordering is unnecessary — process columns left-to-right in blocks of 128. Uses Cholesky decomposition of inverse Hessian. Quantizes 175B model in ~4 GPU-hours. 128 calibration samples.",
+  "explanation": "GPTQ is a post-training quantization method that compresses model weights layer by layer using mathematical error correction. When one weight is rounded to a lower precision, GPTQ adjusts the remaining weights in that layer to compensate, guided by Hessian information about which errors matter most. Processing columns in blocks of 128 makes it scale to models with hundreds of billions of parameters in just a few GPU-hours.",
   "fundamentals": "Objective: $\\min \\|WX - Q(W)X\\|^2$. OBS update: when $w_q$ is quantized, distribute error via $\\delta w = -\\delta \\cdot (H^{-1}_{:,q} / H^{-1}_{q,q})$. GPTQ processes columns left-to-right with lazy batch updates per 128-column block. Complexity: $O(d_{\\text{row}} \\times d_{\\text{col}}^2)$.",
   "seen_in": [
     "model-name",
     "filename"
   ],
   "related": [
-    "awq",
-    "ptq",
-    "marlin",
     "autogptq",
-    "hessian"
+    "awq",
+    "hessian",
+    "marlin",
+    "ptq",
+    "quantization"
   ],
   "sources": [
     "Frantar et al., 'GPTQ,' ICLR 2023, arXiv:2210.17323"

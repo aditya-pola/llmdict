@@ -4,7 +4,7 @@
   "expansion": "Odds Ratio Preference Optimization",
   "category": "training-pipeline",
   "oneliner": "Combines SFT + preference alignment in one stage via odds-ratio penalty — no separate SFT, no reference model. Single-stage, single-model.",
-  "explanation": "SFT+DPO first increases prob of both chosen AND rejected (SFT), then separates (DPO) — inefficient. ORPO adds odds-ratio penalty to SFT loss directly. Single stage on preference data applied to base model. No reference model. ~50% cheaper than SFT+DPO.",
+  "explanation": "ORPO is a single-stage alignment training method that teaches a model to prefer good responses over bad ones without needing a separate supervised fine-tuning step first. It adds an odds-ratio penalty directly to the standard language modeling loss, so the model learns both instruction-following and preference alignment at the same time. This avoids the waste of first raising the probability of all responses then separating them. It costs roughly half as much as SFT plus DPO.",
   "fundamentals": "L = L_SFT + $\\lambda$·L_OR. L_OR = -log $\\sigma$(log(odds(y_w|x)/odds(y_l|x))). odds(y|x) = p(y|x)/(1-p(y|x)). $\\lambda$ 0.1-1.0. No reference model.",
   "seen_in": [
     "model-cards"

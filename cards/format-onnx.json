@@ -8,7 +8,10 @@
     "filename",
     "model-name"
   ],
-  "related": [],
+  "related": [
+    "inference",
+    "quantization"
+  ],
   "confidence": "high",
   "verified_date": "2026-04-10",
   "resources": [

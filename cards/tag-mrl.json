@@ -9,6 +9,7 @@
     "model-name"
   ],
   "related": [
+    "inference",
     "tag-embed"
   ],
   "foundational_papers": [
