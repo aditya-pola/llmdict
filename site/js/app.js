@@ -205,30 +205,127 @@
   // --- Search ---
   Search.init(searchInput, searchResults, navigateTo);
 
+  // --- Shortcut overlay ---
+  const shortcutOverlay = document.getElementById('shortcut-overlay');
+  const shortcutHint = document.getElementById('shortcut-hint');
+
+  function openShortcuts() {
+    shortcutOverlay.classList.remove('hidden');
+    requestAnimationFrame(() => shortcutOverlay.classList.add('active'));
+  }
+  function closeShortcuts() {
+    shortcutOverlay.classList.remove('active');
+    setTimeout(() => shortcutOverlay.classList.add('hidden'), 200);
+  }
+  function isShortcutsOpen() {
+    return shortcutOverlay && shortcutOverlay.classList.contains('active');
+  }
+
+  // --- Unified keyboard handler ---
+  function getActiveIndex() {
+    const cards = container.querySelectorAll('.card');
+    return Array.from(cards).findIndex(c => c.classList.contains('card--active'));
+  }
+
   document.addEventListener('keydown', (e) => {
+    // Always handle: Escape closes whatever is open
+    if (e.key === 'Escape') {
+      if (isShortcutsOpen()) { closeShortcuts(); return; }
+      closeOverlay();
+      return;
+    }
+
+    // If shortcut overlay is open, any key dismisses it
+    if (isShortcutsOpen()) {
+      closeShortcuts();
+      return;
+    }
+
+    // Cmd/Ctrl+K → focus search
     if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
       e.preventDefault();
       searchInput.focus();
+      return;
     }
-  });
 
-  // --- Arrow keys ---
-  document.addEventListener('keydown', (e) => {
+    // Don't handle shortcuts when typing in search
     if (e.target.tagName === 'INPUT') return;
-    const overlay = document.getElementById('overlay');
-    if (overlay && overlay.classList.contains('active')) return;
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-      e.preventDefault();
-      Stack.goTo(Stack.getCardCount() > 0 ? Math.min(
-        Array.from(container.querySelectorAll('.card')).findIndex(c => c.classList.contains('card--active')) + 1,
-        Stack.getCardCount() - 1
-      ) : 0);
-    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-      e.preventDefault();
-      Stack.goTo(Math.max(
-        Array.from(container.querySelectorAll('.card')).findIndex(c => c.classList.contains('card--active')) - 1,
-        0
-      ));
+
+    // Don't handle navigation shortcuts when overlay is open (except Escape, handled above)
+    const overlayOpen = overlay && overlay.classList.contains('active');
+
+    switch (e.key) {
+      case '?':
+        e.preventDefault();
+        openShortcuts();
+        break;
+
+      case 'h':
+      case 'H':
+        e.preventDefault();
+        closeOverlay();
+        History.exitAndNavigate('home');
+        Stack.goTo(0);
+        break;
+
+      case 's':
+      case 'S':
+        if (!overlayOpen) {
+          e.preventDefault();
+          searchInput.focus();
+        }
+        break;
+
+      case 'g':
+      case 'G':
+        if (!overlayOpen) {
+          e.preventDefault();
+          window.location.href = 'graph.html';
+        }
+        break;
+
+      case 'r':
+      case 'R':
+        if (!overlayOpen) {
+          e.preventDefault();
+          const historyToggle = document.getElementById('history-toggle');
+          if (historyToggle) historyToggle.click();
+        }
+        break;
+
+      case 'Enter':
+        if (!overlayOpen) {
+          e.preventDefault();
+          // Expand active card
+          const activeCard = container.querySelector('.card--active.card--term');
+          if (activeCard) {
+            const entryId = activeCard.dataset.entryId;
+            const entry = Data.getEntry(entryId);
+            if (entry) openOverlay(entry);
+          }
+          // Home/category card → trigger click for expand overlay
+          const homeActive = container.querySelector('.card--home.card--active');
+          if (homeActive) homeActive.click();
+          const catActive = container.querySelector('.card--category.card--active');
+          if (catActive) catActive.click();
+        }
+        break;
+
+      case 'ArrowRight':
+      case 'ArrowDown':
+        if (!overlayOpen) {
+          e.preventDefault();
+          Stack.goTo(Math.min(getActiveIndex() + 1, Stack.getCardCount() - 1));
+        }
+        break;
+
+      case 'ArrowLeft':
+      case 'ArrowUp':
+        if (!overlayOpen) {
+          e.preventDefault();
+          Stack.goTo(Math.max(getActiveIndex() - 1, 0));
+        }
+        break;
     }
   });
 
