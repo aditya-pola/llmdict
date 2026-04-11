@@ -477,27 +477,75 @@
       }
     }, { passive: false });
 
+    let touchSelectedNode = null; // track which node is "hovered" via first tap
+
     canvas.addEventListener('touchend', e => {
       if (e.touches.length === 0 && !touchDragMoved) {
-        // Tap: find node
         const mx = (lastTouch.x - panX) / zoom, my = (lastTouch.y - panY) / zoom;
+
+        // Find tapped node
+        let tappedNode = null;
         for (const n of nodes) {
           if (n.isHome) continue;
           const dx = n.x - mx, dy = n.y - my;
           if (dx*dx + dy*dy < (n.radius + 12) * (n.radius + 12)) {
-            if (n.isCatNode) {
-              const cat = categories.find(c => c.id === n.catId);
-              if (cat) {
-                const termList = cat.entries.map(eid => entries[eid]).filter(Boolean);
-                graphOverlayContent.innerHTML = '<div class="overlay-name">' + cat.label + '</div><div class="overlay-expansion">' + termList.length + ' terms</div><div class="overlay-section"><ul style="list-style:none;display:flex;flex-direction:column;gap:0;">' + termList.map(t => '<li style="border-bottom:1px solid rgba(255,255,255,0.06);"><span class="related-tag" data-target="' + t.id + '" style="display:block;border:none;border-radius:0;padding:9px 0;font-size:14px;">' + t.name + '</span></li>').join('') + '</ul></div>';
-                graphOverlay.classList.add('active');
-              }
-            } else {
-              const entry = entries[n.id];
-              if (entry) openGraphOverlay(entry);
-            }
-            return;
+            tappedNode = n;
+            break;
           }
+        }
+
+        if (!tappedNode) {
+          // Tapped empty space: clear selection
+          touchSelectedNode = null;
+          hoveredNode = null;
+          tooltip.classList.remove('visible');
+          draw();
+          return;
+        }
+
+        if (touchSelectedNode && touchSelectedNode.id === tappedNode.id) {
+          // Second tap on same node: open overlay
+          if (tappedNode.isCatNode) {
+            const cat = categories.find(c => c.id === tappedNode.catId);
+            if (cat) {
+              const termList = cat.entries.map(eid => entries[eid]).filter(Boolean);
+              graphOverlayContent.innerHTML = '<div class="overlay-name">' + cat.label + '</div><div class="overlay-expansion">' + termList.length + ' terms</div><div class="overlay-section"><ul style="list-style:none;display:flex;flex-direction:column;gap:0;">' + termList.map(t => '<li style="border-bottom:1px solid rgba(255,255,255,0.06);"><span class="related-tag" data-target="' + t.id + '" style="display:block;border:none;border-radius:0;padding:9px 0;font-size:14px;">' + t.name + '</span></li>').join('') + '</ul></div>';
+              graphOverlay.classList.add('active');
+            }
+          } else {
+            const entry = entries[tappedNode.id];
+            if (entry) openGraphOverlay(entry);
+          }
+          touchSelectedNode = null;
+          hoveredNode = null;
+        } else {
+          // First tap on a node: select it (trigger hover effect + tooltip)
+          touchSelectedNode = tappedNode;
+          hoveredNode = tappedNode;
+
+          // Show tooltip near the tap
+          if (!tappedNode.isHome) {
+            if (tappedNode.isCatNode) {
+              ttCat.textContent = 'Category';
+              ttCat.style.color = tappedNode.color;
+              ttName.textContent = tappedNode.name;
+              ttExpansion.textContent = tappedNode.expansion;
+              ttOneliner.textContent = 'Tap again to see all terms';
+            } else {
+              ttCat.textContent = catLabelMap[tappedNode.category] || '';
+              ttCat.style.color = tappedNode.color;
+              ttName.textContent = tappedNode.name;
+              ttExpansion.textContent = tappedNode.expansion;
+              ttOneliner.textContent = 'Tap again to expand';
+            }
+            // Position tooltip above the tap point
+            const screenX = tappedNode.x * zoom + panX;
+            const screenY = tappedNode.y * zoom + panY;
+            tooltip.style.left = Math.min(screenX, window.innerWidth - 200) + 'px';
+            tooltip.style.top = Math.max(screenY - 80, 60) + 'px';
+            tooltip.classList.add('visible');
+          }
+          draw();
         }
       }
     });
