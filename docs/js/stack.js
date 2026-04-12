@@ -182,7 +182,12 @@ const Stack = (() => {
       if (e.target.closest('.history-bar, .search-results, .overlay-card')) return;
 
       e.preventDefault();
-      const delta = e.deltaY !== 0 ? e.deltaY : e.deltaX;
+      // Pick whichever axis the user was dominantly scrolling on. A pure
+      // priority-with-fallback on deltaY misses touchpad horizontal swipes,
+      // because a two-finger horizontal gesture usually produces a small but
+      // non-zero deltaY from finger jitter, which would win and drown out
+      // the intended deltaX.
+      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
       _accumulator += delta * WHEEL_IMPULSE;
       _velocity = delta * WHEEL_IMPULSE;
       _kick();
