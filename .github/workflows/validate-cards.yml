@@ -3,7 +3,6 @@ name: Validate Cards
 on:
   pull_request:
     branches: [main]
-    paths: ['cards/**', 'build.py']
 
 jobs:
   validate:
