@@ -72,5 +72,5 @@ A GitHub Action automatically rebuilds the site when cards are added or edited.
 This repository is dual-licensed:
 
 - **Dictionary content** (every JSON file under `cards/`, the generated `docs/data/glossary.json`, and the prose in `PHILOSOPHY.md`) is licensed under **[Creative Commons Attribution-ShareAlike 4.0](LICENSE-CONTENT)**. Reuse and adapt freely; credit *LLM Dictionary* and share derivative content under the same license.
-- **Engine and tooling** (the contents of `docs/`, the build and validation scripts, anything under `scripts/`) is licensed under the **[MIT License](LICENSE-CODE)**. Reuse freely with attribution.
+- **Engine and tooling** (the contents of `docs/`, the build and validation scripts, anything under `scripts/`) is licensed under the **[MIT License](LICENSE)**. Reuse freely with attribution.
 

@@ -1,13 +1,5 @@
 MIT License
 
-Scope: This license applies to all source code in the repository that is not
-dictionary content. Specifically: the contents of `docs/` (HTML, CSS,
-JavaScript), the build and validation scripts (`build.py`, `validate.py`),
-and any tooling under `scripts/`. Dictionary content (the JSON card files
-under `cards/`, the generated glossary in `docs/data/glossary.json`, and the
-prose in `PHILOSOPHY.md`) is licensed separately under CC BY-SA 4.0; see
-`LICENSE-CONTENT`.
-
 Copyright (c) 2025 Aditya Pola and contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,3 +19,16 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
+
+---
+
+Scope notice
+
+This MIT License applies to source code and tooling in this repository:
+the contents of `docs/` (HTML, CSS, JavaScript), the build and validation
+scripts (`build.py`, `validate.py`), and anything under `scripts/`.
+
+Dictionary content (every JSON file under `cards/`, the generated glossary
+at `docs/data/glossary.json`, and the long-form prose in `PHILOSOPHY.md`)
+is licensed separately under the Creative Commons Attribution-ShareAlike
+4.0 International License. See `LICENSE-CONTENT` for the full terms.
