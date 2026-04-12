@@ -919,6 +919,11 @@ main {
   align-items: center;
   justify-content: center;
 }
+/* ClustrMaps: ensure the generated image fits nicely */
+.globe-content img {
+  border-radius: 8px;
+  max-width: 100%;
+}
 .globe-placeholder {
   display: flex;
   flex-direction: column;
