@@ -203,6 +203,15 @@
   Stack.addCard(homeCard);
   const HOME_INDEX = 4;
 
+  // Term cards within this many indexes of the initial active card get
+  // their full inner HTML (including linkified explanation) built up
+  // front. Cards beyond that threshold are created in deferred mode
+  // and populated lazily by Stack._layout when they enter peek range.
+  // This pushes the heaviest synchronous init cost (~254 regex scans
+  // per card) off the first-paint critical path.
+  const POPULATE_RADIUS = 12;
+  const cardsBuiltSoFar = () => Stack.getCardCount();
+
   for (const cat of categories) {
     const catCard = Cards.createCategoryCard(cat, entries);
     catCard.innerHTML = `<div class="peek-label"><span>${cat.label}</span></div><div class="card-content">${catCard.innerHTML}</div>`;
@@ -211,7 +220,9 @@
     for (const eid of cat.entries) {
       const entry = entries[eid];
       if (!entry) continue;
-      const termCard = Cards.createTermCard(entry, entries);
+      const distance = Math.abs(cardsBuiltSoFar() - HOME_INDEX);
+      const populate = distance <= POPULATE_RADIUS;
+      const termCard = Cards.createTermCard(entry, entries, populate);
       termCard.innerHTML = `<div class="peek-label"><span>${entry.name}</span></div><div class="card-content">${termCard.innerHTML}</div>`;
       Stack.addCard(termCard);
     }
@@ -481,8 +492,23 @@
     // Don't intercept when Ctrl/Meta/Alt is held (browser shortcuts like Ctrl+R, Ctrl+Shift+R)
     if (e.ctrlKey || e.metaKey || e.altKey) return;
 
-    // Don't handle navigation shortcuts when overlay is open (except Escape, handled above)
+    // If an overlay is open, the navigation shortcuts close it first then
+    // run their action on the next frame. This way the user never has to
+    // press Esc before pressing H, S, G, R, or arrows.
     const overlayOpen = overlay && overlay.classList.contains('active');
+    const globeOpen = globeOverlay && globeOverlay.classList.contains('active');
+
+    function withOverlayDismiss(action) {
+      if (overlayOpen) closeOverlay();
+      if (globeOpen) closeGlobe();
+      if (overlayOpen || globeOpen) {
+        // Wait one frame so the close animation can begin and so DOM
+        // queries below see the up-to-date state.
+        requestAnimationFrame(action);
+      } else {
+        action();
+      }
+    }
 
     switch (e.key) {
       case '?':
@@ -493,38 +519,35 @@
       case 'h':
       case 'H':
         e.preventDefault();
-        closeOverlay();
-        History.exitAndNavigate('home');
-        Stack.goTo(HOME_INDEX);
+        withOverlayDismiss(() => {
+          History.exitAndNavigate('home');
+          Stack.goTo(HOME_INDEX);
+        });
         break;
 
       case 's':
       case 'S':
-        if (!overlayOpen) {
-          e.preventDefault();
-          searchInput.focus();
-        }
+        e.preventDefault();
+        withOverlayDismiss(() => searchInput.focus());
         break;
 
       case 'g':
       case 'G':
-        if (!overlayOpen) {
-          e.preventDefault();
-          window.location.href = 'graph.html';
-        }
+        e.preventDefault();
+        withOverlayDismiss(() => { window.location.href = 'graph.html'; });
         break;
 
       case 'r':
       case 'R':
-        if (!overlayOpen) {
-          e.preventDefault();
+        e.preventDefault();
+        withOverlayDismiss(() => {
           const historyToggle = document.getElementById('history-toggle');
           if (historyToggle) historyToggle.click();
-        }
+        });
         break;
 
       case 'Enter':
-        if (!overlayOpen) {
+        if (!overlayOpen && !globeOpen) {
           e.preventDefault();
           // Expand active card
           const activeCard = container.querySelector('.card--active.card--term');
@@ -543,18 +566,18 @@
 
       case 'ArrowRight':
       case 'ArrowDown':
-        if (!overlayOpen) {
-          e.preventDefault();
+        e.preventDefault();
+        withOverlayDismiss(() => {
           Stack.goTo(Math.min(getActiveIndex() + 1, Stack.getCardCount() - 1));
-        }
+        });
         break;
 
       case 'ArrowLeft':
       case 'ArrowUp':
-        if (!overlayOpen) {
-          e.preventDefault();
+        e.preventDefault();
+        withOverlayDismiss(() => {
           Stack.goTo(Math.max(getActiveIndex() - 1, 0));
-        }
+        });
         break;
     }
   });
@@ -567,18 +590,9 @@
   handleHash();
   window.addEventListener('hashchange', handleHash);
 
-  // --- Math render (retry until KaTeX loads) ---
-  function renderAllMath() {
-    if (typeof renderMathInElement !== 'function') return false;
-    container.querySelectorAll('.card-content').forEach(c => Cards.renderMath(c));
-    return true;
-  }
-  if (!renderAllMath()) {
-    const mathInterval = setInterval(() => {
-      if (renderAllMath()) clearInterval(mathInterval);
-    }, 200);
-    // Give up after 5 seconds
-    setTimeout(() => clearInterval(mathInterval), 5000);
-  }
+  // Math on card faces is forbidden by the writing rubric (validate.py
+  // rejects `$` in explanation), so we do not bulk-render math on load.
+  // The overlay open path calls Cards.renderMath, which lazy-loads KaTeX
+  // only if the element actually contains a `$` delimiter.
 
 })();

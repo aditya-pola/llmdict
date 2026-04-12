@@ -109,23 +109,68 @@ const Cards = (() => {
   }
 
   /**
-   * Create a Term card (the compact "walk away" version)
+   * Create a Term card (the compact "walk away" version).
+   * If `populate` is false, the card is created with placeholder content
+   * (no linkified explanation) and stashes the entry on _pendingEntry for
+   * a later populateTermCard() call. The linkifier is the heaviest
+   * synchronous cost during init (one regex scan per term per card),
+   * so we defer it for cards far from the active position on first load.
    */
-  function createTermCard(entry, allEntries) {
+  const _pendingEntries = new WeakMap();
+  const _pendingAllEntries = new WeakMap();
+
+  function createTermCard(entry, allEntries, populate = true) {
     const card = document.createElement('div');
     card.className = 'card card--term';
     card.id = `card-${entry.id}`;
     card.dataset.entryId = entry.id;
 
-    const explanation = linkifyText(entry.explanation || entry.oneliner || '', allEntries);
+    if (populate) {
+      _populateTermCardInner(card, entry, allEntries);
+    } else {
+      // Placeholder: name + expansion + raw oneliner (no linkification yet).
+      card.innerHTML = `
+        <div class="term-name">${entry.name}</div>
+        <div class="term-expansion">${entry.expansion || ''}</div>
+        <div class="term-explanation">${entry.oneliner || ''}</div>
+        <div class="card-expand-hint">click to expand</div>
+      `;
+      _pendingEntries.set(card, entry);
+      _pendingAllEntries.set(card, allEntries);
+    }
+    return card;
+  }
 
-    card.innerHTML = `
+  function _populateTermCardInner(card, entry, allEntries) {
+    const explanation = linkifyText(entry.explanation || entry.oneliner || '', allEntries);
+    const html = `
       <div class="term-name">${entry.name}</div>
       <div class="term-expansion">${entry.expansion || ''}</div>
       <div class="term-explanation">${explanation}</div>
       <div class="card-expand-hint">click to expand</div>
     `;
-    return card;
+    // If the card has already been wrapped with peek-label + card-content
+    // (app.js does this immediately after createTermCard), write into the
+    // content slot so the wrapper survives. Otherwise fall back to
+    // replacing the whole innerHTML.
+    const slot = card.querySelector('.card-content');
+    if (slot) slot.innerHTML = html;
+    else card.innerHTML = html;
+    card.dataset.populated = '1';
+  }
+
+  /**
+   * Idempotently populate a term card created in deferred mode.
+   * Safe to call repeatedly; only does work the first time.
+   */
+  function populateTermCard(card) {
+    if (!card || card.dataset.populated === '1') return;
+    const entry = _pendingEntries.get(card);
+    const allEntries = _pendingAllEntries.get(card);
+    if (!entry || !allEntries) return;
+    _populateTermCardInner(card, entry, allEntries);
+    _pendingEntries.delete(card);
+    _pendingAllEntries.delete(card);
   }
 
   /**
@@ -208,19 +253,53 @@ const Cards = (() => {
   }
 
   /**
+   * Lazy-load KaTeX (CSS + JS + auto-render extension) on first use.
+   * Returns a Promise that resolves when KaTeX is ready to call.
+   * Cached so subsequent calls resolve immediately.
+   */
+  let _katexPromise = null;
+  function ensureKatexLoaded() {
+    if (_katexPromise) return _katexPromise;
+    _katexPromise = new Promise((resolve) => {
+      // CSS
+      const css = document.createElement('link');
+      css.rel = 'stylesheet';
+      css.href = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css';
+      document.head.appendChild(css);
+      // Core JS, then the auto-render extension (must load in order)
+      const core = document.createElement('script');
+      core.src = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js';
+      core.onload = () => {
+        const auto = document.createElement('script');
+        auto.src = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js';
+        auto.onload = () => resolve();
+        auto.onerror = () => resolve(); // fail silently — math just won't render
+        document.head.appendChild(auto);
+      };
+      core.onerror = () => resolve();
+      document.head.appendChild(core);
+    });
+    return _katexPromise;
+  }
+
+  /**
    * Render LaTeX math in an element using KaTeX auto-render.
    * Recognizes $...$ (inline) and $$...$$ (display).
+   * Only loads KaTeX if the element actually contains a `$` delimiter.
    */
   function renderMath(el) {
-    if (typeof renderMathInElement === 'function') {
-      renderMathInElement(el, {
-        delimiters: [
-          { left: '$$', right: '$$', display: true },
-          { left: '$', right: '$', display: false }
-        ],
-        throwOnError: false
-      });
-    }
+    if (!el || el.textContent.indexOf('$') === -1) return;
+    ensureKatexLoaded().then(() => {
+      if (typeof renderMathInElement === 'function') {
+        renderMathInElement(el, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false }
+          ],
+          throwOnError: false
+        });
+      }
+    });
   }
 
   /**
@@ -248,5 +327,5 @@ const Cards = (() => {
     return card;
   }
 
-  return { createHomeCard, createCategoryCard, createTermCard, createInfoCard, renderOverlayContent, renderMath };
+  return { createHomeCard, createCategoryCard, createTermCard, populateTermCard, createInfoCard, renderOverlayContent, renderMath, ensureKatexLoaded };
 })();

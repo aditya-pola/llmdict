@@ -5,6 +5,7 @@ const Data = (() => {
   let _categories = [];
   let _entries = {};
   let _entryIndex = []; // flat list for search
+  let _searchIndex = []; // [{entry, name, expansion, oneliner}] all lower-cased once
 
   async function load() {
     const res = await fetch('data/glossary.json');
@@ -12,6 +13,15 @@ const Data = (() => {
     _categories = json.categories;
     _entries = json.entries;
     _entryIndex = Object.values(_entries);
+    // Pre-lowercase search fields once at load time so per-keystroke search
+    // is a small array of cheap String.includes checks instead of
+    // recomputing toLowerCase() for every entry on every keystroke.
+    _searchIndex = _entryIndex.map(e => ({
+      entry: e,
+      name: (e.name || '').toLowerCase(),
+      expansion: (e.expansion || '').toLowerCase(),
+      oneliner: (e.oneliner || '').toLowerCase(),
+    }));
     return { categories: _categories, entries: _entries };
   }
 
@@ -33,22 +43,18 @@ const Data = (() => {
   function search(query) {
     if (!query || query.length < 2) return [];
     const q = query.toLowerCase();
-    return _entryIndex
-      .map(e => {
-        let score = 0;
-        const name = (e.name || '').toLowerCase();
-        const expansion = (e.expansion || '').toLowerCase();
-        const oneliner = (e.oneliner || '').toLowerCase();
-        if (name.includes(q)) score += 10;
-        if (name.startsWith(q)) score += 5;
-        if (expansion.includes(q)) score += 4;
-        if (oneliner.includes(q)) score += 2;
-        return { entry: e, score };
-      })
-      .filter(r => r.score > 0)
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 12)
-      .map(r => r.entry);
+    const out = [];
+    for (let i = 0; i < _searchIndex.length; i++) {
+      const r = _searchIndex[i];
+      let score = 0;
+      if (r.name.includes(q)) score += 10;
+      if (r.name.startsWith(q)) score += 5;
+      if (r.expansion.includes(q)) score += 4;
+      if (r.oneliner.includes(q)) score += 2;
+      if (score > 0) out.push({ entry: r.entry, score });
+    }
+    out.sort((a, b) => b.score - a.score);
+    return out.slice(0, 12).map(r => r.entry);
   }
 
   /**

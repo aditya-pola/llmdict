@@ -1211,4 +1211,17 @@ main {
   }
   .graph-pill { left: 16px !important; }
   .contribute-btn { left: 60px !important; }
+
+  /* Soften backdrop-filter blur on mobile.
+     Mobile GPUs spend a disproportionate amount of frame time on large
+     blur radii; halving the radius on the static overlays gives roughly
+     a third of the GPU cost for an indistinguishable visual difference
+     at small viewport sizes. */
+  .site-header,
+  .overlay,
+  .shortcut-overlay,
+  .globe-overlay {
+    backdrop-filter: blur(6px) !important;
+    -webkit-backdrop-filter: blur(6px) !important;
+  }
 }

@@ -11,7 +11,7 @@ const Search = (() => {
     _results = resultsEl;
     _onNavigate = onNavigate;
 
-    _input.addEventListener('input', _onInput);
+    _input.addEventListener('input', _onInputDebounced);
     _input.addEventListener('focus', _onInput);
     _input.addEventListener('keydown', _onKeydown);
     document.addEventListener('click', (e) => {
@@ -19,6 +19,18 @@ const Search = (() => {
         _hide();
       }
     });
+  }
+
+  // Debounce input events to avoid running search + DOM rebuild on every
+  // keystroke during fast typing. ~80ms is below perceptible delay and
+  // collapses bursts of keypresses into a single render.
+  let _debounceId = null;
+  function _onInputDebounced() {
+    if (_debounceId !== null) clearTimeout(_debounceId);
+    _debounceId = setTimeout(() => {
+      _debounceId = null;
+      _onInput();
+    }, 80);
   }
 
   function _onInput() {

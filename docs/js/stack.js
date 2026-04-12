@@ -58,6 +58,11 @@ const Stack = (() => {
   function _layout(tiltDeg) {
     const cardWidth = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--card-width')) || 476;
 
+    // How many cards on either side of the active card to keep populated.
+    // Anything within this radius gets its full inner HTML built (lazy
+    // term cards are realized as the user navigates closer to them).
+    const POPULATE_RADIUS = MAX_PEEK + 3;
+
     for (let i = 0; i < _cards.length; i++) {
       const card = _cards[i];
       const offset = i - _currentIndex;
@@ -65,6 +70,13 @@ const Stack = (() => {
 
       // Remove all state classes
       card.classList.remove('card--active', 'card--left', 'card--right', 'card--hidden');
+
+      // Lazy-populate term cards entering populate radius
+      if (absOff <= POPULATE_RADIUS && card.dataset.entryId && card.dataset.populated !== '1') {
+        if (typeof Cards !== 'undefined' && Cards.populateTermCard) {
+          Cards.populateTermCard(card);
+        }
+      }
 
       if (offset === 0) {
         // Active card
@@ -115,6 +127,7 @@ const Stack = (() => {
     _accumulator = 0;
     _layout(_currentTilt);
     _updateMobilePeekLabels();
+    _kick(); // resume the loop in case it was idling, e.g. for tilt to settle
   }
 
   function _updateMobilePeekLabels() {
@@ -172,6 +185,7 @@ const Stack = (() => {
       const delta = e.deltaY !== 0 ? e.deltaY : e.deltaX;
       _accumulator += delta * WHEEL_IMPULSE;
       _velocity = delta * WHEEL_IMPULSE;
+      _kick();
     }, { passive: false });
   }
 
@@ -179,11 +193,11 @@ const Stack = (() => {
     const left = document.getElementById('scroll-zone-left');
     const right = document.getElementById('scroll-zone-right');
     if (left) {
-      left.addEventListener('mouseenter', () => { _isEdgeScrolling = true; _edgeDir = -1; });
+      left.addEventListener('mouseenter', () => { _isEdgeScrolling = true; _edgeDir = -1; _kick(); });
       left.addEventListener('mouseleave', () => { if (_edgeDir === -1) _isEdgeScrolling = false; });
     }
     if (right) {
-      right.addEventListener('mouseenter', () => { _isEdgeScrolling = true; _edgeDir = 1; });
+      right.addEventListener('mouseenter', () => { _isEdgeScrolling = true; _edgeDir = 1; _kick(); });
       right.addEventListener('mouseleave', () => { if (_edgeDir === 1) _isEdgeScrolling = false; });
     }
   }
@@ -230,52 +244,83 @@ const Stack = (() => {
   }
 
   // --- Physics loop ---
+  // The loop schedules itself only while there is motion to compute. When
+  // velocities and tilt settle to ~0, tick() returns without queuing the
+  // next rAF. _kick() restarts it on user input or programmatic navigation.
+
+  let _rafId = null;
+  let _settledFrames = 0; // require N consecutive settled frames before stopping
+
+  function _kick() {
+    if (_rafId === null) {
+      _settledFrames = 0;
+      _rafId = requestAnimationFrame(_tick);
+    }
+  }
+
+  function _tick() {
+    // Edge hover: accumulate (this is itself a source of motion)
+    if (_isEdgeScrolling) {
+      _accumulator += _edgeDir * EDGE_ACCEL;
+      _velocity = _edgeDir * EDGE_ACCEL;
+    }
+
+    // Snap when accumulator crosses threshold (with cooldown)
+    const now = performance.now();
+    if (now - _lastSnapTime > SNAP_COOLDOWN) {
+      if (_accumulator >= SNAP_THRESHOLD) {
+        goTo(_currentIndex + 1);
+        _lastSnapTime = now;
+      } else if (_accumulator <= -SNAP_THRESHOLD) {
+        goTo(_currentIndex - 1);
+        _lastSnapTime = now;
+      }
+    }
+
+    // Friction on accumulator
+    if (!_isEdgeScrolling) {
+      _accumulator *= FRICTION;
+      if (Math.abs(_accumulator) < 0.01) _accumulator = 0;
+    }
+
+    // Velocity decay
+    _velocity *= FRICTION;
+    if (Math.abs(_velocity) < 0.001) _velocity = 0;
+
+    // Tilt: only update the active card's rotateY (don't re-layout everything)
+    const targetTilt = Math.max(-MAX_TILT, Math.min(MAX_TILT, _velocity * 300));
+    _currentTilt += (targetTilt - _currentTilt) * TILT_SMOOTHING;
+    if (Math.abs(_currentTilt) < 0.05) _currentTilt = 0;
+
+    const activeCard = _cards[_currentIndex];
+    if (activeCard && Math.abs(_currentTilt) > 0.05) {
+      activeCard.style.transform = `translateX(0) scale(1) rotateY(${_currentTilt}deg)`;
+    } else if (activeCard) {
+      activeCard.style.transform = 'translateX(0) scale(1) rotateY(0deg)';
+    }
+
+    // Decide whether the loop has quiesced
+    const settled =
+      !_isEdgeScrolling &&
+      _accumulator === 0 &&
+      _velocity === 0 &&
+      _currentTilt === 0;
+
+    if (settled) {
+      _settledFrames++;
+      if (_settledFrames >= 2) {
+        _rafId = null;
+        return; // stop the loop until next _kick
+      }
+    } else {
+      _settledFrames = 0;
+    }
+
+    _rafId = requestAnimationFrame(_tick);
+  }
 
   function _startPhysicsLoop() {
-    function tick() {
-      // Edge hover: accumulate
-      if (_isEdgeScrolling) {
-        _accumulator += _edgeDir * EDGE_ACCEL;
-        _velocity = _edgeDir * EDGE_ACCEL;
-      }
-
-      // Check if accumulated enough to navigate (with cooldown to prevent rapid-fire)
-      const now = performance.now();
-      if (now - _lastSnapTime > SNAP_COOLDOWN) {
-        if (_accumulator >= SNAP_THRESHOLD) {
-          goTo(_currentIndex + 1);
-          _lastSnapTime = now;
-        } else if (_accumulator <= -SNAP_THRESHOLD) {
-          goTo(_currentIndex - 1);
-          _lastSnapTime = now;
-        }
-      }
-
-      // Friction on accumulator (decays back toward 0 if no input)
-      if (!_isEdgeScrolling) {
-        _accumulator *= FRICTION;
-        if (Math.abs(_accumulator) < 0.01) _accumulator = 0;
-      }
-
-      // Velocity decay
-      _velocity *= FRICTION;
-      if (Math.abs(_velocity) < 0.001) _velocity = 0;
-
-      // Tilt: only update the active card's rotateY (don't re-layout everything)
-      const targetTilt = Math.max(-MAX_TILT, Math.min(MAX_TILT, _velocity * 300));
-      _currentTilt += (targetTilt - _currentTilt) * TILT_SMOOTHING;
-      if (Math.abs(_currentTilt) < 0.05) _currentTilt = 0;
-
-      const activeCard = _cards[_currentIndex];
-      if (activeCard && Math.abs(_currentTilt) > 0.05) {
-        activeCard.style.transform = `translateX(0) scale(1) rotateY(${_currentTilt}deg)`;
-      } else if (activeCard) {
-        activeCard.style.transform = 'translateX(0) scale(1) rotateY(0deg)';
-      }
-
-      requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
+    _kick();
   }
 
   // --- History mode: filtered card set ---
