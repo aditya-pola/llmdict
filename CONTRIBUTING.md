@@ -185,7 +185,7 @@ Two GitHub Actions run on every PR:
 
 ### 1. Card Validation (`validate-cards.yml`)
 
-Runs `validate.py` on every PR touching `cards/`. Checks:
+Runs `validate.py` on every pull request to `main`. Checks:
 
 | Check | Fails PR? | Details |
 |-------|-----------|---------|
