@@ -378,3 +378,80 @@ All 33 previously-empty cards now have 200-500 char prose explanations:
 - 142 entries, 0 empty explanations
 - One-file-per-card architecture in place
 - **Remaining content phases**: B (move math from card face), C (rewrite compressed notes), D (enrich thin tags), E (add 10 new HF entries), F (consistency pass)
+
+---
+
+## 2026-04-12 — Site pages, identity assets, dual license
+
+### Site pages added (cards to the left of Home)
+
+Restructured the carousel so several "system" cards sit to the left of Home in the main stack. Final left-to-right order: **Visitors → Contributing → Philosophy → Usage → Home → categories → terms**. `HOME_INDEX = 4` in `docs/js/app.js`; the home button, the `H` shortcut, and the initial `goTo` all land on it.
+
+- **Visitor Map card** (idx 0). Replaces the standalone globe button in the page header. Card face is minimal ("click to view"). Click anywhere on the card opens the existing ClustrMaps overlay. Removed `.globe-toggle` button + its mobile positioning rules entirely.
+- **Contributing card** (idx 1). Face items: Fork → Add → Validate → PR → Merge → link to `CONTRIBUTING.md`. Click expands a longer overlay covering the JSON-per-term workflow and writing rules summary.
+- **Philosophy card** (idx 3, between Contributing and Usage). New info card expressing the project's thesis. Face items: Living, Open, Accessible (one short clause each). Overlay has seven sections — *What this is*, *Why this exists*, *A living document*, *Open by design*, *Resists going stale*, *Built as a reference*, *An invitation*. Tone is mature/declarative, no marketing language. All em dashes removed (replaced with commas, periods, semicolons, or colons throughout the card and the rendering helper).
+- **Usage card** (idx 2). Restructured so face items pair a label with the actual button icon (or kbd) instead of spatial language ("top-left", "top-right" all removed). Order: Home, Graph, Browse, Search, Expand, History, Shortcuts. History body is "click trail." Search body is `press S, type, Enter`. Shortcuts row points at the `?` key. Inline SVGs in titles for Home and Graph mirror the actual buttons.
+
+`createInfoCard` helper in `docs/js/cards.js` was extended with an icon SVG slot in the title and a click handler bridge so info cards open their `dataset.infoOverlay` HTML in the same `openOverlayRaw` pipeline as before. The Visitor card uses a separate `dataset.opensGlobe` flag so it opens the existing globe overlay instead.
+
+### Home button moved to top-right with rotating ring
+
+`.home-fab` relocated from bottom-right (48px) to top-right (44px). It now carries a **rotating colored ring** in the minimalist-reference style, implemented as:
+
+- `background: conic-gradient(from var(--ring-angle), ...rainbow palette...)` on the button itself
+- `@property --ring-angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }`
+- `animation: ringSpin 6s linear infinite` animating the angle (no transform on the element, so no compositing-layer flicker)
+- `::before` pseudo with `inset: 4px` is the inner black face leaving a 4px ring visible
+- SVG icon at `z-index: 2`
+
+Earlier attempts using a rotating `::before` with `transform: rotate(...)` caused hover flicker because the hover `transform: scale(1.08)` overrode the GPU-promoted layer. Switched to animating the angle via `@property` instead. Hover/active now only animate `box-shadow`. Mobile size 38px, top: 12px right: 12px.
+
+### Cards: no FOUC on load
+
+`.card { opacity: 0; }` by default; `_layout()` in stack.js sets the correct opacity (1 active, 0.85 → 0.3 peeks, 0 hidden) once it runs. Eliminates the flash where every card piled up centered before being positioned.
+
+### Visitor map enlarged
+
+ClustrMaps overlay grown from 40×50 padding → 56×64. `.globe-card` is now `width: min(92vw, 1100px)`, `max-height: 92vh`. The map image stretches to fill (`width: 100% !important`).
+
+**Bugfix**: ClustrMaps reads `parent().width()` at script load time. The overlay was hidden with `display: none`, so parent width was 0 and the map rendered tiny. Switched `.globe-overlay.hidden` from `display: none` to `visibility: hidden` so layout dimensions are real at load. Visitor dot color changed from grey `#666666` to orange `#ff7a00` via the `c=` URL param.
+
+### Hero typing GIF
+
+`scripts/make_hero_gif.py` (Pillow + imageio + numpy) generates `docs/hero.gif`. Cycles through `LLM Dictionary → Transformer Directory → AI Glossary → AI Cheatsheet → AI Field Guide → LLM Dictionary` (start and end on the canonical name). For each: types letter by letter, holds with blinking cursor, erases word by word. Final pass holds for 3.2 s with no erase, then a 1.4 s blank pause before the GIF restarts. Output is 125 frames / 18.9 s / ~117 KB. Embedded at the top of `README.md`.
+
+### Social preview
+
+`scripts/make_social_preview.py` generates `social-preview.png` at 1280×640 — black bg, favicon scaled up on the left, "LLM Dictionary" wordmark + "a living dictionary for a moving field" tagline on the right. Upload via repo Settings → Social preview. Favicons (`favicon.svg`, `favicon.png`) also copied to repo root for visibility in source listings.
+
+### README + PHILOSOPHY.md
+
+`README.md` rewritten:
+- Hero GIF embedded at top
+- Two-sentence vision paragraph immediately after the H1
+- Link to new `PHILOSOPHY.md`
+- URL spelled out as `https://aditya-pola.github.io/llmdict` (js.org rejected the request — will revisit when a custom domain lands; previously incorrect `llmdict.js.org` references all replaced)
+- Contributing language warmed up
+- Two-paragraph license section
+
+`PHILOSOPHY.md` is the long-form essay covering the same content as the Philosophy card overlay, in markdown.
+
+### Dual license
+
+- `LICENSE-CONTENT` — full text of **CC BY-SA 4.0**, scoped to all files under `cards/`, the generated `docs/data/glossary.json`, and `PHILOSOPHY.md`. Forks must credit and re-share under the same license.
+- `LICENSE-CODE` — full text of **MIT**, scoped to engine and tooling (everything under `docs/`, build/validate scripts, `scripts/`). Permissive reuse.
+- README's License section names both with explicit scope.
+
+### Performance pass (next)
+
+Audit identified six high-leverage wins for the next pass:
+1. Defer all script tags (currently six sync `<script>` blocks before `app.js`)
+2. Idle the rAF physics loop in `stack.js` when velocities are near zero
+3. Pre-build a search haystack in `data.js`, debounce search input
+4. Lazy-load KaTeX (currently ~107 KB shipped on every page)
+5. Soften `backdrop-filter: blur(16px)` on mobile
+6. Lazy-render full HTML for term cards far from the active card (defer linkifier work)
+
+Plus a UX item: keyboard shortcuts should close the active overlay first and then act, instead of being silently no-oped while an overlay is open.
+
+DOM virtualization, code-splitting, and Web Worker for graph force simulation deferred to a later pass.

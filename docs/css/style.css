@@ -205,6 +205,8 @@ main {
   transform-style: preserve-3d;
   cursor: pointer;
   transition: transform var(--transition-slow), opacity var(--transition-slow);
+  /* Hidden until JS positions it (prevents pile-up flash on load) */
+  opacity: 0;
 }
 
 /* Active card: front and center */
@@ -619,6 +621,78 @@ main {
 @media (hover: hover) {
   .overlay-section-body .inline-link:hover { border-color: rgba(255, 255, 255, 0.5); }
 }
+.overlay-section-body code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12.5px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: #e8e8e8;
+}
+.overlay-section-body kbd {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11.5px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: #fff;
+}
+.overlay.overlay--light .overlay-section-body code {
+  background: rgba(0, 0, 0, 0.06);
+  color: #111;
+}
+.overlay.overlay--light .overlay-section-body kbd {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.15);
+  color: #000;
+}
+/* Usage page: button-row with icon + description */
+.usage-btn-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+.usage-btn-row + .usage-btn-row { border-top: 1px solid rgba(0, 0, 0, 0.06); }
+.overlay:not(.overlay--light) .usage-btn-row + .usage-btn-row { border-top-color: rgba(255, 255, 255, 0.06); }
+.usage-btn-icon {
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #000;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 500;
+}
+.usage-btn-icon--text { font-size: 11px; padding: 0 6px; width: auto; min-width: 28px; border-radius: 14px; }
+.usage-btn-icon--home {
+  background: conic-gradient(#ff6b6b, #fdcb6e, #55efc4, #00cec9, #6c5ce7, #fd79a8, #ff6b6b);
+  position: relative;
+}
+.usage-btn-icon--home::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: 50%;
+  background: #000;
+}
+.usage-btn-icon--home svg { position: relative; z-index: 1; }
+
+/* Visitors card: minimal — title + "click to view" centered */
+.card--visitors .visitors-cta {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  letter-spacing: -0.4px;
+  color: rgba(0, 0, 0, 0.45);
+}
 
 .paper-item, .resource-item {
   font-size: 13px; color: #adadad; padding: 6px 0;
@@ -670,35 +744,55 @@ main {
 .graph-pill:active { transform: scale(0.94); }
 
 /* --- Home FAB (floating action button) --- */
+@property --ring-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
 .home-fab {
   position: fixed;
-  bottom: 20px;
-  right: 28px;
+  top: 14px;
+  right: 14px;
   z-index: 91;
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: #000;
+  background: conic-gradient(
+    from var(--ring-angle),
+    #ff6b6b, #fdcb6e, #55efc4, #00cec9, #6c5ce7, #fd79a8, #ff6b6b
+  );
   border: none;
+  padding: 0;
   color: #fff;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  animation: ringSpin 6s linear infinite;
   box-shadow:
     0px 2px 8px rgba(0, 0, 0, 0.2),
     0px 12px 24px rgba(0, 0, 0, 0.1);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: box-shadow 0.2s ease;
+}
+/* Inner black circle covers most of the conic, leaving a 4px ring */
+.home-fab::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: #000;
+}
+.home-fab svg { position: relative; z-index: 1; }
+@keyframes ringSpin {
+  to { --ring-angle: 360deg; }
 }
 @media (hover: hover) {
   .home-fab:hover {
-    transform: scale(1.08);
     box-shadow:
-      0px 4px 12px rgba(0, 0, 0, 0.25),
-      0px 16px 32px rgba(0, 0, 0, 0.15);
+      0px 4px 12px rgba(0, 0, 0, 0.3),
+      0px 16px 32px rgba(0, 0, 0, 0.18);
   }
 }
-.home-fab:active { transform: scale(0.94); }
 
 /* --- History Locate Button (on cards in history mode) --- */
 .history-locate-btn {
@@ -875,18 +969,45 @@ main {
   pointer-events: none;
 }
 .globe-overlay.active { opacity: 1; pointer-events: all; }
-.globe-overlay.hidden { display: none; }
+/* Use visibility (not display:none) so ClustrMaps can measure parent width on load */
+.globe-overlay.hidden { visibility: hidden; }
+.globe-overlay.active { visibility: visible; }
 
 .globe-card {
   background: #000;
   border-radius: 16px;
-  padding: 40px 50px;
+  padding: 56px 64px;
   position: relative;
   box-shadow: 0px 4px 16px rgba(0,0,0,0.35), 0px 34px 44px rgba(0,0,0,0.17);
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: min(92vw, 1100px);
+  max-height: 92vh;
 }
+.globe-content {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.globe-content > * { max-width: 100%; }
+.globe-content img,
+.globe-content svg,
+.globe-content canvas,
+.globe-content iframe {
+  display: block;
+  width: 100% !important;
+  height: auto !important;
+  max-width: none !important;
+  max-height: 80vh;
+  object-fit: contain;
+}
+/* ClustrMaps often wraps content in a div with inline width — override */
+.globe-content div { width: 100% !important; max-width: 100% !important; }
 
 .globe-title {
   font-size: 16px;
@@ -914,16 +1035,7 @@ main {
 }
 .globe-close:hover { background: rgba(255,255,255,0.25); }
 
-.globe-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-/* ClustrMaps: ensure the generated image fits nicely */
-.globe-content img {
-  border-radius: 8px;
-  max-width: 100%;
-}
+/* (globe-content + img sized in .globe-card block above) */
 .globe-placeholder {
   display: flex;
   flex-direction: column;
@@ -1083,13 +1195,13 @@ main {
     right: 6px;
     writing-mode: vertical-rl;
   }
-  .home-fab { width: 40px; height: 40px; bottom: 16px; right: 16px; }
+  .home-fab { width: 38px; height: 38px; top: 12px; right: 12px; bottom: auto; }
   .history-toggle { font-size: 10px; padding: 6px 14px; }
   .shortcut-hint { display: none; }
   .overlay-card { padding: 22px; max-width: 92vw; }
 
   /* Move action buttons below the header bar on mobile */
-  .graph-pill, .globe-toggle, .contribute-btn {
+  .graph-pill, .contribute-btn {
     position: fixed !important;
     top: auto !important;
     left: auto !important;
@@ -1098,6 +1210,5 @@ main {
     height: 36px;
   }
   .graph-pill { left: 16px !important; }
-  .globe-toggle { left: 60px !important; }
-  .contribute-btn { left: 104px !important; }
+  .contribute-btn { left: 60px !important; }
 }

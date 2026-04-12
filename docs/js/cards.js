@@ -223,5 +223,30 @@ const Cards = (() => {
     }
   }
 
-  return { createHomeCard, createCategoryCard, createTermCard, renderOverlayContent, renderMath };
+  /**
+   * Create an Info card (usage / contributing). Same visual shell as the home card.
+   * faceItems: array of {title, body} shown as a list on the card face.
+   * overlayHtml: full HTML rendered when the card is clicked.
+   */
+  function createInfoCard({ id, icon, title, subtitle, faceItems, overlayHtml }) {
+    const card = document.createElement('div');
+    card.className = 'card card--home card--info';
+    card.id = `card-${id}`;
+    card.dataset.infoId = id;
+    card.dataset.infoOverlay = overlayHtml;
+    card.innerHTML = `
+      <div class="home-title">${icon || ''}${title}</div>
+      <div class="home-title-underline"></div>
+      <div class="home-subtitle">${subtitle}</div>
+      <ul class="category-list">
+        ${faceItems.map(it =>
+          `<li><span class="category-link" style="cursor:default;"><strong style="color:#000;font-weight:500;">${it.title}</strong> <span style="opacity:0.55">${it.body}</span></span></li>`
+        ).join('')}
+      </ul>
+      <div class="card-hint">click to read more &middot; scroll &rarr;</div>
+    `;
+    return card;
+  }
+
+  return { createHomeCard, createCategoryCard, createTermCard, createInfoCard, renderOverlayContent, renderMath };
 })();

@@ -1,8 +1,12 @@
 # LLM Dictionary
 
-A comprehensive, browsable dictionary of 254 terms across the LLM ecosystem — from quantization formats to training techniques to deployment tools.
+![](docs/hero.gif)
 
-**[Browse the Dictionary](https://llmdict.js.org)** | **[Graph View](https://llmdict.js.org/graph.html)**
+A living dictionary of the language that has grown up around large language models and the work of training, adapting, and serving them. The intent is for it to be maintained over a long horizon, with a contribution path quiet enough that fixing or adding an entry is roughly the work of writing the entry down.
+
+See [PHILOSOPHY.md](PHILOSOPHY.md) for the full intent.
+
+<https://aditya-pola.github.io/llmdict>
 
 ## What's Inside
 
@@ -44,7 +48,7 @@ A comprehensive, browsable dictionary of 254 terms across the LLM ecosystem — 
 
 ## Contributing
 
-Add a card by submitting a single JSON file. See **[CONTRIBUTING.md](CONTRIBUTING.md)** for the full guide, schema, writing rubric, and quality checklist.
+Contributions are warmly welcome. A pull request that adds a single JSON file under `cards/` is the whole workflow. Validation runs automatically and reports what to adjust. See **[CONTRIBUTING.md](CONTRIBUTING.md)** for the full guide, schema, writing rubric, and quality checklist.
 
 ```
 cards/
@@ -65,4 +69,8 @@ A GitHub Action automatically rebuilds the site when cards are added or edited.
 
 ## License
 
-Content and code are open source. See individual card files for paper citations and resource attribution.
+This repository is dual-licensed:
+
+- **Dictionary content** (every JSON file under `cards/`, the generated `docs/data/glossary.json`, and the prose in `PHILOSOPHY.md`) is licensed under **[Creative Commons Attribution-ShareAlike 4.0](LICENSE-CONTENT)**. Reuse and adapt freely; credit *LLM Dictionary* and share derivative content under the same license.
+- **Engine and tooling** (the contents of `docs/`, the build and validation scripts, anything under `scripts/`) is licensed under the **[MIT License](LICENSE-CODE)**. Reuse freely with attribution.
+
