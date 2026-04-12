@@ -409,6 +409,7 @@
     buttons.forEach((btn, i) => {
       btn.style.left = (rect.right + 10 + i * (btnSize + gap)) + 'px';
       btn.style.top = topCenter + 'px';
+      btn.classList.add('positioned'); // CSS reveals via opacity
     });
   }
   positionHeaderButtons();

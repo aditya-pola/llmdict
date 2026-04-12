@@ -9,11 +9,48 @@ const History = (() => {
   let _countEl = null;
   let _labelEl = null;
   const MAX_HISTORY = 50;
+  const STORAGE_KEY = 'llmdict.history';
+
+  // Persist history in sessionStorage so it survives navigation between
+  // pages (index.html <-> graph.html, both of which restart the JS
+  // context). A true page reload wipes it: we detect reload via
+  // PerformanceNavigationTiming.type and clear the storage at init.
+  function _isReload() {
+    try {
+      const entries = performance.getEntriesByType('navigation');
+      if (entries.length > 0) return entries[0].type === 'reload';
+      // Fallback for older browsers
+      return performance.navigation && performance.navigation.type === 1;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function _persist() {
+    try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(_visited)); }
+    catch (e) { /* sessionStorage may be disabled — silently no-op */ }
+  }
+
+  function _hydrate() {
+    try {
+      const raw = sessionStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr)) _visited = arr.slice(-MAX_HISTORY);
+    } catch (e) { /* corrupt or unavailable — start fresh */ }
+  }
 
   function init() {
     _toggleBtn = document.getElementById('history-toggle');
     _countEl = document.getElementById('history-count');
     _labelEl = document.getElementById('history-mode-label');
+
+    if (_isReload()) {
+      try { sessionStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    } else {
+      _hydrate();
+    }
+    _updateCount();
 
     if (_toggleBtn) {
       _toggleBtn.addEventListener('click', _toggle);
@@ -28,6 +65,7 @@ const History = (() => {
     _visited.push({ id, label });
     if (_visited.length > MAX_HISTORY) _visited.shift();
     _updateCount();
+    _persist();
   }
 
   function _updateCount() {

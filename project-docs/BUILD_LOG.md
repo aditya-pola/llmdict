@@ -455,3 +455,56 @@ Audit identified six high-leverage wins for the next pass:
 Plus a UX item: keyboard shortcuts should close the active overlay first and then act, instead of being silently no-oped while an overlay is open.
 
 DOM virtualization, code-splitting, and Web Worker for graph force simulation deferred to a later pass.
+
+---
+
+## 2026-04-12 (evening) — Performance pass, scrub, licensing, polish
+
+### History scrub
+Ran `git filter-repo` on all 60 commits to remove every mention of the reference site that had inspired the early visual design. Replaced phrasing in file blobs and commit messages (dialed.gg-inspired → minimalist-reference-inspired), deleted a historical `docs/ui/DIALED_FINDINGS.md` file from every commit it appeared in, force-pushed rewritten history to GitHub. All commit SHAs changed; backup-pre-scrub branch created before the rewrite and later deleted.
+
+### Performance pass (committed)
+Implemented the six audit items from the preceding plan:
+- All six site `<script>` tags switched to `defer`; `<link rel="preload">` added for `data/glossary.json` so the fetch starts in parallel with script download.
+- `stack.js` physics loop rewritten to idle: the rAF chain stops scheduling itself when accumulator, velocity, and tilt all settle to zero; `_kick()` restarts it on wheel, edge-hover, touch, and `goTo()`. Idle CPU at rest drops from continuous 60 Hz to effectively zero.
+- `data.js` pre-lower-cases name/expansion/oneliner at load into a `_searchIndex` array; `search.js` input debounced 80 ms to coalesce rapid keystrokes.
+- `cards.js` gained `ensureKatexLoaded()`: KaTeX CSS + JS + auto-render inject lazily the first time `renderMath()` is asked to process content containing a `$`. `<link>` and `<script>` removed from `index.html`. On the main page, zero KaTeX bytes are loaded until the user opens an overlay that has math. Also removed the `renderAllMath` polling block in `app.js` (dead code under the new lazy loader since card faces never contain math).
+- `style.css` has a mobile-only `backdrop-filter: blur(6px) !important` override for the header and three overlays (down from the desktop 16 px), cutting a large chunk of mobile compositor work.
+- Term cards beyond ±12 of `HOME_INDEX` are created in deferred mode: placeholder content (name + expansion + raw oneliner) only, entry stashed on a `WeakMap`. `Stack._layout` calls `Cards.populateTermCard(card)` for any card entering `MAX_PEEK + 3` range. The expensive linkifier work (one regex scan per term per card) is pushed off the first-paint path.
+
+### Keyboard shortcuts work through overlays
+Shortcuts (`H`, `S`, `G`, `R`, arrows) were previously no-oped when an overlay was open. Rewired via a new `withOverlayDismiss(action)` helper that calls `closeOverlay()` / `closeGlobe()` if either is open and then runs the action on the next frame. `Esc` still explicitly closes overlays; `?` still toggles the shortcuts overlay; `Enter` still requires no overlay to be open (since it is "expand current card").
+
+### History persists across navigation
+`history.js` now persists `_visited` to `sessionStorage` under the key `llmdict.history`. On init, it checks `performance.getEntriesByType('navigation')[0].type`: if `'reload'`, it clears the key and starts fresh; otherwise it hydrates from storage. Result: clicking Graph and coming back, or any cross-page nav, preserves the History bar; a true page reload still wipes it.
+
+### Header buttons no longer flash
+`.graph-pill` and `.contribute-btn` defaulted to `position: fixed` with no top/left, which painted them at the body's top-left corner before the `positionHeaderButtons()` JS moved them. CSS now marks them `opacity: 0` by default; JS sets the coordinates and adds a `.positioned` class which fades them in over 150 ms. No more dart-across-the-screen on load.
+
+### Cards no FOUC (already in place, noted for completeness)
+`.card { opacity: 0 }` in base styles; `_layout()` sets opacity per card (active=1, peeks=0.85→0.3, hidden=0) on first run, so the pile-up-then-spread flash never happens.
+
+### Social preview regenerated
+`scripts/make_social_preview.py` rewritten to render at 2× (2560×1280) and to draw the favicon "D" from primitives rather than upscaling the 32 px PNG. The pixel pattern matches `favicon.png` exactly: a 13×16 stair-stepped block D where the top/bottom caps are 9 cells wide and the connecting rows step out to 13 cells. The entire composition (icon + gap + text) is now measured up front and centered horizontally so the right margin matches the left.
+
+### Hero typing GIF
+`scripts/make_hero_gif.py`:
+- Added `Collective Knowledge Resource Management` as the penultimate name in the cycle (acronym match for "CKRM" / the project's thesis). Sequence is now `LLM Dictionary → Transformer Directory → AI Glossary → AI Cheatsheet → AI Field Guide → Collective Knowledge Resource Management → LLM Dictionary`.
+- Frame widened from 900 px to 1080 px to accommodate the 41-character phrase without overflow.
+- Final pass holds 3.2 s and skips the erase, then a 1.4 s blank pause before the loop restarts. 173 frames / 23.8 s / 173 KB.
+
+### License detection fixed
+GitHub's licensee scans the repo root for `LICENSE*`; having both `LICENSE-CODE` and `LICENSE-CONTENT` caused the About sidebar to report "Unknown licenses found" and show two license tabs under the README. Two-step fix:
+1. Renamed `LICENSE-CODE` → `LICENSE` (canonical name for the code license) and stripped the custom Scope header that was confusing the detector; scope info now lives after a `---` separator at the end of the file.
+2. Moved `LICENSE-CONTENT` into `cards/LICENSE` — licensee only scans the root, so the content license is discoverable exactly where it applies without confusing the detector. README's License section now links to `LICENSE` and `cards/LICENSE` respectively.
+
+### URL correction
+`llmdict.js.org` was rejected by the js.org maintainers earlier in the project. Every remaining reference in `README.md` replaced with `https://aditya-pola.github.io/llmdict` (the actual GitHub Pages URL). The URL will be revisited when/if a custom domain lands.
+
+### Demo video (manual upload)
+User recorded a 60-second screen demo of the interface (search → expand → inline link → graph view → back → site pages) and drag-dropped it into the README editor on github.com. GitHub's upload produced a `github.com/user-attachments/...` URL that renders as an inline video player directly on the repo page. No file committed to the repo.
+
+### Assets and scripts
+- `docs/hero.gif` regenerated
+- `social-preview.png` regenerated (now 2560×1280, 44 KB)
+- `scripts/make_hero_gif.py` and `scripts/make_social_preview.py` both updated; both produce deterministic output.

@@ -31,10 +31,11 @@ NAMES = [
     "AI Glossary",
     "AI Cheatsheet",
     "AI Field Guide",
+    "Collective Knowledge Resource Management",
     "LLM Dictionary",   # loop returns to the canonical name
 ]
 
-WIDTH, HEIGHT = 900, 140
+WIDTH, HEIGHT = 1080, 140
 BG = (0, 0, 0)
 FG = (255, 255, 255)
 PROMPT_FG = (120, 120, 120)
