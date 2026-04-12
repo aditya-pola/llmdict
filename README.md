@@ -1,3 +1,7 @@
+
+
+https://github.com/user-attachments/assets/a9ad2cd2-af73-4e00-ad58-2129d2b00075
+
 # LLM Dictionary
 
 ![](docs/hero.gif)
