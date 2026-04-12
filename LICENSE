@@ -31,4 +31,4 @@ scripts (`build.py`, `validate.py`), and anything under `scripts/`.
 Dictionary content (every JSON file under `cards/`, the generated glossary
 at `docs/data/glossary.json`, and the long-form prose in `PHILOSOPHY.md`)
 is licensed separately under the Creative Commons Attribution-ShareAlike
-4.0 International License. See `LICENSE-CONTENT` for the full terms.
+4.0 International License. See `cards/LICENSE` for the full terms.
