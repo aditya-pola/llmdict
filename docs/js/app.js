@@ -2,7 +2,18 @@
  * app.js — Main application (stacked card view)
  */
 (async function () {
-  const { categories, entries } = await Data.load();
+  let categories, entries;
+  try {
+    ({ categories, entries } = await Data.load());
+  } catch (err) {
+    const root = document.getElementById('stack-container') || document.body;
+    root.innerHTML = `<div style="color:#fff;padding:24px;font:14px/1.5 system-ui;max-width:520px;margin:40px auto;background:rgba(255,80,80,0.1);border:1px solid rgba(255,80,80,0.4);border-radius:8px;">
+      <strong>Failed to load dictionary data.</strong><br><br>
+      ${String(err && err.message || err)}<br><br>
+      <span style="opacity:0.7">If you're seeing this on iOS/Safari, try refreshing. If it persists, please open an issue.</span>
+    </div>`;
+    throw err;
+  }
 
   const container = document.getElementById('stack-container');
   const historyBar = document.getElementById('history-bar');

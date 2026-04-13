@@ -65,6 +65,7 @@ body {
   padding: 10px 20px;
   z-index: 100;
   background: rgba(0, 0, 0, 0.85);
+  -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   border-radius: 58px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
@@ -488,6 +489,7 @@ main {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.7);
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   z-index: 300;
   display: flex;
@@ -736,6 +738,7 @@ main {
   height: 36px;
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.85);
+  -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   color: rgba(255, 255, 255, 0.5);
   display: flex;
@@ -862,6 +865,7 @@ main {
   letter-spacing: -0.22px;
   padding: 8px 18px;
   background: rgba(0, 0, 0, 0.85);
+  -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   border: none;
   border-radius: 58px;
@@ -928,6 +932,7 @@ main {
   height: 36px;
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.85);
+  -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   color: rgba(255, 255, 255, 0.5);
   display: flex;
@@ -954,6 +959,7 @@ main {
   height: 36px;
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.85);
+  -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   border: none;
   color: rgba(255, 255, 255, 0.5);
@@ -973,6 +979,7 @@ main {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.7);
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   z-index: 350;
   display: flex;
@@ -1083,6 +1090,7 @@ main {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.6);
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   z-index: 400;
   display: flex;
@@ -1235,7 +1243,7 @@ main {
   .overlay,
   .shortcut-overlay,
   .globe-overlay {
-    backdrop-filter: blur(6px) !important;
     -webkit-backdrop-filter: blur(6px) !important;
+    backdrop-filter: blur(6px) !important;
   }
 }
