@@ -202,12 +202,20 @@ main {
   flex-direction: column;
   color: #fff;
   overflow: hidden;
-  will-change: transform, opacity;
   transform-style: preserve-3d;
   cursor: pointer;
   transition: transform var(--transition-slow), opacity var(--transition-slow);
   /* Hidden until JS positions it (prevents pile-up flash on load) */
   opacity: 0;
+}
+
+/* Only cards in the visible peek range get a compositor layer on GPU.
+   Without this scoping, 254 cards × will-change blows through iOS Safari's
+   per-tab memory budget and triggers "A problem repeatedly occurred". */
+.card.card--active,
+.card.card--left,
+.card.card--right {
+  will-change: transform, opacity;
 }
 
 /* Active card: front and center */
@@ -230,12 +238,11 @@ main {
   z-index: 10;
 }
 
-/* Hidden cards (beyond max-peek) */
+/* Hidden cards (beyond max-peek) — removed from the render tree so they
+   don't allocate a GPU layer. JS still assigns transform/opacity; those
+   take effect the next frame after the class is removed. */
 .card.card--hidden {
-  transform: translateX(0) scale(0.8);
-  opacity: 0;
-  pointer-events: none;
-  z-index: 0;
+  display: none;
 }
 
 /* Vertical peek label on stacked cards */
