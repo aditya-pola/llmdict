@@ -24,7 +24,7 @@ VARIANTS = [
     "05-yellow-magenta",
     "06-white-on-pink",
 ]
-RES_TAG = "800x200"
+RES_TAG = "400x100"
 
 HOLD_SEC = 1.42  # per variant
 
