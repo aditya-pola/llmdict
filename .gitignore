@@ -16,3 +16,6 @@ docs/data/phase1_methods_raw.md
 # OS files
 .DS_Store
 Thumbs.db
+
+# Local preview / scratch artifacts
+tmp/

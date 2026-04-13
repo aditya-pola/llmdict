@@ -683,7 +683,7 @@ main {
 }
 .usage-btn-icon--home svg { position: relative; z-index: 1; }
 
-/* Visitors card: minimal — title + "click to view" centered */
+/* Visitors card: minimal — title + "click to view" centered + adblock note */
 .card--visitors .visitors-cta {
   flex: 1;
   display: flex;
@@ -692,6 +692,13 @@ main {
   font-size: 16px;
   letter-spacing: -0.4px;
   color: rgba(0, 0, 0, 0.45);
+}
+.card--visitors .visitors-note {
+  font-size: 11px;
+  letter-spacing: -0.2px;
+  color: rgba(0, 0, 0, 0.3);
+  text-align: center;
+  padding-bottom: 8px;
 }
 
 .paper-item, .resource-item {

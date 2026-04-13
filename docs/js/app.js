@@ -188,6 +188,7 @@
       </div>
       <div class="home-title-underline"></div>
       <div class="visitors-cta">click to view</div>
+      <div class="visitors-note">most ad-blockers block the map.</div>
     </div>
   `;
 
