@@ -8,7 +8,7 @@ See [PHILOSOPHY.md](PHILOSOPHY.md) for the full intent.
 
 → try it
 
-[![llmdict.is-cool.dev](assets/neon-link.gif)](https://llmdict.is-cool.dev)
+<a href="https://llmdict.is-cool.dev"><img src="assets/neon-link.gif" alt="llmdict.is-cool.dev" width="400"></a>
 
 https://github.com/user-attachments/assets/a9ad2cd2-af73-4e00-ad58-2129d2b00075
 
