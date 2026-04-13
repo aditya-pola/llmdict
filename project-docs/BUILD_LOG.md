@@ -514,7 +514,7 @@ User recorded a 60-second screen demo of the interface (search → expand → in
 ## 2026-04-13 — Mobile swipe consistency
 
 ### Symptom
-On iOS Safari, swiping between cards was inconsistent: sometimes one card advanced with a smooth transition, other times the pile jumped 2–5 cards and appeared to "cut" rather than animate. Same-feeling gestures produced different outcomes.
+On mobile, swiping between cards was inconsistent: sometimes one card advanced with a smooth transition, other times the pile jumped 2–5 cards and appeared to "cut" rather than animate. Same-feeling gestures produced different outcomes.
 
 ### Root causes (two independent issues stacking)
 1. **Velocity table was hyper-sensitive to touchend timing.** `_setupTouchSwipe` mapped `speed = |dx|/dt` to a 1–5 card jump via thresholds at 0.6 / 1.0 / 1.5 / 2.0 px·ms⁻¹. `dt` between `touchstart` and `touchend` varies with finger release by tens of milliseconds on visually identical flicks, so one swipe mapped to 1 card and the next to 3. Dominant cause of the perceived randomness.
@@ -524,10 +524,10 @@ Minor contributor: no animation-in-progress guard on `touchend`, so rapid repeat
 
 ### Fix
 - **`docs/js/stack.js` `_setupTouchSwipe`:** dropped the velocity table. Every horizontal swipe now advances exactly one card, matching native paginated carousels (Instagram Stories, Tinder). Added a 250 ms cooldown that reuses `_lastSnapTime` / `SNAP_COOLDOWN + 50` so a second swipe inside a transition is dropped instead of overwriting it.
-- **`docs/js/stack.js` `_layout`:** added a `card--buffer` class for cards at `absOff === MAX_PEEK + 1`. They stay in the render tree with `visibility: hidden` so transitions have a starting frame when they're promoted to a peek slot. Cards further out keep `display: none`, preserving the iOS OOM fix from `95fa405` (only ~2 extra cards per side participate in the render tree, no `will-change` on them → no GPU layer).
+- **`docs/js/stack.js` `_layout`:** added a `card--buffer` class for cards at `absOff === MAX_PEEK + 1`. They stay in the render tree with `visibility: hidden` so transitions have a starting frame when they're promoted to a peek slot. Cards further out keep `display: none`, preserving the OOM fix from `95fa405` (only ~2 extra cards per side participate in the render tree, no `will-change` on them → no GPU layer).
 - **`docs/css/style.css`:** added `.card--buffer { visibility: hidden }`; `.card--hidden` unchanged (`display: none`).
 
 Desktop wheel / edge-hover / touchpad swipe behavior is untouched — only the `touchend` branch changed.
 
 ### Verification
-Served locally on port 8891 (documented the port in a new project-root `CLAUDE.md`) and tested on a real mobile device. Slow drags and fast flicks now both advance exactly one card with a visible slide; rapid-fire swipes inside the cooldown are dropped rather than clobbering the in-flight animation.
+Served locally on port 8891 (documented the port in a new project-root `CLAUDE.md`) and tested on mobile. Slow drags and fast flicks now both advance exactly one card with a visible slide; rapid-fire swipes inside the cooldown are dropped rather than clobbering the in-flight animation.
