@@ -6,7 +6,7 @@ A living dictionary of the language that has grown up around large language mode
 
 See [PHILOSOPHY.md](PHILOSOPHY.md) for the full intent.
 
-<https://aditya-pola.github.io/llmdict>
+<https://llmdict.is-cool.dev>
 
 https://github.com/user-attachments/assets/a9ad2cd2-af73-4e00-ad58-2129d2b00075
 
