@@ -472,11 +472,6 @@
   });
 
   // --- Unified keyboard handler ---
-  function getActiveIndex() {
-    const cards = container.querySelectorAll('.card');
-    return Array.from(cards).findIndex(c => c.classList.contains('card--active'));
-  }
-
   document.addEventListener('keydown', (e) => {
     // Always handle: Escape closes whatever is open
     if (e.key === 'Escape') {
@@ -581,7 +576,7 @@
       case 'ArrowDown':
         e.preventDefault();
         withOverlayDismiss(() => {
-          Stack.goTo(Math.min(getActiveIndex() + 1, Stack.getCardCount() - 1));
+          Stack.goTo(Math.min(Stack.getCurrentIndex() + 1, Stack.getCardCount() - 1));
         });
         break;
 
@@ -589,7 +584,7 @@
       case 'ArrowUp':
         e.preventDefault();
         withOverlayDismiss(() => {
-          Stack.goTo(Math.max(getActiveIndex() - 1, 0));
+          Stack.goTo(Math.max(Stack.getCurrentIndex() - 1, 0));
         });
         break;
     }

@@ -348,5 +348,7 @@ const Stack = (() => {
     }
   }
 
-  return { init, addCard, getCardCount, goTo, goToCard, getCurrentCard, setFilteredCards, clearFilter };
+  function getCurrentIndex() { return _currentIndex; }
+
+  return { init, addCard, getCardCount, getCurrentIndex, goTo, goToCard, getCurrentCard, setFilteredCards, clearFilter };
 })();
