@@ -69,7 +69,7 @@ const Stack = (() => {
       const absOff = Math.abs(offset);
 
       // Remove all state classes
-      card.classList.remove('card--active', 'card--left', 'card--right', 'card--hidden');
+      card.classList.remove('card--active', 'card--left', 'card--right', 'card--buffer', 'card--hidden');
 
       // Lazy-populate term cards entering populate radius
       if (absOff <= POPULATE_RADIUS && card.dataset.entryId && card.dataset.populated !== '1') {
@@ -105,8 +105,19 @@ const Stack = (() => {
         card.style.zIndex = String(z);
         card.style.pointerEvents = 'auto';
         card.style.cursor = 'pointer';
+      } else if (absOff === MAX_PEEK + 1) {
+        // Buffer: one step beyond peek range. Kept in the render tree
+        // (visibility: hidden, not display: none) so that when this card
+        // becomes the next peek, the transition has a starting frame to
+        // interpolate from — otherwise incoming cards "cut" instead of slide.
+        card.classList.add('card--buffer');
+        const tx = offset < 0 ? -800 : 800;
+        card.style.transform = `translateX(${tx}px) scale(0.8)`;
+        card.style.opacity = '0';
+        card.style.zIndex = '0';
+        card.style.pointerEvents = 'none';
       } else {
-        // Hidden
+        // Fully hidden: display: none to keep OOM fix from 95fa405.
         card.classList.add('card--hidden');
         const tx = offset < 0 ? -800 : 800;
         card.style.transform = `translateX(${tx}px) scale(0.8)`;
@@ -225,26 +236,19 @@ const Stack = (() => {
 
       const dx = e.changedTouches[0].clientX - startX;
       const dy = e.changedTouches[0].clientY - startY;
-      const dt = performance.now() - startTime;
 
       if (Math.abs(dx) < 25 || Math.abs(dx) < Math.abs(dy)) return;
 
-      // Velocity-based jump count with smooth animated stepping
-      const speed = Math.abs(dx) / dt; // px/ms
-      let totalJump;
-      if (speed > 2.0) totalJump = 5;
-      else if (speed > 1.5) totalJump = 4;
-      else if (speed > 1.0) totalJump = 3;
-      else if (speed > 0.6) totalJump = 2;
-      else totalJump = 1;
+      // Drop rapid repeat swipes that would overwrite a transition mid-flight.
+      const now = performance.now();
+      if (now - _lastSnapTime < SNAP_COOLDOWN + 50) return;
+      _lastSnapTime = now;
 
+      // One card per swipe. Velocity-based jumps were inconsistent because
+      // dx/dt varies wildly with release timing on visually identical flicks.
       const direction = dx < 0 ? 1 : -1;
-
-      // Clamp jump to available cards
-      const maxForward = _cards.length - 1 - _currentIndex;
-      const maxBack = _currentIndex;
-      const clampedJump = direction > 0 ? Math.min(totalJump, maxForward) : Math.min(totalJump, maxBack);
-      if (clampedJump > 0) goTo(_currentIndex + direction * clampedJump);
+      const target = _currentIndex + direction;
+      if (target >= 0 && target < _cards.length) goTo(target);
     }, { passive: true });
   }
 
